@@ -4,8 +4,8 @@ exports.handler = async (event) => {
   delete params.endpoint;
   const qs = new URLSearchParams(params).toString();
 
-  // USDA FAS PSD Online API — correct base URL
-  const url = `https://apps.fas.usda.gov/psdonline/api/psd/${endpoint}${qs ? '?' + qs : ''}`;
+  // Correct base URL confirmed from USDA FAS Swagger docs
+  const url = `https://api.fas.usda.gov/api/psd/${endpoint}${qs ? '?' + qs : ''}`;
 
   try {
     const res = await fetch(url, {
@@ -15,7 +15,7 @@ exports.handler = async (event) => {
         'User-Agent': 'JHD-Commodity-Advisors/1.0'
       }
     });
-    if (!res.ok) throw new Error(`USDA PSD returned ${res.status}`);
+    if (!res.ok) throw new Error(`USDA PSD returned ${res.status} for ${url}`);
     const data = await res.json();
     return {
       statusCode: 200,
