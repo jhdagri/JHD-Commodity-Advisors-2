@@ -282,67 +282,11 @@
       .snav-btn { padding:12px 12px; font-size:12px; }
     }
   
-/* ── CFTC LIVE DASHBOARD ── */
-:root{
-  --bg:#0d0f12;--card:#141720;--card2:#1c2030;
-  --border:rgba(255,255,255,0.08);--border2:rgba(255,255,255,0.14);
-  --text:#e8eaf0;--muted:#8890a4;--muted2:#555f78;
-  --blue:#4a9eff;--teal:#2ecfaa;--coral:#ff6b4a;
-  --gold:#ffb347;--gold2:#d4aa55;--purple:#a78bfa;
-}
-*{margin:0;padding:0;box-sizing:border-box;}
-html,body{background:var(--bg);color:var(--text);font-family:'DM Sans',sans-serif;font-size:13px;line-height:1.5;}
-.cftc-wrap{width:100%;padding:20px 24px 32px;}
-.cftc-hdr{display:flex;align-items:flex-start;justify-content:space-between;gap:16px;margin-bottom:16px;flex-wrap:wrap;}
-.cftc-hdr-left .tag{font-family:'DM Mono',monospace;font-size:9px;letter-spacing:0.16em;color:var(--blue);text-transform:uppercase;margin-bottom:4px;}
-.cftc-hdr-left h2{font-family:'DM Serif Display',serif;font-size:22px;font-weight:900;color:var(--text);line-height:1.1;}
-.cftc-hdr-left h2 span{color:var(--blue);}
-.cftc-hdr-left .sub{font-family:'DM Mono',monospace;font-size:10px;color:var(--muted2);margin-top:3px;}
-.cftc-hdr-right{display:flex;align-items:center;gap:8px;}
-.live-dot{width:8px;height:8px;border-radius:50%;background:var(--gold);animation:pulse 2s infinite;flex-shrink:0;}
-@keyframes pulse{0%,100%{opacity:1;}50%{opacity:0.3;}}
-.status-txt{font-family:'DM Mono',monospace;font-size:9px;color:var(--muted);}
-.cftc-ctabs{display:flex;gap:6px;margin-bottom:14px;flex-wrap:wrap;}
-.cftc-ctab{padding:6px 14px;border-radius:4px;border:1px solid var(--border2);background:var(--card);
-  color:var(--muted);font-family:'DM Mono',monospace;font-size:9px;font-weight:500;
-  letter-spacing:0.06em;text-transform:uppercase;cursor:pointer;transition:all 0.15s;}
-.cftc-ctab:hover{color:var(--text);}
-.cftc-ctab.active{background:rgba(74,158,255,0.15);color:var(--blue);border-color:var(--blue);}
-.cftc-kpi-row{display:grid;grid-template-columns:repeat(auto-fill,minmax(150px,1fr));gap:8px;margin-bottom:14px;}
-.cftc-kpi{background:var(--card);border:1px solid var(--border);border-radius:6px;padding:10px 13px;}
-.cftc-kpi-l{font-family:'DM Mono',monospace;font-size:8px;color:var(--muted2);text-transform:uppercase;letter-spacing:0.06em;margin-bottom:4px;}
-.cftc-kpi-v{font-family:'DM Mono',monospace;font-size:17px;font-weight:500;color:var(--text);}
-.cftc-kpi-s{font-size:10px;color:var(--muted2);margin-top:1px;}
-.cftc-kpi-v.up{color:var(--teal);}.cftc-kpi-v.dn{color:var(--coral);}
-.cftc-section-label{font-family:'DM Mono',monospace;font-size:8.5px;letter-spacing:0.14em;text-transform:uppercase;color:var(--muted2);margin-bottom:10px;display:flex;align-items:center;gap:10px;}
-.cftc-section-label::after{content:'';flex:1;height:1px;background:var(--border);}
-.cftc-charts-row{display:grid;grid-template-columns:1fr 1fr;gap:12px;margin-bottom:14px;}
-.cftc-chart-card{background:var(--card);border:1px solid var(--border);border-radius:8px;padding:14px;}
-.cftc-chart-title{font-family:'DM Mono',monospace;font-size:8.5px;letter-spacing:0.1em;text-transform:uppercase;color:var(--muted2);margin-bottom:10px;}
-.cftc-chart-wrap{position:relative;height:200px;}
-.cftc-table-card{background:var(--card);border:1px solid var(--border);border-radius:8px;overflow:hidden;margin-bottom:14px;}
-.cftc-table-card table{width:100%;border-collapse:collapse;}
-.cftc-table-card thead th{background:var(--card2);font-family:'DM Mono',monospace;font-size:8px;color:var(--muted2);letter-spacing:0.06em;text-transform:uppercase;padding:8px 10px;text-align:right;border-bottom:1px solid var(--border2);white-space:nowrap;}
-.cftc-table-card thead th:first-child{text-align:left;}
-.cftc-table-card tbody tr{border-bottom:1px solid var(--border);}
-.cftc-table-card tbody tr:last-child{border-bottom:none;}
-.cftc-table-card tbody tr:hover{background:rgba(255,255,255,0.02);}
-.cftc-table-card tbody td{padding:7px 10px;font-family:'DM Mono',monospace;font-size:10.5px;text-align:right;color:var(--muted);}
-.cftc-table-card tbody td:first-child{text-align:left;color:var(--text);}
-.up{color:var(--teal);}.dn{color:var(--coral);}.neu{color:var(--muted2);}
-.cftc-loading{text-align:center;padding:48px;font-family:'DM Mono',monospace;font-size:11px;color:var(--muted);display:flex;align-items:center;justify-content:center;gap:10px;}
-.cftc-spin{width:14px;height:14px;border:2px solid var(--border2);border-top-color:var(--blue);border-radius:50%;animation:sp 0.8s linear infinite;flex-shrink:0;}
-@keyframes sp{to{transform:rotate(360deg);}}
-.cftc-disc{font-family:'DM Mono',monospace;font-size:9px;color:var(--muted2);text-align:center;padding-top:10px;border-top:1px solid var(--border);}
-@media(max-width:700px){.cftc-charts-row{grid-template-columns:1fr;}.cftc-wrap{padding:14px;}}
-.cftc-subnav{padding:8px 16px;border:none;background:transparent;color:var(--muted);
-  font-family:'DM Mono',monospace;font-size:9px;font-weight:500;letter-spacing:0.06em;
-  text-transform:uppercase;cursor:pointer;border-bottom:2px solid transparent;
-  transition:all 0.15s;margin-bottom:-1px;}
-.cftc-subnav:hover{color:var(--text);}
-.cftc-subnav.active{color:var(--blue);border-bottom-color:var(--blue);}
+.pin-badge{display:inline-block;font-family:'DM Mono',monospace;font-size:8px;
+  color:var(--gold2);background:rgba(212,170,85,0.1);border:1px solid rgba(212,170,85,0.25);
+  padding:2px 8px;border-radius:3px;margin-bottom:6px;letter-spacing:0.06em;text-transform:uppercase;}
+.post-card.pinned{border-color:rgba(212,170,85,0.3);background:linear-gradient(135deg,var(--card),rgba(212,170,85,0.03));}
 </style>
-<script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/4.4.1/chart.umd.js"></script>
 </head>
 <body>
 
@@ -433,253 +377,11 @@ html,body{background:var(--bg);color:var(--text);font-family:'DM Sans',sans-seri
 
   <!-- CFTC -->
   <div id="tab-cftc" class="hidden protected">
-    <!-- CFTC Sub-nav -->
-    <div style="display:flex;gap:8px;padding:12px 24px 0;border-bottom:1px solid var(--border);background:var(--card);flex-wrap:wrap;">
-      <button class="cftc-subnav active" id="cftc-sub-live" onclick="cftcSubNav('live')">📊 Live Positioning</button>
-      <button class="cftc-subnav" id="cftc-sub-analysis" onclick="cftcSubNav('analysis')">📄 CFTC Analysis</button>
-    </div>
-
-    <!-- Live Positioning Panel -->
-    <div id="cftc-panel-live">
-<div class="cftc-wrap">
-
-<div class="cftc-hdr">
-  <div class="cftc-hdr-left">
-    <div class="tag">JHD Commodity Advisors · CFTC COT</div>
-    <h2>Managed Money <span>Positioning</span></h2>
-    <div class="sub" id="cftc-last-updated">Loading CFTC Disaggregated COT data…</div>
-  </div>
-  <div class="cftc-hdr-right">
-    <div class="live-dot" id="cftc-live-dot"></div>
-    <span class="status-txt" id="cftc-status-txt">Loading…</span>
-  </div>
-</div>
-
-<div class="cftc-ctabs" id="cftc-ctabs"></div>
-
-<div class="cftc-kpi-row">
-  <div class="cftc-kpi"><div class="cftc-kpi-l">Report Date</div><div class="cftc-kpi-v" id="cftc-k-date" style="font-size:12px;margin-top:2px;">—</div></div>
-  <div class="cftc-kpi"><div class="cftc-kpi-l">MM Net</div><div class="cftc-kpi-v" id="cftc-k-net">—</div><div class="cftc-kpi-s">Managed Money net</div></div>
-  <div class="cftc-kpi"><div class="cftc-kpi-l">Week Change</div><div class="cftc-kpi-v" id="cftc-k-chg">—</div><div class="cftc-kpi-s">net contracts</div></div>
-  <div class="cftc-kpi"><div class="cftc-kpi-l">MM Long</div><div class="cftc-kpi-v" id="cftc-k-long">—</div><div class="cftc-kpi-s">contracts</div></div>
-  <div class="cftc-kpi"><div class="cftc-kpi-l">MM Short</div><div class="cftc-kpi-v" id="cftc-k-short">—</div><div class="cftc-kpi-s">contracts</div></div>
-  <div class="cftc-kpi"><div class="cftc-kpi-l">Open Interest</div><div class="cftc-kpi-v" id="cftc-k-oi">—</div><div class="cftc-kpi-s">total contracts</div></div>
-  <div class="cftc-kpi"><div class="cftc-kpi-l">Prod/Merch Net</div><div class="cftc-kpi-v" id="cftc-k-comm">—</div><div class="cftc-kpi-s">commercial net</div></div>
-</div>
-
-<div class="cftc-section-label">Managed Money — Net Position History (52 Weeks)</div>
-<div class="cftc-charts-row">
-  <div class="cftc-chart-card">
-    <div class="cftc-chart-title">Managed Money Net Position</div>
-    <div class="cftc-chart-wrap"><canvas id="cftc-ch-net"></canvas></div>
-  </div>
-  <div class="cftc-chart-card">
-    <div class="cftc-chart-title">Managed Money Long vs Short</div>
-    <div class="cftc-chart-wrap"><canvas id="cftc-ch-ls"></canvas></div>
-  </div>
-</div>
-
-<div class="cftc-section-label">Weekly Data — Last 20 Reports</div>
-<div class="cftc-table-card">
-  <table>
-    <thead>
-      <tr>
-        <th>Date</th>
-        <th>MM Net</th>
-        <th>Wk Chg</th>
-        <th>MM Long</th>
-        <th>MM Short</th>
-        <th>MM Spread</th>
-        <th>Prod/Merch L</th>
-        <th>Prod/Merch S</th>
-        <th>Open Int</th>
-      </tr>
-    </thead>
-    <tbody id="cftc-cot-tbody">
-      <tr><td colspan="9"><div class="cftc-loading"><span class="cftc-spin"></span>Loading…</div></td></tr>
-    </tbody>
-  </table>
-</div>
-
-<div class="cftc-disc">CFTC Disaggregated COT — Options & Futures Combined · Released Fridays 3:30pm ET · Data as of prior Tuesday · JHD Commodity Advisors</div>
-</div>
-
-<script>
-'use strict';
-
-// Exact market_and_exchange_names from CFTC ag_sof.htm
-const COMMODITIES = [
-  {id:'corn',     label:'Corn',          mkt:'CORN - CHICAGO BOARD OF TRADE',              color:'#c8853a'},
-  {id:'srw',      label:'SRW Wheat',     mkt:'WHEAT-SRW - CHICAGO BOARD OF TRADE',         color:'#d4aa55'},
-  {id:'hrw',      label:'HRW Wheat',     mkt:'WHEAT-HRW - CHICAGO BOARD OF TRADE',         color:'#ffb347'},
-  {id:'soybeans', label:'Soybeans',      mkt:'SOYBEANS - CHICAGO BOARD OF TRADE',          color:'#2ecfaa'},
-  {id:'soymeal',  label:'Soy Meal',      mkt:'SOYBEAN MEAL - CHICAGO BOARD OF TRADE',      color:'#4a9eff'},
-  {id:'soyoil',   label:'Soy Oil',       mkt:'SOYBEAN OIL - CHICAGO BOARD OF TRADE',       color:'#a78bfa'},
-  {id:'cotton',   label:'Cotton',        mkt:'COTTON NO. 2 - ICE FUTURES U.S.',            color:'#e879f9'},
-  {id:'sugar',    label:'Sugar #11',     mkt:'SUGAR NO. 11 - ICE FUTURES U.S.',            color:'#f472b6'},
-  {id:'coffee',   label:'Coffee C',      mkt:'COFFEE C - ICE FUTURES U.S.',                color:'#fb923c'},
-  {id:'cocoa',    label:'Cocoa',         mkt:'COCOA - ICE FUTURES U.S.',                   color:'#a16207'},
-  {id:'canola',   label:'Canola',        mkt:'CANOLA - ICE FUTURES U.S.',                  color:'#84cc16'},
-];
-
-let current = COMMODITIES[0];
-let allData = {};
-let netChart = null, lsChart = null;
-
-function buildTabs() {
-  document.getElementById('ctabs').innerHTML = COMMODITIES.map(c =>
-    `<button class="cftc-ctab${c.id===current.id?' active':''}" onclick="selectTab('${c.id}',this)">${c.label}</button>`
-  ).join('');
-}
-
-function selectTab(id, el) {
-  current = COMMODITIES.find(c=>c.id===id);
-  document.querySelectorAll('.ctab').forEach(b=>b.classList.remove('active'));
-  el.classList.add('active');
-  if (allData[id]) renderData(allData[id]);
-  else { showLoading(); fetchOne(current); }
-}
-
-function showLoading() {
-  document.getElementById('cot-tbody').innerHTML =
-    '<tr><td colspan="9"><div class="cftc-loading"><span class="cftc-spin"></span>Loading…</div></td></tr>';
-}
-
-async function fetchOne(c) {
-  try {
-    const mkt = encodeURIComponent(c.mkt);
-    // Use the Disaggregated COT dataset (kh3c-gbw2)
-    const url = `https://jhdcommodityadvisors.netlify.app/.netlify/functions/cftc?market_and_exchange_names=${mkt}&$order=report_date_as_yyyy_mm_dd+DESC&$limit=52`;
-    const r = await fetch(url);
-    if (!r.ok) throw new Error(`HTTP ${r.status}`);
-    const data = await r.json();
-    if (!data || data.length === 0) throw new Error('No data for '+c.label);
-    allData[c.id] = data;
-    if (c.id === current.id) renderData(data);
-    return true;
-  } catch(e) {
-    console.error(c.label, e.message);
-    if (c.id === current.id) {
-      document.getElementById('cot-tbody').innerHTML =
-        `<tr><td colspan="9"><div class="cftc-loading" style="color:var(--coral)">⚠ ${e.message}</div></td></tr>`;
-      setStatus('Error loading '+c.label, 'err');
-    }
-    return false;
-  }
-}
-
-function setStatus(txt, state) {
-  document.getElementById('status-txt').textContent = txt;
-  document.getElementById('live-dot').style.background =
-    state==='live'?'var(--teal)':state==='err'?'var(--coral)':'var(--gold)';
-}
-
-function n(v){ return parseInt(v)||0; }
-function fmtN(v){ const x=n(v); return x===0?'—':(x>0?'+':'')+x.toLocaleString(); }
-function fmtA(v){ const x=n(v); return x===0?'—':x.toLocaleString(); }
-function fmtDate(s){ if(!s)return'—'; const d=new Date(s); return d.toLocaleDateString('en-GB',{day:'numeric',month:'short',year:'2-digit'}); }
-
-function renderData(data) {
-  const sorted = [...data].sort((a,b)=>new Date(b.report_date_as_yyyy_mm_dd)-new Date(a.report_date_as_yyyy_mm_dd));
-  const r0 = sorted[0], r1 = sorted[1]||{};
-
-  // Managed Money fields in Disaggregated dataset
-  const mmL  = n(r0.m_money_positions_long_all);
-  const mmS  = n(r0.m_money_positions_short_all);
-  const mmSp = n(r0.m_money_positions_spread_all);
-  const mmNet = mmL - mmS;
-  const prevNet = n(r1.m_money_positions_long_all) - n(r1.m_money_positions_short_all);
-  const chg = mmNet - prevNet;
-  const oi  = n(r0.open_interest_all);
-  const pmL = n(r0.prod_merc_positions_long_all);
-  const pmS = n(r0.prod_merc_positions_short_all);
-  const pmNet = pmL - pmS;
-
-  document.getElementById('k-date').textContent = fmtDate(r0.report_date_as_yyyy_mm_dd);
-  const ne = document.getElementById('k-net'); ne.textContent = fmtN(mmNet); ne.className='kpi-v '+(mmNet>=0?'up':'dn');
-  const ce = document.getElementById('k-chg'); ce.textContent = fmtN(chg); ce.className='kpi-v '+(chg>=0?'up':'dn');
-  document.getElementById('k-long').textContent  = fmtA(mmL);
-  document.getElementById('k-short').textContent = fmtA(mmS);
-  document.getElementById('k-oi').textContent    = oi>999999?(oi/1000000).toFixed(2)+'M':oi>999?(oi/1000).toFixed(1)+'K':fmtA(oi);
-  const cme = document.getElementById('k-comm'); cme.textContent = fmtN(pmNet); cme.className='kpi-v '+(pmNet>=0?'up':'dn');
-  document.getElementById('last-updated').textContent =
-    `${current.label} · Report: ${fmtDate(r0.report_date_as_yyyy_mm_dd)} · CFTC Disaggregated COT`;
-
-  // Table
-  const rows = sorted.slice(0,20).map((row,i)=>{
-    const l=n(row.m_money_positions_long_all), s=n(row.m_money_positions_short_all);
-    const sp=n(row.m_money_positions_spread_all), net=l-s;
-    const prev=sorted[i+1]||{}; const pn=n(prev.m_money_positions_long_all)-n(prev.m_money_positions_short_all);
-    const wc=net-pn;
-    const nc=net>0?'up':net<0?'dn':'neu', wcc=wc>0?'up':wc<0?'dn':'neu';
-    return `<tr>
-      <td>${fmtDate(row.report_date_as_yyyy_mm_dd)}</td>
-      <td class="${nc}">${fmtN(net)}</td>
-      <td class="${wcc}">${fmtN(wc)}</td>
-      <td>${fmtA(l)}</td>
-      <td>${fmtA(s)}</td>
-      <td>${fmtA(sp)}</td>
-      <td>${fmtA(n(row.prod_merc_positions_long_all))}</td>
-      <td>${fmtA(n(row.prod_merc_positions_short_all))}</td>
-      <td>${fmtA(n(row.open_interest_all))}</td>
-    </tr>`;
-  }).join('');
-  document.getElementById('cot-tbody').innerHTML = rows;
-
-  renderCharts(sorted);
-}
-
-function renderCharts(sorted) {
-  const rev = [...sorted].reverse();
-  const labels = rev.map(r=>{ const d=new Date(r.report_date_as_yyyy_mm_dd); return `${d.getDate()}/${d.getMonth()+1}`; });
-  const nets  = rev.map(r=>n(r.m_money_positions_long_all)-n(r.m_money_positions_short_all));
-  const longs = rev.map(r=>n(r.m_money_positions_long_all));
-  const shorts= rev.map(r=>n(r.m_money_positions_short_all));
-  const col = current.color;
-  const gc='rgba(255,255,255,0.05)', tc='rgba(136,144,164,0.8)';
-  const base={responsive:true,maintainAspectRatio:false,animation:false,
-    plugins:{legend:{display:false},tooltip:{mode:'index',intersect:false,backgroundColor:'rgba(28,32,48,0.97)',titleColor:'#e8eaf0',bodyColor:'#8890a4',borderColor:'rgba(255,255,255,0.14)',borderWidth:1}},
-    scales:{x:{ticks:{color:tc,font:{size:8},maxTicksLimit:10,maxRotation:0},grid:{color:gc},border:{display:false}},
-            y:{ticks:{color:tc,font:{size:8}},grid:{color:gc},border:{display:false}}}};
-
-  if(netChart)netChart.destroy();
-  netChart=new Chart(document.getElementById('ch-net'),{type:'bar',
-    data:{labels,datasets:[{data:nets,backgroundColor:nets.map(v=>v>=0?'rgba(46,207,170,0.65)':'rgba(255,107,74,0.65)'),borderRadius:2}]},
-    options:{...base}});
-
-  if(lsChart)lsChart.destroy();
-  lsChart=new Chart(document.getElementById('ch-ls'),{type:'line',
-    data:{labels,datasets:[
-      {label:'Long', data:longs, borderColor:col,backgroundColor:'transparent',borderWidth:1.5,pointRadius:0,tension:0.3},
-      {label:'Short',data:shorts,borderColor:'rgba(255,107,74,0.8)',backgroundColor:'transparent',borderWidth:1.5,pointRadius:0,tension:0.3,borderDash:[4,3]},
-    ]},
-    options:{...base,plugins:{...base.plugins,legend:{display:true,labels:{color:tc,font:{size:9},boxWidth:10}}}}});
-}
-
-// Lazy init — only runs once when CFTC tab becomes visible
-let cftcInitialised = false;
-function initCFTC() {
-  if (cftcInitialised) return;
-  cftcInitialised = true;
-  buildTabs();
-  showLoading();
-  fetchOne(current).then(ok => {
-    if(ok) setStatus('Live · CFTC COT', 'live');
-    COMMODITIES.slice(1).forEach((c,i) => setTimeout(()=>fetchOne(c), (i+1)*700));
-  });
-}
-</script>
-    </div>
-
-    <!-- Analysis Posts Panel -->
-    <div id="cftc-panel-analysis" style="display:none;">
-      <div class="page-wrap">
-        <div class="page-heading"><h2>CFTC Analysis</h2><p>Weekly COT analysis and positioning commentary</p></div>
-        <div id="posts-cftc"><div class="spin">Loading…</div></div>
-      </div>
+    <div class="page-wrap">
+      <div class="page-heading"><h2>CFTC</h2><p>Commitment of Traders analysis and positioning data</p></div>
+      <div id="posts-cftc"><div class="spin">Loading…</div></div>
     </div>
   </div>
-
 
   <!-- Futures -->
   <div id="tab-futures" class="hidden protected">
@@ -944,7 +646,7 @@ function initCFTC() {
       <button class="tab-btn active" id="wtab"  onclick="switchAdminTab('write')">✏ New Post</button>
       <button class="tab-btn"        id="ptab"  onclick="switchAdminTab('posts')">📋 Manage Posts</button>
       <button class="tab-btn"        id="mtab"  onclick="switchAdminTab('mod')">💬 Moderate Comments</button>
-      <button class="tab-btn"        id="stab"  onclick="switchAdminTab('subs')">👥 Registered Users</button>
+      <button class="tab-btn"        id="stab"  onclick="switchAdminTab('subs')">👥 Subscribers</button>
     </div>
 
     <!-- New Post -->
@@ -999,9 +701,9 @@ function initCFTC() {
 
     <!-- Subscribers -->
     <div id="admin-subs" class="hidden">
-      <div class="section-h2">Registered Users</div>
+      <div class="section-h2">Subscribers</div>
       <div class="subs-stats">
-        <div class="stat-card"><div class="stat-label">Total Users</div><div class="stat-val" id="subs-total">—</div></div>
+        <div class="stat-card"><div class="stat-label">Total Subscribers</div><div class="stat-val" id="subs-total">—</div></div>
         <div class="stat-card"><div class="stat-label">Joined This Month</div><div class="stat-val" id="subs-month">—</div></div>
         <div class="stat-card"><div class="stat-label">Joined This Week</div><div class="stat-val" id="subs-week">—</div></div>
       </div>
@@ -1011,7 +713,7 @@ function initCFTC() {
       </div>
       <div class="subs-table-wrap">
         <table class="subs-table">
-          <thead><tr><th>#</th><th>Email</th><th>Joined</th><th>Last Login</th></tr></thead>
+          <thead><tr><th>#</th><th>Email</th><th>Joined</th></tr></thead>
           <tbody id="subs-tbody"><tr><td colspan="3" style="text-align:center;padding:32px;color:var(--muted);">Loading…</td></tr></tbody>
         </table>
       </div>
@@ -1149,8 +851,11 @@ async function doSignUp(){
   if(pw.length<6){authMsg('Password must be at least 6 characters.');return;}
   const{error}=await sb.auth.signUp({email,password:pw});
   if(error){authMsg(error.message);return;}
-  // Insert subscriber directly using anon key — works before email confirmation
-  try{ await sb.from('subscribers').upsert({email},{onConflict:'email'}); }catch(e){}
+  // Record subscriber (best-effort — sign in first then insert)
+  try{
+    const{data:sess}=await sb.auth.signInWithPassword({email,password:pw});
+    if(sess?.user) await sb.from('subscribers').upsert({email},{onConflict:'email'});
+  }catch(e){}
   authMsg('Account created successfully! Please use your credentials to sign in.',true);
 }
 
@@ -1166,7 +871,7 @@ async function loadPosts(category){
   const el=document.getElementById('posts-'+category);
   if(!el) return;
   el.innerHTML='<div class="spin">Loading…</div>';
-  const{data:posts,error}=await sb.from('posts').select('id,title,summary,created_at,category').eq('category',category).order('created_at',{ascending:false});
+  const{data:posts,error}=await sb.from('posts').select('id,title,summary,created_at,category,is_pinned').eq('category',category).order('is_pinned',{ascending:false}).order('created_at',{ascending:false});
   if(error){el.innerHTML='<div class="spin">⚠ Could not load posts.</div>';return;}
   if(!posts||posts.length===0){
     el.innerHTML=`<div class="empty-state"><h3>No posts yet</h3><p>${isAdmin?'Go to Admin → New Post and select this section.':'Check back soon.'}</p></div>`;return;
@@ -1176,8 +881,8 @@ async function loadPosts(category){
   const counts={}; (cc||[]).forEach(r=>counts[r.post_id]=(counts[r.post_id]||0)+1);
   const grid=document.createElement('div'); grid.className='posts-grid';
   posts.forEach(p=>{
-    const n=counts[p.id]||0,card=document.createElement('div'); card.className='post-card';
-    card.innerHTML=`<div class="card-date">${fmtDate(p.created_at)}</div><h3>${esc(p.title)}</h3><p class="card-summary">${esc(p.summary||'')}</p><div class="card-foot"><span class="ccount">💬 ${n} comment${n!==1?'s':''}</span><span class="readmore">Read →</span></div>`;
+    const n=counts[p.id]||0,card=document.createElement('div'); card.className='post-card'+(p.is_pinned?' pinned':'');
+    card.innerHTML=`${p.is_pinned?'<div class="pin-badge">📌 Pinned</div>':''}<div class="card-date">${fmtDate(p.created_at)}</div><h3>${esc(p.title)}</h3><p class="card-summary">${esc(p.summary||'')}</p><div class="card-foot"><span class="ccount">💬 ${n} comment${n!==1?'s':''}</span><span class="readmore">Read →</span></div>`;
     card.onclick=()=>loadDetail(p.id,category); grid.appendChild(card);
   });
   el.innerHTML=''; el.appendChild(grid);
@@ -1205,10 +910,8 @@ async function loadDetail(postId,category){
   if(dw) dw.classList.toggle('full-width', isFullDoc);
   let contentHtml;
   if(isFullDoc){
-    // Use blob URL instead of srcdoc — blob: origin allows fetch() calls inside the iframe
-    const blob = new Blob([post.content], {type:'text/html'});
-    const blobUrl = URL.createObjectURL(blob);
-    contentHtml=`<iframe class="post-iframe" src="${blobUrl}" onload="resizeIframe(this)" scrolling="no"></iframe>`;
+    const encoded=post.content.replace(/"/g,'&quot;');
+    contentHtml=`<iframe class="post-iframe" srcdoc="${encoded}" onload="resizeIframe(this)" scrolling="no"></iframe>`;
   } else {
     contentHtml=`<div class="post-kicker">${fmtDate(post.created_at)}</div><h1>${esc(post.title)}</h1>${post.summary?`<div class="post-standfirst">${esc(post.summary)}</div>`:''}<div class="post-body">${post.content}</div>`;
   }
@@ -1277,7 +980,6 @@ function switchAdminTab(t){
   });
   if(t==='mod')   loadAllComments();
   if(t==='subs')  loadSubscribers();
-  if(t==='cftc')  initCFTC();
   if(t==='posts') loadManagePosts();
 }
 async function publishPost(){
@@ -1323,6 +1025,7 @@ async function loadManagePosts(){
       ${p.summary?`<div class="mod-text" style="font-size:12px;color:var(--muted);">${esc(p.summary)}</div>`:''}
       <div class="mod-actions" style="margin-top:10px;">
         <button class="btn-sm-hide" onclick="startEditPost('${p.id}')">✏ Edit</button>
+        <button class="btn-sm-hide" style="${p.is_pinned?'color:var(--gold2);border-color:rgba(212,170,85,0.5);':''}" onclick="togglePin('${p.id}',${!!p.is_pinned})">${p.is_pinned?'📌 Unpin':'📌 Pin'}</button>
         <button class="btn-sm-del"  onclick="deletePost('${p.id}')">Delete</button>
       </div>
     </div>`).join('');
@@ -1385,16 +1088,9 @@ async function modSetVisible(id,vis){ await sb.from('comments').update({is_visib
 async function loadSubscribers(){
   const tbody=document.getElementById('subs-tbody');
   tbody.innerHTML='<tr><td colspan="3" style="text-align:center;padding:32px;color:var(--muted);">Loading…</td></tr>';
-  // Query auth.users via Supabase admin RPC
-  const{data,error}=await sb.rpc('get_users');
-  if(error){
-    // Fallback: try subscribers table
-    const{data:d2,error:e2}=await sb.from('subscribers').select('email,created_at').order('created_at',{ascending:false});
-    if(e2){ tbody.innerHTML=`<tr><td colspan="3" style="text-align:center;padding:32px;color:var(--red);">Error loading users: ${e2.message}</td></tr>`; return; }
-    allSubs=d2||[];
-  } else {
-    allSubs=(data||[]).map(u=>({email:u.email,created_at:u.created_at,last_sign_in:u.last_sign_in_at}));
-  }
+  const{data,error}=await sb.from('subscribers').select('email,created_at').order('created_at',{ascending:false});
+  if(error){ tbody.innerHTML=`<tr><td colspan="3" style="text-align:center;padding:32px;color:var(--red);">Error loading subscribers.</td></tr>`; return; }
+  allSubs=data||[];
   updateSubsStats();
   renderSubsTable(allSubs);
 }
@@ -1409,14 +1105,9 @@ function updateSubsStats(){
 function renderSubsTable(subs){
   const tbody=document.getElementById('subs-tbody');
   if(!subs||subs.length===0){
-    tbody.innerHTML='<tr><td colspan="4" style="text-align:center;padding:40px;color:var(--muted);">No registered users yet.</td></tr>';return;
+    tbody.innerHTML='<tr><td colspan="3" style="text-align:center;padding:40px;color:var(--muted);">No subscribers yet.</td></tr>';return;
   }
-  tbody.innerHTML=subs.map((s,i)=>`<tr>
-    <td style="color:var(--muted);font-size:13px;">${i+1}</td>
-    <td class="email-cell">${esc(s.email)}</td>
-    <td style="color:var(--muted);font-size:13px;">${fmtDate(s.created_at)}</td>
-    <td style="color:var(--muted);font-size:13px;">${s.last_sign_in?fmtDate(s.last_sign_in):'—'}</td>
-  </tr>`).join('');
+  tbody.innerHTML=subs.map((s,i)=>`<tr><td style="color:var(--muted);font-size:13px;">${i+1}</td><td class="email-cell">${esc(s.email)}</td><td style="color:var(--muted);font-size:13px;">${fmtDate(s.created_at)}</td></tr>`).join('');
 }
 function filterSubs(){
   const q=document.getElementById('subs-search').value.trim().toLowerCase();
@@ -1438,13 +1129,10 @@ function fmtDate(d){ return new Date(d).toLocaleDateString('en-GB',{day:'numeric
 
 boot();
 
-
-function cftcSubNav(tab) {
-  document.getElementById('cftc-panel-live').style.display     = tab==='live'     ? '' : 'none';
-  document.getElementById('cftc-panel-analysis').style.display = tab==='analysis' ? '' : 'none';
-  document.getElementById('cftc-sub-live').classList.toggle('active',     tab==='live');
-  document.getElementById('cftc-sub-analysis').classList.toggle('active', tab==='analysis');
-  if (tab==='analysis') loadPosts('cftc');
+async function togglePin(id, currentlyPinned) {
+  const{error}=await sb.from('posts').update({is_pinned:!currentlyPinned}).eq('id',id);
+  if(error){alert('Error: '+error.message);return;}
+  loadManagePosts();
 }
 </script>
 
