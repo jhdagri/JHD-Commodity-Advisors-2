@@ -1,0 +1,2 @@
+/api/yahoo/*  https://query1.finance.yahoo.com/:splat  200
+/api/cftc/*   https://publicreporting.cftc.gov/resource/:splat  200

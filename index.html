@@ -1,0 +1,1140 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <link href="https://fonts.googleapis.com/css2?family=DM+Serif+Display:ital@0;1&family=DM+Mono:wght@400;500&family=DM+Sans:wght@300;400;500;600&display=swap" rel="stylesheet">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>JHD Commodity Advisors</title>
+  <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2/dist/umd/supabase.js"></script>
+  <link href="https://cdn.quilljs.com/1.3.7/quill.snow.css" rel="stylesheet">
+  <script src="https://cdn.quilljs.com/1.3.7/quill.js"></script>
+  <style>
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+    :root {
+      /* ── Dark theme matching Wheat-Corn Spread Analysis ── */
+      --navy:#0d0f12;       /* page background */
+      --navy-lt:#1c2030;    /* hover / elevated */
+      --card:#141720;       /* card backgrounds */
+      --card2:#1c2030;      /* nested cards */
+      --gold:#ffb347;       /* amber accent (brand) */
+      --gold-lt:#d4aa55;    /* gold hover */
+      --blue:#4a9eff;       /* primary interactive blue */
+      --teal:#2ecfaa;       /* positive/success */
+      --coral:#ff6b4a;      /* warning/loss */
+      --bg:#0d0f12;
+      --white:#141720;      /* "white" surfaces are dark cards */
+      --text:#e8eaf0;       /* primary text */
+      --muted:#8890a4;      /* secondary text */
+      --muted2:#555f78;     /* tertiary text */
+      --border:rgba(255,255,255,0.08);
+      --border2:rgba(255,255,255,0.14);
+      --red:#f87171;
+      --green:#4ade80;
+      --red-bg:rgba(248,113,113,0.12);
+      --green-bg:rgba(74,222,128,0.12);
+    }
+    body { font-family:'DM Sans',system-ui,-apple-system,sans-serif; background:var(--bg); color:var(--text); min-height:100vh; }
+    .hidden { display:none !important; }
+    .spin { text-align:center; padding:64px 24px; color:var(--muted); font-size:15px; }
+    .msg-box { padding:10px 14px; border-radius:6px; font-size:13px; margin-top:10px; }
+    .msg-error { background:var(--red-bg); color:var(--red); }
+    .msg-ok    { background:var(--green-bg); color:var(--green); }
+    .btn { display:inline-block; padding:9px 18px; border-radius:6px; font-size:13px; font-weight:600; cursor:pointer; border:none; transition:opacity 0.15s,background 0.15s; }
+    .btn:disabled { opacity:0.55; cursor:not-allowed; }
+    .btn-navy  { background:var(--blue); color:#fff; }
+    .btn-navy:hover:not(:disabled) { background:#3a8eef; }
+    .btn-gold  { background:var(--gold); color:#0d0f12; font-weight:700; }
+    .btn-gold:hover:not(:disabled) { background:var(--gold-lt); }
+    .btn-ghost { background:rgba(255,255,255,0.12); color:#fff; }
+    .btn-ghost:hover { background:rgba(255,255,255,0.22); }
+    .btn-sm-del  { padding:3px 10px; font-size:11px; background:var(--red-bg); color:var(--red); border:1px solid #fecaca; border-radius:4px; cursor:pointer; }
+    .btn-sm-hide { padding:3px 10px; font-size:11px; background:var(--card2); color:var(--muted); border:1px solid var(--border2); border-radius:4px; cursor:pointer; }
+    .field { margin-bottom:14px; }
+    .field label { display:block; font-size:11px; font-weight:700; text-transform:uppercase; letter-spacing:0.6px; color:var(--muted); margin-bottom:5px; }
+    .field input,.field textarea,.field select { width:100%; padding:10px 13px; border:1px solid var(--border2); border-radius:6px; font-size:14px; font-family:inherit; color:var(--text); background:var(--card2); }
+    .field input:focus,.field textarea:focus,.field select:focus { outline:none; border-color:var(--blue); box-shadow:0 0 0 3px rgba(74,158,255,0.12); }
+    .field textarea { resize:vertical; min-height:100px; }
+
+    /* ===== COPY PROTECTION ===== */
+    .protected {
+      -webkit-user-select: none;
+      -moz-user-select: none;
+      -ms-user-select: none;
+      user-select: none;
+    }
+    @media print {
+      body * { display: none !important; }
+      body::after {
+        display: block !important;
+        content: "Printing is not permitted. © JHD Commodity Advisors";
+        font-size: 18px;
+        text-align: center;
+        padding: 80px;
+      }
+    }
+
+    /* ===== TOPBAR ===== */
+    .topbar { background:#080a0d; border-bottom:1px solid var(--border2); position:sticky; top:0; z-index:200; box-shadow:0 2px 20px rgba(0,0,0,0.5); }
+    .topbar-inner { max-width:1280px; margin:0 auto; padding:0 24px; height:58px; display:flex; align-items:center; justify-content:space-between; }
+    .topbar-brand { display:flex; align-items:center; gap:10px; cursor:pointer; user-select:none; }
+    .brand-mark { width:34px; height:34px; background:var(--gold); border-radius:5px; display:flex; align-items:center; justify-content:center; font-weight:900; font-size:11px; color:#080a0d; flex-shrink:0; letter-spacing:-0.5px; font-family:"DM Mono",monospace; }
+    .brand-name { font-size:15px; font-weight:600; color:var(--text); letter-spacing:0.01em; font-family:"DM Sans",sans-serif; }
+    .topbar-right { display:flex; align-items:center; gap:10px; }
+    .user-chip { font-size:12px; color:rgba(255,255,255,0.5); max-width:180px; overflow:hidden; text-overflow:ellipsis; white-space:nowrap; }
+
+    /* ===== SECTION NAV ===== */
+    .section-nav { background:#0a0c10; border-bottom:1px solid var(--border); position:sticky; top:58px; z-index:190; }
+    .section-nav-inner { max-width:1280px; margin:0 auto; padding:0 24px; display:flex; overflow-x:auto; scrollbar-width:none; }
+    .section-nav-inner::-webkit-scrollbar { display:none; }
+    .snav-btn { padding:14px 18px; border:none; background:none; cursor:pointer; font-size:13px; font-weight:600; color:var(--muted); border-bottom:3px solid transparent; white-space:nowrap; transition:color 0.15s; }
+    .snav-btn:hover { color:var(--text); }
+    .snav-btn.active { color:var(--blue); border-bottom-color:var(--blue); }
+
+    /* ===== AUTH ===== */
+    #page-auth { min-height:100vh; display:flex; flex-direction:column; }
+    .auth-hero { background:linear-gradient(180deg,#080a0d 0%,#0d0f12 100%); padding:56px 24px 48px; text-align:center; border-bottom:1px solid var(--border2); }
+    .auth-hero .hero-mark { display:inline-flex; align-items:center; justify-content:center; width:56px; height:56px; background:var(--gold); border-radius:8px; font-weight:900; font-size:14px; color:#080a0d; margin-bottom:18px; letter-spacing:-0.5px; font-family:"DM Mono",monospace; }
+    .auth-hero h1 { font-size:32px; font-weight:900; color:var(--text); letter-spacing:-0.5px; margin-bottom:10px; font-family:"DM Serif Display",serif; }
+    .auth-hero .rule { width:36px; height:2px; background:var(--blue); margin:14px auto; }
+    .auth-hero p { color:var(--muted); font-size:15px; max-width:420px; margin:0 auto; }
+    .auth-body { flex:1; display:flex; align-items:flex-start; justify-content:center; padding:44px 24px 60px; background:var(--bg); }
+    .auth-card { background:var(--card); border:1px solid var(--border2); border-radius:12px; padding:36px; width:100%; max-width:420px; box-shadow:0 12px 40px rgba(0,0,0,0.4); }
+    .auth-card h2 { font-size:21px; font-weight:700; color:var(--text); margin-bottom:4px; font-family:"DM Serif Display",serif; }
+    .auth-card > p { color:var(--muted2); font-size:14px; margin-bottom:24px; }
+    .auth-tab-row { display:flex; border-bottom:1px solid var(--border2); margin-bottom:24px; }
+    .auth-tab { padding:8px 14px; border:none; background:none; cursor:pointer; font-size:13px; font-weight:500; color:var(--muted); border-bottom:2px solid transparent; margin-bottom:-2px; letter-spacing:0.04em; text-transform:uppercase; font-family:"DM Mono",monospace; }
+    .auth-tab.active { color:var(--blue); border-bottom-color:var(--blue); }
+    .auth-submit { width:100%; padding:11px; margin-top:4px; }
+
+    /* ===== CONTENT ===== */
+    .page-wrap { max-width:1280px; margin:0 auto; padding:40px 24px 60px; }
+    .page-heading { margin-bottom:32px; padding-bottom:20px; border-bottom:1px solid var(--border); }
+    .page-heading h2 { font-size:24px; font-weight:700; color:var(--text); margin-bottom:4px; font-family:"DM Serif Display",serif; }
+    .page-heading p { color:var(--muted); font-size:14px; }
+    .posts-grid { display:grid; grid-template-columns:repeat(auto-fill,minmax(320px,1fr)); gap:20px; }
+    .post-card { background:var(--card); border:1px solid var(--border); border-radius:10px; padding:26px; cursor:pointer; transition:box-shadow 0.18s,transform 0.15s; }
+    .post-card:hover { box-shadow:0 8px 32px rgba(0,0,0,0.4); transform:translateY(-2px); border-color:var(--border2); }
+    .post-card .card-date { font-size:11px; font-weight:500; text-transform:uppercase; letter-spacing:0.9px; color:var(--blue); margin-bottom:10px; font-family:"DM Mono",monospace; }
+    .post-card h3 { font-size:17px; font-weight:600; color:var(--text); line-height:1.35; margin-bottom:10px; font-family:"DM Serif Display",serif; }
+    .post-card .card-summary { font-size:13px; color:var(--muted); line-height:1.6; }
+    .card-foot { margin-top:18px; padding-top:14px; border-top:1px solid var(--border); display:flex; align-items:center; justify-content:space-between; }
+    .card-foot .ccount { font-size:11px; color:var(--muted); }
+    .card-foot .readmore { font-size:11px; font-weight:500; color:var(--blue); font-family:"DM Mono",monospace; }
+    .empty-state { text-align:center; padding:80px 24px; color:var(--muted); background:var(--card); border:1px dashed var(--border2); border-radius:12px; }
+    .empty-state h3 { font-size:18px; color:var(--text); margin-bottom:8px; font-family:"DM Serif Display",serif; }
+
+    /* ===== POST DETAIL ===== */
+    .detail-wrap { max-width:1280px; margin:0 auto; padding:32px 24px 80px; }
+    .detail-wrap.full-width { max-width:100%; padding:0 0 80px; }
+    .detail-wrap.full-width .comments-wrap { max-width:1280px; margin:0 auto; padding:0 24px; }
+    .post-iframe { width:1px; min-width:100%; border:none; border-radius:0; display:block; min-height:600px; overflow:hidden; }
+    .post-kicker { font-size:11px; font-weight:500; text-transform:uppercase; letter-spacing:1px; color:var(--blue); margin-bottom:12px; font-family:"DM Mono",monospace; }
+    .detail-wrap h1 { font-size:32px; font-weight:900; color:var(--text); line-height:1.15; letter-spacing:-0.02em; margin-bottom:14px; font-family:"DM Serif Display",serif; }
+    .post-standfirst { font-size:17px; color:var(--muted); line-height:1.55; padding-bottom:24px; border-bottom:1px solid var(--border2); margin-bottom:28px; }
+    .post-body { font-size:16px; line-height:1.8; color:var(--text); max-width:780px; }
+    .detail-wrap h1 { max-width:780px; }
+    .post-standfirst { max-width:780px; }
+    .post-body h2,.post-body h3 { color:var(--text); margin:28px 0 12px; font-weight:600; font-family:"DM Serif Display",serif; }
+    .post-body h2 { font-size:22px; } .post-body h3 { font-size:18px; }
+    .post-body p { margin-bottom:18px; }
+    .post-body ul,.post-body ol { margin:0 0 18px 24px; }
+    .post-body li { margin-bottom:6px; }
+    .post-body blockquote { border-left:3px solid var(--blue); padding:4px 0 4px 16px; color:var(--muted); font-style:italic; margin-bottom:18px; background:var(--card); border-radius:0 4px 4px 0; }
+    .post-body table { width:100%; border-collapse:collapse; margin-bottom:20px; font-size:14px; }
+    .post-body th { background:var(--card2); color:var(--muted); padding:9px 12px; text-align:left; font-family:"DM Mono",monospace; font-size:11px; letter-spacing:0.05em; text-transform:uppercase; }
+    .post-body td { padding:8px 12px; border-bottom:1px solid var(--border); font-family:"DM Mono",monospace; font-size:12px; }
+    .post-body tr:nth-child(even) td { background:rgba(255,255,255,0.02); }
+    .post-body a { color:var(--blue); text-decoration:underline; }
+
+    /* ===== COMMENTS ===== */
+    .comments-wrap { margin-top:48px; border-top:1px solid var(--border); padding-top:36px; max-width:780px; }
+    .comments-wrap .section-title { font-size:19px; font-weight:700; color:var(--text); margin-bottom:24px; font-family:"DM Serif Display",serif; }
+    .comment-item { background:var(--card); border:1px solid var(--border); border-radius:8px; padding:16px 18px; margin-bottom:12px; }
+    .comment-header { display:flex; justify-content:space-between; align-items:flex-start; margin-bottom:7px; }
+    .comment-author { font-weight:600; font-size:14px; color:var(--blue); }
+    .comment-time { font-size:11px; color:var(--muted); }
+    .comment-text { font-size:14px; line-height:1.65; color:var(--text); }
+    .comment-admin-row { display:flex; gap:6px; margin-top:10px; }
+    .no-comments { text-align:center; padding:32px; border:1px dashed var(--border2); border-radius:8px; color:var(--muted2); font-size:14px; }
+    .comment-form-card { background:var(--card); border:1px solid var(--border2); border-radius:10px; padding:26px; margin-top:32px; }
+    .comment-form-card h3 { font-size:16px; font-weight:600; color:var(--text); margin-bottom:16px; font-family:"DM Serif Display",serif; }
+
+    /* ===== FUTURES ===== */
+    .futures-wrap { max-width:1280px; margin:0 auto; padding:32px 24px 60px; }
+    .futures-heading { margin-bottom:28px; padding-bottom:18px; border-bottom:1px solid var(--border); }
+    .futures-heading h2 { font-size:24px; font-weight:700; color:var(--text); margin-bottom:4px; font-family:"DM Serif Display",serif; }
+    .futures-heading p { font-size:14px; color:var(--muted); }
+    .tv-widget-wrap { background:var(--card); border:1px solid var(--border2); border-radius:10px; overflow:hidden; margin-bottom:20px; }
+
+    /* ===== STATIC PAGES ===== */
+    .static-wrap { max-width:1280px; margin:0 auto; padding:40px 24px 80px; }
+    .static-wrap h2 { font-size:28px; font-weight:900; color:var(--text); margin-bottom:8px; font-family:"DM Serif Display",serif; }
+    .static-rule { width:40px; height:2px; background:var(--blue); border-radius:2px; margin-bottom:28px; }
+    .static-wrap p { font-size:16px; line-height:1.8; color:var(--text); margin-bottom:18px; }
+    .static-wrap h3 { font-size:18px; font-weight:600; color:var(--text); margin:28px 0 10px; font-family:"DM Serif Display",serif; }
+    .static-wrap ul { margin:0 0 18px 22px; }
+    .static-wrap li { font-size:15px; line-height:1.7; color:var(--text); margin-bottom:6px; }
+    .service-cards { display:grid; grid-template-columns:repeat(auto-fill,minmax(260px,1fr)); gap:16px; margin:24px 0 32px; }
+    .service-card { background:var(--card); border:1px solid var(--border); border-radius:10px; padding:22px; }
+    .service-card .sc-icon { font-size:24px; margin-bottom:12px; }
+    .service-card h4 { font-size:15px; font-weight:600; color:var(--blue); margin-bottom:8px; }
+    .service-card p { font-size:13px; color:var(--muted); line-height:1.6; }
+    .contact-grid { display:grid; grid-template-columns:1fr 1fr; gap:24px; margin-top:24px; }
+    .contact-item { background:var(--card); border:1px solid var(--border); border-radius:10px; padding:22px; }
+    .contact-item .ci-label { font-size:11px; font-weight:700; text-transform:uppercase; letter-spacing:0.6px; color:var(--muted); margin-bottom:6px; }
+    .contact-item .ci-val { font-size:15px; font-weight:600; color:var(--text); font-family:"DM Mono",monospace; }
+    .contact-item .ci-sub { font-size:13px; color:var(--muted); margin-top:3px; }
+    .about-bio { display:flex; gap:24px; align-items:flex-start; background:var(--card); border:1px solid var(--border2); border-radius:10px; padding:24px; margin:24px 0; }
+    .about-avatar { width:64px; height:64px; background:var(--blue); border-radius:50%; display:flex; align-items:center; justify-content:center; font-weight:700; font-size:16px; color:#fff; flex-shrink:0; font-family:"DM Mono",monospace; }
+    .about-bio-text h3 { font-size:17px; font-weight:700; color:var(--text); margin-bottom:4px; font-family:"DM Serif Display",serif; }
+    .about-bio-text .role { font-size:13px; color:var(--blue); font-weight:500; margin-bottom:10px; font-family:"DM Mono",monospace; letter-spacing:0.04em; }
+    .about-bio-text p { font-size:14px; color:var(--muted); line-height:1.65; }
+    .disclaimer-box { background:rgba(74,158,255,0.05); border:1px solid var(--border); border-left:3px solid var(--blue); border-radius:6px; padding:16px 18px; margin-top:32px; font-size:13px; color:var(--muted); line-height:1.6; }
+
+    /* ===== ADMIN ===== */
+    .admin-wrap { max-width:1280px; margin:0 auto; padding:40px 24px 80px; }
+    .admin-tab-row { display:flex; border-bottom:2px solid var(--border); margin-bottom:36px; flex-wrap:wrap; }
+    .tab-btn { padding:10px 20px; border:none; background:none; cursor:pointer; font-size:14px; font-weight:600; color:var(--muted); border-bottom:2px solid transparent; margin-bottom:-2px; }
+    .tab-btn.active { color:var(--blue); border-bottom-color:var(--blue); }
+    .section-h2 { font-size:22px; font-weight:700; color:var(--text); margin-bottom:26px; font-family:"DM Serif Display",serif; }
+    .admin-field input[type="text"],.admin-field select { width:100%; padding:11px 14px; border:1px solid var(--border2); border-radius:6px; font-size:15px; font-family:inherit; color:var(--text); background:var(--card2); margin-bottom:12px; }
+    .admin-field input:focus,.admin-field select:focus { outline:none; border-color:var(--blue); }
+    .editor-mode-row { display:flex; align-items:center; gap:10px; margin-bottom:8px; }
+    .editor-label { font-size:11px; font-weight:700; text-transform:uppercase; letter-spacing:0.6px; color:var(--muted); }
+    .mode-toggle { display:flex; border:1px solid var(--border); border-radius:6px; overflow:hidden; }
+    .mode-btn { padding:5px 14px; font-size:12px; font-weight:500; border:none; cursor:pointer; background:var(--card2); color:var(--muted); transition:all 0.15s; font-family:"DM Mono",monospace; letter-spacing:0.04em; }
+    .mode-btn.active { background:var(--blue); color:#fff; }
+    #quill-editor { background:var(--card2); min-height:280px; font-size:15px; color:var(--text); }
+    .ql-toolbar.ql-snow { border:1px solid var(--border2); border-bottom:none; border-radius:6px 6px 0 0; background:var(--card); }
+    .ql-container.ql-snow { border:1px solid var(--border2); border-radius:0 0 6px 6px; font-size:15px; background:var(--card2); color:var(--text); }
+    .ql-editor.ql-blank::before { color:var(--muted2) !important; }
+    .ql-editor { color:var(--text); }
+    .ql-stroke { stroke:var(--muted) !important; }
+    .ql-fill { fill:var(--muted) !important; }
+    .ql-picker { color:var(--muted) !important; }
+    #html-source-input { width:100%; min-height:320px; padding:14px; border:1px solid var(--border2); border-radius:6px; font-family:"DM Mono","Menlo","Monaco",monospace; font-size:12px; line-height:1.6; color:var(--text); background:var(--card2); resize:vertical; }
+    #html-source-input:focus { outline:none; border-color:var(--blue); }
+    .html-hint { font-size:12px; color:var(--muted); margin-top:8px; padding:10px 14px; background:rgba(74,158,255,0.06); border-radius:5px; border-left:3px solid var(--blue); line-height:1.5; }
+    .publish-row { display:flex; align-items:center; gap:16px; margin-top:20px; }
+    .cat-label { font-size:11px; font-weight:700; text-transform:uppercase; letter-spacing:0.6px; color:var(--muted); margin-bottom:5px; display:block; }
+    .mod-card { background:var(--card); border:1px solid var(--border); border-radius:8px; padding:16px 18px; margin-bottom:12px; }
+    .mod-card.is-hidden { opacity:0.45; background:var(--card2); }
+    .mod-top { display:flex; justify-content:space-between; align-items:flex-start; margin-bottom:6px; }
+    .mod-who { font-weight:600; font-size:14px; color:var(--text); }
+    .mod-meta { font-size:11px; color:var(--muted); margin-left:6px; }
+    .mod-post { font-size:12px; color:var(--muted); font-weight:400; max-width:260px; text-align:right; font-family:"DM Mono",monospace; }
+    .mod-text { font-size:14px; line-height:1.55; margin-bottom:10px; }
+    .mod-actions { display:flex; gap:6px; }
+    .badge-hidden { display:inline-block; padding:2px 7px; border-radius:4px; font-size:10px; font-weight:600; background:rgba(255,107,74,0.15); color:var(--coral); margin-left:8px; vertical-align:middle; font-family:"DM Mono",monospace; }
+    .cat-badge { display:inline-block; padding:2px 8px; border-radius:4px; font-size:10px; font-weight:500; background:rgba(74,158,255,0.12); color:var(--blue); margin-left:6px; vertical-align:middle; font-family:"DM Mono",monospace; }
+
+    /* ===== SUBSCRIBERS TAB ===== */
+    .subs-stats { display:grid; grid-template-columns:repeat(auto-fill,minmax(180px,1fr)); gap:16px; margin-bottom:32px; }
+    .stat-card { background:var(--card); border:1px solid var(--border); border-radius:10px; padding:20px 22px; }
+    .stat-card .stat-label { font-size:11px; font-weight:700; text-transform:uppercase; letter-spacing:0.6px; color:var(--muted); margin-bottom:6px; }
+    .stat-card .stat-val { font-size:30px; font-weight:500; color:var(--blue); font-family:"DM Mono",monospace; }
+    .subs-table-wrap { background:var(--card); border:1px solid var(--border); border-radius:10px; overflow:hidden; }
+    .subs-table { width:100%; border-collapse:collapse; font-size:14px; }
+    .subs-table th { background:var(--card2); color:var(--muted); padding:11px 16px; text-align:left; font-size:11px; font-weight:500; letter-spacing:0.06em; text-transform:uppercase; font-family:"DM Mono",monospace; }
+    .subs-table td { padding:11px 16px; border-bottom:1px solid var(--border); color:var(--text); font-family:"DM Mono",monospace; font-size:13px; }
+    .subs-table tr:last-child td { border-bottom:none; }
+    .subs-table tr:nth-child(even) td { background:rgba(255,255,255,0.02); }
+    .subs-table .email-cell { font-weight:500; color:var(--text); }
+    .subs-search { width:100%; padding:10px 14px; border:1px solid var(--border2); border-radius:6px; font-size:14px; font-family:inherit; margin-bottom:16px; background:var(--card2); color:var(--text); }
+    .subs-search:focus { outline:none; border-color:var(--blue); }
+    .export-row { display:flex; justify-content:space-between; align-items:center; margin-bottom:16px; }
+    .export-row p { font-size:13px; color:var(--muted); }
+
+    .futures-group-label { font-family:"DM Mono",monospace; font-size:9pt; font-weight:500; letter-spacing:0.12em; text-transform:uppercase; color:var(--blue); padding:16px 0 8px; border-bottom:1px solid var(--border); margin-bottom:12px; }
+    .tv-widget-wrap { background:transparent; border:1px solid var(--border); border-radius:10px; overflow:hidden; margin-bottom:8px; }
+    /* RECENT STRIP */
+    .recent-strip-wrap { background:#080a0d; border-top:1px solid var(--border); padding:20px 0 0; }
+    .recent-strip-inner { max-width:1280px; margin:0 auto; padding:0 24px; }
+    .recent-strip-label { font-family:"DM Mono",monospace; font-size:7.5pt; letter-spacing:0.14em; text-transform:uppercase; color:var(--muted2); margin-bottom:12px; }
+    .recent-strip-scroll { display:flex; gap:12px; overflow-x:auto; padding-bottom:16px; scrollbar-width:thin; scrollbar-color:var(--border) transparent; }
+    .recent-strip-scroll::-webkit-scrollbar { height:4px; }
+    .recent-strip-scroll::-webkit-scrollbar-track { background:transparent; }
+    .recent-strip-scroll::-webkit-scrollbar-thumb { background:var(--border); border-radius:2px; }
+    .recent-doc-card { background:var(--card); border:1px solid var(--border); border-radius:6px; padding:12px 14px; min-width:200px; max-width:200px; cursor:pointer; flex-shrink:0; transition:border-color 0.15s,transform 0.15s; }
+    .recent-doc-card:hover { border-color:var(--blue); transform:translateY(-2px); }
+    .recent-doc-cat { font-family:"DM Mono",monospace; font-size:7pt; color:var(--blue); text-transform:uppercase; letter-spacing:0.08em; margin-bottom:5px; }
+    .recent-doc-title { font-family:"DM Serif Display",serif; font-size:10pt; font-weight:600; color:var(--text); line-height:1.35; margin-bottom:5px; display:-webkit-box; -webkit-line-clamp:2; -webkit-box-orient:vertical; overflow:hidden; }
+    .recent-doc-date { font-family:"DM Mono",monospace; font-size:7pt; color:var(--muted2); }
+    /* SITE FOOTER */
+    .site-footer { background:#080a0d; border-top:1px solid var(--border); }
+    .site-footer-inner { max-width:1280px; margin:0 auto; padding:16px 24px; display:flex; align-items:center; gap:20px; flex-wrap:wrap; }
+    .footer-brand-wrap { display:flex; align-items:center; gap:8px; }
+    .footer-brand-mark { width:28px; height:28px; background:var(--gold); border-radius:4px; display:flex; align-items:center; justify-content:center; font-family:"DM Mono",monospace; font-size:9pt; font-weight:700; color:#080a0d; flex-shrink:0; cursor:pointer; }
+    .footer-brand-name { font-family:"DM Sans",sans-serif; font-size:12px; font-weight:600; color:var(--muted); }
+    .footer-nav { display:flex; gap:0; margin-left:auto; }
+    .footer-nav-btn { padding:8px 16px; border:none; background:none; cursor:pointer; font-size:12px; font-weight:500; color:var(--muted2); font-family:"DM Sans",sans-serif; transition:color 0.15s; border-left:1px solid var(--border); }
+    .footer-nav-btn:first-child { border-left:none; }
+    .footer-nav-btn:hover { color:var(--blue); }
+    .footer-copy { width:100%; font-size:11px; color:var(--muted2); font-family:"DM Mono",monospace; letter-spacing:0.04em; padding-top:10px; border-top:1px solid var(--border); }
+    @media (max-width:900px) { .contact-grid { grid-template-columns:1fr; } .about-bio { flex-direction:column; } .footer-nav { margin-left:0; } }
+    @media (max-width:640px) {
+      .posts-grid { grid-template-columns:1fr; }
+      .detail-wrap h1 { font-size:26px; }
+      .brand-name { font-size:12px; }
+      .user-chip { display:none; }
+      .auth-card { padding:28px 20px; }
+      .service-cards { grid-template-columns:1fr; }
+      .snav-btn { padding:12px 12px; font-size:12px; }
+    }
+  </style>
+</head>
+<body>
+
+<script>
+  const SUPABASE_URL  = 'https://raiaqevgkfxvdlcblutc.supabase.co';
+  const SUPABASE_ANON = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6InJhaWFxZXZna2Z4dmRsY2JsdXRjIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NzY4OTQ5NDEsImV4cCI6MjA5MjQ3MDk0MX0.CdHIhZtVieywyxbQipQoQWd42z7ewW3NZTUpDjICZdM';
+  const ADMIN_EMAIL   = 'jhdagri@gmail.com';
+</script>
+
+<!-- ========================= AUTH ========================= -->
+<div id="page-auth">
+  <div class="auth-hero">
+    <div class="hero-mark">JHD</div>
+    <h1>JHD Commodity Advisors</h1>
+    <div class="rule"></div>
+    <p>Professional agricultural commodity advisory &amp; market intelligence</p>
+  </div>
+  <div class="auth-body">
+    <div class="auth-card">
+      <h2>Access Research Platform</h2>
+      <p>Free sign-up</p>
+      <div class="auth-tab-row">
+        <button class="auth-tab active" id="atab-in" onclick="switchAuthTab('in')">Sign In</button>
+        <button class="auth-tab"        id="atab-up" onclick="switchAuthTab('up')">Create Account</button>
+      </div>
+      <div id="form-in">
+        <div class="field"><label>Email</label><input type="email" id="in-email" placeholder="you@example.com" onkeydown="if(event.key==='Enter')doSignIn()"></div>
+        <div class="field"><label>Password</label><input type="password" id="in-pw" placeholder="••••••••" onkeydown="if(event.key==='Enter')doSignIn()"></div>
+        <button class="btn btn-navy auth-submit" onclick="doSignIn()">Sign In →</button>
+      </div>
+      <div id="form-up" class="hidden">
+        <div class="field"><label>Email</label><input type="email" id="up-email" placeholder="you@example.com"></div>
+        <div class="field"><label>Password <span style="font-weight:400;color:var(--muted)">(min 6 chars)</span></label><input type="password" id="up-pw" placeholder="Choose a password"></div>
+        <button class="btn btn-navy auth-submit" onclick="doSignUp()">Create Free Account →</button>
+      </div>
+      <div id="auth-msg" class="hidden msg-box"></div>
+    </div>
+  </div>
+</div>
+
+<!-- ========================= MAIN APP ========================= -->
+<div id="page-app" class="hidden">
+  <header class="topbar">
+    <div class="topbar-inner">
+      <div class="topbar-brand" onclick="showTab('commentary')" title="Home">
+        <div class="brand-mark" onclick="event.stopPropagation();showTab('services')" title="Services" style="cursor:pointer;">JHD</div>
+        <span class="brand-name">JHD Commodity Advisors</span>
+      </div>
+      <div class="topbar-right">
+        <span class="user-chip" id="app-chip"></span>
+        <button class="btn btn-gold hidden" id="admin-btn" onclick="showAdminPage()">⚙ Admin</button>
+        <button class="btn btn-ghost" onclick="doSignOut()">Sign Out</button>
+      </div>
+    </div>
+  </header>
+  <nav class="section-nav">
+    <div class="section-nav-inner">
+      <button class="snav-btn active" data-tab="commentary" onclick="showTab('commentary')">Market Commentary</button>
+      <button class="snav-btn" data-tab="research"          onclick="showTab('research')">Research</button>
+      <button class="snav-btn" data-tab="cftc"              onclick="showTab('cftc')">CFTC</button>
+      <button class="snav-btn" data-tab="futures"           onclick="showTab('futures')">Futures Price Quotes</button>
+      <button class="snav-btn" data-tab="exports"           onclick="showTab('exports')">Export Data</button>
+      <button class="snav-btn" data-tab="wasde"             onclick="showTab('wasde')">WASDE</button>
+      <button class="snav-btn" data-tab="commoditymap"      onclick="showTab('commoditymap')">Commodity Map</button>
+      <button class="snav-btn" data-tab="weather"           onclick="showTab('weather')">Weather</button>
+      <button class="snav-btn" data-tab="options"           onclick="showTab('options')">Options Analytics</button>
+      <button class="snav-btn" data-tab="fob"               onclick="showTab('fob')">FOB Data</button>
+      <button class="snav-btn" data-tab="freight"           onclick="showTab('freight')">Freight</button>
+    </div>
+  </nav>
+
+  <!-- Commentary -->
+  <div id="tab-commentary" class="protected">
+    <div class="page-wrap">
+      <div class="page-heading"><h2>Market Commentary</h2><p>In-depth analysis of agricultural commodity markets</p></div>
+      <div id="posts-commentary"><div class="spin">Loading…</div></div>
+    </div>
+  </div>
+
+  <!-- Research -->
+  <div id="tab-research" class="hidden protected">
+    <div class="page-wrap">
+      <div class="page-heading"><h2>Research</h2><p>Fundamental and technical research reports</p></div>
+      <!-- Database posts -->
+      <div id="posts-research"><div class="spin">Loading…</div></div>
+    </div>
+  </div>
+
+  <!-- CFTC -->
+  <div id="tab-cftc" class="hidden protected">
+    <div class="page-wrap">
+      <div class="page-heading"><h2>CFTC</h2><p>Commitment of Traders analysis and positioning data</p></div>
+      <div id="posts-cftc"><div class="spin">Loading…</div></div>
+    </div>
+  </div>
+
+  <!-- Futures -->
+  <div id="tab-futures" class="hidden protected">
+    <div class="futures-wrap">
+      <div class="futures-heading">
+        <h2>Futures Price Quotes</h2>
+        <p>Agricultural commodities, energy, metals &amp; key commodity currencies — prices delayed 10–15 min</p>
+      </div>
+      <!-- TradingView Widget BEGIN -->
+      <div class="tradingview-widget-container">
+        <div class="tradingview-widget-container__widget"></div>
+        <div class="tradingview-widget-copyright"><a href="https://www.tradingview.com/markets/" rel="noopener nofollow" target="_blank"><span class="blue-text">Market summary</span></a><span class="trademark"> by TradingView</span></div>
+        <script type="text/javascript" src="https://s3.tradingview.com/external-embedding/embed-widget-market-quotes.js" async>
+        {
+          "colorTheme": "dark",
+          "locale": "en",
+          "largeChartUrl": "",
+          "isTransparent": true,
+          "showSymbolLogo": true,
+          "backgroundColor": "rgba(13,15,18,0)",
+          "support_host": "https://www.tradingview.com",
+          "width": "100%",
+          "height": 600,
+          "symbolsGroups": [
+            {
+              "name": "Indices",
+              "symbols": [
+                {"name": "FOREXCOM:SPXUSD", "displayName": "S&P 500 Index"},
+                {"name": "FOREXCOM:NSXUSD", "displayName": "US 100 Cash CFD"},
+                {"name": "FOREXCOM:DJI",    "displayName": "Dow Jones Industrial Average Index"},
+                {"name": "INDEX:NKY",       "displayName": "Japan 225"},
+                {"name": "INDEX:DEU40",     "displayName": "DAX Index"},
+                {"name": "FOREXCOM:UKXGBP", "displayName": "FTSE 100 Index"}
+              ]
+            },
+            {
+              "name": "Grains",
+              "symbols": [
+                {"name": "CBOT:ZCK2026",      "displayName": "Corn May 26"},
+                {"name": "CBOT:ZWK2026",      "displayName": "SRW Wheat May 26"},
+                {"name": "CBOT:KEK2026",      "displayName": "HRW Wheat May 26"},
+                {"name": "EURONEXT:EBMK2026", "displayName": "Milling Wheat May 26"},
+                {"name": "CBOT:ZSK2026",      "displayName": "Soybeans May 26"},
+                {"name": "CBOT:ZMK2026",      "displayName": "Soybean Meal May 26"},
+                {"name": "CBOT:ZLK2026",      "displayName": "Soybean Oil May 26"}
+              ]
+            },
+            {
+              "name": "Softs",
+              "symbols": [
+                {"name": "CAPITALCOM:SUGAR",    "displayName": "Sugar #11"},
+                {"name": "CAPITALCOM:COFFEE",   "displayName": "Coffee C"},
+                {"name": "CAPITALCOM:COTTON",   "displayName": "Cotton #2"},
+                {"name": "CAPITALCOM:COCOA",    "displayName": "Cocoa"}
+              ]
+            },
+            {
+              "name": "Energy & Metals",
+              "symbols": [
+                {"name": "CAPITALCOM:OIL_CRUDE",  "displayName": "WTI Crude Oil"},
+                {"name": "CAPITALCOM:OIL",        "displayName": "Brent Crude"},
+                {"name": "CAPITALCOM:NATURAL_GAS","displayName": "Natural Gas"},
+                {"name": "CAPITALCOM:GOLD",       "displayName": "Gold"},
+                {"name": "CAPITALCOM:SILVER",     "displayName": "Silver"},
+                {"name": "COMEX:HGN2026",         "displayName": "Copper Jul 26"}
+              ]
+            },
+            {
+              "name": "Forex",
+              "symbols": [
+                {"name": "FX:EURUSD", "displayName": "EUR/USD"},
+                {"name": "FX:GBPUSD", "displayName": "GBP/USD"},
+                {"name": "FX:USDJPY", "displayName": "USD/JPY"},
+                {"name": "FX:USDCHF", "displayName": "USD/CHF"},
+                {"name": "FX:AUDUSD", "displayName": "AUD/USD"},
+                {"name": "FX:USDCAD", "displayName": "USD/CAD"},
+                {"name": "FX:USDBRL", "displayName": "USD/BRL"},
+                {"name": "TVC:DXY",   "displayName": "DXY Index"}
+              ]
+            }
+          ]
+        }
+        </script>
+      </div>
+      <!-- TradingView Widget END -->
+      <p style="font-size:12px;color:var(--muted);text-align:center;padding-top:8px;">Data provided by TradingView · Prices delayed 10–15 minutes</p>
+    </div>
+  </div>
+
+  <!-- Services -->
+  <div id="tab-services" class="hidden protected">
+    <div class="static-wrap">
+      <h2>Services</h2><div class="static-rule"></div>
+      <p>JHD Commodity Advisors provides specialist advisory and broking services across agricultural commodity markets, combining deep market knowledge with 14+ years of hands-on trading and broking experience.</p>
+      <div class="service-cards">
+        <div class="service-card"><div class="sc-icon">📊</div><h4>Market Commentary</h4><p>Regular in-depth analysis across grains, oilseeds and soft commodities with actionable trade ideas.</p></div>
+        <div class="service-card"><div class="sc-icon">🌾</div><h4>Physical Cargo Procurement</h4><p>Specialist procurement advisory for agricultural cargoes, covering origin selection, basis management and logistics.</p></div>
+        <div class="service-card"><div class="sc-icon">📈</div><h4>Derivatives Broking</h4><p>Futures and options execution and strategy across CBOT, Euronext and CME agricultural contracts.</p></div>
+        <div class="service-card"><div class="sc-icon">🔍</div><h4>Research &amp; Analysis</h4><p>Bespoke fundamental and technical research reports tailored to your risk exposure and commercial needs.</p></div>
+      </div>
+      <h3>Who We Work With</h3>
+      <ul>
+        <li>Agricultural commodity trading houses</li>
+        <li>Commodity hedge funds and family offices</li>
+        <li>Food manufacturers and processors</li>
+        <li>Grain origination businesses</li>
+        <li>Livestock and feed producers</li>
+      </ul>
+      <div class="disclaimer-box">All services are provided on a professional basis. Nothing on this platform constitutes investment advice. Past performance is not indicative of future results.</div>
+    </div>
+  </div>
+
+  <!-- Contact -->
+  <div id="tab-contact" class="hidden">
+    <div class="static-wrap">
+      <h2>Contact Us</h2><div class="static-rule"></div>
+      <p>To discuss how JHD Commodity Advisors can support your business, or to enquire about our advisory and broking services, please get in touch using the details below.</p>
+      <div class="contact-grid">
+        <div class="contact-item"><div class="ci-label">Email</div><div class="ci-val">jhdagri@gmail.com</div><div class="ci-sub">We aim to respond within one business day</div></div>
+        <div class="contact-item"><div class="ci-label">Location</div><div class="ci-val">London, United Kingdom</div><div class="ci-sub">Available for meetings in London and internationally</div></div>
+        <div class="contact-item"><div class="ci-label">LinkedIn</div><div class="ci-val">James Day</div><div class="ci-sub">Connect for market updates and commentary</div></div>
+        <div class="contact-item"><div class="ci-label">Coverage Hours</div><div class="ci-val">Mon – Fri, 07:00 – 19:00 GMT</div><div class="ci-sub">Covering European and US market sessions</div></div>
+      </div>
+      <div class="disclaimer-box">This platform is for informational purposes only. Nothing contained herein constitutes investment advice or a solicitation to trade.</div>
+    </div>
+  </div>
+
+  <!-- About -->
+  <div id="tab-about" class="hidden protected">
+    <div class="static-wrap">
+      <h2>About Us</h2><div class="static-rule"></div>
+      <p>JHD Commodity Advisors is a specialist agricultural commodity advisory business providing market intelligence, research and broking services to trading houses, hedge funds and commercial operators across global grain, oilseed and soft commodity markets.</p>
+      <div class="about-bio">
+        <div class="about-avatar">JD</div>
+        <div class="about-bio-text">
+          <h3>James Day</h3>
+          <div class="role">Senior Agricultural Commodity Broker &amp; Advisor</div>
+          <p>James brings over 14 years of experience in agricultural commodity trading and broking, spanning physical cargo procurement and derivatives broking across grains, oilseeds and soft commodities. His career includes senior roles at TP ICAP, City Group of Industries and Condor Shipping Ltd, with deep expertise in CBOT, Euronext and CME agricultural markets.</p>
+        </div>
+      </div>
+      <h3>Our Approach</h3>
+      <p>We combine rigorous fundamental analysis — supply and demand balances, USDA data, CFTC positioning — with technical price analysis and on-the-ground market intelligence to provide commentary and advisory services that are practical, timely and commercially relevant.</p>
+      <h3>Markets Covered</h3>
+      <ul>
+        <li>Grains — Corn, Wheat (CBOT, HRW, Euronext Milling, MGEX Spring)</li>
+        <li>Oilseeds — Soybeans, Soybean Meal, Soybean Oil, Canola, Palm Oil</li>
+        <li>Soft Commodities — Sugar #11, Cotton</li>
+        <li>Macro — Energy (WTI, Brent), FX (USD, EUR, GBP), Equity indices</li>
+      </ul>
+      <div class="disclaimer-box">JHD Commodity Advisors. All commentary and analysis published on this platform is for informational purposes only and does not constitute investment advice. Trading commodity futures and options involves significant risk of loss.</div>
+    </div>
+  </div>
+
+  <!-- Post Detail -->
+  <div id="tab-detail" class="hidden">
+    <header style="background:var(--bg);border-bottom:1px solid var(--border);">
+      <div style="max-width:1280px;margin:0 auto;padding:12px 24px;display:flex;align-items:center;gap:12px;">
+        <button class="btn btn-navy" onclick="closeDetail()" style="padding:7px 16px;font-size:13px;">← Back</button>
+        <span id="detail-breadcrumb" style="font-size:13px;color:var(--muted);"></span>
+      </div>
+    </header>
+    <div class="detail-wrap protected">
+      <div id="detail-content"><div class="spin">Loading…</div></div>
+    </div>
+  </div>
+</div>
+
+  <!-- Export Data -->
+  <div id="tab-exports" class="hidden protected">
+    <div class="page-wrap">
+      <div class="page-heading"><h2>Export Data</h2><p>Global agricultural export flows, trade data and shipment analysis</p></div>
+      <div id="posts-exports"><div class="spin">Loading…</div></div>
+    </div>
+  </div>
+
+  <!-- WASDE -->
+  <div id="tab-wasde" class="hidden protected">
+    <div class="page-wrap">
+      <div class="page-heading"><h2>WASDE</h2><p>World Agricultural Supply and Demand Estimates — analysis and commentary</p></div>
+      <div id="posts-wasde"><div class="spin">Loading…</div></div>
+    </div>
+  </div>
+
+  <!-- Commodity Map -->
+  <div id="tab-commoditymap" class="hidden protected">
+    <div class="page-wrap">
+      <div class="page-heading"><h2>Commodity Map</h2><p>Production regions, trade flows and origin analysis</p></div>
+      <div id="posts-commoditymap"><div class="spin">Loading…</div></div>
+    </div>
+  </div>
+
+  <!-- Weather -->
+  <div id="tab-weather" class="hidden protected">
+    <div class="page-wrap">
+      <div class="page-heading"><h2>Weather</h2><p>Crop weather analysis — key growing regions and seasonal outlooks</p></div>
+      <div id="posts-weather"><div class="spin">Loading…</div></div>
+    </div>
+  </div>
+
+  <!-- Options Analytics -->
+  <div id="tab-options" class="hidden protected">
+    <div class="page-wrap">
+      <div class="page-heading"><h2>Options Analytics</h2><p>Volatility analysis, options strategies and derivatives market intelligence</p></div>
+      <div id="posts-options"><div class="spin">Loading…</div></div>
+    </div>
+  </div>
+
+  <!-- FOB Data -->
+  <div id="tab-fob" class="hidden protected">
+    <div class="page-wrap">
+      <div class="page-heading"><h2>FOB Data</h2><p>Free-on-board pricing, origin spreads and export basis analysis</p></div>
+      <div id="posts-fob"><div class="spin">Loading…</div></div>
+    </div>
+  </div>
+
+  <!-- Freight -->
+  <div id="tab-freight" class="hidden protected">
+    <div class="page-wrap">
+      <div class="page-heading"><h2>Freight</h2><p>Dry bulk freight rates, vessel markets and shipping cost analysis</p></div>
+      <div id="posts-freight"><div class="spin">Loading…</div></div>
+    </div>
+  </div>
+
+    <!-- RECENT PUBLICATIONS STRIP + FOOTER — always visible outside all tabs -->
+  <div class="recent-strip-wrap" id="recent-strip-wrap">
+    <div class="recent-strip-inner">
+      <div class="recent-strip-label">Recent Publications</div>
+      <div class="recent-strip-scroll" id="recent-strip-scroll">
+        <div style="color:var(--muted2);font-size:12px;font-family:'DM Mono',monospace;padding:20px 0;">Loading…</div>
+      </div>
+    </div>
+  </div>
+  <footer class="site-footer">
+    <div class="site-footer-inner">
+      <div class="footer-brand-wrap">
+        <div class="footer-brand-mark" onclick="showTab('services')" title="Services">JHD</div>
+        <span class="footer-brand-name">JHD Commodity Advisors</span>
+      </div>
+      <nav class="footer-nav">
+        <button class="footer-nav-btn" onclick="showTab('services')">Services</button>
+        <button class="footer-nav-btn" onclick="showTab('contact')">Contact Us</button>
+        <button class="footer-nav-btn" onclick="showTab('about')">About Us</button>
+      </nav>
+      <div class="footer-copy">© 2025 JHD Commodity Advisors · Informational use only · Not investment advice</div>
+    </div>
+  </footer>
+</div>
+
+<!-- ========================= ADMIN ========================= -->
+<div id="page-admin" class="hidden">
+  <header class="topbar">
+    <div class="topbar-inner">
+      <div class="topbar-brand" onclick="showAppPage()"><div class="brand-mark">JHD</div><span class="brand-name">JHD Commodity Advisors</span></div>
+      <div class="topbar-right">
+        <button class="btn btn-ghost" onclick="showAppPage()">← Back to Site</button>
+        <button class="btn btn-ghost" onclick="doSignOut()">Sign Out</button>
+      </div>
+    </div>
+  </header>
+  <div class="admin-wrap">
+    <div class="admin-tab-row">
+      <button class="tab-btn active" id="wtab"  onclick="switchAdminTab('write')">✏ New Post</button>
+      <button class="tab-btn"        id="ptab"  onclick="switchAdminTab('posts')">📋 Manage Posts</button>
+      <button class="tab-btn"        id="mtab"  onclick="switchAdminTab('mod')">💬 Moderate Comments</button>
+      <button class="tab-btn"        id="stab"  onclick="switchAdminTab('subs')">👥 Registered Users</button>
+    </div>
+
+    <!-- New Post -->
+    <div id="admin-write">
+      <div class="section-h2">Publish New Post</div>
+      <div class="admin-field">
+        <label class="cat-label">Publish to section</label>
+        <select id="p-category">
+          <option value="commentary">Market Commentary</option>
+          <option value="research">Research</option>
+          <option value="cftc">CFTC</option>
+          <option value="exports">Export Data</option>
+          <option value="wasde">WASDE</option>
+          <option value="commoditymap">Commodity Map</option>
+          <option value="weather">Weather</option>
+          <option value="options">Options Analytics</option>
+          <option value="fob">FOB Data</option>
+          <option value="freight">Freight</option>
+        </select>
+        <input type="text" id="p-title"   placeholder="Title of this post…">
+        <input type="text" id="p-summary" placeholder="One-line summary shown on the listing…">
+        <div class="editor-mode-row">
+          <span class="editor-label">Content</span>
+          <div class="mode-toggle">
+            <button class="mode-btn active" id="mode-visual" onclick="setEditorMode('visual')">Visual</button>
+            <button class="mode-btn"        id="mode-html"   onclick="setEditorMode('html')">HTML Source</button>
+          </div>
+        </div>
+        <div id="editor-visual-wrap"><div id="quill-editor"></div></div>
+        <div id="editor-html-wrap" class="hidden">
+          <textarea id="html-source-input" placeholder="Paste your full HTML commentary file here…"></textarea>
+          <div class="html-hint">💡 Paste your complete HTML file including &lt;!DOCTYPE html&gt;. Your full design — masthead, ticker bar, fonts, sidebar — will render exactly as designed.</div>
+        </div>
+      </div>
+      <div class="publish-row">
+        <button class="btn btn-navy" id="pub-btn" onclick="publishPost()" style="padding:12px 28px;font-size:15px;">Publish Post</button>
+        <div id="pub-msg" class="hidden msg-box" style="margin:0;flex:1;"></div>
+      </div>
+    </div>
+
+    <!-- Moderate Comments -->
+    <div id="admin-mod" class="hidden">
+      <div class="section-h2">Moderate Comments</div>
+      <div id="mod-list"><div class="spin">Loading…</div></div>
+    </div>
+
+    <!-- Manage Posts -->
+    <div id="admin-posts" class="hidden">
+      <div class="section-h2">Manage Posts</div>
+      <div id="posts-manage-list"><div class="spin">Loading…</div></div>
+    </div>
+
+    <!-- Subscribers -->
+    <div id="admin-subs" class="hidden">
+      <div class="section-h2">Registered Users</div>
+      <div class="subs-stats">
+        <div class="stat-card"><div class="stat-label">Total Users</div><div class="stat-val" id="subs-total">—</div></div>
+        <div class="stat-card"><div class="stat-label">Joined This Month</div><div class="stat-val" id="subs-month">—</div></div>
+        <div class="stat-card"><div class="stat-label">Joined This Week</div><div class="stat-val" id="subs-week">—</div></div>
+      </div>
+      <div class="export-row">
+        <input class="subs-search" type="text" id="subs-search" placeholder="Search by email…" oninput="filterSubs()" style="max-width:320px;margin-bottom:0;">
+        <button class="btn btn-navy" onclick="exportCSV()" style="padding:9px 18px;">↓ Export CSV</button>
+      </div>
+      <div class="subs-table-wrap">
+        <table class="subs-table">
+          <thead><tr><th>#</th><th>Email</th><th>Joined</th><th>Last Login</th></tr></thead>
+          <tbody id="subs-tbody"><tr><td colspan="3" style="text-align:center;padding:32px;color:var(--muted);">Loading…</td></tr></tbody>
+        </table>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- ================================================================
+     LOGIC
+     ================================================================ -->
+<script>
+'use strict';
+let sb, currentUser, isAdmin=false, currentPostId=null, currentPostTab=null, quill=null, editorMode='visual';
+let allSubs=[];
+
+/* ===== RECENT STRIP ===== */
+async function loadRecentStrip(){
+  const scroll = document.getElementById('recent-strip-scroll');
+  if(!scroll) return;
+  const catLabel = {'commentary':'Commentary','research':'Research','cftc':'CFTC','exports':'Export Data','wasde':'WASDE','commoditymap':'Commodity Map','weather':'Weather','options':'Options','fob':'FOB Data','freight':'Freight'};
+  const{data,error} = await sb.from('posts').select('id,title,created_at,category').order('created_at',{ascending:false}).limit(12);
+  if(error || !data || data.length === 0){
+    scroll.innerHTML = '<div style="color:var(--muted2);font-size:12px;font-family:monospace;padding:8px 0;">No publications yet.</div>';
+    return;
+  }
+  scroll.innerHTML = data.map(p => `
+    <div class="recent-doc-card" onclick="loadDetail('${p.id}','${p.category}')">
+      <div class="recent-doc-cat">${catLabel[p.category]||p.category}</div>
+      <div class="recent-doc-title">${esc(p.title)}</div>
+      <div class="recent-doc-date">${fmtDate(p.created_at)}</div>
+    </div>`).join('');
+}
+
+async function boot(){
+  sb=window.supabase.createClient(SUPABASE_URL,SUPABASE_ANON);
+  document.title='JHD Commodity Advisors';
+
+  // Preview mode: skip login when opening as a local file or ?preview in URL
+  const isLocalFile = window.location.protocol === 'file:';
+  const isPreview   = new URLSearchParams(window.location.search).has('preview');
+  if(isLocalFile || isPreview){
+    showAppPage();
+    installProtection();
+    return;
+  }
+
+  const{data:{session}}=await sb.auth.getSession();
+  if(session){ currentUser=session.user; isAdmin=currentUser.email.toLowerCase()===ADMIN_EMAIL.toLowerCase(); showAppPage(); }
+  else document.getElementById('page-auth').classList.remove('hidden');
+  installProtection();
+}
+
+/* ===== COPY / PRINT PROTECTION ===== */
+function installProtection(){
+  // Block right-click on protected content
+  document.addEventListener('contextmenu', e=>{
+    if(e.target.closest('.protected')){ e.preventDefault(); return false; }
+  });
+  // Block keyboard shortcuts on protected content
+  document.addEventListener('keydown', e=>{
+    const inProtected = e.target.closest('.protected') || document.querySelector('.protected:not(.hidden)');
+    if(!inProtected) return;
+    const k=e.key.toLowerCase();
+    // Block copy, select all, save, print
+    if((e.ctrlKey||e.metaKey) && ['c','a','s','p','u'].includes(k)){
+      e.preventDefault(); return false;
+    }
+    // Block F12 devtools (best effort)
+    if(e.key==='F12'){ e.preventDefault(); return false; }
+    // Block PrintScreen
+    if(e.key==='PrintScreen'){ e.preventDefault(); return false; }
+  });
+  // Block drag-to-copy on protected areas
+  document.addEventListener('dragstart', e=>{
+    if(e.target.closest('.protected')){ e.preventDefault(); return false; }
+  });
+}
+
+/* ===== PAGE ROUTING ===== */
+function showAppPage(){
+  ['page-auth','page-admin'].forEach(id=>document.getElementById(id).classList.add('hidden'));
+  document.getElementById('page-app').classList.remove('hidden');
+  const btn=document.getElementById('admin-btn');
+  if(btn) btn.classList.toggle('hidden',!isAdmin);
+  const chip=document.getElementById('app-chip');
+  if(chip) chip.textContent=currentUser?currentUser.email:'';
+  showTab(window._activeTab||'commentary');
+  loadRecentStrip();
+}
+function showAdminPage(){
+  document.getElementById('page-app').classList.add('hidden');
+  document.getElementById('page-admin').classList.remove('hidden');
+  if(!quill) initQuill();
+  switchAdminTab('write');
+}
+
+/* ===== TAB ROUTING ===== */
+const POST_TABS=['commentary','research','cftc','exports','wasde','commoditymap','weather','options','fob','freight'];
+function showTab(name){
+  window._activeTab=name;
+  ['commentary','research','cftc','futures','services','contact','about','detail','exports','wasde','commoditymap','weather','options','fob','freight']
+    .forEach(t=>document.getElementById('tab-'+t).classList.add('hidden'));
+  document.getElementById('tab-'+name).classList.remove('hidden');
+  document.querySelectorAll('.snav-btn').forEach(b=>b.classList.toggle('active',b.dataset.tab===name));
+  if(POST_TABS.includes(name)) loadPosts(name);
+}
+function closeDetail(){
+  document.getElementById('tab-detail').classList.add('hidden');
+  document.getElementById('tab-'+(window._activeTab||'commentary')).classList.remove('hidden');
+}
+
+/* ===== AUTH ===== */
+function switchAuthTab(t){
+  document.getElementById('form-in').classList.toggle('hidden',t!=='in');
+  document.getElementById('form-up').classList.toggle('hidden',t!=='up');
+  document.getElementById('atab-in').classList.toggle('active',t==='in');
+  document.getElementById('atab-up').classList.toggle('active',t==='up');
+  authMsg('');
+}
+function authMsg(text,ok){ const el=document.getElementById('auth-msg'); if(!text){el.classList.add('hidden');return;} el.textContent=text; el.className='msg-box '+(ok?'msg-ok':'msg-error'); }
+
+async function doSignIn(){
+  const email=document.getElementById('in-email').value.trim(),pw=document.getElementById('in-pw').value;
+  if(!email||!pw){authMsg('Please fill in both fields.');return;}
+  const{error}=await sb.auth.signInWithPassword({email,password:pw});
+  if(error){authMsg(error.message);return;}
+  currentUser=(await sb.auth.getUser()).data.user;
+  isAdmin=currentUser.email.toLowerCase()===ADMIN_EMAIL.toLowerCase();
+  showAppPage();
+}
+
+async function doSignUp(){
+  const email=document.getElementById('up-email').value.trim(),pw=document.getElementById('up-pw').value;
+  if(!email||!pw){authMsg('Please fill in both fields.');return;}
+  if(pw.length<6){authMsg('Password must be at least 6 characters.');return;}
+  const{error}=await sb.auth.signUp({email,password:pw});
+  if(error){authMsg(error.message);return;}
+  // Insert subscriber directly using anon key — works before email confirmation
+  try{ await sb.from('subscribers').upsert({email},{onConflict:'email'}); }catch(e){}
+  authMsg('Account created successfully! Please use your credentials to sign in.',true);
+}
+
+async function doSignOut(){
+  await sb.auth.signOut(); currentUser=null; isAdmin=false; currentPostId=null;
+  document.getElementById('page-app').classList.add('hidden');
+  document.getElementById('page-admin').classList.add('hidden');
+  document.getElementById('page-auth').classList.remove('hidden');
+}
+
+/* ===== POSTS ===== */
+async function loadPosts(category){
+  const el=document.getElementById('posts-'+category);
+  if(!el) return;
+  el.innerHTML='<div class="spin">Loading…</div>';
+  const{data:posts,error}=await sb.from('posts').select('id,title,summary,created_at,category').eq('category',category).order('created_at',{ascending:false});
+  if(error){el.innerHTML='<div class="spin">⚠ Could not load posts.</div>';return;}
+  if(!posts||posts.length===0){
+    el.innerHTML=`<div class="empty-state"><h3>No posts yet</h3><p>${isAdmin?'Go to Admin → New Post and select this section.':'Check back soon.'}</p></div>`;return;
+  }
+  const ids=posts.map(p=>p.id);
+  const{data:cc}=await sb.from('comments').select('post_id').in('post_id',ids).eq('is_visible',true);
+  const counts={}; (cc||[]).forEach(r=>counts[r.post_id]=(counts[r.post_id]||0)+1);
+  const grid=document.createElement('div'); grid.className='posts-grid';
+  posts.forEach(p=>{
+    const n=counts[p.id]||0,card=document.createElement('div'); card.className='post-card';
+    card.innerHTML=`<div class="card-date">${fmtDate(p.created_at)}</div><h3>${esc(p.title)}</h3><p class="card-summary">${esc(p.summary||'')}</p><div class="card-foot"><span class="ccount">💬 ${n} comment${n!==1?'s':''}</span><span class="readmore">Read →</span></div>`;
+    card.onclick=()=>loadDetail(p.id,category); grid.appendChild(card);
+  });
+  el.innerHTML=''; el.appendChild(grid);
+}
+
+/* ===== POST DETAIL ===== */
+async function loadDetail(postId,category){
+  currentPostId=postId; currentPostTab=category||window._activeTab;
+  ['commentary','research','cftc','futures','services','contact','about'].forEach(t=>document.getElementById('tab-'+t).classList.add('hidden'));
+  document.getElementById('tab-detail').classList.remove('hidden');
+  const labels={'commentary':'Market Commentary','research':'Research','cftc':'CFTC'};
+  const bc=document.getElementById('detail-breadcrumb');
+  if(bc) bc.textContent=labels[currentPostTab]||'';
+  const wrap=document.getElementById('detail-content');
+  wrap.innerHTML='<div class="spin">Loading…</div>';
+  const{data:post,error}=await sb.from('posts').select('*').eq('id',postId).single();
+  if(error||!post){wrap.innerHTML='<div class="spin">Post not found.</div>';return;}
+  const{data:comments}=await sb.from('comments').select('*').eq('post_id',postId).eq('is_visible',true).order('created_at',{ascending:true});
+  const commHtml=(comments&&comments.length)
+    ?comments.map(c=>`<div class="comment-item" id="ci-${c.id}"><div class="comment-header"><span class="comment-author">${esc(c.author_name||'Anonymous')}</span><span class="comment-time">${fmtDate(c.created_at)}</span></div><div class="comment-text">${esc(c.content)}</div>${isAdmin?`<div class="comment-admin-row"><button class="btn-sm-del" onclick="adminDelComment('${c.id}')">Delete</button><button class="btn-sm-hide" onclick="adminHideComment('${c.id}')">Hide</button></div>`:''}</div>`).join('')
+    :'<div class="no-comments">No comments yet — be first to share your view.</div>';
+  const isFullDoc=isFullHtmlDocument(post.content);
+  // Expand detail-wrap to full width for full HTML documents
+  const dw=wrap.closest('.detail-wrap');
+  if(dw) dw.classList.toggle('full-width', isFullDoc);
+  let contentHtml;
+  if(isFullDoc){
+    // Use blob URL instead of srcdoc — blob: origin allows fetch() calls inside the iframe
+    const blob = new Blob([post.content], {type:'text/html'});
+    const blobUrl = URL.createObjectURL(blob);
+    contentHtml=`<iframe class="post-iframe" src="${blobUrl}" onload="resizeIframe(this)" scrolling="no"></iframe>`;
+  } else {
+    contentHtml=`<div class="post-kicker">${fmtDate(post.created_at)}</div><h1>${esc(post.title)}</h1>${post.summary?`<div class="post-standfirst">${esc(post.summary)}</div>`:''}<div class="post-body">${post.content}</div>`;
+  }
+  wrap.innerHTML=`${contentHtml}<div class="comments-wrap"><div class="section-title">Discussion</div><div id="comments-area">${commHtml}</div><div class="comment-form-card"><h3>Leave a Comment</h3><div class="field"><label>Your name <span style="font-weight:400;color:var(--muted)">(optional)</span></label><input type="text" id="c-name" placeholder="e.g. John T."></div><div class="field"><label>Comment</label><textarea id="c-text" placeholder="Share your view on this analysis…"></textarea></div><button class="btn btn-navy" onclick="postComment()">Post Comment</button><div id="c-msg" class="hidden msg-box" style="margin-top:10px;"></div></div></div>`;
+}
+
+function resizeIframe(iframe){
+  if(!iframe) return;
+  function doResize(){
+    try{
+      const doc = iframe.contentDocument || iframe.contentWindow.document;
+      if(!doc || !doc.body) return;
+      doc.body.style.margin = '0';
+      doc.documentElement.style.overflowX = 'hidden';
+      // Make iframe fill its container width properly
+      iframe.style.width = '100%';
+      const h = Math.max(
+        doc.documentElement.scrollHeight,
+        doc.documentElement.offsetHeight,
+        doc.body.scrollHeight,
+        doc.body.offsetHeight,
+        600
+      );
+      iframe.style.height = h + 'px';
+    } catch(e){}
+  }
+  doResize();
+  [200, 600, 1200, 2500, 4000].forEach(ms => setTimeout(doResize, ms));
+  try{
+    (iframe.contentDocument||iframe.contentWindow.document)
+      .addEventListener('click', () => { setTimeout(doResize,150); setTimeout(doResize,500); });
+  }catch(e){}
+}
+function isFullHtmlDocument(c){ if(!c) return false; const t=c.trim().toLowerCase(); return t.startsWith('<!doctype')||t.startsWith('<html'); }
+
+async function postComment(){
+  const name=(document.getElementById('c-name').value.trim())||'Anonymous';
+  const content=document.getElementById('c-text').value.trim();
+  const msgEl=document.getElementById('c-msg');
+  if(!content){msgEl.textContent='Please write a comment.';msgEl.className='msg-box msg-error';msgEl.classList.remove('hidden');return;}
+  const{error}=await sb.from('comments').insert({post_id:currentPostId,author_name:name,content,is_visible:true});
+  if(error){msgEl.textContent='Error posting comment.';msgEl.className='msg-box msg-error';msgEl.classList.remove('hidden');return;}
+  document.getElementById('c-name').value=''; document.getElementById('c-text').value='';
+  msgEl.textContent='Comment posted!'; msgEl.className='msg-box msg-ok'; msgEl.classList.remove('hidden');
+  setTimeout(()=>loadDetail(currentPostId,currentPostTab),600);
+}
+async function adminDelComment(id){ if(!confirm('Permanently delete this comment?')) return; await sb.from('comments').delete().eq('id',id); loadDetail(currentPostId,currentPostTab); }
+async function adminHideComment(id){ await sb.from('comments').update({is_visible:false}).eq('id',id); loadDetail(currentPostId,currentPostTab); }
+
+/* ===== ADMIN ===== */
+function setEditorMode(mode){
+  editorMode=mode;
+  document.getElementById('editor-visual-wrap').classList.toggle('hidden',mode!=='visual');
+  document.getElementById('editor-html-wrap').classList.toggle('hidden',mode!=='html');
+  document.getElementById('mode-visual').classList.toggle('active',mode==='visual');
+  document.getElementById('mode-html').classList.toggle('active',mode==='html');
+}
+function initQuill(){
+  quill=new Quill('#quill-editor',{theme:'snow',modules:{toolbar:[[{header:[1,2,3,false]}],['bold','italic','underline'],[{list:'ordered'},{list:'bullet'}],['link','blockquote'],[{color:[]}],['clean']]},placeholder:'Write your post here…'});
+}
+function switchAdminTab(t){
+  ['write','posts','mod','subs'].forEach(x=>{
+    document.getElementById('admin-'+x).classList.toggle('hidden',x!==t);
+    const btnId = x==='write'?'wtab':x==='posts'?'ptab':x==='mod'?'mtab':'stab';
+    document.getElementById(btnId).classList.toggle('active',x===t);
+  });
+  if(t==='mod')   loadAllComments();
+  if(t==='subs')  loadSubscribers();
+  if(t==='posts') loadManagePosts();
+}
+async function publishPost(){
+  const title=document.getElementById('p-title').value.trim();
+  const summary=document.getElementById('p-summary').value.trim();
+  const category=document.getElementById('p-category').value;
+  const content=editorMode==='html'?document.getElementById('html-source-input').value.trim():(quill?quill.root.innerHTML:'');
+  const btn=document.getElementById('pub-btn');
+  if(!title){pubMsg('Please add a title.',false);return;}
+  if(!content||content==='<p><br></p>'){pubMsg('Please add content.',false);return;}
+  btn.disabled=true; btn.textContent='Publishing…';
+  const{error}=await sb.from('posts').insert({title,summary,content,category});
+  btn.disabled=false; btn.textContent='Publish Post';
+  if(error){pubMsg('Error: '+error.message,false);return;}
+  document.getElementById('p-title').value=''; document.getElementById('p-summary').value='';
+  document.getElementById('html-source-input').value=''; if(quill) quill.setText('');
+  pubMsg('Post published to '+category+'!',true);
+}
+function pubMsg(text,ok){ const el=document.getElementById('pub-msg'); el.textContent=text; el.className='msg-box '+(ok?'msg-ok':'msg-error'); el.classList.remove('hidden'); setTimeout(()=>el.classList.add('hidden'),4500); }
+
+async function loadAllComments(){
+  const wrap=document.getElementById('mod-list'); wrap.innerHTML='<div class="spin">Loading…</div>';
+  const{data,error}=await sb.from('comments').select('*,posts(title,category)').order('created_at',{ascending:false});
+  if(error||!data||data.length===0){wrap.innerHTML='<div class="empty-state"><h3>No comments yet</h3></div>';return;}
+  wrap.innerHTML=data.map(c=>`<div class="mod-card ${!c.is_visible?'is-hidden':''}" id="mc-${c.id}"><div class="mod-top"><div><span class="mod-who">${esc(c.author_name||'Anonymous')}</span><span class="mod-meta">${fmtDate(c.created_at)}</span>${!c.is_visible?'<span class="badge-hidden">HIDDEN</span>':''}<span class="cat-badge">${esc(c.posts?.category||'')}</span></div><span class="mod-post">${esc(c.posts?.title||'—')}</span></div><div class="mod-text">${esc(c.content)}</div><div class="mod-actions"><button class="btn-sm-del" onclick="modDelete('${c.id}')">Delete</button>${c.is_visible?`<button class="btn-sm-hide" onclick="modSetVisible('${c.id}',false)">Hide</button>`:`<button class="btn-sm-hide" onclick="modSetVisible('${c.id}',true)">Unhide</button>`}</div></div>`).join('');
+}
+/* ---- Manage Posts ---- */
+async function loadManagePosts(){
+  const wrap=document.getElementById('posts-manage-list');
+  wrap.innerHTML='<div class="spin">Loading…</div>';
+  const{data,error}=await sb.from('posts').select('id,title,summary,category,created_at').order('created_at',{ascending:false});
+  if(error||!data||data.length===0){wrap.innerHTML='<div class="empty-state"><h3>No posts yet</h3></div>';return;}
+  const catLabel={'commentary':'Market Commentary','research':'Research','cftc':'CFTC','exports':'Export Data','wasde':'WASDE','commoditymap':'Commodity Map','weather':'Weather','options':'Options Analytics','fob':'FOB Data','freight':'Freight'};
+  wrap.innerHTML=data.map(p=>`
+    <div class="mod-card" id="mp-${p.id}">
+      <div class="mod-top">
+        <div>
+          <span class="mod-who">${esc(p.title)}</span>
+          <span class="cat-badge">${catLabel[p.category]||p.category}</span>
+          <span class="mod-meta">${fmtDate(p.created_at)}</span>
+        </div>
+      </div>
+      ${p.summary?`<div class="mod-text" style="font-size:12px;color:var(--muted);">${esc(p.summary)}</div>`:''}
+      <div class="mod-actions" style="margin-top:10px;">
+        <button class="btn-sm-hide" onclick="startEditPost('${p.id}')">✏ Edit</button>
+        <button class="btn-sm-del"  onclick="deletePost('${p.id}')">Delete</button>
+      </div>
+    </div>`).join('');
+}
+
+async function deletePost(id){
+  if(!confirm('Permanently delete this post and all its comments? This cannot be undone.')) return;
+  await sb.from('posts').delete().eq('id',id);
+  loadManagePosts();
+}
+
+async function startEditPost(id){
+  const{data:post,error}=await sb.from('posts').select('*').eq('id',id).single();
+  if(error||!post){alert('Could not load post.');return;}
+  // Switch to write tab and populate fields
+  switchAdminTab('write');
+  document.getElementById('p-title').value  = post.title||'';
+  document.getElementById('p-summary').value= post.summary||'';
+  document.getElementById('p-category').value= post.category||'commentary';
+  // Store the id being edited
+  window._editingPostId = id;
+  document.getElementById('pub-btn').textContent = 'Save Changes';
+  // Set editor content
+  if(isFullHtmlDocument(post.content)){
+    setEditorMode('html');
+    document.getElementById('html-source-input').value = post.content;
+  } else {
+    setEditorMode('visual');
+    if(quill) quill.root.innerHTML = post.content||'';
+  }
+  // Show cancel button
+  const pubRow = document.getElementById('pub-btn').parentElement;
+  if(!document.getElementById('cancel-edit-btn')){
+    const cancelBtn = document.createElement('button');
+    cancelBtn.id='cancel-edit-btn';
+    cancelBtn.className='btn btn-ghost';
+    cancelBtn.style.background='var(--muted)';
+    cancelBtn.style.color='#fff';
+    cancelBtn.textContent='✕ Cancel Edit';
+    cancelBtn.onclick=cancelEdit;
+    pubRow.appendChild(cancelBtn);
+  }
+}
+
+function cancelEdit(){
+  window._editingPostId=null;
+  document.getElementById('pub-btn').textContent='Publish Post';
+  document.getElementById('p-title').value='';
+  document.getElementById('p-summary').value='';
+  document.getElementById('html-source-input').value='';
+  if(quill) quill.setText('');
+  const cb=document.getElementById('cancel-edit-btn');
+  if(cb) cb.remove();
+}
+
+async function modDelete(id){ if(!confirm('Permanently delete?')) return; await sb.from('comments').delete().eq('id',id); loadAllComments(); }
+async function modSetVisible(id,vis){ await sb.from('comments').update({is_visible:vis}).eq('id',id); loadAllComments(); }
+
+/* ===== SUBSCRIBERS ===== */
+async function loadSubscribers(){
+  const tbody=document.getElementById('subs-tbody');
+  tbody.innerHTML='<tr><td colspan="3" style="text-align:center;padding:32px;color:var(--muted);">Loading…</td></tr>';
+  // Query auth.users via Supabase admin RPC
+  const{data,error}=await sb.rpc('get_users');
+  if(error){
+    // Fallback: try subscribers table
+    const{data:d2,error:e2}=await sb.from('subscribers').select('email,created_at').order('created_at',{ascending:false});
+    if(e2){ tbody.innerHTML=`<tr><td colspan="3" style="text-align:center;padding:32px;color:var(--red);">Error loading users: ${e2.message}</td></tr>`; return; }
+    allSubs=d2||[];
+  } else {
+    allSubs=(data||[]).map(u=>({email:u.email,created_at:u.created_at,last_sign_in:u.last_sign_in_at}));
+  }
+  updateSubsStats();
+  renderSubsTable(allSubs);
+}
+function updateSubsStats(){
+  document.getElementById('subs-total').textContent=allSubs.length;
+  const now=new Date();
+  const thisMonth=allSubs.filter(s=>{ const d=new Date(s.created_at); return d.getMonth()===now.getMonth()&&d.getFullYear()===now.getFullYear(); }).length;
+  const thisWeek=allSubs.filter(s=>{ const d=new Date(s.created_at); return (now-d)<7*24*60*60*1000; }).length;
+  document.getElementById('subs-month').textContent=thisMonth;
+  document.getElementById('subs-week').textContent=thisWeek;
+}
+function renderSubsTable(subs){
+  const tbody=document.getElementById('subs-tbody');
+  if(!subs||subs.length===0){
+    tbody.innerHTML='<tr><td colspan="4" style="text-align:center;padding:40px;color:var(--muted);">No registered users yet.</td></tr>';return;
+  }
+  tbody.innerHTML=subs.map((s,i)=>`<tr>
+    <td style="color:var(--muted);font-size:13px;">${i+1}</td>
+    <td class="email-cell">${esc(s.email)}</td>
+    <td style="color:var(--muted);font-size:13px;">${fmtDate(s.created_at)}</td>
+    <td style="color:var(--muted);font-size:13px;">${s.last_sign_in?fmtDate(s.last_sign_in):'—'}</td>
+  </tr>`).join('');
+}
+function filterSubs(){
+  const q=document.getElementById('subs-search').value.trim().toLowerCase();
+  const filtered=q?allSubs.filter(s=>s.email.toLowerCase().includes(q)):allSubs;
+  renderSubsTable(filtered);
+}
+function exportCSV(){
+  if(!allSubs.length){ alert('No subscribers to export.'); return; }
+  const rows=['Email,Joined',...allSubs.map(s=>`${s.email},${new Date(s.created_at).toLocaleDateString('en-GB')}`)];
+  const blob=new Blob([rows.join('\n')],{type:'text/csv'});
+  const url=URL.createObjectURL(blob);
+  const a=document.createElement('a'); a.href=url; a.download='jhd-subscribers.csv'; a.click();
+  URL.revokeObjectURL(url);
+}
+
+/* ===== HELPERS ===== */
+function esc(s){ if(!s) return ''; return String(s).replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;').replace(/"/g,'&quot;').replace(/'/g,'&#39;'); }
+function fmtDate(d){ return new Date(d).toLocaleDateString('en-GB',{day:'numeric',month:'short',year:'numeric'}); }
+
+boot();
+</script>
+
+
+</body>
+</html>
