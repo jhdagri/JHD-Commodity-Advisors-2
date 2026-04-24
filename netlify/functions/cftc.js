@@ -1,19 +1,18 @@
 exports.handler = async (event) => {
-  const params = { ...event.queryStringParameters } || {};
-  
-  // Support switching between CFTC datasets
-  // jun7-fc8e = Legacy Futures Only
-  // kh3c-gbw2 = Disaggregated Futures & Options Combined (ag_sof)
-  const dataset = params.$dataset || 'kh3c-gbw2';
-  delete params.$dataset;
-
+  const params = event.queryStringParameters || {};
   const qs = new URLSearchParams(params).toString();
-  const url = `https://publicreporting.cftc.gov/resource/${dataset}.json?${qs}`;
+  
+  // Disaggregated COT — Options & Futures Combined (matches CFTC ag_sof report)
+  const url = `https://publicreporting.cftc.gov/resource/kh3c-gbw2.json?${qs}`;
 
   try {
     const res = await fetch(url, {
-      headers: { 'Accept': 'application/json', 'User-Agent': 'JHD-Commodity-Advisors/1.0' }
+      headers: {
+        'Accept': 'application/json',
+        'User-Agent': 'JHD-Commodity-Advisors/1.0'
+      }
     });
+    if (!res.ok) throw new Error(`CFTC returned ${res.status}`);
     const data = await res.json();
     return {
       statusCode: 200,
