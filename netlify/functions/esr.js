@@ -4,7 +4,8 @@ exports.handler = async (event) => {
   delete params.endpoint;
   const qs = new URLSearchParams(params).toString();
 
-  const url = `https://apps.fas.usda.gov/OpenData/api/esr/${endpoint}${qs ? '?' + qs : ''}`;
+  // New USDA FAS API base URL (replaced OpenData in March 2026)
+  const url = `https://api.fas.usda.gov/esr/${endpoint}${qs ? '?' + qs : ''}`;
 
   try {
     const res = await fetch(url, {
