@@ -4,8 +4,8 @@ exports.handler = async (event) => {
   delete params.endpoint;
   const qs = new URLSearchParams(params).toString();
 
-  // USDA FAS PSD API — Production, Supply & Distribution (WASDE data)
-  const url = `https://apps.fas.usda.gov/OpenData/api/psd/${endpoint}${qs ? '?' + qs : ''}`;
+  // USDA FAS PSD Online API — correct base URL
+  const url = `https://apps.fas.usda.gov/psdonline/api/psd/${endpoint}${qs ? '?' + qs : ''}`;
 
   try {
     const res = await fetch(url, {
@@ -22,7 +22,7 @@ exports.handler = async (event) => {
       headers: {
         'Content-Type': 'application/json',
         'Access-Control-Allow-Origin': '*',
-        'Cache-Control': 'public, max-age=3600'
+        'Cache-Control': 'public, max-age=86400'
       },
       body: JSON.stringify(data)
     };
