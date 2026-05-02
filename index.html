@@ -2,77 +2,77 @@
 
 <html lang="en">
 <head>
-  <meta charset="UTF-8">
-  <link href="https://fonts.googleapis.com/css2?family=DM+Serif+Display:ital@0;1&family=DM+Mono:wght@400;500&family=DM+Sans:wght@300;400;500;600&display=swap" rel="stylesheet">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>JHD Commodity Advisors</title>
-  <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2/dist/umd/supabase.js"></script>
-  <link href="https://cdn.quilljs.com/1.3.7/quill.snow.css" rel="stylesheet">
-  <script src="https://cdn.quilljs.com/1.3.7/quill.js"></script>
-  <style>
-    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
-    :root {
-      /* ── Dark theme matching Wheat-Corn Spread Analysis ── */
-      --navy:#0d0f12;       /* page background */
-      --navy-lt:#1c2030;    /* hover / elevated */
-      --card:#141720;       /* card backgrounds */
-      --card2:#1c2030;      /* nested cards */
-      --gold:#ffb347;       /* amber accent (brand) */
-      --gold-lt:#d4aa55;    /* gold hover */
-      --blue:#4a9eff;       /* primary interactive blue */
-      --teal:#2ecfaa;       /* positive/success */
-      --coral:#ff6b4a;      /* warning/loss */
-      --bg:#0d0f12;
-      --white:#141720;      /* "white" surfaces are dark cards */
-      --text:#e8eaf0;       /* primary text */
-      --muted:#8890a4;      /* secondary text */
-      --muted2:#555f78;     /* tertiary text */
-      --border:rgba(255,255,255,0.08);
-      --border2:rgba(255,255,255,0.14);
-      --red:#f87171;
-      --green:#4ade80;
-      --red-bg:rgba(248,113,113,0.12);
-      --green-bg:rgba(74,222,128,0.12);
-    }
-    body { font-family:'DM Sans',system-ui,-apple-system,sans-serif; background:var(--bg); color:var(--text); min-height:100vh; }
-    .hidden { display:none !important; }
-    .spin { text-align:center; padding:64px 24px; color:var(--muted); font-size:15px; }
-    .msg-box { padding:10px 14px; border-radius:6px; font-size:13px; margin-top:10px; }
-    .msg-error { background:var(--red-bg); color:var(--red); }
-    .msg-ok    { background:var(--green-bg); color:var(--green); }
-    .btn { display:inline-block; padding:9px 18px; border-radius:6px; font-size:13px; font-weight:600; cursor:pointer; border:none; transition:opacity 0.15s,background 0.15s; }
-    .btn:disabled { opacity:0.55; cursor:not-allowed; }
-    .btn-navy  { background:var(--blue); color:#fff; }
-    .btn-navy:hover:not(:disabled) { background:#3a8eef; }
-    .btn-gold  { background:var(--gold); color:#0d0f12; font-weight:700; }
-    .btn-gold:hover:not(:disabled) { background:var(--gold-lt); }
-    .btn-ghost { background:rgba(255,255,255,0.12); color:#fff; }
-    .btn-ghost:hover { background:rgba(255,255,255,0.22); }
-    .btn-sm-del  { padding:3px 10px; font-size:11px; background:var(--red-bg); color:var(--red); border:1px solid #fecaca; border-radius:4px; cursor:pointer; }
-    .btn-sm-hide { padding:3px 10px; font-size:11px; background:var(--card2); color:var(--muted); border:1px solid var(--border2); border-radius:4px; cursor:pointer; }
-    .field { margin-bottom:14px; }
-    .field label { display:block; font-size:11px; font-weight:700; text-transform:uppercase; letter-spacing:0.6px; color:var(--muted); margin-bottom:5px; }
-    .field input,.field textarea,.field select { width:100%; padding:10px 13px; border:1px solid var(--border2); border-radius:6px; font-size:14px; font-family:inherit; color:var(--text); background:var(--card2); }
-    .field input:focus,.field textarea:focus,.field select:focus { outline:none; border-color:var(--blue); box-shadow:0 0 0 3px rgba(74,158,255,0.12); }
-    .field textarea { resize:vertical; min-height:100px; }
+<meta charset="UTF-8">
+<link href="https://fonts.googleapis.com/css2?family=DM+Serif+Display:ital@0;1&family=DM+Mono:wght@400;500&family=DM+Sans:wght@300;400;500;600&display=swap" rel="stylesheet">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>JHD Commodity Advisors</title>
+<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2/dist/umd/supabase.js"></script>
+<link href="https://cdn.quilljs.com/1.3.7/quill.snow.css" rel="stylesheet">
+<script src="https://cdn.quilljs.com/1.3.7/quill.js"></script>
+<style>
+*, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+:root {
+/* ── Dark theme matching Wheat-Corn Spread Analysis ── */
+--navy:#0d0f12; /* page background */
+--navy-lt:#1c2030; /* hover / elevated */
+--card:#141720; /* card backgrounds */
+--card2:#1c2030; /* nested cards */
+--gold:#ffb347; /* amber accent (brand) */
+--gold-lt:#d4aa55; /* gold hover */
+--blue:#4a9eff; /* primary interactive blue */
+--teal:#2ecfaa; /* positive/success */
+--coral:#ff6b4a; /* warning/loss */
+--bg:#0d0f12;
+--white:#141720; /* "white" surfaces are dark cards */
+--text:#e8eaf0; /* primary text */
+--muted:#8890a4; /* secondary text */
+--muted2:#555f78; /* tertiary text */
+--border:rgba(255,255,255,0.08);
+--border2:rgba(255,255,255,0.14);
+--red:#f87171;
+--green:#4ade80;
+--red-bg:rgba(248,113,113,0.12);
+--green-bg:rgba(74,222,128,0.12);
+}
+body { font-family:'DM Sans',system-ui,-apple-system,sans-serif; background:var(--bg); color:var(--text); min-height:100vh; }
+.hidden { display:none !important; }
+.spin { text-align:center; padding:64px 24px; color:var(--muted); font-size:15px; }
+.msg-box { padding:10px 14px; border-radius:6px; font-size:13px; margin-top:10px; }
+.msg-error { background:var(--red-bg); color:var(--red); }
+.msg-ok { background:var(--green-bg); color:var(--green); }
+.btn { display:inline-block; padding:9px 18px; border-radius:6px; font-size:13px; font-weight:600; cursor:pointer; border:none; transition:opacity 0.15s,background 0.15s; }
+.btn:disabled { opacity:0.55; cursor:not-allowed; }
+.btn-navy { background:var(--blue); color:#fff; }
+.btn-navy:hover:not(:disabled) { background:#3a8eef; }
+.btn-gold { background:var(--gold); color:#0d0f12; font-weight:700; }
+.btn-gold:hover:not(:disabled) { background:var(--gold-lt); }
+.btn-ghost { background:rgba(255,255,255,0.12); color:#fff; }
+.btn-ghost:hover { background:rgba(255,255,255,0.22); }
+.btn-sm-del { padding:3px 10px; font-size:11px; background:var(--red-bg); color:var(--red); border:1px solid #fecaca; border-radius:4px; cursor:pointer; }
+.btn-sm-hide { padding:3px 10px; font-size:11px; background:var(--card2); color:var(--muted); border:1px solid var(--border2); border-radius:4px; cursor:pointer; }
+.field { margin-bottom:14px; }
+.field label { display:block; font-size:11px; font-weight:700; text-transform:uppercase; letter-spacing:0.6px; color:var(--muted); margin-bottom:5px; }
+.field input,.field textarea,.field select { width:100%; padding:10px 13px; border:1px solid var(--border2); border-radius:6px; font-size:14px; font-family:inherit; color:var(--text); background:var(--card2); }
+.field input:focus,.field textarea:focus,.field select:focus { outline:none; border-color:var(--blue); box-shadow:0 0 0 3px rgba(74,158,255,0.12); }
+.field textarea { resize:vertical; min-height:100px; }
 
 ```
 /* ===== COPY PROTECTION ===== */
 .protected {
-  -webkit-user-select: none;
-  -moz-user-select: none;
-  -ms-user-select: none;
-  user-select: none;
+-webkit-user-select: none;
+-moz-user-select: none;
+-ms-user-select: none;
+user-select: none;
 }
 @media print {
-  body * { display: none !important; }
-  body::after {
-    display: block !important;
-    content: "Printing is not permitted. © JHD Commodity Advisors";
-    font-size: 18px;
-    text-align: center;
-    padding: 80px;
-  }
+body * { display: none !important; }
+body::after {
+display: block !important;
+content: "Printing is not permitted. © JHD Commodity Advisors";
+font-size: 18px;
+text-align: center;
+padding: 80px;
+}
 }
 
 /* ===== TOPBAR ===== */
@@ -277,13 +277,13 @@
 .footer-copy { width:100%; font-size:11px; color:var(--muted2); font-family:"DM Mono",monospace; letter-spacing:0.04em; padding-top:10px; border-top:1px solid var(--border); }
 @media (max-width:900px) { .contact-grid { grid-template-columns:1fr; } .about-bio { flex-direction:column; } .footer-nav { margin-left:0; } }
 @media (max-width:640px) {
-  .posts-grid { grid-template-columns:1fr; }
-  .detail-wrap h1 { font-size:26px; }
-  .brand-name { font-size:12px; }
-  .user-chip { display:none; }
-  .auth-card { padding:28px 20px; }
-  .service-cards { grid-template-columns:1fr; }
-  .snav-btn { padding:12px 12px; font-size:12px; }
+.posts-grid { grid-template-columns:1fr; }
+.detail-wrap h1 { font-size:26px; }
+.brand-name { font-size:12px; }
+.user-chip { display:none; }
+.auth-card { padding:28px 20px; }
+.service-cards { grid-template-columns:1fr; }
+.snav-btn { padding:12px 12px; font-size:12px; }
 }
 
 /* ===== TECHNICAL ANALYSIS TAB ===== */
@@ -294,9 +294,9 @@
 .ta-instrument { font-family:"DM Serif Display",serif; font-size:17px; color:var(--text); flex:1; }
 .ta-timeframe { font-family:"DM Mono",monospace; font-size:9px; color:var(--blue); background:rgba(74,158,255,0.1); border:1px solid rgba(74,158,255,0.2); padding:3px 8px; border-radius:3px; letter-spacing:0.06em; text-transform:uppercase; }
 .ta-bias { font-family:"DM Mono",monospace; font-size:9px; padding:3px 8px; border-radius:3px; letter-spacing:0.06em; text-transform:uppercase; }
-.ta-bias.bullish  { color:var(--teal); background:rgba(46,207,170,0.1); border:1px solid rgba(46,207,170,0.25); }
-.ta-bias.bearish  { color:var(--coral); background:rgba(255,107,74,0.1); border:1px solid rgba(255,107,74,0.25); }
-.ta-bias.neutral  { color:var(--muted); background:rgba(136,144,164,0.1); border:1px solid rgba(136,144,164,0.2); }
+.ta-bias.bullish { color:var(--teal); background:rgba(46,207,170,0.1); border:1px solid rgba(46,207,170,0.25); }
+.ta-bias.bearish { color:var(--coral); background:rgba(255,107,74,0.1); border:1px solid rgba(255,107,74,0.25); }
+.ta-bias.neutral { color:var(--muted); background:rgba(136,144,164,0.1); border:1px solid rgba(136,144,164,0.2); }
 .ta-chart-wrap { position:relative; background:#080a0d; min-height:200px; max-height:420px; overflow:hidden; display:flex; align-items:center; justify-content:center; }
 .ta-chart-wrap img { width:100%; height:auto; max-height:420px; object-fit:contain; display:block; }
 .ta-chart-placeholder { color:var(--muted2); font-family:"DM Mono",monospace; font-size:11px; text-align:center; padding:40px; }
@@ -305,9 +305,9 @@
 .ta-level-label { font-family:"DM Mono",monospace; font-size:8px; color:var(--muted2); text-transform:uppercase; letter-spacing:0.07em; margin-bottom:4px; }
 .ta-level-val { font-family:"DM Mono",monospace; font-size:12px; font-weight:500; }
 .ta-level-val.resistance { color:var(--coral); }
-.ta-level-val.support    { color:var(--teal); }
-.ta-level-val.target     { color:var(--gold2); }
-.ta-level-val.neutral    { color:var(--text); }
+.ta-level-val.support { color:var(--teal); }
+.ta-level-val.target { color:var(--gold2); }
+.ta-level-val.neutral { color:var(--text); }
 .ta-commentary { padding:14px 18px; font-size:13px; color:var(--muted); line-height:1.65; border-top:1px solid var(--border); }
 .ta-indicators { display:flex; flex-wrap:wrap; gap:6px; padding:12px 18px; border-top:1px solid var(--border); }
 .ta-indicator { font-family:"DM Mono",monospace; font-size:9px; padding:3px 8px; border-radius:3px; }
@@ -436,239 +436,239 @@ p:last-child{margin-bottom:0;}
 <body>
 
 <script>
-  const SUPABASE_URL  = 'https://raiaqevgkfxvdlcblutc.supabase.co';
-  const SUPABASE_ANON = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6InJhaWFxZXZna2Z4dmRsY2JsdXRjIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NzY4OTQ5NDEsImV4cCI6MjA5MjQ3MDk0MX0.CdHIhZtVieywyxbQipQoQWd42z7ewW3NZTUpDjICZdM';
-  const ADMIN_EMAIL   = 'jhdagri@gmail.com';
+const SUPABASE_URL = 'https://raiaqevgkfxvdlcblutc.supabase.co';
+const SUPABASE_ANON = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6InJhaWFxZXZna2Z4dmRsY2JsdXRjIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NzY4OTQ5NDEsImV4cCI6MjA5MjQ3MDk0MX0.CdHIhZtVieywyxbQipQoQWd42z7ewW3NZTUpDjICZdM';
+const ADMIN_EMAIL = 'jhdagri@gmail.com';
 </script>
 
 <!-- ========================= AUTH ========================= -->
 
 <div id="page-auth">
-  <div class="auth-hero">
-    <img src="https://i.ibb.co/PZPZGP71/IMG-2924.jpg" alt="JHD Commodity Advisors" style="width:90px;height:90px;object-fit:contain;border-radius:10px;margin-bottom:12px;display:block;margin-left:auto;margin-right:auto;">
-    <h1>JHD <span style="color:var(--gold2);">Commodity Advisors</span></h1>
-    <div class="rule"></div>
-    <p>Professional agricultural commodity advisory &amp; market intelligence</p>
-  </div>
-  <div class="auth-body">
-    <div class="auth-card">
-      <h2>Access Research Platform</h2>
-      <p>Free sign-up</p>
-      <div class="auth-tab-row">
-        <button class="auth-tab active" id="atab-in" onclick="switchAuthTab('in')">Sign In</button>
-        <button class="auth-tab"        id="atab-up" onclick="switchAuthTab('up')">Create Account</button>
-      </div>
-      <div id="form-in">
-        <div class="field"><label>Email</label><input type="email" id="in-email" placeholder="you@example.com" onkeydown="if(event.key==='Enter')doSignIn()"></div>
-        <div class="field"><label>Password</label><input type="password" id="in-pw" placeholder="••••••••" onkeydown="if(event.key==='Enter')doSignIn()"></div>
-        <button class="btn btn-navy auth-submit" onclick="doSignIn()">Sign In →</button>
-      </div>
-      <div id="form-up" class="hidden">
-        <div class="field"><label>Email</label><input type="email" id="up-email" placeholder="you@example.com"></div>
-        <div class="field"><label>Password <span style="font-weight:400;color:var(--muted)">(min 6 chars)</span></label><input type="password" id="up-pw" placeholder="Choose a password"></div>
-        <button class="btn btn-navy auth-submit" onclick="doSignUp()">Create Free Account →</button>
-      </div>
-      <div id="auth-msg" class="hidden msg-box"></div>
-    </div>
-  </div>
+<div class="auth-hero">
+<img src="https://i.ibb.co/PZPZGP71/IMG-2924.jpg" alt="JHD Commodity Advisors" style="width:90px;height:90px;object-fit:contain;border-radius:10px;margin-bottom:12px;display:block;margin-left:auto;margin-right:auto;">
+<h1>JHD <span style="color:var(--gold2);">Commodity Advisors</span></h1>
+<div class="rule"></div>
+<p>Professional agricultural commodity advisory &amp; market intelligence</p>
+</div>
+<div class="auth-body">
+<div class="auth-card">
+<h2>Access Research Platform</h2>
+<p>Free sign-up</p>
+<div class="auth-tab-row">
+<button class="auth-tab active" id="atab-in" onclick="switchAuthTab('in')">Sign In</button>
+<button class="auth-tab" id="atab-up" onclick="switchAuthTab('up')">Create Account</button>
+</div>
+<div id="form-in">
+<div class="field"><label>Email</label><input type="email" id="in-email" placeholder="you@example.com" onkeydown="if(event.key==='Enter')doSignIn()"></div>
+<div class="field"><label>Password</label><input type="password" id="in-pw" placeholder="••••••••" onkeydown="if(event.key==='Enter')doSignIn()"></div>
+<button class="btn btn-navy auth-submit" onclick="doSignIn()">Sign In →</button>
+</div>
+<div id="form-up" class="hidden">
+<div class="field"><label>Email</label><input type="email" id="up-email" placeholder="you@example.com"></div>
+<div class="field"><label>Password <span style="font-weight:400;color:var(--muted)">(min 6 chars)</span></label><input type="password" id="up-pw" placeholder="Choose a password"></div>
+<button class="btn btn-navy auth-submit" onclick="doSignUp()">Create Free Account →</button>
+</div>
+<div id="auth-msg" class="hidden msg-box"></div>
+</div>
+</div>
 </div>
 
 <!-- ========================= MAIN APP ========================= -->
 
 <div id="page-app" class="hidden">
-  <header class="topbar">
-    <div class="topbar-inner">
-      <div class="topbar-brand" onclick="showTab('commentary')" title="Home">
-        <div class="brand-mark" onclick="event.stopPropagation();showTab('services')" title="Services">
-          <img src="https://i.ibb.co/PZPZGP71/IMG-2924.jpg" alt="JHD Commodity Advisors" style="height:38px;width:38px;object-fit:contain;border-radius:4px;">
-          <div class="brand-name">
-            <span class="brand-name-jhd">JHD</span>
-            <span class="brand-name-sub">Commodity Advisors</span>
-          </div>
-        </div>
-      </div>
-      <div class="topbar-right">
-        <span class="user-chip" id="app-chip"></span>
-        <button class="btn btn-gold hidden" id="admin-btn" onclick="showAdminPage()">⚙ Admin</button>
-        <button class="btn btn-ghost" onclick="doSignOut()">Sign Out</button>
-      </div>
-    </div>
-  </header>
-  <nav class="section-nav">
-    <div class="section-nav-inner">
-      <button class="snav-btn active" data-tab="commentary" onclick="showTab('commentary')">Market Commentary</button>
-      <button class="snav-btn" data-tab="research"          onclick="showTab('research')">Research</button>
-      <button class="snav-btn" data-tab="cftc"              onclick="showTab('cftc')">CFTC</button>
-      <button class="snav-btn" data-tab="futures"           onclick="showTab('futures')">Futures Price Quotes</button>
-      <button class="snav-btn" data-tab="exports"           onclick="showTab('exports')">Export Data</button>
-      <button class="snav-btn" data-tab="wasde"             onclick="showTab('wasde')">WASDE</button>
-      <button class="snav-btn" data-tab="commoditymap"      onclick="showTab('commoditymap')">Commodity Map</button>
-      <button class="snav-btn" data-tab="weather"           onclick="showTab('weather')">Weather</button>
-      <button class="snav-btn" data-tab="options"           onclick="showTab('options')">Options Analytics</button>
-      <button class="snav-btn" data-tab="fob"               onclick="showTab('fob')">FOB Data</button>
-      <button class="snav-btn" data-tab="freight"           onclick="showTab('freight')">Freight</button>
-      <button class="snav-btn" data-tab="technicals"        onclick="showTab('technicals')">Technical Analysis</button>
-    </div>
-  </nav>
+<header class="topbar">
+<div class="topbar-inner">
+<div class="topbar-brand" onclick="showTab('commentary')" title="Home">
+<div class="brand-mark" onclick="event.stopPropagation();showTab('services')" title="Services">
+<img src="https://i.ibb.co/PZPZGP71/IMG-2924.jpg" alt="JHD Commodity Advisors" style="height:38px;width:38px;object-fit:contain;border-radius:4px;">
+<div class="brand-name">
+<span class="brand-name-jhd">JHD</span>
+<span class="brand-name-sub">Commodity Advisors</span>
+</div>
+</div>
+</div>
+<div class="topbar-right">
+<span class="user-chip" id="app-chip"></span>
+<button class="btn btn-gold hidden" id="admin-btn" onclick="showAdminPage()">⚙ Admin</button>
+<button class="btn btn-ghost" onclick="doSignOut()">Sign Out</button>
+</div>
+</div>
+</header>
+<nav class="section-nav">
+<div class="section-nav-inner">
+<button class="snav-btn active" data-tab="commentary" onclick="showTab('commentary')">Market Commentary</button>
+<button class="snav-btn" data-tab="research" onclick="showTab('research')">Research</button>
+<button class="snav-btn" data-tab="cftc" onclick="showTab('cftc')">CFTC</button>
+<button class="snav-btn" data-tab="futures" onclick="showTab('futures')">Futures Price Quotes</button>
+<button class="snav-btn" data-tab="exports" onclick="showTab('exports')">Export Data</button>
+<button class="snav-btn" data-tab="wasde" onclick="showTab('wasde')">WASDE</button>
+<button class="snav-btn" data-tab="commoditymap" onclick="showTab('commoditymap')">Commodity Map</button>
+<button class="snav-btn" data-tab="weather" onclick="showTab('weather')">Weather</button>
+<button class="snav-btn" data-tab="options" onclick="showTab('options')">Options Analytics</button>
+<button class="snav-btn" data-tab="fob" onclick="showTab('fob')">FOB Data</button>
+<button class="snav-btn" data-tab="freight" onclick="showTab('freight')">Freight</button>
+<button class="snav-btn" data-tab="technicals" onclick="showTab('technicals')">Technical Analysis</button>
+</div>
+</nav>
 
-  <!-- Commentary -->
+<!-- Commentary -->
 
-  <div id="tab-commentary" class="protected">
-    <div class="page-wrap">
-      <div class="page-heading"><h2>Market Commentary</h2><p>In-depth analysis of agricultural commodity markets</p></div>
-      <div id="posts-commentary"><div class="spin">Loading…</div></div>
-    </div>
-  </div>
+<div id="tab-commentary" class="protected">
+<div class="page-wrap">
+<div class="page-heading"><h2>Market Commentary</h2><p>In-depth analysis of agricultural commodity markets</p></div>
+<div id="posts-commentary"><div class="spin">Loading…</div></div>
+</div>
+</div>
 
-  <!-- Research -->
+<!-- Research -->
 
-  <div id="tab-research" class="hidden protected">
-    <div class="page-wrap">
-      <div class="page-heading"><h2>Research</h2><p>Fundamental and technical research reports</p></div>
-      <!-- Database posts -->
-      <div id="posts-research"><div class="spin">Loading…</div></div>
-    </div>
-  </div>
+<div id="tab-research" class="hidden protected">
+<div class="page-wrap">
+<div class="page-heading"><h2>Research</h2><p>Fundamental and technical research reports</p></div>
+<!-- Database posts -->
+<div id="posts-research"><div class="spin">Loading…</div></div>
+</div>
+</div>
 
-  <!-- CFTC -->
+<!-- CFTC -->
 
-  <div id="tab-cftc" class="hidden protected">
-    <div class="page-wrap">
-      <div class="page-heading"><h2>CFTC</h2><p>Commitment of Traders analysis and positioning data</p></div>
-      <div id="posts-cftc"><div class="spin">Loading…</div></div>
-    </div>
-  </div>
+<div id="tab-cftc" class="hidden protected">
+<div class="page-wrap">
+<div class="page-heading"><h2>CFTC</h2><p>Commitment of Traders analysis and positioning data</p></div>
+<div id="posts-cftc"><div class="spin">Loading…</div></div>
+</div>
+</div>
 
-  <!-- Futures -->
+<!-- Futures -->
 
-  <div id="tab-futures" class="hidden protected">
-    <div class="futures-wrap">
-      <div class="futures-heading">
-        <h2>Futures Price Quotes</h2>
-        <p>Indices &amp; currencies via TradingView · Commodity prices via direct exchange links below</p>
-      </div>
+<div id="tab-futures" class="hidden protected">
+<div class="futures-wrap">
+<div class="futures-heading">
+<h2>Futures Price Quotes</h2>
+<p>Indices &amp; currencies via TradingView · Commodity prices via direct exchange links below</p>
+</div>
 
 ```
-  <!-- WORKING: Indices + Forex via TradingView market quotes -->
-  <div class="futures-section-label">Indices &amp; Currencies</div>
-  <div class="tradingview-widget-container" style="margin-bottom:24px;">
-    <div class="tradingview-widget-container__widget"></div>
-    <script type="text/javascript" src="https://s3.tradingview.com/external-embedding/embed-widget-market-quotes.js" async>
-    {
-      "colorTheme": "dark",
-      "locale": "en",
-      "isTransparent": true,
-      "showSymbolLogo": false,
-      "backgroundColor": "rgba(13,15,18,0)",
-      "support_host": "https://www.tradingview.com",
-      "width": "100%",
-      "height": 400,
-      "symbolsGroups": [
-        {
-          "name": "Indices",
-          "symbols": [
-            {"name": "FOREXCOM:SPXUSD", "displayName": "S&P 500"},
-            {"name": "FOREXCOM:NSXUSD", "displayName": "US 100"},
-            {"name": "FOREXCOM:DJI",    "displayName": "Dow Jones"},
-            {"name": "INDEX:DEU40",     "displayName": "DAX"},
-            {"name": "FOREXCOM:UKXGBP", "displayName": "FTSE 100"},
-            {"name": "INDEX:NKY",       "displayName": "Nikkei 225"}
-          ]
-        },
-        {
-          "name": "Forex",
-          "symbols": [
-            {"name": "FX:EURUSD", "displayName": "EUR/USD"},
-            {"name": "FX:GBPUSD", "displayName": "GBP/USD"},
-            {"name": "FX:USDJPY", "displayName": "USD/JPY"},
-            {"name": "FX:AUDUSD", "displayName": "AUD/USD"},
-            {"name": "FX:USDCAD", "displayName": "USD/CAD"},
-            {"name": "FX:USDBRL", "displayName": "USD/BRL"},
-            {"name": "TVC:DXY",   "displayName": "DXY Index"}
-          ]
-        }
-      ]
-    }
-    </script>
-  </div>
+<!-- WORKING: Indices + Forex via TradingView market quotes -->
+<div class="futures-section-label">Indices &amp; Currencies</div>
+<div class="tradingview-widget-container" style="margin-bottom:24px;">
+<div class="tradingview-widget-container__widget"></div>
+<script type="text/javascript" src="https://s3.tradingview.com/external-embedding/embed-widget-market-quotes.js" async>
+{
+"colorTheme": "dark",
+"locale": "en",
+"isTransparent": true,
+"showSymbolLogo": false,
+"backgroundColor": "rgba(13,15,18,0)",
+"support_host": "https://www.tradingview.com",
+"width": "100%",
+"height": 400,
+"symbolsGroups": [
+{
+"name": "Indices",
+"symbols": [
+{"name": "FOREXCOM:SPXUSD", "displayName": "S&P 500"},
+{"name": "FOREXCOM:NSXUSD", "displayName": "US 100"},
+{"name": "FOREXCOM:DJI", "displayName": "Dow Jones"},
+{"name": "INDEX:DEU40", "displayName": "DAX"},
+{"name": "FOREXCOM:UKXGBP", "displayName": "FTSE 100"},
+{"name": "INDEX:NKY", "displayName": "Nikkei 225"}
+]
+},
+{
+"name": "Forex",
+"symbols": [
+{"name": "FX:EURUSD", "displayName": "EUR/USD"},
+{"name": "FX:GBPUSD", "displayName": "GBP/USD"},
+{"name": "FX:USDJPY", "displayName": "USD/JPY"},
+{"name": "FX:AUDUSD", "displayName": "AUD/USD"},
+{"name": "FX:USDCAD", "displayName": "USD/CAD"},
+{"name": "FX:USDBRL", "displayName": "USD/BRL"},
+{"name": "TVC:DXY", "displayName": "DXY Index"}
+]
+}
+]
+}
+</script>
+</div>
 
-  <!-- COMMODITY PRICE LINKS -->
-  <div class="futures-section-label">Agricultural Commodities — Delayed Quotes</div>
-  <div class="futures-links-grid">
-    <a href="https://www.cmegroup.com/markets/agriculture/grains/corn.quotes.html" target="_blank" class="futures-link-card">
-      <div class="flc-label">Corn (ZC)</div>
-      <div class="flc-sub">CBOT · CME Group</div>
-      <div class="flc-arrow">↗</div>
-    </a>
-    <a href="https://www.cmegroup.com/markets/agriculture/grains/wheat.quotes.html" target="_blank" class="futures-link-card">
-      <div class="flc-label">SRW Wheat (ZW)</div>
-      <div class="flc-sub">CBOT · CME Group</div>
-      <div class="flc-arrow">↗</div>
-    </a>
-    <a href="https://www.cmegroup.com/markets/agriculture/grains/kc-hrw-wheat.quotes.html" target="_blank" class="futures-link-card">
-      <div class="flc-label">HRW Wheat (KE)</div>
-      <div class="flc-sub">KCBT · CME Group</div>
-      <div class="flc-arrow">↗</div>
-    </a>
-    <a href="https://www.euronext.com/en/products/commodities/milling-wheat-futures" target="_blank" class="futures-link-card">
-      <div class="flc-label">Milling Wheat (EBM)</div>
-      <div class="flc-sub">Euronext Paris</div>
-      <div class="flc-arrow">↗</div>
-    </a>
-    <a href="https://www.cmegroup.com/markets/agriculture/oilseeds/soybean.quotes.html" target="_blank" class="futures-link-card">
-      <div class="flc-label">Soybeans (ZS)</div>
-      <div class="flc-sub">CBOT · CME Group</div>
-      <div class="flc-arrow">↗</div>
-    </a>
-    <a href="https://www.cmegroup.com/markets/agriculture/oilseeds/soybean-meal.quotes.html" target="_blank" class="futures-link-card">
-      <div class="flc-label">Soybean Meal (ZM)</div>
-      <div class="flc-sub">CBOT · CME Group</div>
-      <div class="flc-arrow">↗</div>
-    </a>
-    <a href="https://www.cmegroup.com/markets/agriculture/oilseeds/soybean-oil.quotes.html" target="_blank" class="futures-link-card">
-      <div class="flc-label">Soybean Oil (ZL)</div>
-      <div class="flc-sub">CBOT · CME Group</div>
-      <div class="flc-arrow">↗</div>
-    </a>
-    <a href="https://www.theice.com/products/254671929/Sugar-No-11-Futures/data" target="_blank" class="futures-link-card">
-      <div class="flc-label">Sugar #11 (SB)</div>
-      <div class="flc-sub">ICE Futures US</div>
-      <div class="flc-arrow">↗</div>
-    </a>
-    <a href="https://www.theice.com/products/15/Coffee-C-Futures/data" target="_blank" class="futures-link-card">
-      <div class="flc-label">Coffee C (KC)</div>
-      <div class="flc-sub">ICE Futures US</div>
-      <div class="flc-arrow">↗</div>
-    </a>
-    <a href="https://www.theice.com/products/254671928/Cotton-No-2-Futures/data" target="_blank" class="futures-link-card">
-      <div class="flc-label">Cotton #2 (CT)</div>
-      <div class="flc-sub">ICE Futures US</div>
-      <div class="flc-arrow">↗</div>
-    </a>
-    <a href="https://www.cmegroup.com/markets/energy/crude-oil/light-sweet-crude.quotes.html" target="_blank" class="futures-link-card">
-      <div class="flc-label">WTI Crude Oil (CL)</div>
-      <div class="flc-sub">NYMEX · CME Group</div>
-      <div class="flc-arrow">↗</div>
-    </a>
-    <a href="https://www.theice.com/products/219/Brent-Crude-Futures/data" target="_blank" class="futures-link-card">
-      <div class="flc-label">Brent Crude</div>
-      <div class="flc-sub">ICE Futures Europe</div>
-      <div class="flc-arrow">↗</div>
-    </a>
-    <a href="https://www.cmegroup.com/markets/metals/precious/gold.quotes.html" target="_blank" class="futures-link-card">
-      <div class="flc-label">Gold (GC)</div>
-      <div class="flc-sub">COMEX · CME Group</div>
-      <div class="flc-arrow">↗</div>
-    </a>
-  </div>
-  <p style="font-size:11px;color:var(--muted2);text-align:center;padding-top:16px;">Indices &amp; forex: TradingView (delayed 10–15 min) · Commodity links open exchange pages with free delayed quotes</p>
+<!-- COMMODITY PRICE LINKS -->
+<div class="futures-section-label">Agricultural Commodities — Delayed Quotes</div>
+<div class="futures-links-grid">
+<a href="https://www.cmegroup.com/markets/agriculture/grains/corn.quotes.html" target="_blank" class="futures-link-card">
+<div class="flc-label">Corn (ZC)</div>
+<div class="flc-sub">CBOT · CME Group</div>
+<div class="flc-arrow">↗</div>
+</a>
+<a href="https://www.cmegroup.com/markets/agriculture/grains/wheat.quotes.html" target="_blank" class="futures-link-card">
+<div class="flc-label">SRW Wheat (ZW)</div>
+<div class="flc-sub">CBOT · CME Group</div>
+<div class="flc-arrow">↗</div>
+</a>
+<a href="https://www.cmegroup.com/markets/agriculture/grains/kc-hrw-wheat.quotes.html" target="_blank" class="futures-link-card">
+<div class="flc-label">HRW Wheat (KE)</div>
+<div class="flc-sub">KCBT · CME Group</div>
+<div class="flc-arrow">↗</div>
+</a>
+<a href="https://www.euronext.com/en/products/commodities/milling-wheat-futures" target="_blank" class="futures-link-card">
+<div class="flc-label">Milling Wheat (EBM)</div>
+<div class="flc-sub">Euronext Paris</div>
+<div class="flc-arrow">↗</div>
+</a>
+<a href="https://www.cmegroup.com/markets/agriculture/oilseeds/soybean.quotes.html" target="_blank" class="futures-link-card">
+<div class="flc-label">Soybeans (ZS)</div>
+<div class="flc-sub">CBOT · CME Group</div>
+<div class="flc-arrow">↗</div>
+</a>
+<a href="https://www.cmegroup.com/markets/agriculture/oilseeds/soybean-meal.quotes.html" target="_blank" class="futures-link-card">
+<div class="flc-label">Soybean Meal (ZM)</div>
+<div class="flc-sub">CBOT · CME Group</div>
+<div class="flc-arrow">↗</div>
+</a>
+<a href="https://www.cmegroup.com/markets/agriculture/oilseeds/soybean-oil.quotes.html" target="_blank" class="futures-link-card">
+<div class="flc-label">Soybean Oil (ZL)</div>
+<div class="flc-sub">CBOT · CME Group</div>
+<div class="flc-arrow">↗</div>
+</a>
+<a href="https://www.theice.com/products/254671929/Sugar-No-11-Futures/data" target="_blank" class="futures-link-card">
+<div class="flc-label">Sugar #11 (SB)</div>
+<div class="flc-sub">ICE Futures US</div>
+<div class="flc-arrow">↗</div>
+</a>
+<a href="https://www.theice.com/products/15/Coffee-C-Futures/data" target="_blank" class="futures-link-card">
+<div class="flc-label">Coffee C (KC)</div>
+<div class="flc-sub">ICE Futures US</div>
+<div class="flc-arrow">↗</div>
+</a>
+<a href="https://www.theice.com/products/254671928/Cotton-No-2-Futures/data" target="_blank" class="futures-link-card">
+<div class="flc-label">Cotton #2 (CT)</div>
+<div class="flc-sub">ICE Futures US</div>
+<div class="flc-arrow">↗</div>
+</a>
+<a href="https://www.cmegroup.com/markets/energy/crude-oil/light-sweet-crude.quotes.html" target="_blank" class="futures-link-card">
+<div class="flc-label">WTI Crude Oil (CL)</div>
+<div class="flc-sub">NYMEX · CME Group</div>
+<div class="flc-arrow">↗</div>
+</a>
+<a href="https://www.theice.com/products/219/Brent-Crude-Futures/data" target="_blank" class="futures-link-card">
+<div class="flc-label">Brent Crude</div>
+<div class="flc-sub">ICE Futures Europe</div>
+<div class="flc-arrow">↗</div>
+</a>
+<a href="https://www.cmegroup.com/markets/metals/precious/gold.quotes.html" target="_blank" class="futures-link-card">
+<div class="flc-label">Gold (GC)</div>
+<div class="flc-sub">COMEX · CME Group</div>
+<div class="flc-arrow">↗</div>
+</a>
+</div>
+<p style="font-size:11px;color:var(--muted2);text-align:center;padding-top:16px;">Indices &amp; forex: TradingView (delayed 10–15 min) · Commodity links open exchange pages with free delayed quotes</p>
 </div>
 ```
 
-  </div>
-  <!-- Services -->
-  <div id="tab-services" class="hidden">
-    <div class="static-about-page">
+</div>
+<!-- Services -->
+<div id="tab-services" class="hidden">
+<div class="static-about-page">
 
 <!-- ══ ABOUT US ══ -->
 
@@ -683,67 +683,67 @@ p:last-child{margin-bottom:0;}
 <p>Alongside the research platform, JHD Commodity Advisors provides a range of professional services to commodity-exposed businesses, trading houses and market participants — drawing on a deep network across global origins, end-user relationships and a consistent track record of managing risk and developing scalable commodity trading strategies.</p>
 
 <div class="cred-row">
-  <span class="cred">FCA Regulated</span>
-  <span class="cred">NFA Series 3</span>
-  <span class="cred">GAFTA</span>
-  <span class="cred">FOSFA</span>
-  <span class="cred">ISDA / CSA</span>
-  <span class="cred">ANEC</span>
+<span class="cred">FCA Regulated</span>
+<span class="cred">NFA Series 3</span>
+<span class="cred">GAFTA</span>
+<span class="cred">FOSFA</span>
+<span class="cred">ISDA / CSA</span>
+<span class="cred">ANEC</span>
 </div>
 
 <div class="stat-strip">
-  <div class="stat"><div class="stat-v">>$5bn</div><div class="stat-l">Physical Purchases</div></div>
-  <div class="stat"><div class="stat-v">1.5 MMT</div><div class="stat-l">Annual Grain Volume</div></div>
-  <div class="stat"><div class="stat-v">>$400m</div><div class="stat-l">Trade Finance Secured</div></div>
-  <div class="stat"><div class="stat-v">14+</div><div class="stat-l">Years Experience</div></div>
-  <div class="stat"><div class="stat-v">15+</div><div class="stat-l">Active Origin Networks</div></div>
-  <div class="stat"><div class="stat-v">Zero</div><div class="stat-l">Defaults</div></div>
+<div class="stat"><div class="stat-v">>$5bn</div><div class="stat-l">Physical Purchases</div></div>
+<div class="stat"><div class="stat-v">1.5 MMT</div><div class="stat-l">Annual Grain Volume</div></div>
+<div class="stat"><div class="stat-v">>$400m</div><div class="stat-l">Trade Finance Secured</div></div>
+<div class="stat"><div class="stat-v">14+</div><div class="stat-l">Years Experience</div></div>
+<div class="stat"><div class="stat-v">15+</div><div class="stat-l">Active Origin Networks</div></div>
+<div class="stat"><div class="stat-v">Zero</div><div class="stat-l">Defaults</div></div>
 </div>
 
 <div class="exp-grid">
-  <div class="exp-card">
-    <div class="exp-card-title">Physical Markets</div>
-    <ul>
-      <li>Wheat, Corn, Barley, Pulses</li>
-      <li>Soybeans, Canola, Veg Oils, Feedstuffs</li>
-      <li>FOB Santos, Upriver Argentina, USG, PNW</li>
-      <li>Full Panamax & Handysize execution</li>
-      <li>Multi-origin and split-discharge expertise</li>
-      <li>Tier-1 APAC end-user relationships</li>
-    </ul>
-  </div>
-  <div class="exp-card">
-    <div class="exp-card-title">Derivatives & Risk</div>
-    <ul>
-      <li>CME / CBOT, MGEX, ICE, Euronext</li>
-      <li>Futures and listed options</li>
-      <li>Inter-commodity and calendar spreads</li>
-      <li>Physical contract hedging</li>
-      <li>FX exposure management</li>
-      <li>OTC and structured hedging</li>
-    </ul>
-  </div>
-  <div class="exp-card">
-    <div class="exp-card-title">Origins Coverage</div>
-    <ul>
-      <li>Australia, USA, Canada</li>
-      <li>Brazil, Argentina</li>
-      <li>Ukraine, Black Sea, Romania</li>
-      <li>India, Kazakhstan</li>
-      <li>China & APAC buy-side network</li>
-    </ul>
-  </div>
-  <div class="exp-card">
-    <div class="exp-card-title">Research & Intelligence</div>
-    <ul>
-      <li>Weekly grain & oilseed commentary</li>
-      <li>CFTC COT positioning analysis</li>
-      <li>WASDE supply & demand interpretation</li>
-      <li>FOB price data across origins</li>
-      <li>Export sales pace analysis</li>
-      <li>Agricultural weather & crop risk</li>
-    </ul>
-  </div>
+<div class="exp-card">
+<div class="exp-card-title">Physical Markets</div>
+<ul>
+<li>Wheat, Corn, Barley, Pulses</li>
+<li>Soybeans, Canola, Veg Oils, Feedstuffs</li>
+<li>FOB Santos, Upriver Argentina, USG, PNW</li>
+<li>Full Panamax & Handysize execution</li>
+<li>Multi-origin and split-discharge expertise</li>
+<li>Tier-1 APAC end-user relationships</li>
+</ul>
+</div>
+<div class="exp-card">
+<div class="exp-card-title">Derivatives & Risk</div>
+<ul>
+<li>CME / CBOT, MGEX, ICE, Euronext</li>
+<li>Futures and listed options</li>
+<li>Inter-commodity and calendar spreads</li>
+<li>Physical contract hedging</li>
+<li>FX exposure management</li>
+<li>OTC and structured hedging</li>
+</ul>
+</div>
+<div class="exp-card">
+<div class="exp-card-title">Origins Coverage</div>
+<ul>
+<li>Australia, USA, Canada</li>
+<li>Brazil, Argentina</li>
+<li>Ukraine, Black Sea, Romania</li>
+<li>India, Kazakhstan</li>
+<li>China & APAC buy-side network</li>
+</ul>
+</div>
+<div class="exp-card">
+<div class="exp-card-title">Research & Intelligence</div>
+<ul>
+<li>Weekly grain & oilseed commentary</li>
+<li>CFTC COT positioning analysis</li>
+<li>WASDE supply & demand interpretation</li>
+<li>FOB price data across origins</li>
+<li>Export sales pace analysis</li>
+<li>Agricultural weather & crop risk</li>
+</ul>
+</div>
 </div>
 
 <div class="about-divider"></div>
@@ -758,78 +758,78 @@ p:last-child{margin-bottom:0;}
 
 <div class="strand-wrap">
 
-  <!-- STRAND 1 -->
+<!-- STRAND 1 -->
 
-  <div class="strand">
-    <div class="strand-header">
-      <div class="strand-icon">📊</div>
-      <div>
-        <div class="strand-title">Research Platform</div>
-        <div class="strand-label">JHD Commodity Advisors · Public Platform</div>
-      </div>
-    </div>
-    <div class="strand-body">
-      <p>The JHD Commodity Advisors platform provides professional-grade agricultural market intelligence, live data analytics and original weekly commentary — accessible to individual traders, analysts, merchandisers and brokers. Free to join, with premium research content available through the platform's engagement economy.</p>
-      <ul class="strand-items">
-        <li>Weekly wheat & grain commentary</li>
-        <li>Live CFTC COT positioning dashboards</li>
-        <li>WASDE supply & demand analytics</li>
-        <li>Weekly export sales data</li>
-        <li>FOB price data across 6 commodities</li>
-        <li>Agricultural weather — 19 global regions</li>
-        <li>Options analytics tool</li>
-        <li>Active community of market participants</li>
-      </ul>
-    </div>
-  </div>
+<div class="strand">
+<div class="strand-header">
+<div class="strand-icon">📊</div>
+<div>
+<div class="strand-title">Research Platform</div>
+<div class="strand-label">JHD Commodity Advisors · Public Platform</div>
+</div>
+</div>
+<div class="strand-body">
+<p>The JHD Commodity Advisors platform provides professional-grade agricultural market intelligence, live data analytics and original weekly commentary — accessible to individual traders, analysts, merchandisers and brokers. Free to join, with premium research content available through the platform's engagement economy.</p>
+<ul class="strand-items">
+<li>Weekly wheat & grain commentary</li>
+<li>Live CFTC COT positioning dashboards</li>
+<li>WASDE supply & demand analytics</li>
+<li>Weekly export sales data</li>
+<li>FOB price data across 6 commodities</li>
+<li>Agricultural weather — 19 global regions</li>
+<li>Options analytics tool</li>
+<li>Active community of market participants</li>
+</ul>
+</div>
+</div>
 
-  <!-- STRAND 2 -->
+<!-- STRAND 2 -->
 
-  <div class="strand">
-    <div class="strand-header">
-      <div class="strand-icon">🌾</div>
-      <div>
-        <div class="strand-title">Advisory Services</div>
-        <div class="strand-label">JHD Commodity Advisors · Professional Services</div>
-      </div>
-    </div>
-    <div class="strand-body">
-      <p>Independent advisory services for commodity-exposed businesses, trading houses and market participants. Engagements are bespoke and priced on scope — covering market strategy, procurement, hedging and trade execution across global grain and oilseed markets.</p>
-      <ul class="strand-items">
-        <li>Commodity market advisory</li>
-        <li>Procurement strategy & market entry</li>
-        <li>Physical commodity broking — managing relations between a global network of Agri participants</li>
-        <li>Hedging using listed futures and options</li>
-        <li>Trade finance & procurement structuring</li>
-        <li>GAFTA / FOSFA contract frameworks</li>
-        <li>Origin diversification strategy</li>
-        <li>Counterparty & supplier onboarding</li>
-      </ul>
-    </div>
-  </div>
+<div class="strand">
+<div class="strand-header">
+<div class="strand-icon">🌾</div>
+<div>
+<div class="strand-title">Advisory Services</div>
+<div class="strand-label">JHD Commodity Advisors · Professional Services</div>
+</div>
+</div>
+<div class="strand-body">
+<p>Independent advisory services for commodity-exposed businesses, trading houses and market participants. Engagements are bespoke and priced on scope — covering market strategy, procurement, hedging and trade execution across global grain and oilseed markets.</p>
+<ul class="strand-items">
+<li>Commodity market advisory</li>
+<li>Procurement strategy & market entry</li>
+<li>Physical commodity broking — managing relations between a global network of Agri participants</li>
+<li>Hedging using listed futures and options</li>
+<li>Trade finance & procurement structuring</li>
+<li>GAFTA / FOSFA contract frameworks</li>
+<li>Origin diversification strategy</li>
+<li>Counterparty & supplier onboarding</li>
+</ul>
+</div>
+</div>
 
-  <!-- STRAND 3 -->
+<!-- STRAND 3 -->
 
-  <div class="strand">
-    <div class="strand-header">
-      <div class="strand-icon">📈</div>
-      <div>
-        <div class="strand-title">Discretionary Trading</div>
-        <div class="strand-label">JHD Commodity Advisors · Managed Accounts</div>
-      </div>
-    </div>
-    <div class="strand-body">
-      <p>James Day is an experienced agricultural commodities trader with a strong track record of managing risk and developing scalable commodity trading strategies across major global markets. Discretionary managed account arrangements are considered on a selective basis and are introduced through direct referral only.</p>
-      <ul class="strand-items">
-        <li>Fundamentally-driven strategies</li>
-        <li>Spread and relative value trading</li>
-        <li>Inter-commodity & calendar spreads</li>
-        <li>Listed options strategies</li>
-        <li>CME, MGEX and ICE markets</li>
-        <li>Grain and oilseed focus</li>
-      </ul>
-    </div>
-  </div>
+<div class="strand">
+<div class="strand-header">
+<div class="strand-icon">📈</div>
+<div>
+<div class="strand-title">Discretionary Trading</div>
+<div class="strand-label">JHD Commodity Advisors · Managed Accounts</div>
+</div>
+</div>
+<div class="strand-body">
+<p>James Day is an experienced agricultural commodities trader with a strong track record of managing risk and developing scalable commodity trading strategies across major global markets. Discretionary managed account arrangements are considered on a selective basis and are introduced through direct referral only.</p>
+<ul class="strand-items">
+<li>Fundamentally-driven strategies</li>
+<li>Spread and relative value trading</li>
+<li>Inter-commodity & calendar spreads</li>
+<li>Listed options strategies</li>
+<li>CME, MGEX and ICE markets</li>
+<li>Grain and oilseed focus</li>
+</ul>
+</div>
+</div>
 
 </div>
 
@@ -841,74 +841,74 @@ p:last-child{margin-bottom:0;}
 
 <div class="mkt-label">Commodities</div>
 <div class="market-tags">
-  <span class="market-tag mt-blue">Wheat (SRW · HRW · DNS · Milling)</span>
-  <span class="market-tag mt-blue">Corn</span>
-  <span class="market-tag mt-blue">Soybeans</span>
-  <span class="market-tag mt-blue">Soybean Meal</span>
-  <span class="market-tag mt-blue">Soybean Oil</span>
-  <span class="market-tag mt-blue">Canola / Rapeseed</span>
-  <span class="market-tag mt-blue">Barley</span>
-  <span class="market-tag mt-blue">Pulses</span>
-  <span class="market-tag mt-blue">Palm Oil</span>
+<span class="market-tag mt-blue">Wheat (SRW · HRW · DNS · Milling)</span>
+<span class="market-tag mt-blue">Corn</span>
+<span class="market-tag mt-blue">Soybeans</span>
+<span class="market-tag mt-blue">Soybean Meal</span>
+<span class="market-tag mt-blue">Soybean Oil</span>
+<span class="market-tag mt-blue">Canola / Rapeseed</span>
+<span class="market-tag mt-blue">Barley</span>
+<span class="market-tag mt-blue">Pulses</span>
+<span class="market-tag mt-blue">Palm Oil</span>
 </div>
 
 <div class="mkt-label">Exchanges</div>
 <div class="market-tags">
-  <span class="market-tag mt-teal">CME / CBOT</span>
-  <span class="market-tag mt-teal">MGEX</span>
-  <span class="market-tag mt-teal">ICE Futures US</span>
-  <span class="market-tag mt-teal">ICE Futures Europe</span>
-  <span class="market-tag mt-teal">Euronext Paris (MATIF)</span>
+<span class="market-tag mt-teal">CME / CBOT</span>
+<span class="market-tag mt-teal">MGEX</span>
+<span class="market-tag mt-teal">ICE Futures US</span>
+<span class="market-tag mt-teal">ICE Futures Europe</span>
+<span class="market-tag mt-teal">Euronext Paris (MATIF)</span>
 </div>
 
 <div class="mkt-label">Instruments</div>
 <div class="market-tags">
-  <span class="market-tag mt-gold">Futures</span>
-  <span class="market-tag mt-gold">Listed Options</span>
-  <span class="market-tag mt-gold">Physical Spreads</span>
-  <span class="market-tag mt-gold">FOB Paper</span>
-  <span class="market-tag mt-gold">OTC Hedging</span>
-  <span class="market-tag mt-gold">Calendar Spreads</span>
-  <span class="market-tag mt-gold">Inter-Commodity Spreads</span>
+<span class="market-tag mt-gold">Futures</span>
+<span class="market-tag mt-gold">Listed Options</span>
+<span class="market-tag mt-gold">Physical Spreads</span>
+<span class="market-tag mt-gold">FOB Paper</span>
+<span class="market-tag mt-gold">OTC Hedging</span>
+<span class="market-tag mt-gold">Calendar Spreads</span>
+<span class="market-tag mt-gold">Inter-Commodity Spreads</span>
 </div>
 
 <div class="mkt-label">Contract Frameworks</div>
 <div class="market-tags">
-  <span class="market-tag mt-coral">GAFTA</span>
-  <span class="market-tag mt-coral">FOSFA</span>
-  <span class="market-tag mt-coral">ANEC</span>
-  <span class="market-tag mt-coral">ISDA / CSA</span>
+<span class="market-tag mt-coral">GAFTA</span>
+<span class="market-tag mt-coral">FOSFA</span>
+<span class="market-tag mt-coral">ANEC</span>
+<span class="market-tag mt-coral">ISDA / CSA</span>
 </div>
 
 <div class="about-divider"></div>
 
 <p style="font-size:12px;color:var(--muted2);font-family:'DM Mono',monospace;line-height:1.7;">
-  JHD Commodity Advisors is a trading name of James Day. FCA regulated. NFA Series 3 qualified. All research and commentary is produced for informational purposes only and does not constitute investment advice. Past performance is not indicative of future results. Commodity trading involves substantial risk of loss. Managed account services are provided to eligible counterparties only.
+JHD Commodity Advisors is a trading name of James Day. FCA regulated. NFA Series 3 qualified. All research and commentary is produced for informational purposes only and does not constitute investment advice. Past performance is not indicative of future results. Commodity trading involves substantial risk of loss. Managed account services are provided to eligible counterparties only.
 </p>
 
 </div>
-  </div>
+</div>
 
-  <!-- Contact -->
+<!-- Contact -->
 
-  <div id="tab-contact" class="hidden">
-    <div class="static-wrap">
-      <h2>Contact Us</h2><div class="static-rule"></div>
-      <p>To discuss how JHD Commodity Advisors can support your business, or to enquire about our advisory and broking services, please get in touch using the details below.</p>
-      <div class="contact-grid">
-        <div class="contact-item"><div class="ci-label">Email</div><div class="ci-val">jhdagri@gmail.com</div><div class="ci-sub">We aim to respond within one business day</div></div>
-        <div class="contact-item"><div class="ci-label">Location</div><div class="ci-val">London, United Kingdom</div><div class="ci-sub">Available for meetings in London and internationally</div></div>
-        <div class="contact-item"><div class="ci-label">LinkedIn</div><div class="ci-val">James Day</div><div class="ci-sub">Connect for market updates and commentary</div></div>
-        <div class="contact-item"><div class="ci-label">Coverage Hours</div><div class="ci-val">Mon – Fri, 07:00 – 19:00 GMT</div><div class="ci-sub">Covering European and US market sessions</div></div>
-      </div>
-      <div class="disclaimer-box">This platform is for informational purposes only. Nothing contained herein constitutes investment advice or a solicitation to trade.</div>
-    </div>
-  </div>
+<div id="tab-contact" class="hidden">
+<div class="static-wrap">
+<h2>Contact Us</h2><div class="static-rule"></div>
+<p>To discuss how JHD Commodity Advisors can support your business, or to enquire about our advisory and broking services, please get in touch using the details below.</p>
+<div class="contact-grid">
+<div class="contact-item"><div class="ci-label">Email</div><div class="ci-val">jhdagri@gmail.com</div><div class="ci-sub">We aim to respond within one business day</div></div>
+<div class="contact-item"><div class="ci-label">Location</div><div class="ci-val">London, United Kingdom</div><div class="ci-sub">Available for meetings in London and internationally</div></div>
+<div class="contact-item"><div class="ci-label">LinkedIn</div><div class="ci-val">James Day</div><div class="ci-sub">Connect for market updates and commentary</div></div>
+<div class="contact-item"><div class="ci-label">Coverage Hours</div><div class="ci-val">Mon – Fri, 07:00 – 19:00 GMT</div><div class="ci-sub">Covering European and US market sessions</div></div>
+</div>
+<div class="disclaimer-box">This platform is for informational purposes only. Nothing contained herein constitutes investment advice or a solicitation to trade.</div>
+</div>
+</div>
 
-  <!-- About -->
+<!-- About -->
 
-  <div id="tab-about" class="hidden">
-    <div class="static-about-page">
+<div id="tab-about" class="hidden">
+<div class="static-about-page">
 
 <!-- ══ ABOUT US ══ -->
 
@@ -923,67 +923,67 @@ p:last-child{margin-bottom:0;}
 <p>Alongside the research platform, JHD Commodity Advisors provides a range of professional services to commodity-exposed businesses, trading houses and market participants — drawing on a deep network across global origins, end-user relationships and a consistent track record of managing risk and developing scalable commodity trading strategies.</p>
 
 <div class="cred-row">
-  <span class="cred">FCA Regulated</span>
-  <span class="cred">NFA Series 3</span>
-  <span class="cred">GAFTA</span>
-  <span class="cred">FOSFA</span>
-  <span class="cred">ISDA / CSA</span>
-  <span class="cred">ANEC</span>
+<span class="cred">FCA Regulated</span>
+<span class="cred">NFA Series 3</span>
+<span class="cred">GAFTA</span>
+<span class="cred">FOSFA</span>
+<span class="cred">ISDA / CSA</span>
+<span class="cred">ANEC</span>
 </div>
 
 <div class="stat-strip">
-  <div class="stat"><div class="stat-v">>$5bn</div><div class="stat-l">Physical Purchases</div></div>
-  <div class="stat"><div class="stat-v">1.5 MMT</div><div class="stat-l">Annual Grain Volume</div></div>
-  <div class="stat"><div class="stat-v">>$400m</div><div class="stat-l">Trade Finance Secured</div></div>
-  <div class="stat"><div class="stat-v">14+</div><div class="stat-l">Years Experience</div></div>
-  <div class="stat"><div class="stat-v">15+</div><div class="stat-l">Active Origin Networks</div></div>
-  <div class="stat"><div class="stat-v">Zero</div><div class="stat-l">Defaults</div></div>
+<div class="stat"><div class="stat-v">>$5bn</div><div class="stat-l">Physical Purchases</div></div>
+<div class="stat"><div class="stat-v">1.5 MMT</div><div class="stat-l">Annual Grain Volume</div></div>
+<div class="stat"><div class="stat-v">>$400m</div><div class="stat-l">Trade Finance Secured</div></div>
+<div class="stat"><div class="stat-v">14+</div><div class="stat-l">Years Experience</div></div>
+<div class="stat"><div class="stat-v">15+</div><div class="stat-l">Active Origin Networks</div></div>
+<div class="stat"><div class="stat-v">Zero</div><div class="stat-l">Defaults</div></div>
 </div>
 
 <div class="exp-grid">
-  <div class="exp-card">
-    <div class="exp-card-title">Physical Markets</div>
-    <ul>
-      <li>Wheat, Corn, Barley, Pulses</li>
-      <li>Soybeans, Canola, Veg Oils, Feedstuffs</li>
-      <li>FOB Santos, Upriver Argentina, USG, PNW</li>
-      <li>Full Panamax & Handysize execution</li>
-      <li>Multi-origin and split-discharge expertise</li>
-      <li>Tier-1 APAC end-user relationships</li>
-    </ul>
-  </div>
-  <div class="exp-card">
-    <div class="exp-card-title">Derivatives & Risk</div>
-    <ul>
-      <li>CME / CBOT, MGEX, ICE, Euronext</li>
-      <li>Futures and listed options</li>
-      <li>Inter-commodity and calendar spreads</li>
-      <li>Physical contract hedging</li>
-      <li>FX exposure management</li>
-      <li>OTC and structured hedging</li>
-    </ul>
-  </div>
-  <div class="exp-card">
-    <div class="exp-card-title">Origins Coverage</div>
-    <ul>
-      <li>Australia, USA, Canada</li>
-      <li>Brazil, Argentina</li>
-      <li>Ukraine, Black Sea, Romania</li>
-      <li>India, Kazakhstan</li>
-      <li>China & APAC buy-side network</li>
-    </ul>
-  </div>
-  <div class="exp-card">
-    <div class="exp-card-title">Research & Intelligence</div>
-    <ul>
-      <li>Weekly grain & oilseed commentary</li>
-      <li>CFTC COT positioning analysis</li>
-      <li>WASDE supply & demand interpretation</li>
-      <li>FOB price data across origins</li>
-      <li>Export sales pace analysis</li>
-      <li>Agricultural weather & crop risk</li>
-    </ul>
-  </div>
+<div class="exp-card">
+<div class="exp-card-title">Physical Markets</div>
+<ul>
+<li>Wheat, Corn, Barley, Pulses</li>
+<li>Soybeans, Canola, Veg Oils, Feedstuffs</li>
+<li>FOB Santos, Upriver Argentina, USG, PNW</li>
+<li>Full Panamax & Handysize execution</li>
+<li>Multi-origin and split-discharge expertise</li>
+<li>Tier-1 APAC end-user relationships</li>
+</ul>
+</div>
+<div class="exp-card">
+<div class="exp-card-title">Derivatives & Risk</div>
+<ul>
+<li>CME / CBOT, MGEX, ICE, Euronext</li>
+<li>Futures and listed options</li>
+<li>Inter-commodity and calendar spreads</li>
+<li>Physical contract hedging</li>
+<li>FX exposure management</li>
+<li>OTC and structured hedging</li>
+</ul>
+</div>
+<div class="exp-card">
+<div class="exp-card-title">Origins Coverage</div>
+<ul>
+<li>Australia, USA, Canada</li>
+<li>Brazil, Argentina</li>
+<li>Ukraine, Black Sea, Romania</li>
+<li>India, Kazakhstan</li>
+<li>China & APAC buy-side network</li>
+</ul>
+</div>
+<div class="exp-card">
+<div class="exp-card-title">Research & Intelligence</div>
+<ul>
+<li>Weekly grain & oilseed commentary</li>
+<li>CFTC COT positioning analysis</li>
+<li>WASDE supply & demand interpretation</li>
+<li>FOB price data across origins</li>
+<li>Export sales pace analysis</li>
+<li>Agricultural weather & crop risk</li>
+</ul>
+</div>
 </div>
 
 <div class="about-divider"></div>
@@ -998,78 +998,78 @@ p:last-child{margin-bottom:0;}
 
 <div class="strand-wrap">
 
-  <!-- STRAND 1 -->
+<!-- STRAND 1 -->
 
-  <div class="strand">
-    <div class="strand-header">
-      <div class="strand-icon">📊</div>
-      <div>
-        <div class="strand-title">Research Platform</div>
-        <div class="strand-label">JHD Commodity Advisors · Public Platform</div>
-      </div>
-    </div>
-    <div class="strand-body">
-      <p>The JHD Commodity Advisors platform provides professional-grade agricultural market intelligence, live data analytics and original weekly commentary — accessible to individual traders, analysts, merchandisers and brokers. Free to join, with premium research content available through the platform's engagement economy.</p>
-      <ul class="strand-items">
-        <li>Weekly wheat & grain commentary</li>
-        <li>Live CFTC COT positioning dashboards</li>
-        <li>WASDE supply & demand analytics</li>
-        <li>Weekly export sales data</li>
-        <li>FOB price data across 6 commodities</li>
-        <li>Agricultural weather — 19 global regions</li>
-        <li>Options analytics tool</li>
-        <li>Active community of market participants</li>
-      </ul>
-    </div>
-  </div>
+<div class="strand">
+<div class="strand-header">
+<div class="strand-icon">📊</div>
+<div>
+<div class="strand-title">Research Platform</div>
+<div class="strand-label">JHD Commodity Advisors · Public Platform</div>
+</div>
+</div>
+<div class="strand-body">
+<p>The JHD Commodity Advisors platform provides professional-grade agricultural market intelligence, live data analytics and original weekly commentary — accessible to individual traders, analysts, merchandisers and brokers. Free to join, with premium research content available through the platform's engagement economy.</p>
+<ul class="strand-items">
+<li>Weekly wheat & grain commentary</li>
+<li>Live CFTC COT positioning dashboards</li>
+<li>WASDE supply & demand analytics</li>
+<li>Weekly export sales data</li>
+<li>FOB price data across 6 commodities</li>
+<li>Agricultural weather — 19 global regions</li>
+<li>Options analytics tool</li>
+<li>Active community of market participants</li>
+</ul>
+</div>
+</div>
 
-  <!-- STRAND 2 -->
+<!-- STRAND 2 -->
 
-  <div class="strand">
-    <div class="strand-header">
-      <div class="strand-icon">🌾</div>
-      <div>
-        <div class="strand-title">Advisory Services</div>
-        <div class="strand-label">JHD Commodity Advisors · Professional Services</div>
-      </div>
-    </div>
-    <div class="strand-body">
-      <p>Independent advisory services for commodity-exposed businesses, trading houses and market participants. Engagements are bespoke and priced on scope — covering market strategy, procurement, hedging and trade execution across global grain and oilseed markets.</p>
-      <ul class="strand-items">
-        <li>Commodity market advisory</li>
-        <li>Procurement strategy & market entry</li>
-        <li>Physical commodity broking — managing relations between a global network of Agri participants</li>
-        <li>Hedging using listed futures and options</li>
-        <li>Trade finance & procurement structuring</li>
-        <li>GAFTA / FOSFA contract frameworks</li>
-        <li>Origin diversification strategy</li>
-        <li>Counterparty & supplier onboarding</li>
-      </ul>
-    </div>
-  </div>
+<div class="strand">
+<div class="strand-header">
+<div class="strand-icon">🌾</div>
+<div>
+<div class="strand-title">Advisory Services</div>
+<div class="strand-label">JHD Commodity Advisors · Professional Services</div>
+</div>
+</div>
+<div class="strand-body">
+<p>Independent advisory services for commodity-exposed businesses, trading houses and market participants. Engagements are bespoke and priced on scope — covering market strategy, procurement, hedging and trade execution across global grain and oilseed markets.</p>
+<ul class="strand-items">
+<li>Commodity market advisory</li>
+<li>Procurement strategy & market entry</li>
+<li>Physical commodity broking — managing relations between a global network of Agri participants</li>
+<li>Hedging using listed futures and options</li>
+<li>Trade finance & procurement structuring</li>
+<li>GAFTA / FOSFA contract frameworks</li>
+<li>Origin diversification strategy</li>
+<li>Counterparty & supplier onboarding</li>
+</ul>
+</div>
+</div>
 
-  <!-- STRAND 3 -->
+<!-- STRAND 3 -->
 
-  <div class="strand">
-    <div class="strand-header">
-      <div class="strand-icon">📈</div>
-      <div>
-        <div class="strand-title">Discretionary Trading</div>
-        <div class="strand-label">JHD Commodity Advisors · Managed Accounts</div>
-      </div>
-    </div>
-    <div class="strand-body">
-      <p>James Day is an experienced agricultural commodities trader with a strong track record of managing risk and developing scalable commodity trading strategies across major global markets. Discretionary managed account arrangements are considered on a selective basis and are introduced through direct referral only.</p>
-      <ul class="strand-items">
-        <li>Fundamentally-driven strategies</li>
-        <li>Spread and relative value trading</li>
-        <li>Inter-commodity & calendar spreads</li>
-        <li>Listed options strategies</li>
-        <li>CME, MGEX and ICE markets</li>
-        <li>Grain and oilseed focus</li>
-      </ul>
-    </div>
-  </div>
+<div class="strand">
+<div class="strand-header">
+<div class="strand-icon">📈</div>
+<div>
+<div class="strand-title">Discretionary Trading</div>
+<div class="strand-label">JHD Commodity Advisors · Managed Accounts</div>
+</div>
+</div>
+<div class="strand-body">
+<p>James Day is an experienced agricultural commodities trader with a strong track record of managing risk and developing scalable commodity trading strategies across major global markets. Discretionary managed account arrangements are considered on a selective basis and are introduced through direct referral only.</p>
+<ul class="strand-items">
+<li>Fundamentally-driven strategies</li>
+<li>Spread and relative value trading</li>
+<li>Inter-commodity & calendar spreads</li>
+<li>Listed options strategies</li>
+<li>CME, MGEX and ICE markets</li>
+<li>Grain and oilseed focus</li>
+</ul>
+</div>
+</div>
 
 </div>
 
@@ -1081,274 +1081,275 @@ p:last-child{margin-bottom:0;}
 
 <div class="mkt-label">Commodities</div>
 <div class="market-tags">
-  <span class="market-tag mt-blue">Wheat (SRW · HRW · DNS · Milling)</span>
-  <span class="market-tag mt-blue">Corn</span>
-  <span class="market-tag mt-blue">Soybeans</span>
-  <span class="market-tag mt-blue">Soybean Meal</span>
-  <span class="market-tag mt-blue">Soybean Oil</span>
-  <span class="market-tag mt-blue">Canola / Rapeseed</span>
-  <span class="market-tag mt-blue">Barley</span>
-  <span class="market-tag mt-blue">Pulses</span>
-  <span class="market-tag mt-blue">Palm Oil</span>
+<span class="market-tag mt-blue">Wheat (SRW · HRW · DNS · Milling)</span>
+<span class="market-tag mt-blue">Corn</span>
+<span class="market-tag mt-blue">Soybeans</span>
+<span class="market-tag mt-blue">Soybean Meal</span>
+<span class="market-tag mt-blue">Soybean Oil</span>
+<span class="market-tag mt-blue">Canola / Rapeseed</span>
+<span class="market-tag mt-blue">Barley</span>
+<span class="market-tag mt-blue">Pulses</span>
+<span class="market-tag mt-blue">Palm Oil</span>
 </div>
 
 <div class="mkt-label">Exchanges</div>
 <div class="market-tags">
-  <span class="market-tag mt-teal">CME / CBOT</span>
-  <span class="market-tag mt-teal">MGEX</span>
-  <span class="market-tag mt-teal">ICE Futures US</span>
-  <span class="market-tag mt-teal">ICE Futures Europe</span>
-  <span class="market-tag mt-teal">Euronext Paris (MATIF)</span>
+<span class="market-tag mt-teal">CME / CBOT</span>
+<span class="market-tag mt-teal">MGEX</span>
+<span class="market-tag mt-teal">ICE Futures US</span>
+<span class="market-tag mt-teal">ICE Futures Europe</span>
+<span class="market-tag mt-teal">Euronext Paris (MATIF)</span>
 </div>
 
 <div class="mkt-label">Instruments</div>
 <div class="market-tags">
-  <span class="market-tag mt-gold">Futures</span>
-  <span class="market-tag mt-gold">Listed Options</span>
-  <span class="market-tag mt-gold">Physical Spreads</span>
-  <span class="market-tag mt-gold">FOB Paper</span>
-  <span class="market-tag mt-gold">OTC Hedging</span>
-  <span class="market-tag mt-gold">Calendar Spreads</span>
-  <span class="market-tag mt-gold">Inter-Commodity Spreads</span>
+<span class="market-tag mt-gold">Futures</span>
+<span class="market-tag mt-gold">Listed Options</span>
+<span class="market-tag mt-gold">Physical Spreads</span>
+<span class="market-tag mt-gold">FOB Paper</span>
+<span class="market-tag mt-gold">OTC Hedging</span>
+<span class="market-tag mt-gold">Calendar Spreads</span>
+<span class="market-tag mt-gold">Inter-Commodity Spreads</span>
 </div>
 
 <div class="mkt-label">Contract Frameworks</div>
 <div class="market-tags">
-  <span class="market-tag mt-coral">GAFTA</span>
-  <span class="market-tag mt-coral">FOSFA</span>
-  <span class="market-tag mt-coral">ANEC</span>
-  <span class="market-tag mt-coral">ISDA / CSA</span>
+<span class="market-tag mt-coral">GAFTA</span>
+<span class="market-tag mt-coral">FOSFA</span>
+<span class="market-tag mt-coral">ANEC</span>
+<span class="market-tag mt-coral">ISDA / CSA</span>
 </div>
 
 <div class="about-divider"></div>
 
 <p style="font-size:12px;color:var(--muted2);font-family:'DM Mono',monospace;line-height:1.7;">
-  JHD Commodity Advisors is a trading name of James Day. FCA regulated. NFA Series 3 qualified. All research and commentary is produced for informational purposes only and does not constitute investment advice. Past performance is not indicative of future results. Commodity trading involves substantial risk of loss. Managed account services are provided to eligible counterparties only.
+JHD Commodity Advisors is a trading name of James Day. FCA regulated. NFA Series 3 qualified. All research and commentary is produced for informational purposes only and does not constitute investment advice. Past performance is not indicative of future results. Commodity trading involves substantial risk of loss. Managed account services are provided to eligible counterparties only.
 </p>
 
 </div>
-  </div>
-
-  <!-- Post Detail -->
-
-  <div id="tab-detail" class="hidden">
-    <header style="background:var(--bg);border-bottom:1px solid var(--border);">
-      <div style="max-width:1280px;margin:0 auto;padding:12px 24px;display:flex;align-items:center;gap:12px;">
-        <button class="btn btn-navy" onclick="closeDetail()" style="padding:7px 16px;font-size:13px;">← Back</button>
-        <span id="detail-breadcrumb" style="font-size:13px;color:var(--muted);"></span>
-      </div>
-    </header>
-    <div class="detail-wrap protected">
-      <div id="detail-content"><div class="spin">Loading…</div></div>
-    </div>
-  </div>
 </div>
 
-  <!-- Export Data -->
+<!-- Post Detail -->
 
-  <div id="tab-exports" class="hidden protected">
-    <div class="page-wrap">
-      <div class="page-heading"><h2>Export Data</h2><p>Global agricultural export flows, trade data and shipment analysis</p></div>
-      <div id="posts-exports"><div class="spin">Loading…</div></div>
-    </div>
-  </div>
+<div id="tab-detail" class="hidden">
+<header style="background:var(--bg);border-bottom:1px solid var(--border);">
+<div style="max-width:1280px;margin:0 auto;padding:12px 24px;display:flex;align-items:center;gap:12px;">
+<button class="btn btn-navy" onclick="closeDetail()" style="padding:7px 16px;font-size:13px;">← Back</button>
+<span id="detail-breadcrumb" style="font-size:13px;color:var(--muted);"></span>
+</div>
+</header>
+<div class="detail-wrap protected">
+<div id="detail-content"><div class="spin">Loading…</div></div>
+</div>
+</div>
+</div>
 
-  <!-- WASDE -->
+<!-- Export Data -->
 
-  <div id="tab-wasde" class="hidden protected">
-    <div class="page-wrap">
-      <div class="page-heading"><h2>WASDE</h2><p>World Agricultural Supply and Demand Estimates — analysis and commentary</p></div>
-      <div id="posts-wasde"><div class="spin">Loading…</div></div>
-    </div>
-  </div>
+<div id="tab-exports" class="hidden protected">
+<div class="page-wrap">
+<div class="page-heading"><h2>Export Data</h2><p>Global agricultural export flows, trade data and shipment analysis</p></div>
+<div id="posts-exports"><div class="spin">Loading…</div></div>
+</div>
+</div>
 
-  <!-- Commodity Map -->
+<!-- WASDE -->
 
-  <div id="tab-commoditymap" class="hidden protected">
-    <div class="page-wrap">
-      <div class="page-heading"><h2>Commodity Map</h2><p>Production regions, trade flows and origin analysis</p></div>
-      <div id="posts-commoditymap"><div class="spin">Loading…</div></div>
-    </div>
-  </div>
+<div id="tab-wasde" class="hidden protected">
+<div class="page-wrap">
+<div class="page-heading"><h2>WASDE</h2><p>World Agricultural Supply and Demand Estimates — analysis and commentary</p></div>
+<div id="posts-wasde"><div class="spin">Loading…</div></div>
+</div>
+</div>
 
-  <!-- Weather -->
+<!-- Commodity Map -->
 
-  <div id="tab-weather" class="hidden protected">
-    <iframe
-      src="/JHD_Weather_Hub.html"
-      id="weather-hub-iframe"
-      title="JHD Agricultural Weather Hub"
-      style="width:100%;height:calc(100vh - 110px);border:none;display:block;"
-      loading="lazy">
-    </iframe>
-  </div>
+<div id="tab-commoditymap" class="hidden protected">
+<div class="page-wrap">
+<div class="page-heading"><h2>Commodity Map</h2><p>Production regions, trade flows and origin analysis</p></div>
+<div id="posts-commoditymap"><div class="spin">Loading…</div></div>
+</div>
+</div>
 
-  <!-- Options Analytics -->
+<!-- Weather -->
 
-  <div id="tab-options" class="hidden protected">
-    <div class="page-wrap">
-      <div class="page-heading"><h2>Options Analytics</h2><p>Volatility analysis, options strategies and derivatives market intelligence</p></div>
-      <div id="posts-options"><div class="spin">Loading…</div></div>
-    </div>
-  </div>
+<div id="tab-weather" class="hidden protected">
+<iframe
+src="/JHD_Weather_Hub.html"
+id="weather-hub-iframe"
+title="JHD Agricultural Weather Hub"
+style="width:100%;height:calc(100vh - 110px);border:none;display:block;"
+loading="lazy">
+</iframe>
+</div>
 
-  <!-- FOB Data -->
+<!-- Options Analytics -->
 
-  <div id="tab-fob" class="hidden protected">
-    <div class="page-wrap">
-      <div class="page-heading"><h2>FOB Data</h2><p>Free-on-board pricing, origin spreads and export basis analysis</p></div>
-      <div id="posts-fob"><div class="spin">Loading…</div></div>
-    </div>
-  </div>
+<div id="tab-options" class="hidden protected">
+<div class="page-wrap">
+<div class="page-heading"><h2>Options Analytics</h2><p>Volatility analysis, options strategies and derivatives market intelligence</p></div>
+<div id="posts-options"><div class="spin">Loading…</div></div>
+</div>
+</div>
 
-  <!-- Freight -->
+<!-- FOB Data -->
 
-  <div id="tab-freight" class="hidden protected">
-    <div class="page-wrap">
-      <div class="page-heading"><h2>Freight</h2><p>Dry bulk freight rates, vessel markets and shipping cost analysis</p></div>
-      <div id="posts-freight"><div class="spin">Loading…</div></div>
-    </div>
-  </div>
+<div id="tab-fob" class="hidden protected">
+<div class="page-wrap">
+<div class="page-heading"><h2>FOB Data</h2><p>Free-on-board pricing, origin spreads and export basis analysis</p></div>
+<div id="posts-fob"><div class="spin">Loading…</div></div>
+</div>
+</div>
 
-  <!-- Technical Analysis -->
+<!-- Freight -->
 
-  <div id="tab-technicals" class="hidden protected">
-    <div class="page-wrap">
-      <div class="page-heading">
-        <h2>Technical Analysis</h2>
-        <p>Chart analysis, key levels and technical factors across grain and oilseed markets</p>
-      </div>
-      <div id="ta-admin-form-wrap" class="hidden"></div>
-      <div id="ta-cards-wrap">
-        <div class="ta-empty">Loading charts…</div>
-      </div>
-    </div>
-  </div>
-  <div class="recent-strip-wrap" id="recent-strip-wrap" style="display:none;">
-    <div class="recent-strip-inner">
-      <div class="recent-strip-label">Recent Publications</div>
-      <div class="recent-strip-scroll" id="recent-strip-scroll">
-        <div style="color:var(--muted2);font-size:12px;font-family:'DM Mono',monospace;padding:20px 0;">Loading…</div>
-      </div>
-    </div>
-  </div>
-  <footer class="site-footer">
-    <div class="site-footer-inner">
-      <div class="footer-brand-wrap">
-        <div class="footer-brand-mark" onclick="showTab('services')" title="Services" style="background:transparent;display:flex;align-items:center;gap:6px;width:auto;">
-          <img src="https://i.ibb.co/PZPZGP71/IMG-2924.jpg" alt="JHD" style="height:28px;width:28px;object-fit:contain;border-radius:3px;">
-          <span style="font-family:'DM Serif Display',serif;font-size:13px;color:var(--text);">JHD</span>
-        </div>
-        <span class="footer-brand-name" style="font-family:'DM Mono',monospace;font-size:8px;color:var(--gold2);letter-spacing:0.14em;text-transform:uppercase;">Commodity Advisors</span>
-      </div>
-      <nav class="footer-nav">
-        <button class="footer-nav-btn" onclick="showTab('services')">Services</button>
-        <button class="footer-nav-btn" onclick="showTab('contact')">Contact Us</button>
-        <button class="footer-nav-btn" onclick="showTab('about')">About Us</button>
-      </nav>
-      <div class="footer-copy">© 2025 JHD Commodity Advisors · Informational use only · Not investment advice</div>
-    </div>
-  </footer>
+<div id="tab-freight" class="hidden protected">
+<div class="page-wrap">
+<div class="page-heading"><h2>Freight</h2><p>Dry bulk freight rates, vessel markets and shipping cost analysis</p></div>
+<div id="posts-freight"><div class="spin">Loading…</div></div>
+</div>
+</div>
+
+<!-- Technical Analysis -->
+
+<div id="tab-technicals" class="hidden protected">
+<div class="page-wrap">
+<div class="page-heading">
+<h2>Technical Analysis</h2>
+<p>Chart analysis, key levels and technical factors across grain and oilseed markets</p>
+</div>
+<div id="ta-admin-form-wrap" class="hidden"></div>
+<div id="ta-cards-wrap">
+<div class="ta-empty">Loading charts…</div>
+</div>
+</div>
+</div>
+<div class="recent-strip-wrap" id="recent-strip-wrap" style="display:none;">
+<div class="recent-strip-inner">
+<div class="recent-strip-label">Recent Publications</div>
+<div class="recent-strip-scroll" id="recent-strip-scroll">
+<div style="color:var(--muted2);font-size:12px;font-family:'DM Mono',monospace;padding:20px 0;">Loading…</div>
+</div>
+</div>
+</div>
+<footer class="site-footer">
+<div class="site-footer-inner">
+<div class="footer-brand-wrap">
+<div class="footer-brand-mark" onclick="showTab('services')" title="Services" style="background:transparent;display:flex;align-items:center;gap:6px;width:auto;">
+<img src="https://i.ibb.co/PZPZGP71/IMG-2924.jpg" alt="JHD" style="height:28px;width:28px;object-fit:contain;border-radius:3px;">
+<span style="font-family:'DM Serif Display',serif;font-size:13px;color:var(--text);">JHD</span>
+</div>
+<span class="footer-brand-name" style="font-family:'DM Mono',monospace;font-size:8px;color:var(--gold2);letter-spacing:0.14em;text-transform:uppercase;">Commodity Advisors</span>
+</div>
+<nav class="footer-nav">
+<button class="footer-nav-btn" onclick="showTab('services')">Services</button>
+<button class="footer-nav-btn" onclick="showTab('contact')">Contact Us</button>
+<button class="footer-nav-btn" onclick="showTab('about')">About Us</button>
+</nav>
+<div class="footer-copy">© 2025 JHD Commodity Advisors · Informational use only · Not investment advice</div>
+</div>
+</footer>
 </div>
 
 <!-- ========================= ADMIN ========================= -->
 
 <div id="page-admin" class="hidden">
-  <header class="topbar">
-    <div class="topbar-inner">
-      <div class="topbar-brand" onclick="showAppPage()"><div class="brand-mark">JHD</div><span class="brand-name">JHD Commodity Advisors</span></div>
-      <div class="topbar-right">
-        <button class="btn btn-ghost" onclick="showAppPage()">← Back to Site</button>
-        <button class="btn btn-ghost" onclick="doSignOut()">Sign Out</button>
-      </div>
-    </div>
-  </header>
-  <div class="admin-wrap">
-    <div class="admin-tab-row">
-      <button class="tab-btn active" id="wtab"  onclick="switchAdminTab('write')">✏ New Post</button>
-      <button class="tab-btn"        id="ptab"  onclick="switchAdminTab('posts')">📋 Manage Posts</button>
-      <button class="tab-btn"        id="mtab"  onclick="switchAdminTab('mod')">💬 Moderate Comments</button>
-      <button class="tab-btn"        id="stab"  onclick="switchAdminTab('subs')">👥 Subscribers</button>
-    </div>
+<header class="topbar">
+<div class="topbar-inner">
+<div class="topbar-brand" onclick="showAppPage()"><div class="brand-mark">JHD</div><span class="brand-name">JHD Commodity Advisors</span></div>
+<div class="topbar-right">
+<button class="btn btn-ghost" onclick="showAppPage()">← Back to Site</button>
+<button class="btn btn-ghost" onclick="doSignOut()">Sign Out</button>
+</div>
+</div>
+</header>
+<div class="admin-wrap">
+<div class="admin-tab-row">
+<button class="tab-btn active" id="wtab" onclick="switchAdminTab('write')">✏ New Post</button>
+<button class="tab-btn" id="ptab" onclick="switchAdminTab('posts')">📋 Manage Posts</button>
+<button class="tab-btn" id="mtab" onclick="switchAdminTab('mod')">💬 Moderate Comments</button>
+<button class="tab-btn" id="stab" onclick="switchAdminTab('subs')">👥 Subscribers</button>
+</div>
 
 ```
 <!-- New Post -->
 <div id="admin-write">
-  <div class="section-h2">Publish New Post</div>
-  <div class="admin-field">
-    <label class="cat-label">Publish to section</label>
-    <select id="p-category">
-      <option value="commentary">Market Commentary</option>
-      <option value="research">Research</option>
-      <option value="cftc">CFTC</option>
-      <option value="exports">Export Data</option>
-      <option value="wasde">WASDE</option>
-      <option value="commoditymap">Commodity Map</option>
-      <option value="weather">Weather</option>
-      <option value="options">Options Analytics</option>
-      <option value="fob">FOB Data</option>
-      <option value="freight">Freight</option>
-      <option value="technicals">Technical Analysis</option>
-    <input type="text" id="p-title"   placeholder="Title of this post…">
-    <input type="text" id="p-summary" placeholder="One-line summary shown on the listing…">
-    <div class="editor-mode-row">
-      <span class="editor-label">Content</span>
-      <div class="mode-toggle">
-        <button class="mode-btn active" id="mode-visual" onclick="setEditorMode('visual')">Visual</button>
-        <button class="mode-btn"        id="mode-html"   onclick="setEditorMode('html')">HTML Source</button>
-      </div>
-    </div>
-    <div id="editor-visual-wrap"><div id="quill-editor"></div></div>
-    <div id="editor-html-wrap" class="hidden">
-      <textarea id="html-source-input" placeholder="Paste your full HTML commentary file here…"></textarea>
-      <div class="html-hint">💡 Paste your complete HTML file including &lt;!DOCTYPE html&gt;. Your full design — masthead, ticker bar, fonts, sidebar — will render exactly as designed.</div>
-    </div>
-  </div>
-  <div class="publish-row">
-    <button class="btn btn-navy" id="pub-btn" onclick="publishPost()" style="padding:12px 28px;font-size:15px;">Publish Post</button>
-    <div id="pub-msg" class="hidden msg-box" style="margin:0;flex:1;"></div>
-  </div>
+<div class="section-h2">Publish New Post</div>
+<div class="admin-field">
+<label class="cat-label">Publish to section</label>
+<select id="p-category">
+<option value="commentary">Market Commentary</option>
+<option value="research">Research</option>
+<option value="cftc">CFTC</option>
+<option value="exports">Export Data</option>
+<option value="wasde">WASDE</option>
+<option value="commoditymap">Commodity Map</option>
+<option value="weather">Weather</option>
+<option value="options">Options Analytics</option>
+<option value="fob">FOB Data</option>
+<option value="freight">Freight</option>
+<option value="technicals">Technical Analysis</option>
+</select>
+<input type="text" id="p-title" placeholder="Title of this post…">
+<input type="text" id="p-summary" placeholder="One-line summary shown on the listing…">
+<div class="editor-mode-row">
+<span class="editor-label">Content</span>
+<div class="mode-toggle">
+<button class="mode-btn active" id="mode-visual" onclick="setEditorMode('visual')">Visual</button>
+<button class="mode-btn" id="mode-html" onclick="setEditorMode('html')">HTML Source</button>
+</div>
+</div>
+<div id="editor-visual-wrap"><div id="quill-editor"></div></div>
+<div id="editor-html-wrap" class="hidden">
+<textarea id="html-source-input" placeholder="Paste your full HTML commentary file here…"></textarea>
+<div class="html-hint">💡 Paste your complete HTML file including &lt;!DOCTYPE html&gt;. Your full design — masthead, ticker bar, fonts, sidebar — will render exactly as designed.</div>
+</div>
+</div>
+<div class="publish-row">
+<button class="btn btn-navy" id="pub-btn" onclick="publishPost()" style="padding:12px 28px;font-size:15px;">Publish Post</button>
+<div id="pub-msg" class="hidden msg-box" style="margin:0;flex:1;"></div>
+</div>
 </div>
 
 <!-- Moderate Comments -->
 <div id="admin-mod" class="hidden">
-  <div class="section-h2">Moderate Comments</div>
-  <div id="mod-list"><div class="spin">Loading…</div></div>
+<div class="section-h2">Moderate Comments</div>
+<div id="mod-list"><div class="spin">Loading…</div></div>
 </div>
 
 <!-- Manage Posts -->
 <div id="admin-posts" class="hidden">
-  <div class="section-h2">Manage Posts</div>
-  <div id="posts-manage-list"><div class="spin">Loading…</div></div>
+<div class="section-h2">Manage Posts</div>
+<div id="posts-manage-list"><div class="spin">Loading…</div></div>
 </div>
 
 <!-- Subscribers -->
 <div id="admin-subs" class="hidden">
-  <div class="section-h2">Subscribers</div>
-  <div class="subs-stats">
-    <div class="stat-card"><div class="stat-label">Total Subscribers</div><div class="stat-val" id="subs-total">—</div></div>
-    <div class="stat-card"><div class="stat-label">Joined This Month</div><div class="stat-val" id="subs-month">—</div></div>
-    <div class="stat-card"><div class="stat-label">Joined This Week</div><div class="stat-val" id="subs-week">—</div></div>
-  </div>
-  <div class="export-row">
-    <input class="subs-search" type="text" id="subs-search" placeholder="Search by email…" oninput="filterSubs()" style="max-width:320px;margin-bottom:0;">
-    <button class="btn btn-navy" onclick="exportCSV()" style="padding:9px 18px;">↓ Export CSV</button>
-  </div>
-  <div class="subs-table-wrap">
-    <table class="subs-table">
-      <thead><tr><th>#</th><th>Email</th><th>Joined</th></tr></thead>
-      <tbody id="subs-tbody"><tr><td colspan="3" style="text-align:center;padding:32px;color:var(--muted);">Loading…</td></tr></tbody>
-    </table>
-  </div>
+<div class="section-h2">Subscribers</div>
+<div class="subs-stats">
+<div class="stat-card"><div class="stat-label">Total Subscribers</div><div class="stat-val" id="subs-total">—</div></div>
+<div class="stat-card"><div class="stat-label">Joined This Month</div><div class="stat-val" id="subs-month">—</div></div>
+<div class="stat-card"><div class="stat-label">Joined This Week</div><div class="stat-val" id="subs-week">—</div></div>
+</div>
+<div class="export-row">
+<input class="subs-search" type="text" id="subs-search" placeholder="Search by email…" oninput="filterSubs()" style="max-width:320px;margin-bottom:0;">
+<button class="btn btn-navy" onclick="exportCSV()" style="padding:9px 18px;">↓ Export CSV</button>
+</div>
+<div class="subs-table-wrap">
+<table class="subs-table">
+<thead><tr><th>#</th><th>Email</th><th>Joined</th></tr></thead>
+<tbody id="subs-tbody"><tr><td colspan="3" style="text-align:center;padding:32px;color:var(--muted);">Loading…</td></tr></tbody>
+</table>
+</div>
 </div>
 ```
 
-  </div>
+</div>
 </div>
 
 <!-- ================================================================
-     LOGIC
-     ================================================================ -->
+LOGIC
+================================================================ -->
 
 <script>
 'use strict';
@@ -1357,116 +1358,116 @@ let allSubs=[];
 
 /* ===== RECENT STRIP ===== */
 async function loadRecentStrip(){
-  const scroll = document.getElementById('recent-strip-scroll');
-  if(!scroll) return;
-  const catLabel = {'commentary':'Commentary','research':'Research','cftc':'CFTC','exports':'Export Data','wasde':'WASDE','commoditymap':'Commodity Map','weather':'Weather','options':'Options','fob':'FOB Data','freight':'Freight','technicals':'Technical Analysis'};
-  const{data,error} = await sb.from('posts').select('id,title,created_at,category').order('created_at',{ascending:false}).limit(12);
-  if(error || !data || data.length === 0){
-    scroll.innerHTML = '<div style="color:var(--muted2);font-size:12px;font-family:monospace;padding:8px 0;">No publications yet.</div>';
-    return;
-  }
-  scroll.innerHTML = data.map(p => `
-    <div class="recent-doc-card" onclick="loadDetail('${p.id}','${p.category}')">
-      <div class="recent-doc-cat">${catLabel[p.category]||p.category}</div>
-      <div class="recent-doc-title">${esc(p.title)}</div>
-      <div class="recent-doc-date">${fmtDate(p.created_at)}</div>
-    </div>`).join('');
+const scroll = document.getElementById('recent-strip-scroll');
+if(!scroll) return;
+const catLabel = {'commentary':'Commentary','research':'Research','cftc':'CFTC','exports':'Export Data','wasde':'WASDE','commoditymap':'Commodity Map','weather':'Weather','options':'Options','fob':'FOB Data','freight':'Freight','technicals':'Technical Analysis'};
+const{data,error} = await sb.from('posts').select('id,title,created_at,category').order('created_at',{ascending:false}).limit(12);
+if(error || !data || data.length === 0){
+scroll.innerHTML = '<div style="color:var(--muted2);font-size:12px;font-family:monospace;padding:8px 0;">No publications yet.</div>';
+return;
+}
+scroll.innerHTML = data.map(p => `
+<div class="recent-doc-card" onclick="loadDetail('${p.id}','${p.category}')">
+<div class="recent-doc-cat">${catLabel[p.category]||p.category}</div>
+<div class="recent-doc-title">${esc(p.title)}</div>
+<div class="recent-doc-date">${fmtDate(p.created_at)}</div>
+</div>`).join('');
 }
 
 async function boot(){
-  try {
-    if(!window.supabase){ throw new Error('Supabase library failed to load. Please hard-refresh (Ctrl+Shift+R).'); }
-    sb=window.supabase.createClient(SUPABASE_URL,SUPABASE_ANON);
-    document.title='JHD Commodity Advisors';
+try {
+if(!window.supabase){ throw new Error('Supabase library failed to load. Please hard-refresh (Ctrl+Shift+R).'); }
+sb=window.supabase.createClient(SUPABASE_URL,SUPABASE_ANON);
+document.title='JHD Commodity Advisors';
 
-    // Preview mode: skip login when opening as a local file or ?preview in URL
-    const isLocalFile = window.location.protocol === 'file:';
-    const isPreview   = new URLSearchParams(window.location.search).has('preview');
-    if(isLocalFile || isPreview){
-      showAppPage();
-      installProtection();
-      return;
-    }
+// Preview mode: skip login when opening as a local file or ?preview in URL
+const isLocalFile = window.location.protocol === 'file:';
+const isPreview = new URLSearchParams(window.location.search).has('preview');
+if(isLocalFile || isPreview){
+showAppPage();
+installProtection();
+return;
+}
 
-    const{data:{session}}=await sb.auth.getSession();
-    if(session){ currentUser=session.user; isAdmin=currentUser.email.toLowerCase()===ADMIN_EMAIL.toLowerCase(); showAppPage(); }
-    else document.getElementById('page-auth').classList.remove('hidden');
-    installProtection();
-  } catch(e) {
-    console.error('Boot error:', e);
-    const authCard = document.querySelector('.auth-card');
-    if(authCard) authCard.insertAdjacentHTML('afterbegin', `<div class="msg-box msg-error" style="margin-bottom:14px;">Startup error: ${e.message}</div>`);
-    document.getElementById('page-auth').classList.remove('hidden');
-  }
+const{data:{session}}=await sb.auth.getSession();
+if(session){ currentUser=session.user; isAdmin=currentUser.email.toLowerCase()===ADMIN_EMAIL.toLowerCase(); showAppPage(); }
+else document.getElementById('page-auth').classList.remove('hidden');
+installProtection();
+} catch(e) {
+console.error('Boot error:', e);
+const authCard = document.querySelector('.auth-card');
+if(authCard) authCard.insertAdjacentHTML('afterbegin', `<div class="msg-box msg-error" style="margin-bottom:14px;">Startup error: ${e.message}</div>`);
+document.getElementById('page-auth').classList.remove('hidden');
+}
 }
 
 /* ===== COPY / PRINT PROTECTION ===== */
 function installProtection(){
-  // Block right-click on protected content
-  document.addEventListener('contextmenu', e=>{
-    if(e.target.closest('.protected')){ e.preventDefault(); return false; }
-  });
-  // Block keyboard shortcuts on protected content
-  document.addEventListener('keydown', e=>{
-    const inProtected = e.target.closest('.protected') || document.querySelector('.protected:not(.hidden)');
-    if(!inProtected) return;
-    const k=e.key.toLowerCase();
-    // Block copy, select all, save, print
-    if((e.ctrlKey||e.metaKey) && ['c','a','s','p','u'].includes(k)){
-      e.preventDefault(); return false;
-    }
-    // Block F12 devtools (best effort)
-    if(e.key==='F12'){ e.preventDefault(); return false; }
-    // Block PrintScreen
-    if(e.key==='PrintScreen'){ e.preventDefault(); return false; }
-  });
-  // Block drag-to-copy on protected areas
-  document.addEventListener('dragstart', e=>{
-    if(e.target.closest('.protected')){ e.preventDefault(); return false; }
-  });
+// Block right-click on protected content
+document.addEventListener('contextmenu', e=>{
+if(e.target.closest('.protected')){ e.preventDefault(); return false; }
+});
+// Block keyboard shortcuts on protected content
+document.addEventListener('keydown', e=>{
+const inProtected = e.target.closest('.protected') || document.querySelector('.protected:not(.hidden)');
+if(!inProtected) return;
+const k=e.key.toLowerCase();
+// Block copy, select all, save, print
+if((e.ctrlKey||e.metaKey) && ['c','a','s','p','u'].includes(k)){
+e.preventDefault(); return false;
+}
+// Block F12 devtools (best effort)
+if(e.key==='F12'){ e.preventDefault(); return false; }
+// Block PrintScreen
+if(e.key==='PrintScreen'){ e.preventDefault(); return false; }
+});
+// Block drag-to-copy on protected areas
+document.addEventListener('dragstart', e=>{
+if(e.target.closest('.protected')){ e.preventDefault(); return false; }
+});
 }
 
 /* ===== PAGE ROUTING ===== */
 function showAppPage(){
-  ['page-auth','page-admin'].forEach(id=>document.getElementById(id).classList.add('hidden'));
-  document.getElementById('page-app').classList.remove('hidden');
-  const btn=document.getElementById('admin-btn');
-  if(btn) btn.classList.toggle('hidden',!isAdmin);
-  const chip=document.getElementById('app-chip');
-  if(chip) chip.textContent=currentUser?currentUser.email:'';
-  showTab(window._activeTab||'commentary');
-  loadRecentStrip();
+['page-auth','page-admin'].forEach(id=>document.getElementById(id).classList.add('hidden'));
+document.getElementById('page-app').classList.remove('hidden');
+const btn=document.getElementById('admin-btn');
+if(btn) btn.classList.toggle('hidden',!isAdmin);
+const chip=document.getElementById('app-chip');
+if(chip) chip.textContent=currentUser?currentUser.email:'';
+showTab(window._activeTab||'commentary');
+loadRecentStrip();
 }
 function showAdminPage(){
-  document.getElementById('page-app').classList.add('hidden');
-  document.getElementById('page-admin').classList.remove('hidden');
-  if(!quill) initQuill();
-  switchAdminTab('write');
+document.getElementById('page-app').classList.add('hidden');
+document.getElementById('page-admin').classList.remove('hidden');
+if(!quill) initQuill();
+switchAdminTab('write');
 }
 
 /* ===== TAB ROUTING ===== */
 const POST_TABS=['commentary','research','cftc','exports','wasde','commoditymap','weather','options','fob','freight'];
 function showTab(name){
-  window._activeTab=name;
-  ['commentary','research','cftc','futures','services','contact','about','detail','exports','wasde','commoditymap','weather','options','fob','freight','technicals']
-    .forEach(t=>document.getElementById('tab-'+t).classList.add('hidden'));
-  document.getElementById('tab-'+name).classList.remove('hidden');
-  document.querySelectorAll('.snav-btn').forEach(b=>b.classList.toggle('active',b.dataset.tab===name));
-  if(POST_TABS.includes(name)) loadPosts(name);
-  if(name==='technicals') loadTACharts();
+window._activeTab=name;
+['commentary','research','cftc','futures','services','contact','about','detail','exports','wasde','commoditymap','weather','options','fob','freight','technicals']
+.forEach(t=>document.getElementById('tab-'+t).classList.add('hidden'));
+document.getElementById('tab-'+name).classList.remove('hidden');
+document.querySelectorAll('.snav-btn').forEach(b=>b.classList.toggle('active',b.dataset.tab===name));
+if(POST_TABS.includes(name)) loadPosts(name);
+if(name==='technicals') loadTACharts();
 }
 /* ===== TECHNICAL ANALYSIS ===== */
 const TA_INDICATORS = [
-  'RSI Overbought','RSI Oversold','RSI Neutral',
-  'MACD Bullish Cross','MACD Bearish Cross',
-  'Golden Cross','Death Cross',
-  'Above 200 MA','Below 200 MA',
-  'Above 50 MA','Below 50 MA',
-  'Bullish Engulfing','Bearish Engulfing',
-  'Double Top','Double Bottom',
-  'Bull Flag','Bear Flag',
-  'Trend Breakout','Support Held','Resistance Held',
-  'Volume Divergence','Price Divergence'
+'RSI Overbought','RSI Oversold','RSI Neutral',
+'MACD Bullish Cross','MACD Bearish Cross',
+'Golden Cross','Death Cross',
+'Above 200 MA','Below 200 MA',
+'Above 50 MA','Below 50 MA',
+'Bullish Engulfing','Bearish Engulfing',
+'Double Top','Double Bottom',
+'Bull Flag','Bear Flag',
+'Trend Breakout','Support Held','Resistance Held',
+'Volume Divergence','Price Divergence'
 ];
 
 let _taChartImage = null;
@@ -1474,172 +1475,172 @@ let _taIndicatorState = {}; // key: indicator name, value: 'bull'|'bear'|'neut'|
 
 
 async function loadTACharts(){
-  const wrap = document.getElementById('ta-cards-wrap');
-  const adminWrap = document.getElementById('ta-admin-form-wrap');
+const wrap = document.getElementById('ta-cards-wrap');
+const adminWrap = document.getElementById('ta-admin-form-wrap');
 
-  // Show admin form for admin users
-  if(isAdmin){
-    adminWrap.classList.remove('hidden');
-    renderTAAdminForm();
-  }
+// Show admin form for admin users
+if(isAdmin){
+adminWrap.classList.remove('hidden');
+renderTAAdminForm();
+}
 
-  wrap.innerHTML = '<div class="ta-empty"><span class="spin" style="display:inline-block;margin-right:8px"></span>Loading charts…</div>';
+wrap.innerHTML = '<div class="ta-empty"><span class="spin" style="display:inline-block;margin-right:8px"></span>Loading charts…</div>';
 
-  try {
-    const { data, error } = await sb
-      .from('posts')
-      .select('*')
-      .eq('category','technicals')
-      .order('created_at',{ascending:false});
+try {
+const { data, error } = await sb
+.from('posts')
+.select('*')
+.eq('category','technicals')
+.order('created_at',{ascending:false});
 
-    if(error) throw error;
+if(error) throw error;
 
-    if(!data || data.length === 0){
-      wrap.innerHTML = '<div class="ta-empty">No technical analysis charts published yet.</div>';
-      return;
-    }
+if(!data || data.length === 0){
+wrap.innerHTML = '<div class="ta-empty">No technical analysis charts published yet.</div>';
+return;
+}
 
-    wrap.innerHTML = '<div class="ta-grid">' +
-      data.map(post => renderTACard(post)).join('') +
-      '</div>';
+wrap.innerHTML = '<div class="ta-grid">' +
+data.map(post => renderTACard(post)).join('') +
+'</div>';
 
-  } catch(e){
-    wrap.innerHTML = `<div class="ta-empty">Error loading charts: ${esc(e.message)}</div>`;
-  }
+} catch(e){
+wrap.innerHTML = `<div class="ta-empty">Error loading charts: ${esc(e.message)}</div>`;
+}
 }
 
 function renderTACard(post){
-  let meta = {};
-  try { meta = JSON.parse(post.summary || '{}'); } catch(e){}
+let meta = {};
+try { meta = JSON.parse(post.summary || '{}'); } catch(e){}
 
-  const instrument  = meta.instrument  || post.title || 'Unknown';
-  const timeframe   = meta.timeframe   || '';
-  const bias        = meta.bias        || 'neutral';
-  const resistance  = meta.resistance  || '—';
-  const support     = meta.support     || '—';
-  const target      = meta.target      || '—';
-  const commentary  = meta.commentary  || post.content || '';
-  const chartImg    = meta.chart_image || '';
-  const indicators  = meta.indicators  || [];
-  const dateStr     = new Date(post.created_at).toLocaleDateString('en-GB',{day:'numeric',month:'short',year:'numeric'});
+const instrument = meta.instrument || post.title || 'Unknown';
+const timeframe = meta.timeframe || '';
+const bias = meta.bias || 'neutral';
+const resistance = meta.resistance || '—';
+const support = meta.support || '—';
+const target = meta.target || '—';
+const commentary = meta.commentary || post.content || '';
+const chartImg = meta.chart_image || '';
+const indicators = meta.indicators || [];
+const dateStr = new Date(post.created_at).toLocaleDateString('en-GB',{day:'numeric',month:'short',year:'numeric'});
 
-  const biasCls = bias === 'bullish' ? 'bullish' : bias === 'bearish' ? 'bearish' : 'neutral';
-  const biasLabel = bias.charAt(0).toUpperCase() + bias.slice(1);
+const biasCls = bias === 'bullish' ? 'bullish' : bias === 'bearish' ? 'bearish' : 'neutral';
+const biasLabel = bias.charAt(0).toUpperCase() + bias.slice(1);
 
-  const chartHtml = chartImg
-    ? `<img src="${chartImg}" alt="${esc(instrument)} chart" loading="lazy">`
-    : `<div class="ta-chart-placeholder">📈 No chart uploaded</div>`;
+const chartHtml = chartImg
+? `<img src="${chartImg}" alt="${esc(instrument)} chart" loading="lazy">`
+: `<div class="ta-chart-placeholder">📈 No chart uploaded</div>`;
 
-  const indHtml = indicators.length > 0
-    ? `<div class="ta-indicators">${indicators.map(i => {
-        const cls = i.signal === 'bull' ? 'bull' : i.signal === 'bear' ? 'bear' : 'neut';
-        return `<span class="ta-indicator ${cls}">${esc(i.label)}</span>`;
-      }).join('')}</div>`
-    : '';
+const indHtml = indicators.length > 0
+? `<div class="ta-indicators">${indicators.map(i => {
+const cls = i.signal === 'bull' ? 'bull' : i.signal === 'bear' ? 'bear' : 'neut';
+return `<span class="ta-indicator ${cls}">${esc(i.label)}</span>`;
+}).join('')}</div>`
+: '';
 
-  const deleteBtn = isAdmin
-    ? `<button class="ta-delete-btn" onclick="deleteTAPost('${post.id}',event)">Delete</button>`
-    : '';
+const deleteBtn = isAdmin
+? `<button class="ta-delete-btn" onclick="deleteTAPost('${post.id}',event)">Delete</button>`
+: '';
 
-  return `
-    <div class="ta-card" id="ta-${post.id}">
-      <div class="ta-card-header">
-        <div class="ta-instrument">${esc(instrument)}</div>
-        ${timeframe ? `<span class="ta-timeframe">${esc(timeframe)}</span>` : ''}
-        <span class="ta-bias ${biasCls}">${biasLabel}</span>
-      </div>
-      <div class="ta-chart-wrap">${chartHtml}</div>
-      <div class="ta-levels">
-        <div class="ta-level">
-          <div class="ta-level-label">Resistance</div>
-          <div class="ta-level-val resistance">${esc(resistance)}</div>
-        </div>
-        <div class="ta-level">
-          <div class="ta-level-label">Support</div>
-          <div class="ta-level-val support">${esc(support)}</div>
-        </div>
-        <div class="ta-level">
-          <div class="ta-level-label">Target / Pivot</div>
-          <div class="ta-level-val target">${esc(target)}</div>
-        </div>
-      </div>
-      ${commentary ? `<div class="ta-commentary">${esc(commentary)}</div>` : ''}
-      ${indHtml}
-      <div class="ta-meta">
-        <span class="ta-date">Updated ${dateStr}</span>
-        ${deleteBtn}
-      </div>
-    </div>`;
+return `
+<div class="ta-card" id="ta-${post.id}">
+<div class="ta-card-header">
+<div class="ta-instrument">${esc(instrument)}</div>
+${timeframe ? `<span class="ta-timeframe">${esc(timeframe)}</span>` : ''}
+<span class="ta-bias ${biasCls}">${biasLabel}</span>
+</div>
+<div class="ta-chart-wrap">${chartHtml}</div>
+<div class="ta-levels">
+<div class="ta-level">
+<div class="ta-level-label">Resistance</div>
+<div class="ta-level-val resistance">${esc(resistance)}</div>
+</div>
+<div class="ta-level">
+<div class="ta-level-label">Support</div>
+<div class="ta-level-val support">${esc(support)}</div>
+</div>
+<div class="ta-level">
+<div class="ta-level-label">Target / Pivot</div>
+<div class="ta-level-val target">${esc(target)}</div>
+</div>
+</div>
+${commentary ? `<div class="ta-commentary">${esc(commentary)}</div>` : ''}
+${indHtml}
+<div class="ta-meta">
+<span class="ta-date">Updated ${dateStr}</span>
+${deleteBtn}
+</div>
+</div>`;
 }
 
 function renderTAAdminForm(){
-  const wrap = document.getElementById('ta-admin-form-wrap');
-  _taChartImage = null;
-  _taIndicatorState = {};
+const wrap = document.getElementById('ta-admin-form-wrap');
+_taChartImage = null;
+_taIndicatorState = {};
 
-  const indButtons = TA_INDICATORS.map(name =>
-    `<button class="ta-ind-toggle" data-ind="${esc(name)}" onclick="cycleTAIndicator(this,'${esc(name)}')">${esc(name)}</button>`
-  ).join('');
+const indButtons = TA_INDICATORS.map(name =>
+`<button class="ta-ind-toggle" data-ind="${esc(name)}" onclick="cycleTAIndicator(this,'${esc(name)}')">${esc(name)}</button>`
+).join('');
 
-  wrap.innerHTML = `
-    <div class="ta-form">
-      <div class="ta-form-title">📈 Publish New Technical Analysis</div>
-      <div class="ta-chart-upload" onclick="document.getElementById('ta-img-input').click()">
-        <input type="file" id="ta-img-input" accept="image/*" onchange="handleTAImageUpload(this)">
-        <div class="ta-chart-upload-label">Click to upload chart image (PNG, JPG, WebP)</div>
-        <img id="ta-chart-preview" class="ta-chart-preview" src="" alt="Chart preview">
-      </div>
-      <div class="ta-form-grid">
-        <div class="ta-form-field">
-          <label>Instrument / Contract</label>
-          <input type="text" id="ta-instrument" placeholder="e.g. ZCN26, MATIF Wheat, Soybean Meal">
-        </div>
-        <div class="ta-form-field">
-          <label>Timeframe</label>
-          <select id="ta-timeframe">
-            <option value="">Select timeframe…</option>
-            <option value="Daily">Daily</option>
-            <option value="Weekly">Weekly</option>
-            <option value="Monthly">Monthly</option>
-            <option value="4H">4-Hour</option>
-            <option value="1H">1-Hour</option>
-            <option value="15m">15-Minute</option>
-          </select>
-        </div>
-        <div class="ta-form-field">
-          <label>Overall Bias</label>
-          <select id="ta-bias">
-            <option value="neutral">Neutral</option>
-            <option value="bullish">Bullish</option>
-            <option value="bearish">Bearish</option>
-          </select>
-        </div>
-        <div class="ta-form-field">
-          <label>Resistance Level</label>
-          <input type="text" id="ta-resistance" placeholder="e.g. 487.50¢">
-        </div>
-        <div class="ta-form-field">
-          <label>Support Level</label>
-          <input type="text" id="ta-support" placeholder="e.g. 462.00¢">
-        </div>
-        <div class="ta-form-field">
-          <label>Target / Pivot</label>
-          <input type="text" id="ta-target" placeholder="e.g. 510.00¢">
-        </div>
-      </div>
-      <div class="ta-form-field" style="margin-bottom:12px">
-        <label>Technical Commentary</label>
-        <textarea id="ta-commentary" placeholder="Describe the technical setup, pattern, key observations…"></textarea>
+wrap.innerHTML = `
+<div class="ta-form">
+<div class="ta-form-title">📈 Publish New Technical Analysis</div>
+<div class="ta-chart-upload" onclick="document.getElementById('ta-img-input').click()">
+<input type="file" id="ta-img-input" accept="image/*" onchange="handleTAImageUpload(this)">
+<div class="ta-chart-upload-label">Click to upload chart image (PNG, JPG, WebP)</div>
+<img id="ta-chart-preview" class="ta-chart-preview" src="" alt="Chart preview">
+</div>
+<div class="ta-form-grid">
+<div class="ta-form-field">
+<label>Instrument / Contract</label>
+<input type="text" id="ta-instrument" placeholder="e.g. ZCN26, MATIF Wheat, Soybean Meal">
+</div>
+<div class="ta-form-field">
+<label>Timeframe</label>
+<select id="ta-timeframe">
+<option value="">Select timeframe…</option>
+<option value="Daily">Daily</option>
+<option value="Weekly">Weekly</option>
+<option value="Monthly">Monthly</option>
+<option value="4H">4-Hour</option>
+<option value="1H">1-Hour</option>
+<option value="15m">15-Minute</option>
+</select>
+</div>
+<div class="ta-form-field">
+<label>Overall Bias</label>
+<select id="ta-bias">
+<option value="neutral">Neutral</option>
+<option value="bullish">Bullish</option>
+<option value="bearish">Bearish</option>
+</select>
+</div>
+<div class="ta-form-field">
+<label>Resistance Level</label>
+<input type="text" id="ta-resistance" placeholder="e.g. 487.50¢">
+</div>
+<div class="ta-form-field">
+<label>Support Level</label>
+<input type="text" id="ta-support" placeholder="e.g. 462.00¢">
+</div>
+<div class="ta-form-field">
+<label>Target / Pivot</label>
+<input type="text" id="ta-target" placeholder="e.g. 510.00¢">
+</div>
+</div>
+<div class="ta-form-field" style="margin-bottom:12px">
+<label>Technical Commentary</label>
+<textarea id="ta-commentary" placeholder="Describe the technical setup, pattern, key observations…"></textarea>
 
 ```
-  </div>
-  <div class="ta-form-field" style="margin-bottom:14px">
-    <label>Indicators &amp; Signals — click once (bullish), twice (bearish), three times (neutral), again to deselect</label>
-    <div class="ta-indicator-builder" id="ta-ind-builder">${indButtons}</div>
-  </div>
-  <button class="btn-primary" onclick="publishTAChart()" style="width:100%;padding:11px;font-size:13px;border-radius:6px;border:none;background:var(--blue);color:#fff;cursor:pointer;font-family:'DM Sans',sans-serif;font-weight:600;">
-    Publish Chart Analysis
-  </button>
+</div>
+<div class="ta-form-field" style="margin-bottom:14px">
+<label>Indicators &amp; Signals — click once (bullish), twice (bearish), three times (neutral), again to deselect</label>
+<div class="ta-indicator-builder" id="ta-ind-builder">${indButtons}</div>
+</div>
+<button class="btn-primary" onclick="publishTAChart()" style="width:100%;padding:11px;font-size:13px;border-radius:6px;border:none;background:var(--blue);color:#fff;cursor:pointer;font-family:'DM Sans',sans-serif;font-weight:600;">
+Publish Chart Analysis
+</button>
 </div>`;
 ```
 
@@ -1678,13 +1679,13 @@ const indicators = Object.entries(_taIndicatorState)
 
 const meta = {
 instrument,
-timeframe:    document.getElementById(‘ta-timeframe’).value,
-bias:         document.getElementById(‘ta-bias’).value,
-resistance:   document.getElementById(‘ta-resistance’).value.trim(),
-support:      document.getElementById(‘ta-support’).value.trim(),
-target:       document.getElementById(‘ta-target’).value.trim(),
-commentary:   document.getElementById(‘ta-commentary’).value.trim(),
-chart_image:  _taChartImage || ‘’,
+timeframe: document.getElementById(‘ta-timeframe’).value,
+bias: document.getElementById(‘ta-bias’).value,
+resistance: document.getElementById(‘ta-resistance’).value.trim(),
+support: document.getElementById(‘ta-support’).value.trim(),
+target: document.getElementById(‘ta-target’).value.trim(),
+commentary: document.getElementById(‘ta-commentary’).value.trim(),
+chart_image: _taChartImage || ‘’,
 indicators
 };
 
@@ -1694,11 +1695,11 @@ btn.disabled = true;
 
 try {
 const { error } = await sb.from(‘posts’).insert({
-title:    instrument,
+title: instrument,
 category: ‘technicals’,
-summary:  JSON.stringify(meta),
-content:  meta.commentary,
-user_id:  currentUser.id
+summary: JSON.stringify(meta),
+content: meta.commentary,
+user_id: currentUser.id
 });
 if(error) throw error;
 renderTAAdminForm();
@@ -1885,8 +1886,8 @@ document.getElementById(‘admin-’+x).classList.toggle(‘hidden’,x!==t);
 const btnId = x===‘write’?‘wtab’:x===‘posts’?‘ptab’:x===‘mod’?‘mtab’:‘stab’;
 document.getElementById(btnId).classList.toggle(‘active’,x===t);
 });
-if(t===‘mod’)   loadAllComments();
-if(t===‘subs’)  loadSubscribers();
+if(t===‘mod’) loadAllComments();
+if(t===‘subs’) loadSubscribers();
 if(t===‘posts’) loadManagePosts();
 }
 async function publishPost(){
@@ -1920,7 +1921,7 @@ wrap.innerHTML=’<div class="spin">Loading…</div>’;
 const{data,error}=await sb.from(‘posts’).select(‘id,title,summary,category,created_at’).order(‘created_at’,{ascending:false});
 if(error||!data||data.length===0){wrap.innerHTML=’<div class="empty-state"><h3>No posts yet</h3></div>’;return;}
 const catLabel={‘commentary’:‘Market Commentary’,‘research’:‘Research’,‘cftc’:‘CFTC’,‘exports’:‘Export Data’,‘wasde’:‘WASDE’,‘commoditymap’:‘Commodity Map’,‘weather’:‘Weather’,‘options’:‘Options Analytics’,‘fob’:‘FOB Data’,‘freight’:‘Freight’,‘technicals’:‘Technical Analysis’};
-wrap.innerHTML=data.map(p=>` <div class="mod-card" id="mp-${p.id}"> <div class="mod-top"> <div> <span class="mod-who">${esc(p.title)}</span> <span class="cat-badge">${catLabel[p.category]||p.category}</span> <span class="mod-meta">${fmtDate(p.created_at)}</span> </div> </div> ${p.summary?`<div class="mod-text" style="font-size:12px;color:var(--muted);">${esc(p.summary)}</div>`:''} <div class="mod-actions" style="margin-top:10px;"> <button class="btn-sm-hide" onclick="startEditPost('${p.id}')">✏ Edit</button> <button class="btn-sm-hide" style="${p.is_pinned?'color:var(--gold2);border-color:rgba(212,170,85,0.5);':''}" onclick="togglePin('${p.id}',${!!p.is_pinned})">${p.is_pinned?'📌 Unpin':'📌 Pin'}</button> <button class="btn-sm-del"  onclick="deletePost('${p.id}')">Delete</button> </div> </div>`).join(’’);
+wrap.innerHTML=data.map(p=>` <div class="mod-card" id="mp-${p.id}"> <div class="mod-top"> <div> <span class="mod-who">${esc(p.title)}</span> <span class="cat-badge">${catLabel[p.category]||p.category}</span> <span class="mod-meta">${fmtDate(p.created_at)}</span> </div> </div> ${p.summary?`<div class="mod-text" style="font-size:12px;color:var(--muted);">${esc(p.summary)}</div>`:''} <div class="mod-actions" style="margin-top:10px;"> <button class="btn-sm-hide" onclick="startEditPost('${p.id}')">✏ Edit</button> <button class="btn-sm-hide" style="${p.is_pinned?'color:var(--gold2);border-color:rgba(212,170,85,0.5);':''}" onclick="togglePin('${p.id}',${!!p.is_pinned})">${p.is_pinned?'📌 Unpin':'📌 Pin'}</button> <button class="btn-sm-del" onclick="deletePost('${p.id}')">Delete</button> </div> </div>`).join(’’);
 }
 
 async function deletePost(id){
@@ -1934,7 +1935,7 @@ const{data:post,error}=await sb.from(‘posts’).select(’*’).eq(‘id’,id
 if(error||!post){alert(‘Could not load post.’);return;}
 // Switch to write tab and populate fields
 switchAdminTab(‘write’);
-document.getElementById(‘p-title’).value  = post.title||’’;
+document.getElementById(‘p-title’).value = post.title||’’;
 document.getElementById(‘p-summary’).value= post.summary||’’;
 document.getElementById(‘p-category’).value= post.category||‘commentary’;
 // Store the id being edited
