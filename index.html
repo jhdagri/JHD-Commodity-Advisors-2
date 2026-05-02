@@ -1053,7 +1053,8 @@ async function loadDetail(postId,category){
     const encoded=post.content.replace(/"/g,'&quot;');
     contentHtml=`<iframe class="post-iframe" srcdoc="${encoded}" onload="resizeIframe(this)" scrolling="no"></iframe>`;
   } else {
-    contentHtml=`<div class="post-kicker">${fmtDate(post.created_at)}</div><h1>${esc(post.title)}</h1>${post.summary?`<div class="post-standfirst">${esc(post.summary)}</div>`:''}<div class="post-body">${post.content}</div>`;
+    var standfirst = post.summary ? '<div class="post-standfirst">'+esc(post.summary)+'</div>' : '';
+    contentHtml = '<div class="post-kicker">'+fmtDate(post.created_at)+'</div><h1>'+esc(post.title)+'</h1>'+standfirst+'<div class="post-body">'+post.content+'</div>';
   }
   wrap.innerHTML=`${contentHtml}<div class="comments-wrap"><div class="section-title">Discussion</div><div id="comments-area">${commHtml}</div><div class="comment-form-card"><h3>Leave a Comment</h3><div class="field"><label>Your name <span style="font-weight:400;color:var(--muted)">(optional)</span></label><input type="text" id="c-name" placeholder="e.g. John T."></div><div class="field"><label>Comment</label><textarea id="c-text" placeholder="Share your view on this analysis…"></textarea></div><button class="btn btn-navy" onclick="postComment()">Post Comment</button><div id="c-msg" class="hidden msg-box" style="margin-top:10px;"></div></div></div>`;
 
@@ -1172,7 +1173,7 @@ wrap.innerHTML=’<div class="spin">Loading…</div>’;
 const{data,error}=await sb.from(‘posts’).select(‘id,title,summary,category,created_at’).order(‘created_at’,{ascending:false});
 if(error||!data||data.length===0){wrap.innerHTML=’<div class="empty-state"><h3>No posts yet</h3></div>’;return;}
 const catLabel={‘commentary’:‘Market Commentary’,‘research’:‘Research’,‘cftc’:‘CFTC’,‘exports’:‘Export Data’,‘wasde’:‘WASDE’,‘commoditymap’:‘Commodity Map’,‘weather’:‘Weather’,‘options’:‘Options Analytics’,‘fob’:‘FOB Data’,‘freight’:‘Freight’,‘technicals’:‘Technical Analysis’};
-wrap.innerHTML=data.map(p=>` <div class="mod-card" id="mp-${p.id}"> <div class="mod-top"> <div> <span class="mod-who">${esc(p.title)}</span> <span class="cat-badge">${catLabel[p.category]||p.category}</span> <span class="mod-meta">${fmtDate(p.created_at)}</span> </div> </div> ${p.summary?`<div class="mod-text" style="font-size:12px;color:var(--muted);">${esc(p.summary)}</div>`:''} <div class="mod-actions" style="margin-top:10px;"> <button class="btn-sm-hide" onclick="startEditPost(&quot;${p.id}&quot;)">✏ Edit</button> <button class="btn-sm-del"  onclick="deletePost(&quot;${p.id}&quot;)">Delete</button> </div> </div>`).join(’’);
+wrap.innerHTML=data.map(p=>` <div class="mod-card" id="mp-${p.id}"> <div class="mod-top"> <div> <span class="mod-who">${esc(p.title)}</span> <span class="cat-badge">${catLabel[p.category]||p.category}</span> <span class="mod-meta">${fmtDate(p.created_at)}</span> </div> </div> '+(p.summary?'<div class="mod-text" style="font-size:12px;color:var(--muted);">'+esc(p.summary)+'</div>':'')+' <div class="mod-actions" style="margin-top:10px;"> <button class="btn-sm-hide" onclick="startEditPost(&quot;${p.id}&quot;)">✏ Edit</button> <button class="btn-sm-del"  onclick="deletePost(&quot;${p.id}&quot;)">Delete</button> </div> </div>`).join(’’);
 }
 
 async function deletePost(id){
