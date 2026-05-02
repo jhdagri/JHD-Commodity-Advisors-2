@@ -1039,7 +1039,10 @@ async function loadDetail(postId,category){
   if(error||!post){wrap.innerHTML='<div class="spin">Post not found.</div>';return;}
   const{data:comments}=await sb.from('comments').select('*').eq('post_id',postId).eq('is_visible',true).order('created_at',{ascending:true});
   const commHtml=(comments&&comments.length)
-    ?comments.map(c=>`<div class="comment-item" id="ci-${c.id}"><div class="comment-header"><span class="comment-author">${esc(c.author_name||'Anonymous')}</span><span class="comment-time">${fmtDate(c.created_at)}</span></div><div class="comment-text">${esc(c.content)}</div>${isAdmin?`<div class="comment-admin-row"><button class="btn-sm-del" onclick="adminDelComment('${c.id}')">Delete</button><button class="btn-sm-hide" onclick="adminHideComment('${c.id}')">Hide</button></div>`:''}</div>`).join('')
+    ?comments.map(c=>{
+      var adminBtns=isAdmin?('<div class="comment-admin-row"><button class="btn-sm-del" onclick="adminDelComment(&quot;'+c.id+'&quot;)">Delete</button><button class="btn-sm-hide" onclick="adminHideComment(&quot;'+c.id+'&quot;)">Hide</button></div>'):'';
+      return '<div class="comment-item" id="ci-'+c.id+'"><div class="comment-header"><span class="comment-author">'+esc(c.author_name||'Anonymous')+'</span><span class="comment-time">'+fmtDate(c.created_at)+'</span></div><div class="comment-text">'+esc(c.content)+'</div>'+adminBtns+'</div>';
+    }).join('')
     :'<div class="no-comments">No comments yet — be first to share your view.</div>';
   const isFullDoc=isFullHtmlDocument(post.content);
   // Expand detail-wrap to full width for full HTML documents
@@ -1142,7 +1145,25 @@ async function loadAllComments(){
 const wrap=document.getElementById(‘mod-list’); wrap.innerHTML=’<div class="spin">Loading…</div>’;
 const{data,error}=await sb.from(‘comments’).select(’*,posts(title,category)’).order(‘created_at’,{ascending:false});
 if(error||!data||data.length===0){wrap.innerHTML=’<div class="empty-state"><h3>No comments yet</h3></div>’;return;}
-wrap.innerHTML=data.map(c=>`<div class="mod-card ${!c.is_visible?'is-hidden':''}" id="mc-${c.id}"><div class="mod-top"><div><span class="mod-who">${esc(c.author_name||'Anonymous')}</span><span class="mod-meta">${fmtDate(c.created_at)}</span>${!c.is_visible?'<span class="badge-hidden">HIDDEN</span>':''}<span class="cat-badge">${esc(c.posts?.category||'')}</span></div><span class="mod-post">${esc(c.posts?.title||'—')}</span></div><div class="mod-text">${esc(c.content)}</div><div class="mod-actions"><button class="btn-sm-del" onclick="modDelete('${c.id}')">Delete</button>${c.is_visible?`<button class="btn-sm-hide" onclick="modSetVisible('${c.id}',false)">Hide</button>`:`<button class="btn-sm-hide" onclick="modSetVisible('${c.id}',true)">Unhide</button>`}</div></div>`).join(’’);
+wrap.innerHTML=data.map(function(c){
+var hiddenCls=!c.is_visible?’ is-hidden’:’’;
+var hiddenBadge=!c.is_visible?’<span class="badge-hidden">HIDDEN</span>’:’’;
+var visBtn=c.is_visible
+?(’<button class="btn-sm-hide" onclick="modSetVisible(&quot;'+c.id+'&quot;,false)">Hide</button>’)
+:(’<button class="btn-sm-hide" onclick="modSetVisible(&quot;'+c.id+'&quot;,true)">Unhide</button>’);
+return ‘<div class="mod-card'+hiddenCls+'" id="mc-'+c.id+'">’
++’<div class="mod-top"><div>’
++’<span class="mod-who">’+esc(c.author_name||‘Anonymous’)+’</span>’
++’<span class="mod-meta">’+fmtDate(c.created_at)+’</span>’
++hiddenBadge
++’<span class="cat-badge">’+esc(c.posts?.category||’’)+’</span>’
++’</div><span class="mod-post">’+esc(c.posts?.title||’—’)+’</span></div>’
++’<div class="mod-text">’+esc(c.content)+’</div>’
++’<div class="mod-actions">’
++’<button class="btn-sm-del" onclick="modDelete(&quot;'+c.id+'&quot;)">Delete</button>’
++visBtn
++’</div></div>’;
+}).join(’’);
 }
 /* –– Manage Posts –– */
 async function loadManagePosts(){
@@ -1151,7 +1172,7 @@ wrap.innerHTML=’<div class="spin">Loading…</div>’;
 const{data,error}=await sb.from(‘posts’).select(‘id,title,summary,category,created_at’).order(‘created_at’,{ascending:false});
 if(error||!data||data.length===0){wrap.innerHTML=’<div class="empty-state"><h3>No posts yet</h3></div>’;return;}
 const catLabel={‘commentary’:‘Market Commentary’,‘research’:‘Research’,‘cftc’:‘CFTC’,‘exports’:‘Export Data’,‘wasde’:‘WASDE’,‘commoditymap’:‘Commodity Map’,‘weather’:‘Weather’,‘options’:‘Options Analytics’,‘fob’:‘FOB Data’,‘freight’:‘Freight’,‘technicals’:‘Technical Analysis’};
-wrap.innerHTML=data.map(p=>` <div class="mod-card" id="mp-${p.id}"> <div class="mod-top"> <div> <span class="mod-who">${esc(p.title)}</span> <span class="cat-badge">${catLabel[p.category]||p.category}</span> <span class="mod-meta">${fmtDate(p.created_at)}</span> </div> </div> ${p.summary?`<div class="mod-text" style="font-size:12px;color:var(--muted);">${esc(p.summary)}</div>`:''} <div class="mod-actions" style="margin-top:10px;"> <button class="btn-sm-hide" onclick="startEditPost('${p.id}')">✏ Edit</button> <button class="btn-sm-del"  onclick="deletePost('${p.id}')">Delete</button> </div> </div>`).join(’’);
+wrap.innerHTML=data.map(p=>` <div class="mod-card" id="mp-${p.id}"> <div class="mod-top"> <div> <span class="mod-who">${esc(p.title)}</span> <span class="cat-badge">${catLabel[p.category]||p.category}</span> <span class="mod-meta">${fmtDate(p.created_at)}</span> </div> </div> ${p.summary?`<div class="mod-text" style="font-size:12px;color:var(--muted);">${esc(p.summary)}</div>`:''} <div class="mod-actions" style="margin-top:10px;"> <button class="btn-sm-hide" onclick="startEditPost(&quot;${p.id}&quot;)">✏ Edit</button> <button class="btn-sm-del"  onclick="deletePost(&quot;${p.id}&quot;)">Delete</button> </div> </div>`).join(’’);
 }
 
 async function deletePost(id){
