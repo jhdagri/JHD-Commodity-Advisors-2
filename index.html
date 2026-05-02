@@ -1,4 +1,5 @@
 <!DOCTYPE html>
+
 <html lang="en">
 <head>
   <meta charset="UTF-8">
@@ -55,237 +56,381 @@
     .field input:focus,.field textarea:focus,.field select:focus { outline:none; border-color:var(--blue); box-shadow:0 0 0 3px rgba(74,158,255,0.12); }
     .field textarea { resize:vertical; min-height:100px; }
 
-    /* ===== COPY PROTECTION ===== */
-    .protected {
-      -webkit-user-select: none;
-      -moz-user-select: none;
-      -ms-user-select: none;
-      user-select: none;
-    }
-    @media print {
-      body * { display: none !important; }
-      body::after {
-        display: block !important;
-        content: "Printing is not permitted. © JHD Commodity Advisors";
-        font-size: 18px;
-        text-align: center;
-        padding: 80px;
-      }
-    }
+```
+/* ===== COPY PROTECTION ===== */
+.protected {
+  -webkit-user-select: none;
+  -moz-user-select: none;
+  -ms-user-select: none;
+  user-select: none;
+}
+@media print {
+  body * { display: none !important; }
+  body::after {
+    display: block !important;
+    content: "Printing is not permitted. © JHD Commodity Advisors";
+    font-size: 18px;
+    text-align: center;
+    padding: 80px;
+  }
+}
 
-    /* ===== TOPBAR ===== */
-    .topbar { background:#080a0d; border-bottom:1px solid var(--border2); position:sticky; top:0; z-index:200; box-shadow:0 2px 20px rgba(0,0,0,0.5); }
-    .topbar-inner { max-width:1280px; margin:0 auto; padding:0 24px; height:58px; display:flex; align-items:center; justify-content:space-between; }
-    .topbar-brand { display:flex; align-items:center; gap:10px; cursor:pointer; user-select:none; }
-    .brand-mark { width:34px; height:34px; background:var(--gold); border-radius:5px; display:flex; align-items:center; justify-content:center; font-weight:900; font-size:11px; color:#080a0d; flex-shrink:0; letter-spacing:-0.5px; font-family:"DM Mono",monospace; }
-    .brand-name { font-size:15px; font-weight:600; color:var(--text); letter-spacing:0.01em; font-family:"DM Sans",sans-serif; }
-    .topbar-right { display:flex; align-items:center; gap:10px; }
-    .user-chip { font-size:12px; color:rgba(255,255,255,0.5); max-width:180px; overflow:hidden; text-overflow:ellipsis; white-space:nowrap; }
+/* ===== TOPBAR ===== */
+.topbar { background:#080a0d; border-bottom:1px solid var(--border2); position:sticky; top:0; z-index:200; box-shadow:0 2px 20px rgba(0,0,0,0.5); }
+.topbar-inner { max-width:1280px; margin:0 auto; padding:0 24px; height:58px; display:flex; align-items:center; justify-content:space-between; }
+.topbar-brand { display:flex; align-items:center; gap:10px; cursor:pointer; user-select:none; }
+.brand-mark { display:flex; align-items:center; gap:8px; flex-shrink:0; cursor:pointer; text-decoration:none; }
+.brand-name { display:flex; flex-direction:column; gap:1px; }
+.brand-name-jhd { font-family:'DM Serif Display',serif; font-size:18px; font-weight:700; color:var(--text); letter-spacing:0.05em; line-height:1; }
+.brand-name-sub { font-family:'DM Mono',monospace; font-size:8px; color:var(--gold2); letter-spacing:0.18em; text-transform:uppercase; line-height:1; }
+.topbar-right { display:flex; align-items:center; gap:10px; }
+.user-chip { font-size:12px; color:rgba(255,255,255,0.5); max-width:180px; overflow:hidden; text-overflow:ellipsis; white-space:nowrap; }
 
-    /* ===== SECTION NAV ===== */
-    .section-nav { background:#0a0c10; border-bottom:1px solid var(--border); position:sticky; top:58px; z-index:190; }
-    .section-nav-inner { max-width:1280px; margin:0 auto; padding:0 24px; display:flex; overflow-x:auto; scrollbar-width:none; }
-    .section-nav-inner::-webkit-scrollbar { display:none; }
-    .snav-btn { padding:14px 18px; border:none; background:none; cursor:pointer; font-size:13px; font-weight:600; color:var(--muted); border-bottom:3px solid transparent; white-space:nowrap; transition:color 0.15s; }
-    .snav-btn:hover { color:var(--text); }
-    .snav-btn.active { color:var(--blue); border-bottom-color:var(--blue); }
+/* ===== SECTION NAV ===== */
+.section-nav { background:#0a0c10; border-bottom:1px solid var(--border); position:sticky; top:58px; z-index:190; }
+.section-nav-inner { max-width:1280px; margin:0 auto; padding:0 24px; display:flex; overflow-x:auto; scrollbar-width:none; }
+.section-nav-inner::-webkit-scrollbar { display:none; }
+.snav-btn { padding:14px 18px; border:none; background:none; cursor:pointer; font-size:13px; font-weight:600; color:var(--muted); border-bottom:3px solid transparent; white-space:nowrap; transition:color 0.15s; }
+.snav-btn:hover { color:var(--text); }
+.snav-btn.active { color:var(--blue); border-bottom-color:var(--blue); }
 
-    /* ===== AUTH ===== */
-    #page-auth { min-height:100vh; display:flex; flex-direction:column; }
-    .auth-hero { background:linear-gradient(180deg,#080a0d 0%,#0d0f12 100%); padding:56px 24px 48px; text-align:center; border-bottom:1px solid var(--border2); }
-    .auth-hero .hero-mark { display:inline-flex; align-items:center; justify-content:center; width:56px; height:56px; background:var(--gold); border-radius:8px; font-weight:900; font-size:14px; color:#080a0d; margin-bottom:18px; letter-spacing:-0.5px; font-family:"DM Mono",monospace; }
-    .auth-hero h1 { font-size:32px; font-weight:900; color:var(--text); letter-spacing:-0.5px; margin-bottom:10px; font-family:"DM Serif Display",serif; }
-    .auth-hero .rule { width:36px; height:2px; background:var(--blue); margin:14px auto; }
-    .auth-hero p { color:var(--muted); font-size:15px; max-width:420px; margin:0 auto; }
-    .auth-body { flex:1; display:flex; align-items:flex-start; justify-content:center; padding:44px 24px 60px; background:var(--bg); }
-    .auth-card { background:var(--card); border:1px solid var(--border2); border-radius:12px; padding:36px; width:100%; max-width:420px; box-shadow:0 12px 40px rgba(0,0,0,0.4); }
-    .auth-card h2 { font-size:21px; font-weight:700; color:var(--text); margin-bottom:4px; font-family:"DM Serif Display",serif; }
-    .auth-card > p { color:var(--muted2); font-size:14px; margin-bottom:24px; }
-    .auth-tab-row { display:flex; border-bottom:1px solid var(--border2); margin-bottom:24px; }
-    .auth-tab { padding:8px 14px; border:none; background:none; cursor:pointer; font-size:13px; font-weight:500; color:var(--muted); border-bottom:2px solid transparent; margin-bottom:-2px; letter-spacing:0.04em; text-transform:uppercase; font-family:"DM Mono",monospace; }
-    .auth-tab.active { color:var(--blue); border-bottom-color:var(--blue); }
-    .auth-submit { width:100%; padding:11px; margin-top:4px; }
+/* ===== AUTH ===== */
+#page-auth { min-height:100vh; display:flex; flex-direction:column; }
+.auth-hero { background:linear-gradient(180deg,#080a0d 0%,#0d0f12 100%); padding:56px 24px 48px; text-align:center; border-bottom:1px solid var(--border2); }
+.auth-hero .hero-mark { display:inline-flex; align-items:center; justify-content:center; width:56px; height:56px; background:var(--gold); border-radius:8px; font-weight:900; font-size:14px; color:#080a0d; margin-bottom:18px; letter-spacing:-0.5px; font-family:"DM Mono",monospace; }
+.auth-hero h1 { font-size:32px; font-weight:900; color:var(--text); letter-spacing:-0.5px; margin-bottom:10px; font-family:"DM Serif Display",serif; }
+.auth-hero .rule { width:36px; height:2px; background:var(--blue); margin:14px auto; }
+.auth-hero p { color:var(--muted); font-size:15px; max-width:420px; margin:0 auto; }
+.auth-body { flex:1; display:flex; align-items:flex-start; justify-content:center; padding:44px 24px 60px; background:var(--bg); }
+.auth-card { background:var(--card); border:1px solid var(--border2); border-radius:12px; padding:36px; width:100%; max-width:420px; box-shadow:0 12px 40px rgba(0,0,0,0.4); }
+.auth-card h2 { font-size:21px; font-weight:700; color:var(--text); margin-bottom:4px; font-family:"DM Serif Display",serif; }
+.auth-card > p { color:var(--muted2); font-size:14px; margin-bottom:24px; }
+.auth-tab-row { display:flex; border-bottom:1px solid var(--border2); margin-bottom:24px; }
+.auth-tab { padding:8px 14px; border:none; background:none; cursor:pointer; font-size:13px; font-weight:500; color:var(--muted); border-bottom:2px solid transparent; margin-bottom:-2px; letter-spacing:0.04em; text-transform:uppercase; font-family:"DM Mono",monospace; }
+.auth-tab.active { color:var(--blue); border-bottom-color:var(--blue); }
+.auth-submit { width:100%; padding:11px; margin-top:4px; }
 
-    /* ===== CONTENT ===== */
-    .page-wrap { max-width:1280px; margin:0 auto; padding:40px 24px 60px; }
-    .page-heading { margin-bottom:32px; padding-bottom:20px; border-bottom:1px solid var(--border); }
-    .page-heading h2 { font-size:24px; font-weight:700; color:var(--text); margin-bottom:4px; font-family:"DM Serif Display",serif; }
-    .page-heading p { color:var(--muted); font-size:14px; }
-    .posts-grid { display:grid; grid-template-columns:repeat(auto-fill,minmax(320px,1fr)); gap:20px; }
-    .post-card { background:var(--card); border:1px solid var(--border); border-radius:10px; padding:26px; cursor:pointer; transition:box-shadow 0.18s,transform 0.15s; }
-    .post-card:hover { box-shadow:0 8px 32px rgba(0,0,0,0.4); transform:translateY(-2px); border-color:var(--border2); }
-    .post-card .card-date { font-size:11px; font-weight:500; text-transform:uppercase; letter-spacing:0.9px; color:var(--blue); margin-bottom:10px; font-family:"DM Mono",monospace; }
-    .post-card h3 { font-size:17px; font-weight:600; color:var(--text); line-height:1.35; margin-bottom:10px; font-family:"DM Serif Display",serif; }
-    .post-card .card-summary { font-size:13px; color:var(--muted); line-height:1.6; }
-    .card-foot { margin-top:18px; padding-top:14px; border-top:1px solid var(--border); display:flex; align-items:center; justify-content:space-between; }
-    .card-foot .ccount { font-size:11px; color:var(--muted); }
-    .card-foot .readmore { font-size:11px; font-weight:500; color:var(--blue); font-family:"DM Mono",monospace; }
-    .empty-state { text-align:center; padding:80px 24px; color:var(--muted); background:var(--card); border:1px dashed var(--border2); border-radius:12px; }
-    .empty-state h3 { font-size:18px; color:var(--text); margin-bottom:8px; font-family:"DM Serif Display",serif; }
+/* ===== CONTENT ===== */
+.page-wrap { max-width:1280px; margin:0 auto; padding:40px 24px 60px; }
+.page-heading { margin-bottom:32px; padding-bottom:20px; border-bottom:1px solid var(--border); }
+.page-heading h2 { font-size:24px; font-weight:700; color:var(--text); margin-bottom:4px; font-family:"DM Serif Display",serif; }
+.page-heading p { color:var(--muted); font-size:14px; }
+.posts-grid { display:grid; grid-template-columns:repeat(auto-fill,minmax(320px,1fr)); gap:20px; }
+.post-card { background:var(--card); border:1px solid var(--border); border-radius:10px; padding:26px; cursor:pointer; transition:box-shadow 0.18s,transform 0.15s; }
+.post-card:hover { box-shadow:0 8px 32px rgba(0,0,0,0.4); transform:translateY(-2px); border-color:var(--border2); }
+.post-card .card-date { font-size:11px; font-weight:500; text-transform:uppercase; letter-spacing:0.9px; color:var(--blue); margin-bottom:10px; font-family:"DM Mono",monospace; }
+.post-card h3 { font-size:17px; font-weight:600; color:var(--text); line-height:1.35; margin-bottom:10px; font-family:"DM Serif Display",serif; }
+.post-card .card-summary { font-size:13px; color:var(--muted); line-height:1.6; }
+.card-foot { margin-top:18px; padding-top:14px; border-top:1px solid var(--border); display:flex; align-items:center; justify-content:space-between; }
+.card-foot .ccount { font-size:11px; color:var(--muted); }
+.card-foot .readmore { font-size:11px; font-weight:500; color:var(--blue); font-family:"DM Mono",monospace; }
+.empty-state { text-align:center; padding:80px 24px; color:var(--muted); background:var(--card); border:1px dashed var(--border2); border-radius:12px; }
+.empty-state h3 { font-size:18px; color:var(--text); margin-bottom:8px; font-family:"DM Serif Display",serif; }
 
-    /* ===== POST DETAIL ===== */
-    .detail-wrap { max-width:1280px; margin:0 auto; padding:32px 24px 80px; }
-    .detail-wrap.full-width { max-width:100%; padding:0 0 80px; }
-    .detail-wrap.full-width .comments-wrap { max-width:1280px; margin:0 auto; padding:0 24px; }
-    .post-iframe { width:1px; min-width:100%; border:none; border-radius:0; display:block; min-height:600px; overflow:hidden; }
-    .post-kicker { font-size:11px; font-weight:500; text-transform:uppercase; letter-spacing:1px; color:var(--blue); margin-bottom:12px; font-family:"DM Mono",monospace; }
-    .detail-wrap h1 { font-size:32px; font-weight:900; color:var(--text); line-height:1.15; letter-spacing:-0.02em; margin-bottom:14px; font-family:"DM Serif Display",serif; }
-    .post-standfirst { font-size:17px; color:var(--muted); line-height:1.55; padding-bottom:24px; border-bottom:1px solid var(--border2); margin-bottom:28px; }
-    .post-body { font-size:16px; line-height:1.8; color:var(--text); max-width:780px; }
-    .detail-wrap h1 { max-width:780px; }
-    .post-standfirst { max-width:780px; }
-    .post-body h2,.post-body h3 { color:var(--text); margin:28px 0 12px; font-weight:600; font-family:"DM Serif Display",serif; }
-    .post-body h2 { font-size:22px; } .post-body h3 { font-size:18px; }
-    .post-body p { margin-bottom:18px; }
-    .post-body ul,.post-body ol { margin:0 0 18px 24px; }
-    .post-body li { margin-bottom:6px; }
-    .post-body blockquote { border-left:3px solid var(--blue); padding:4px 0 4px 16px; color:var(--muted); font-style:italic; margin-bottom:18px; background:var(--card); border-radius:0 4px 4px 0; }
-    .post-body table { width:100%; border-collapse:collapse; margin-bottom:20px; font-size:14px; }
-    .post-body th { background:var(--card2); color:var(--muted); padding:9px 12px; text-align:left; font-family:"DM Mono",monospace; font-size:11px; letter-spacing:0.05em; text-transform:uppercase; }
-    .post-body td { padding:8px 12px; border-bottom:1px solid var(--border); font-family:"DM Mono",monospace; font-size:12px; }
-    .post-body tr:nth-child(even) td { background:rgba(255,255,255,0.02); }
-    .post-body a { color:var(--blue); text-decoration:underline; }
+/* ===== POST DETAIL ===== */
+.detail-wrap { max-width:1280px; margin:0 auto; padding:32px 24px 80px; }
+.detail-wrap.full-width { max-width:100%; padding:0 0 80px; }
+.detail-wrap.full-width .comments-wrap { max-width:1280px; margin:0 auto; padding:0 24px; }
+.post-iframe { width:1px; min-width:100%; border:none; border-radius:0; display:block; min-height:600px; overflow:hidden; }
+.post-kicker { font-size:11px; font-weight:500; text-transform:uppercase; letter-spacing:1px; color:var(--blue); margin-bottom:12px; font-family:"DM Mono",monospace; }
+.detail-wrap h1 { font-size:32px; font-weight:900; color:var(--text); line-height:1.15; letter-spacing:-0.02em; margin-bottom:14px; font-family:"DM Serif Display",serif; }
+.post-standfirst { font-size:17px; color:var(--muted); line-height:1.55; padding-bottom:24px; border-bottom:1px solid var(--border2); margin-bottom:28px; }
+.post-body { font-size:16px; line-height:1.8; color:var(--text); max-width:780px; }
+.detail-wrap h1 { max-width:780px; }
+.post-standfirst { max-width:780px; }
+.post-body h2,.post-body h3 { color:var(--text); margin:28px 0 12px; font-weight:600; font-family:"DM Serif Display",serif; }
+.post-body h2 { font-size:22px; } .post-body h3 { font-size:18px; }
+.post-body p { margin-bottom:18px; }
+.post-body ul,.post-body ol { margin:0 0 18px 24px; }
+.post-body li { margin-bottom:6px; }
+.post-body blockquote { border-left:3px solid var(--blue); padding:4px 0 4px 16px; color:var(--muted); font-style:italic; margin-bottom:18px; background:var(--card); border-radius:0 4px 4px 0; }
+.post-body table { width:100%; border-collapse:collapse; margin-bottom:20px; font-size:14px; }
+.post-body th { background:var(--card2); color:var(--muted); padding:9px 12px; text-align:left; font-family:"DM Mono",monospace; font-size:11px; letter-spacing:0.05em; text-transform:uppercase; }
+.post-body td { padding:8px 12px; border-bottom:1px solid var(--border); font-family:"DM Mono",monospace; font-size:12px; }
+.post-body tr:nth-child(even) td { background:rgba(255,255,255,0.02); }
+.post-body a { color:var(--blue); text-decoration:underline; }
 
-    /* ===== COMMENTS ===== */
-    .comments-wrap { margin-top:48px; border-top:1px solid var(--border); padding-top:36px; max-width:780px; }
-    .comments-wrap .section-title { font-size:19px; font-weight:700; color:var(--text); margin-bottom:24px; font-family:"DM Serif Display",serif; }
-    .comment-item { background:var(--card); border:1px solid var(--border); border-radius:8px; padding:16px 18px; margin-bottom:12px; }
-    .comment-header { display:flex; justify-content:space-between; align-items:flex-start; margin-bottom:7px; }
-    .comment-author { font-weight:600; font-size:14px; color:var(--blue); }
-    .comment-time { font-size:11px; color:var(--muted); }
-    .comment-text { font-size:14px; line-height:1.65; color:var(--text); }
-    .comment-admin-row { display:flex; gap:6px; margin-top:10px; }
-    .no-comments { text-align:center; padding:32px; border:1px dashed var(--border2); border-radius:8px; color:var(--muted2); font-size:14px; }
-    .comment-form-card { background:var(--card); border:1px solid var(--border2); border-radius:10px; padding:26px; margin-top:32px; }
-    .comment-form-card h3 { font-size:16px; font-weight:600; color:var(--text); margin-bottom:16px; font-family:"DM Serif Display",serif; }
+/* ===== COMMENTS ===== */
+.comments-wrap { margin-top:48px; border-top:1px solid var(--border); padding-top:36px; max-width:780px; }
+.comments-wrap .section-title { font-size:19px; font-weight:700; color:var(--text); margin-bottom:24px; font-family:"DM Serif Display",serif; }
+.comment-item { background:var(--card); border:1px solid var(--border); border-radius:8px; padding:16px 18px; margin-bottom:12px; }
+.comment-header { display:flex; justify-content:space-between; align-items:flex-start; margin-bottom:7px; }
+.comment-author { font-weight:600; font-size:14px; color:var(--blue); }
+.comment-time { font-size:11px; color:var(--muted); }
+.comment-text { font-size:14px; line-height:1.65; color:var(--text); }
+.comment-admin-row { display:flex; gap:6px; margin-top:10px; }
+.no-comments { text-align:center; padding:32px; border:1px dashed var(--border2); border-radius:8px; color:var(--muted2); font-size:14px; }
+.comment-form-card { background:var(--card); border:1px solid var(--border2); border-radius:10px; padding:26px; margin-top:32px; }
+.comment-form-card h3 { font-size:16px; font-weight:600; color:var(--text); margin-bottom:16px; font-family:"DM Serif Display",serif; }
 
-    /* ===== FUTURES ===== */
-    .futures-wrap { max-width:1280px; margin:0 auto; padding:32px 24px 60px; }
-    .futures-heading { margin-bottom:28px; padding-bottom:18px; border-bottom:1px solid var(--border); }
-    .futures-heading h2 { font-size:24px; font-weight:700; color:var(--text); margin-bottom:4px; font-family:"DM Serif Display",serif; }
-    .futures-heading p { font-size:14px; color:var(--muted); }
-    .tv-widget-wrap { background:var(--card); border:1px solid var(--border2); border-radius:10px; overflow:hidden; margin-bottom:20px; }
+/* ===== FUTURES ===== */
+.futures-wrap { max-width:1280px; margin:0 auto; padding:32px 24px 60px; }
+.futures-heading { margin-bottom:28px; padding-bottom:18px; border-bottom:1px solid var(--border); }
+.futures-heading h2 { font-size:24px; font-weight:700; color:var(--text); margin-bottom:4px; font-family:"DM Serif Display",serif; }
+.futures-heading p { font-size:14px; color:var(--muted); }
+.tv-widget-wrap { background:var(--card); border:1px solid var(--border2); border-radius:10px; overflow:hidden; margin-bottom:20px; }
 
-    /* ===== STATIC PAGES ===== */
-    .static-wrap { max-width:1280px; margin:0 auto; padding:40px 24px 80px; }
-    .static-wrap h2 { font-size:28px; font-weight:900; color:var(--text); margin-bottom:8px; font-family:"DM Serif Display",serif; }
-    .static-rule { width:40px; height:2px; background:var(--blue); border-radius:2px; margin-bottom:28px; }
-    .static-wrap p { font-size:16px; line-height:1.8; color:var(--text); margin-bottom:18px; }
-    .static-wrap h3 { font-size:18px; font-weight:600; color:var(--text); margin:28px 0 10px; font-family:"DM Serif Display",serif; }
-    .static-wrap ul { margin:0 0 18px 22px; }
-    .static-wrap li { font-size:15px; line-height:1.7; color:var(--text); margin-bottom:6px; }
-    .service-cards { display:grid; grid-template-columns:repeat(auto-fill,minmax(260px,1fr)); gap:16px; margin:24px 0 32px; }
-    .service-card { background:var(--card); border:1px solid var(--border); border-radius:10px; padding:22px; }
-    .service-card .sc-icon { font-size:24px; margin-bottom:12px; }
-    .service-card h4 { font-size:15px; font-weight:600; color:var(--blue); margin-bottom:8px; }
-    .service-card p { font-size:13px; color:var(--muted); line-height:1.6; }
-    .contact-grid { display:grid; grid-template-columns:1fr 1fr; gap:24px; margin-top:24px; }
-    .contact-item { background:var(--card); border:1px solid var(--border); border-radius:10px; padding:22px; }
-    .contact-item .ci-label { font-size:11px; font-weight:700; text-transform:uppercase; letter-spacing:0.6px; color:var(--muted); margin-bottom:6px; }
-    .contact-item .ci-val { font-size:15px; font-weight:600; color:var(--text); font-family:"DM Mono",monospace; }
-    .contact-item .ci-sub { font-size:13px; color:var(--muted); margin-top:3px; }
-    .about-bio { display:flex; gap:24px; align-items:flex-start; background:var(--card); border:1px solid var(--border2); border-radius:10px; padding:24px; margin:24px 0; }
-    .about-avatar { width:64px; height:64px; background:var(--blue); border-radius:50%; display:flex; align-items:center; justify-content:center; font-weight:700; font-size:16px; color:#fff; flex-shrink:0; font-family:"DM Mono",monospace; }
-    .about-bio-text h3 { font-size:17px; font-weight:700; color:var(--text); margin-bottom:4px; font-family:"DM Serif Display",serif; }
-    .about-bio-text .role { font-size:13px; color:var(--blue); font-weight:500; margin-bottom:10px; font-family:"DM Mono",monospace; letter-spacing:0.04em; }
-    .about-bio-text p { font-size:14px; color:var(--muted); line-height:1.65; }
-    .disclaimer-box { background:rgba(74,158,255,0.05); border:1px solid var(--border); border-left:3px solid var(--blue); border-radius:6px; padding:16px 18px; margin-top:32px; font-size:13px; color:var(--muted); line-height:1.6; }
+/* ===== STATIC PAGES ===== */
+.static-wrap { max-width:1280px; margin:0 auto; padding:40px 24px 80px; }
+.static-wrap h2 { font-size:28px; font-weight:900; color:var(--text); margin-bottom:8px; font-family:"DM Serif Display",serif; }
+.static-rule { width:40px; height:2px; background:var(--blue); border-radius:2px; margin-bottom:28px; }
+.static-wrap p { font-size:16px; line-height:1.8; color:var(--text); margin-bottom:18px; }
+.static-wrap h3 { font-size:18px; font-weight:600; color:var(--text); margin:28px 0 10px; font-family:"DM Serif Display",serif; }
+.static-wrap ul { margin:0 0 18px 22px; }
+.static-wrap li { font-size:15px; line-height:1.7; color:var(--text); margin-bottom:6px; }
+.service-cards { display:grid; grid-template-columns:repeat(auto-fill,minmax(260px,1fr)); gap:16px; margin:24px 0 32px; }
+.service-card { background:var(--card); border:1px solid var(--border); border-radius:10px; padding:22px; }
+.service-card .sc-icon { font-size:24px; margin-bottom:12px; }
+.service-card h4 { font-size:15px; font-weight:600; color:var(--blue); margin-bottom:8px; }
+.service-card p { font-size:13px; color:var(--muted); line-height:1.6; }
+.contact-grid { display:grid; grid-template-columns:1fr 1fr; gap:24px; margin-top:24px; }
+.contact-item { background:var(--card); border:1px solid var(--border); border-radius:10px; padding:22px; }
+.contact-item .ci-label { font-size:11px; font-weight:700; text-transform:uppercase; letter-spacing:0.6px; color:var(--muted); margin-bottom:6px; }
+.contact-item .ci-val { font-size:15px; font-weight:600; color:var(--text); font-family:"DM Mono",monospace; }
+.contact-item .ci-sub { font-size:13px; color:var(--muted); margin-top:3px; }
+.about-bio { display:flex; gap:24px; align-items:flex-start; background:var(--card); border:1px solid var(--border2); border-radius:10px; padding:24px; margin:24px 0; }
+.about-avatar { width:64px; height:64px; background:var(--blue); border-radius:50%; display:flex; align-items:center; justify-content:center; font-weight:700; font-size:16px; color:#fff; flex-shrink:0; font-family:"DM Mono",monospace; }
+.about-bio-text h3 { font-size:17px; font-weight:700; color:var(--text); margin-bottom:4px; font-family:"DM Serif Display",serif; }
+.about-bio-text .role { font-size:13px; color:var(--blue); font-weight:500; margin-bottom:10px; font-family:"DM Mono",monospace; letter-spacing:0.04em; }
+.about-bio-text p { font-size:14px; color:var(--muted); line-height:1.65; }
+.disclaimer-box { background:rgba(74,158,255,0.05); border:1px solid var(--border); border-left:3px solid var(--blue); border-radius:6px; padding:16px 18px; margin-top:32px; font-size:13px; color:var(--muted); line-height:1.6; }
 
-    /* ===== ADMIN ===== */
-    .admin-wrap { max-width:1280px; margin:0 auto; padding:40px 24px 80px; }
-    .admin-tab-row { display:flex; border-bottom:2px solid var(--border); margin-bottom:36px; flex-wrap:wrap; }
-    .tab-btn { padding:10px 20px; border:none; background:none; cursor:pointer; font-size:14px; font-weight:600; color:var(--muted); border-bottom:2px solid transparent; margin-bottom:-2px; }
-    .tab-btn.active { color:var(--blue); border-bottom-color:var(--blue); }
-    .section-h2 { font-size:22px; font-weight:700; color:var(--text); margin-bottom:26px; font-family:"DM Serif Display",serif; }
-    .admin-field input[type="text"],.admin-field select { width:100%; padding:11px 14px; border:1px solid var(--border2); border-radius:6px; font-size:15px; font-family:inherit; color:var(--text); background:var(--card2); margin-bottom:12px; }
-    .admin-field input:focus,.admin-field select:focus { outline:none; border-color:var(--blue); }
-    .editor-mode-row { display:flex; align-items:center; gap:10px; margin-bottom:8px; }
-    .editor-label { font-size:11px; font-weight:700; text-transform:uppercase; letter-spacing:0.6px; color:var(--muted); }
-    .mode-toggle { display:flex; border:1px solid var(--border); border-radius:6px; overflow:hidden; }
-    .mode-btn { padding:5px 14px; font-size:12px; font-weight:500; border:none; cursor:pointer; background:var(--card2); color:var(--muted); transition:all 0.15s; font-family:"DM Mono",monospace; letter-spacing:0.04em; }
-    .mode-btn.active { background:var(--blue); color:#fff; }
-    #quill-editor { background:var(--card2); min-height:280px; font-size:15px; color:var(--text); }
-    .ql-toolbar.ql-snow { border:1px solid var(--border2); border-bottom:none; border-radius:6px 6px 0 0; background:var(--card); }
-    .ql-container.ql-snow { border:1px solid var(--border2); border-radius:0 0 6px 6px; font-size:15px; background:var(--card2); color:var(--text); }
-    .ql-editor.ql-blank::before { color:var(--muted2) !important; }
-    .ql-editor { color:var(--text); }
-    .ql-stroke { stroke:var(--muted) !important; }
-    .ql-fill { fill:var(--muted) !important; }
-    .ql-picker { color:var(--muted) !important; }
-    #html-source-input { width:100%; min-height:320px; padding:14px; border:1px solid var(--border2); border-radius:6px; font-family:"DM Mono","Menlo","Monaco",monospace; font-size:12px; line-height:1.6; color:var(--text); background:var(--card2); resize:vertical; }
-    #html-source-input:focus { outline:none; border-color:var(--blue); }
-    .html-hint { font-size:12px; color:var(--muted); margin-top:8px; padding:10px 14px; background:rgba(74,158,255,0.06); border-radius:5px; border-left:3px solid var(--blue); line-height:1.5; }
-    .publish-row { display:flex; align-items:center; gap:16px; margin-top:20px; }
-    .cat-label { font-size:11px; font-weight:700; text-transform:uppercase; letter-spacing:0.6px; color:var(--muted); margin-bottom:5px; display:block; }
-    .mod-card { background:var(--card); border:1px solid var(--border); border-radius:8px; padding:16px 18px; margin-bottom:12px; }
-    .mod-card.is-hidden { opacity:0.45; background:var(--card2); }
-    .mod-top { display:flex; justify-content:space-between; align-items:flex-start; margin-bottom:6px; }
-    .mod-who { font-weight:600; font-size:14px; color:var(--text); }
-    .mod-meta { font-size:11px; color:var(--muted); margin-left:6px; }
-    .mod-post { font-size:12px; color:var(--muted); font-weight:400; max-width:260px; text-align:right; font-family:"DM Mono",monospace; }
-    .mod-text { font-size:14px; line-height:1.55; margin-bottom:10px; }
-    .mod-actions { display:flex; gap:6px; }
-    .badge-hidden { display:inline-block; padding:2px 7px; border-radius:4px; font-size:10px; font-weight:600; background:rgba(255,107,74,0.15); color:var(--coral); margin-left:8px; vertical-align:middle; font-family:"DM Mono",monospace; }
-    .cat-badge { display:inline-block; padding:2px 8px; border-radius:4px; font-size:10px; font-weight:500; background:rgba(74,158,255,0.12); color:var(--blue); margin-left:6px; vertical-align:middle; font-family:"DM Mono",monospace; }
+/* ===== ADMIN ===== */
+.admin-wrap { max-width:1280px; margin:0 auto; padding:40px 24px 80px; }
+.admin-tab-row { display:flex; border-bottom:2px solid var(--border); margin-bottom:36px; flex-wrap:wrap; }
+.tab-btn { padding:10px 20px; border:none; background:none; cursor:pointer; font-size:14px; font-weight:600; color:var(--muted); border-bottom:2px solid transparent; margin-bottom:-2px; }
+.tab-btn.active { color:var(--blue); border-bottom-color:var(--blue); }
+.section-h2 { font-size:22px; font-weight:700; color:var(--text); margin-bottom:26px; font-family:"DM Serif Display",serif; }
+.admin-field input[type="text"],.admin-field select { width:100%; padding:11px 14px; border:1px solid var(--border2); border-radius:6px; font-size:15px; font-family:inherit; color:var(--text); background:var(--card2); margin-bottom:12px; }
+.admin-field input:focus,.admin-field select:focus { outline:none; border-color:var(--blue); }
+.editor-mode-row { display:flex; align-items:center; gap:10px; margin-bottom:8px; }
+.editor-label { font-size:11px; font-weight:700; text-transform:uppercase; letter-spacing:0.6px; color:var(--muted); }
+.mode-toggle { display:flex; border:1px solid var(--border); border-radius:6px; overflow:hidden; }
+.mode-btn { padding:5px 14px; font-size:12px; font-weight:500; border:none; cursor:pointer; background:var(--card2); color:var(--muted); transition:all 0.15s; font-family:"DM Mono",monospace; letter-spacing:0.04em; }
+.mode-btn.active { background:var(--blue); color:#fff; }
+#quill-editor { background:var(--card2); min-height:280px; font-size:15px; color:var(--text); }
+.ql-toolbar.ql-snow { border:1px solid var(--border2); border-bottom:none; border-radius:6px 6px 0 0; background:var(--card); }
+.ql-container.ql-snow { border:1px solid var(--border2); border-radius:0 0 6px 6px; font-size:15px; background:var(--card2); color:var(--text); }
+.ql-editor.ql-blank::before { color:var(--muted2) !important; }
+.ql-editor { color:var(--text); }
+.ql-stroke { stroke:var(--muted) !important; }
+.ql-fill { fill:var(--muted) !important; }
+.ql-picker { color:var(--muted) !important; }
+#html-source-input { width:100%; min-height:320px; padding:14px; border:1px solid var(--border2); border-radius:6px; font-family:"DM Mono","Menlo","Monaco",monospace; font-size:12px; line-height:1.6; color:var(--text); background:var(--card2); resize:vertical; }
+#html-source-input:focus { outline:none; border-color:var(--blue); }
+.html-hint { font-size:12px; color:var(--muted); margin-top:8px; padding:10px 14px; background:rgba(74,158,255,0.06); border-radius:5px; border-left:3px solid var(--blue); line-height:1.5; }
+.publish-row { display:flex; align-items:center; gap:16px; margin-top:20px; }
+.cat-label { font-size:11px; font-weight:700; text-transform:uppercase; letter-spacing:0.6px; color:var(--muted); margin-bottom:5px; display:block; }
+.mod-card { background:var(--card); border:1px solid var(--border); border-radius:8px; padding:16px 18px; margin-bottom:12px; }
+.mod-card.is-hidden { opacity:0.45; background:var(--card2); }
+.mod-top { display:flex; justify-content:space-between; align-items:flex-start; margin-bottom:6px; }
+.mod-who { font-weight:600; font-size:14px; color:var(--text); }
+.mod-meta { font-size:11px; color:var(--muted); margin-left:6px; }
+.mod-post { font-size:12px; color:var(--muted); font-weight:400; max-width:260px; text-align:right; font-family:"DM Mono",monospace; }
+.mod-text { font-size:14px; line-height:1.55; margin-bottom:10px; }
+.mod-actions { display:flex; gap:6px; }
+.badge-hidden { display:inline-block; padding:2px 7px; border-radius:4px; font-size:10px; font-weight:600; background:rgba(255,107,74,0.15); color:var(--coral); margin-left:8px; vertical-align:middle; font-family:"DM Mono",monospace; }
+.cat-badge { display:inline-block; padding:2px 8px; border-radius:4px; font-size:10px; font-weight:500; background:rgba(74,158,255,0.12); color:var(--blue); margin-left:6px; vertical-align:middle; font-family:"DM Mono",monospace; }
 
-    /* ===== SUBSCRIBERS TAB ===== */
-    .subs-stats { display:grid; grid-template-columns:repeat(auto-fill,minmax(180px,1fr)); gap:16px; margin-bottom:32px; }
-    .stat-card { background:var(--card); border:1px solid var(--border); border-radius:10px; padding:20px 22px; }
-    .stat-card .stat-label { font-size:11px; font-weight:700; text-transform:uppercase; letter-spacing:0.6px; color:var(--muted); margin-bottom:6px; }
-    .stat-card .stat-val { font-size:30px; font-weight:500; color:var(--blue); font-family:"DM Mono",monospace; }
-    .subs-table-wrap { background:var(--card); border:1px solid var(--border); border-radius:10px; overflow:hidden; }
-    .subs-table { width:100%; border-collapse:collapse; font-size:14px; }
-    .subs-table th { background:var(--card2); color:var(--muted); padding:11px 16px; text-align:left; font-size:11px; font-weight:500; letter-spacing:0.06em; text-transform:uppercase; font-family:"DM Mono",monospace; }
-    .subs-table td { padding:11px 16px; border-bottom:1px solid var(--border); color:var(--text); font-family:"DM Mono",monospace; font-size:13px; }
-    .subs-table tr:last-child td { border-bottom:none; }
-    .subs-table tr:nth-child(even) td { background:rgba(255,255,255,0.02); }
-    .subs-table .email-cell { font-weight:500; color:var(--text); }
-    .subs-search { width:100%; padding:10px 14px; border:1px solid var(--border2); border-radius:6px; font-size:14px; font-family:inherit; margin-bottom:16px; background:var(--card2); color:var(--text); }
-    .subs-search:focus { outline:none; border-color:var(--blue); }
-    .export-row { display:flex; justify-content:space-between; align-items:center; margin-bottom:16px; }
-    .export-row p { font-size:13px; color:var(--muted); }
+/* ===== SUBSCRIBERS TAB ===== */
+.subs-stats { display:grid; grid-template-columns:repeat(auto-fill,minmax(180px,1fr)); gap:16px; margin-bottom:32px; }
+.stat-card { background:var(--card); border:1px solid var(--border); border-radius:10px; padding:20px 22px; }
+.stat-card .stat-label { font-size:11px; font-weight:700; text-transform:uppercase; letter-spacing:0.6px; color:var(--muted); margin-bottom:6px; }
+.stat-card .stat-val { font-size:30px; font-weight:500; color:var(--blue); font-family:"DM Mono",monospace; }
+.subs-table-wrap { background:var(--card); border:1px solid var(--border); border-radius:10px; overflow:hidden; }
+.subs-table { width:100%; border-collapse:collapse; font-size:14px; }
+.subs-table th { background:var(--card2); color:var(--muted); padding:11px 16px; text-align:left; font-size:11px; font-weight:500; letter-spacing:0.06em; text-transform:uppercase; font-family:"DM Mono",monospace; }
+.subs-table td { padding:11px 16px; border-bottom:1px solid var(--border); color:var(--text); font-family:"DM Mono",monospace; font-size:13px; }
+.subs-table tr:last-child td { border-bottom:none; }
+.subs-table tr:nth-child(even) td { background:rgba(255,255,255,0.02); }
+.subs-table .email-cell { font-weight:500; color:var(--text); }
+.subs-search { width:100%; padding:10px 14px; border:1px solid var(--border2); border-radius:6px; font-size:14px; font-family:inherit; margin-bottom:16px; background:var(--card2); color:var(--text); }
+.subs-search:focus { outline:none; border-color:var(--blue); }
+.export-row { display:flex; justify-content:space-between; align-items:center; margin-bottom:16px; }
+.export-row p { font-size:13px; color:var(--muted); }
 
-    .futures-group-label { font-family:"DM Mono",monospace; font-size:9pt; font-weight:500; letter-spacing:0.12em; text-transform:uppercase; color:var(--blue); padding:16px 0 8px; border-bottom:1px solid var(--border); margin-bottom:12px; }
-    .tv-widget-wrap { background:transparent; border:1px solid var(--border); border-radius:10px; overflow:hidden; margin-bottom:8px; }
-    /* RECENT STRIP */
-    .recent-strip-wrap { background:#080a0d; border-top:1px solid var(--border); padding:20px 0 0; }
-    .recent-strip-inner { max-width:1280px; margin:0 auto; padding:0 24px; }
-    .recent-strip-label { font-family:"DM Mono",monospace; font-size:7.5pt; letter-spacing:0.14em; text-transform:uppercase; color:var(--muted2); margin-bottom:12px; }
-    .recent-strip-scroll { display:flex; gap:12px; overflow-x:auto; padding-bottom:16px; scrollbar-width:thin; scrollbar-color:var(--border) transparent; }
-    .recent-strip-scroll::-webkit-scrollbar { height:4px; }
-    .recent-strip-scroll::-webkit-scrollbar-track { background:transparent; }
-    .recent-strip-scroll::-webkit-scrollbar-thumb { background:var(--border); border-radius:2px; }
-    .recent-doc-card { background:var(--card); border:1px solid var(--border); border-radius:6px; padding:12px 14px; min-width:200px; max-width:200px; cursor:pointer; flex-shrink:0; transition:border-color 0.15s,transform 0.15s; }
-    .recent-doc-card:hover { border-color:var(--blue); transform:translateY(-2px); }
-    .recent-doc-cat { font-family:"DM Mono",monospace; font-size:7pt; color:var(--blue); text-transform:uppercase; letter-spacing:0.08em; margin-bottom:5px; }
-    .recent-doc-title { font-family:"DM Serif Display",serif; font-size:10pt; font-weight:600; color:var(--text); line-height:1.35; margin-bottom:5px; display:-webkit-box; -webkit-line-clamp:2; -webkit-box-orient:vertical; overflow:hidden; }
-    .recent-doc-date { font-family:"DM Mono",monospace; font-size:7pt; color:var(--muted2); }
-    /* SITE FOOTER */
-    .site-footer { background:#080a0d; border-top:1px solid var(--border); }
-    .site-footer-inner { max-width:1280px; margin:0 auto; padding:16px 24px; display:flex; align-items:center; gap:20px; flex-wrap:wrap; }
-    .footer-brand-wrap { display:flex; align-items:center; gap:8px; }
-    .footer-brand-mark { width:28px; height:28px; background:var(--gold); border-radius:4px; display:flex; align-items:center; justify-content:center; font-family:"DM Mono",monospace; font-size:9pt; font-weight:700; color:#080a0d; flex-shrink:0; cursor:pointer; }
-    .footer-brand-name { font-family:"DM Sans",sans-serif; font-size:12px; font-weight:600; color:var(--muted); }
-    .footer-nav { display:flex; gap:0; margin-left:auto; }
-    .footer-nav-btn { padding:8px 16px; border:none; background:none; cursor:pointer; font-size:12px; font-weight:500; color:var(--muted2); font-family:"DM Sans",sans-serif; transition:color 0.15s; border-left:1px solid var(--border); }
-    .footer-nav-btn:first-child { border-left:none; }
-    .footer-nav-btn:hover { color:var(--blue); }
-    .footer-copy { width:100%; font-size:11px; color:var(--muted2); font-family:"DM Mono",monospace; letter-spacing:0.04em; padding-top:10px; border-top:1px solid var(--border); }
-    @media (max-width:900px) { .contact-grid { grid-template-columns:1fr; } .about-bio { flex-direction:column; } .footer-nav { margin-left:0; } }
-    @media (max-width:640px) {
-      .posts-grid { grid-template-columns:1fr; }
-      .detail-wrap h1 { font-size:26px; }
-      .brand-name { font-size:12px; }
-      .user-chip { display:none; }
-      .auth-card { padding:28px 20px; }
-      .service-cards { grid-template-columns:1fr; }
-      .snav-btn { padding:12px 12px; font-size:12px; }
-    }
-  
-.pin-badge{display:inline-block;font-family:'DM Mono',monospace;font-size:8px;
-  color:var(--gold2);background:rgba(212,170,85,0.1);border:1px solid rgba(212,170,85,0.25);
-  padding:2px 8px;border-radius:3px;margin-bottom:6px;letter-spacing:0.06em;text-transform:uppercase;}
-.post-card.pinned{border-color:rgba(212,170,85,0.3);background:linear-gradient(135deg,var(--card),rgba(212,170,85,0.03));}
+.futures-group-label { font-family:"DM Mono",monospace; font-size:9pt; font-weight:500; letter-spacing:0.12em; text-transform:uppercase; color:var(--blue); padding:16px 0 8px; border-bottom:1px solid var(--border); margin-bottom:12px; }
+.tv-widget-wrap { background:transparent; border:1px solid var(--border); border-radius:10px; overflow:hidden; margin-bottom:8px; }
+/* RECENT STRIP */
+.recent-strip-wrap { background:#080a0d; border-top:1px solid var(--border); padding:20px 0 0; }
+.recent-strip-inner { max-width:1280px; margin:0 auto; padding:0 24px; }
+.recent-strip-label { font-family:"DM Mono",monospace; font-size:7.5pt; letter-spacing:0.14em; text-transform:uppercase; color:var(--muted2); margin-bottom:12px; }
+.recent-strip-scroll { display:flex; gap:12px; overflow-x:auto; padding-bottom:16px; scrollbar-width:thin; scrollbar-color:var(--border) transparent; }
+.recent-strip-scroll::-webkit-scrollbar { height:4px; }
+.recent-strip-scroll::-webkit-scrollbar-track { background:transparent; }
+.recent-strip-scroll::-webkit-scrollbar-thumb { background:var(--border); border-radius:2px; }
+.recent-doc-card { background:var(--card); border:1px solid var(--border); border-radius:6px; padding:12px 14px; min-width:200px; max-width:200px; cursor:pointer; flex-shrink:0; transition:border-color 0.15s,transform 0.15s; }
+.recent-doc-card:hover { border-color:var(--blue); transform:translateY(-2px); }
+.recent-doc-cat { font-family:"DM Mono",monospace; font-size:7pt; color:var(--blue); text-transform:uppercase; letter-spacing:0.08em; margin-bottom:5px; }
+.recent-doc-title { font-family:"DM Serif Display",serif; font-size:10pt; font-weight:600; color:var(--text); line-height:1.35; margin-bottom:5px; display:-webkit-box; -webkit-line-clamp:2; -webkit-box-orient:vertical; overflow:hidden; }
+.recent-doc-date { font-family:"DM Mono",monospace; font-size:7pt; color:var(--muted2); }
+/* SITE FOOTER */
+.site-footer { background:#080a0d; border-top:1px solid var(--border); }
+.site-footer-inner { max-width:1280px; margin:0 auto; padding:16px 24px; display:flex; align-items:center; gap:20px; flex-wrap:wrap; }
+.footer-brand-wrap { display:flex; align-items:center; gap:8px; }
+.footer-brand-mark { width:28px; height:28px; background:var(--gold); border-radius:4px; display:flex; align-items:center; justify-content:center; font-family:"DM Mono",monospace; font-size:9pt; font-weight:700; color:#080a0d; flex-shrink:0; cursor:pointer; }
+.footer-brand-name { font-family:"DM Sans",sans-serif; font-size:12px; font-weight:600; color:var(--muted); }
+.footer-nav { display:flex; gap:0; margin-left:auto; }
+.footer-nav-btn { padding:8px 16px; border:none; background:none; cursor:pointer; font-size:12px; font-weight:500; color:var(--muted2); font-family:"DM Sans",sans-serif; transition:color 0.15s; border-left:1px solid var(--border); }
+.footer-nav-btn:first-child { border-left:none; }
+.footer-nav-btn:hover { color:var(--blue); }
+.footer-copy { width:100%; font-size:11px; color:var(--muted2); font-family:"DM Mono",monospace; letter-spacing:0.04em; padding-top:10px; border-top:1px solid var(--border); }
+@media (max-width:900px) { .contact-grid { grid-template-columns:1fr; } .about-bio { flex-direction:column; } .footer-nav { margin-left:0; } }
+@media (max-width:640px) {
+  .posts-grid { grid-template-columns:1fr; }
+  .detail-wrap h1 { font-size:26px; }
+  .brand-name { font-size:12px; }
+  .user-chip { display:none; }
+  .auth-card { padding:28px 20px; }
+  .service-cards { grid-template-columns:1fr; }
+  .snav-btn { padding:12px 12px; font-size:12px; }
+}
+
+/* ===== TECHNICAL ANALYSIS TAB ===== */
+.ta-grid { display:grid; grid-template-columns:repeat(auto-fill,minmax(520px,1fr)); gap:20px; }
+.ta-card { background:var(--card); border:1px solid var(--border); border-radius:10px; overflow:hidden; transition:border-color 0.2s; }
+.ta-card:hover { border-color:rgba(74,158,255,0.35); }
+.ta-card-header { padding:14px 18px 10px; display:flex; align-items:center; gap:10px; border-bottom:1px solid var(--border); }
+.ta-instrument { font-family:"DM Serif Display",serif; font-size:17px; color:var(--text); flex:1; }
+.ta-timeframe { font-family:"DM Mono",monospace; font-size:9px; color:var(--blue); background:rgba(74,158,255,0.1); border:1px solid rgba(74,158,255,0.2); padding:3px 8px; border-radius:3px; letter-spacing:0.06em; text-transform:uppercase; }
+.ta-bias { font-family:"DM Mono",monospace; font-size:9px; padding:3px 8px; border-radius:3px; letter-spacing:0.06em; text-transform:uppercase; }
+.ta-bias.bullish  { color:var(--teal); background:rgba(46,207,170,0.1); border:1px solid rgba(46,207,170,0.25); }
+.ta-bias.bearish  { color:var(--coral); background:rgba(255,107,74,0.1); border:1px solid rgba(255,107,74,0.25); }
+.ta-bias.neutral  { color:var(--muted); background:rgba(136,144,164,0.1); border:1px solid rgba(136,144,164,0.2); }
+.ta-chart-wrap { position:relative; background:#080a0d; min-height:200px; max-height:420px; overflow:hidden; display:flex; align-items:center; justify-content:center; }
+.ta-chart-wrap img { width:100%; height:auto; max-height:420px; object-fit:contain; display:block; }
+.ta-chart-placeholder { color:var(--muted2); font-family:"DM Mono",monospace; font-size:11px; text-align:center; padding:40px; }
+.ta-levels { display:grid; grid-template-columns:1fr 1fr 1fr; gap:1px; background:var(--border); border-top:1px solid var(--border); }
+.ta-level { background:var(--card2); padding:10px 14px; }
+.ta-level-label { font-family:"DM Mono",monospace; font-size:8px; color:var(--muted2); text-transform:uppercase; letter-spacing:0.07em; margin-bottom:4px; }
+.ta-level-val { font-family:"DM Mono",monospace; font-size:12px; font-weight:500; }
+.ta-level-val.resistance { color:var(--coral); }
+.ta-level-val.support    { color:var(--teal); }
+.ta-level-val.target     { color:var(--gold2); }
+.ta-level-val.neutral    { color:var(--text); }
+.ta-commentary { padding:14px 18px; font-size:13px; color:var(--muted); line-height:1.65; border-top:1px solid var(--border); }
+.ta-indicators { display:flex; flex-wrap:wrap; gap:6px; padding:12px 18px; border-top:1px solid var(--border); }
+.ta-indicator { font-family:"DM Mono",monospace; font-size:9px; padding:3px 8px; border-radius:3px; }
+.ta-indicator.bull { color:var(--teal); background:rgba(46,207,170,0.08); border:1px solid rgba(46,207,170,0.2); }
+.ta-indicator.bear { color:var(--coral); background:rgba(255,107,74,0.08); border:1px solid rgba(255,107,74,0.2); }
+.ta-indicator.neut { color:var(--muted); background:rgba(136,144,164,0.08); border:1px solid rgba(136,144,164,0.15); }
+.ta-meta { padding:10px 18px; display:flex; align-items:center; justify-content:space-between; }
+.ta-date { font-family:"DM Mono",monospace; font-size:9px; color:var(--muted2); }
+.ta-delete-btn { font-family:"DM Mono",monospace; font-size:9px; padding:3px 8px; border-radius:3px; border:1px solid rgba(255,107,74,0.3); background:transparent; color:var(--coral); cursor:pointer; opacity:0; transition:opacity 0.2s; }
+.ta-card:hover .ta-delete-btn { opacity:1; }
+.ta-empty { text-align:center; padding:60px 20px; color:var(--muted2); font-family:"DM Mono",monospace; font-size:12px; }
+/* TA Admin Form */
+.ta-form { background:var(--card); border:1px solid var(--border); border-radius:10px; padding:20px; margin-bottom:24px; }
+.ta-form-title { font-family:"DM Mono",monospace; font-size:10px; color:var(--muted2); text-transform:uppercase; letter-spacing:0.08em; margin-bottom:16px; }
+.ta-form-grid { display:grid; grid-template-columns:1fr 1fr; gap:10px; margin-bottom:12px; }
+.ta-form-field { display:flex; flex-direction:column; gap:5px; }
+.ta-form-field label { font-family:"DM Mono",monospace; font-size:9px; color:var(--muted); text-transform:uppercase; letter-spacing:0.06em; }
+.ta-form-field input, .ta-form-field select, .ta-form-field textarea { background:var(--card2); border:1px solid var(--border); color:var(--text); padding:8px 10px; border-radius:5px; font-family:"DM Mono",monospace; font-size:12px; outline:none; transition:border-color 0.15s; }
+.ta-form-field input:focus, .ta-form-field select:focus, .ta-form-field textarea:focus { border-color:var(--blue); }
+.ta-form-field textarea { resize:vertical; min-height:80px; }
+.ta-chart-upload { border:2px dashed var(--border2); border-radius:8px; padding:24px; text-align:center; cursor:pointer; transition:border-color 0.2s; margin-bottom:12px; }
+.ta-chart-upload:hover { border-color:var(--blue); }
+.ta-chart-upload input { display:none; }
+.ta-chart-upload-label { font-family:"DM Mono",monospace; font-size:11px; color:var(--muted2); }
+.ta-chart-preview { max-width:100%; max-height:300px; border-radius:6px; margin-top:10px; display:none; }
+.ta-indicator-builder { display:flex; flex-wrap:wrap; gap:6px; margin-top:6px; }
+.ta-ind-toggle { font-family:"DM Mono",monospace; font-size:9px; padding:4px 10px; border-radius:3px; border:1px solid var(--border2); background:transparent; color:var(--muted); cursor:pointer; transition:all 0.15s; }
+.ta-ind-toggle.selected-bull { border-color:rgba(46,207,170,0.5); color:var(--teal); background:rgba(46,207,170,0.08); }
+.ta-ind-toggle.selected-bear { border-color:rgba(255,107,74,0.5); color:var(--coral); background:rgba(255,107,74,0.08); }
+.ta-ind-toggle.selected-neut { border-color:rgba(136,144,164,0.4); color:var(--muted); background:rgba(136,144,164,0.1); }
+@media(max-width:640px){ .ta-grid{grid-template-columns:1fr;} .ta-levels{grid-template-columns:1fr 1fr;} .ta-form-grid{grid-template-columns:1fr;} }
+```
+
+.pin-badge{display:inline-block;font-family:‘DM Mono’,monospace;font-size:8px;
+color:var(–gold2);background:rgba(212,170,85,0.1);border:1px solid rgba(212,170,85,0.25);
+padding:2px 8px;border-radius:3px;margin-bottom:6px;letter-spacing:0.06em;text-transform:uppercase;}
+.post-card.pinned{border-color:rgba(212,170,85,0.3);background:linear-gradient(135deg,var(–card),rgba(212,170,85,0.03));}
+
+```
+.futures-section { margin-bottom: 28px; }
+.futures-section-label { font-family: 'DM Mono', monospace; font-size: 9px; letter-spacing: 0.14em; text-transform: uppercase; color: var(--muted2); margin-bottom: 12px; display: flex; align-items: center; gap: 10px; }
+.futures-section-label::after { content: ''; flex: 1; height: 1px; background: var(--border); }
+.mini-charts-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(280px, 1fr)); gap: 10px; }
+.mini-chart-wrap { background: var(--card); border: 1px solid var(--border); border-radius: 8px; overflow: hidden; height: 220px; }
+.mini-chart-wrap .tradingview-widget-container { height: 220px; }
+
+
+.futures-links-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(200px,1fr));gap:8px;margin-bottom:8px;}
+.futures-link-card{display:flex;align-items:center;justify-content:space-between;background:var(--card);border:1px solid var(--border);border-radius:6px;padding:12px 14px;text-decoration:none;transition:border-color 0.15s,background 0.15s;cursor:pointer;}
+.futures-link-card:hover{border-color:var(--blue);background:rgba(74,158,255,0.05);}
+.flc-label{font-family:'DM Mono',monospace;font-size:11px;font-weight:500;color:var(--text);}
+.flc-sub{font-family:'DM Mono',monospace;font-size:9px;color:var(--muted2);margin-top:2px;}
+.flc-arrow{font-size:14px;color:var(--blue);flex-shrink:0;margin-left:8px;}
+```
+
+/* ── ABOUT & SERVICES ── */
+
+:root{
+–bg:#0d0f12;–card:#141720;–card2:#1c2030;
+–border:rgba(255,255,255,0.08);–border2:rgba(255,255,255,0.14);
+–text:#e8eaf0;–muted:#8890a4;–muted2:#555f78;
+–blue:#4a9eff;–teal:#2ecfaa;–coral:#ff6b4a;–gold:#ffb347;–gold2:#d4aa55;
+}
+*{margin:0;padding:0;box-sizing:border-box;}
+html,body{background:var(–bg);color:var(–text);font-family:‘DM Sans’,sans-serif;font-size:13px;line-height:1.7;}
+.static-about-page{max-width:900px;margin:0 auto;padding:36px 28px 56px;}
+.about-section-tag{font-family:‘DM Mono’,monospace;font-size:8.5px;letter-spacing:0.18em;color:var(–blue);text-transform:uppercase;margin-bottom:8px;}
+.about-section-title{font-family:‘DM Serif Display’,serif;font-size:28px;color:var(–text);line-height:1.1;margin-bottom:6px;}
+.about-section-title span{color:var(–blue);}
+.about-section-sub{font-family:‘DM Mono’,monospace;font-size:10px;color:var(–muted2);margin-bottom:28px;}
+.about-divider{height:1px;background:var(–border);margin:36px 0;}
+.static-about-page p{color:var(–muted);font-size:13.5px;line-height:1.75;margin-bottom:14px;}
+p:last-child{margin-bottom:0;}
+.static-about-page strong{color:var(–text);font-weight:500;}
+
+/* STAT STRIP */
+.stat-stri.static-about-page p{display:grid;grid-template-columns:repeat(auto-fill,minmax(150px,1fr));gap:10px;margin:24px 0;}
+.stat{background:var(–card);border:1px solid var(–border);border-radius:6px;padding:14px 16px;}
+.stat-v{font-family:‘DM Serif Display’,serif;font-size:24px;color:var(–blue);line-height:1;}
+.stat-l{font-family:‘DM Mono’,monospace;font-size:9px;color:var(–muted2);text-transform:uppercase;letter-spacing:0.06em;margin-top:5px;}
+
+/* CREDENTIALS */
+.cred-row{display:flex;gap:8px;flex-wrap:wrap;margin:16px 0;}
+.cred{font-family:‘DM Mono’,monospace;font-size:9px;color:var(–gold2);background:rgba(212,170,85,0.1);border:1px solid rgba(212,170,85,0.2);padding:4px 10px;border-radius:3px;letter-spacing:0.06em;text-transform:uppercase;}
+
+/* EXPERTISE GRID */
+.exp-grid{display:grid;grid-template-columns:1fr 1fr;gap:10px;margin:20px 0;}
+.exp-card{background:var(–card);border:1px solid var(–border);border-radius:8px;padding:16px 18px;}
+.exp-card-title{font-family:‘DM Mono’,monospace;font-size:9px;color:var(–blue);text-transform:uppercase;letter-spacing:0.1em;margin-bottom:10px;}
+.exp-card ul{list-style:none;padding:0;}
+.exp-card ul li{position:relative;padding:4px 0 4px 14px;font-size:12.5px;color:var(–muted);border-bottom:1px solid var(–border);}
+.exp-card ul li:last-child{border-bottom:none;padding-bottom:0;}
+.exp-card ul li::before{content:’—’;position:absolute;left:0;color:var(–gold2);font-family:‘DM Mono’,monospace;font-size:10px;}
+
+/* STRAND CARDS */
+.strand-wra.static-about-page p{display:flex;flex-direction:column;gap:12px;margin:20px 0;}
+.strand{background:var(–card);border:1px solid var(–border);border-radius:8px;overflow:hidden;}
+.strand-header{padding:14px 20px;border-bottom:1px solid var(–border);background:var(–card2);display:flex;align-items:center;gap:14px;}
+.strand-icon{font-size:20px;flex-shrink:0;}
+.strand-title{font-family:‘DM Serif Display’,serif;font-size:16px;color:var(–text);}
+.strand-label{font-family:‘DM Mono’,monospace;font-size:8px;color:var(–blue);text-transform:uppercase;letter-spacing:0.1em;margin-top:2px;}
+.strand-body{padding:16px 20px;}
+.strand-body .static-about-page p{font-size:13px;color:var(–muted);margin-bottom:12px;}
+.strand-body p:last-child{margin-bottom:0;}
+.strand-items{list-style:none;padding:0;display:grid;grid-template-columns:1fr 1fr;gap:4px;}
+.strand-items li{position:relative;padding:5px 0 5px 14px;font-size:12px;color:var(–muted);border-bottom:1px solid var(–border);}
+.strand-items li:last-child{border-bottom:none;}
+.strand-items li::before{content:’—’;position:absolute;left:0;color:var(–gold2);font-family:‘DM Mono’,monospace;font-size:10px;}
+
+/* MARKETS */
+.market-tags{display:flex;gap:6px;flex-wrap:wrap;margin:8px 0 16px;}
+.market-tag{font-family:‘DM Mono’,monospace;font-size:9px;padding:4px 10px;border-radius:3px;letter-spacing:0.04em;}
+.mt-blue{color:var(–blue);background:rgba(74,158,255,0.1);border:1px solid rgba(74,158,255,0.2);}
+.mt-teal{color:var(–teal);background:rgba(46,207,170,0.1);border:1px solid rgba(46,207,170,0.2);}
+.mt-gold{color:var(–gold2);background:rgba(212,170,85,0.1);border:1px solid rgba(212,170,85,0.2);}
+.mt-coral{color:var(–coral);background:rgba(255,107,74,0.1);border:1px solid rgba(255,107,74,0.2);}
+.mkt-label{font-family:‘DM Mono’,monospace;font-size:9px;color:var(–muted2);text-transform:uppercase;letter-spacing:0.08em;margin:12px 0 6px;}
+
+@media(max-width:700px){
+.exp-grid{grid-template-columns:1fr;}
+.strand-items{grid-template-columns:1fr;}
+}
+
 </style>
 </head>
 <body>
@@ -297,10 +442,11 @@
 </script>
 
 <!-- ========================= AUTH ========================= -->
+
 <div id="page-auth">
   <div class="auth-hero">
-    <div class="hero-mark">JHD</div>
-    <h1>JHD Commodity Advisors</h1>
+    <img src="https://i.ibb.co/PZPZGP71/IMG-2924.jpg" alt="JHD Commodity Advisors" style="width:90px;height:90px;object-fit:contain;border-radius:10px;margin-bottom:12px;display:block;margin-left:auto;margin-right:auto;">
+    <h1>JHD <span style="color:var(--gold2);">Commodity Advisors</span></h1>
     <div class="rule"></div>
     <p>Professional agricultural commodity advisory &amp; market intelligence</p>
   </div>
@@ -328,12 +474,18 @@
 </div>
 
 <!-- ========================= MAIN APP ========================= -->
+
 <div id="page-app" class="hidden">
   <header class="topbar">
     <div class="topbar-inner">
       <div class="topbar-brand" onclick="showTab('commentary')" title="Home">
-        <div class="brand-mark" onclick="event.stopPropagation();showTab('services')" title="Services" style="cursor:pointer;">JHD</div>
-        <span class="brand-name">JHD Commodity Advisors</span>
+        <div class="brand-mark" onclick="event.stopPropagation();showTab('services')" title="Services">
+          <img src="https://i.ibb.co/PZPZGP71/IMG-2924.jpg" alt="JHD Commodity Advisors" style="height:38px;width:38px;object-fit:contain;border-radius:4px;">
+          <div class="brand-name">
+            <span class="brand-name-jhd">JHD</span>
+            <span class="brand-name-sub">Commodity Advisors</span>
+          </div>
+        </div>
       </div>
       <div class="topbar-right">
         <span class="user-chip" id="app-chip"></span>
@@ -355,10 +507,12 @@
       <button class="snav-btn" data-tab="options"           onclick="showTab('options')">Options Analytics</button>
       <button class="snav-btn" data-tab="fob"               onclick="showTab('fob')">FOB Data</button>
       <button class="snav-btn" data-tab="freight"           onclick="showTab('freight')">Freight</button>
+      <button class="snav-btn" data-tab="technicals"        onclick="showTab('technicals')">Technical Analysis</button>
     </div>
   </nav>
 
   <!-- Commentary -->
+
   <div id="tab-commentary" class="protected">
     <div class="page-wrap">
       <div class="page-heading"><h2>Market Commentary</h2><p>In-depth analysis of agricultural commodity markets</p></div>
@@ -367,6 +521,7 @@
   </div>
 
   <!-- Research -->
+
   <div id="tab-research" class="hidden protected">
     <div class="page-wrap">
       <div class="page-heading"><h2>Research</h2><p>Fundamental and technical research reports</p></div>
@@ -376,6 +531,7 @@
   </div>
 
   <!-- CFTC -->
+
   <div id="tab-cftc" class="hidden protected">
     <div class="page-wrap">
       <div class="page-heading"><h2>CFTC</h2><p>Commitment of Traders analysis and positioning data</p></div>
@@ -384,117 +540,357 @@
   </div>
 
   <!-- Futures -->
+
   <div id="tab-futures" class="hidden protected">
     <div class="futures-wrap">
       <div class="futures-heading">
         <h2>Futures Price Quotes</h2>
-        <p>Agricultural commodities, energy, metals &amp; key commodity currencies — prices delayed 10–15 min</p>
+        <p>Indices &amp; currencies via TradingView · Commodity prices via direct exchange links below</p>
       </div>
-      <!-- TradingView Widget BEGIN -->
-      <div class="tradingview-widget-container">
-        <div class="tradingview-widget-container__widget"></div>
-        <div class="tradingview-widget-copyright"><a href="https://www.tradingview.com/markets/" rel="noopener nofollow" target="_blank"><span class="blue-text">Market summary</span></a><span class="trademark"> by TradingView</span></div>
-        <script type="text/javascript" src="https://s3.tradingview.com/external-embedding/embed-widget-market-quotes.js" async>
+
+```
+  <!-- WORKING: Indices + Forex via TradingView market quotes -->
+  <div class="futures-section-label">Indices &amp; Currencies</div>
+  <div class="tradingview-widget-container" style="margin-bottom:24px;">
+    <div class="tradingview-widget-container__widget"></div>
+    <script type="text/javascript" src="https://s3.tradingview.com/external-embedding/embed-widget-market-quotes.js" async>
+    {
+      "colorTheme": "dark",
+      "locale": "en",
+      "isTransparent": true,
+      "showSymbolLogo": false,
+      "backgroundColor": "rgba(13,15,18,0)",
+      "support_host": "https://www.tradingview.com",
+      "width": "100%",
+      "height": 400,
+      "symbolsGroups": [
         {
-          "colorTheme": "dark",
-          "locale": "en",
-          "largeChartUrl": "",
-          "isTransparent": true,
-          "showSymbolLogo": true,
-          "backgroundColor": "rgba(13,15,18,0)",
-          "support_host": "https://www.tradingview.com",
-          "width": "100%",
-          "height": 600,
-          "symbolsGroups": [
-            {
-              "name": "Indices",
-              "symbols": [
-                {"name": "FOREXCOM:SPXUSD", "displayName": "S&P 500 Index"},
-                {"name": "FOREXCOM:NSXUSD", "displayName": "US 100 Cash CFD"},
-                {"name": "FOREXCOM:DJI",    "displayName": "Dow Jones Industrial Average Index"},
-                {"name": "INDEX:NKY",       "displayName": "Japan 225"},
-                {"name": "INDEX:DEU40",     "displayName": "DAX Index"},
-                {"name": "FOREXCOM:UKXGBP", "displayName": "FTSE 100 Index"}
-              ]
-            },
-            {
-              "name": "Grains",
-              "symbols": [
-                {"name": "CBOT:ZCK2026",      "displayName": "Corn May 26"},
-                {"name": "CBOT:ZWK2026",      "displayName": "SRW Wheat May 26"},
-                {"name": "CBOT:KEK2026",      "displayName": "HRW Wheat May 26"},
-                {"name": "EURONEXT:EBMK2026", "displayName": "Milling Wheat May 26"},
-                {"name": "CBOT:ZSK2026",      "displayName": "Soybeans May 26"},
-                {"name": "CBOT:ZMK2026",      "displayName": "Soybean Meal May 26"},
-                {"name": "CBOT:ZLK2026",      "displayName": "Soybean Oil May 26"}
-              ]
-            },
-            {
-              "name": "Softs",
-              "symbols": [
-                {"name": "CAPITALCOM:SUGAR",    "displayName": "Sugar #11"},
-                {"name": "CAPITALCOM:COFFEE",   "displayName": "Coffee C"},
-                {"name": "CAPITALCOM:COTTON",   "displayName": "Cotton #2"},
-                {"name": "CAPITALCOM:COCOA",    "displayName": "Cocoa"}
-              ]
-            },
-            {
-              "name": "Energy & Metals",
-              "symbols": [
-                {"name": "CAPITALCOM:OIL_CRUDE",  "displayName": "WTI Crude Oil"},
-                {"name": "CAPITALCOM:OIL",        "displayName": "Brent Crude"},
-                {"name": "CAPITALCOM:NATURAL_GAS","displayName": "Natural Gas"},
-                {"name": "CAPITALCOM:GOLD",       "displayName": "Gold"},
-                {"name": "CAPITALCOM:SILVER",     "displayName": "Silver"},
-                {"name": "COMEX:HGN2026",         "displayName": "Copper Jul 26"}
-              ]
-            },
-            {
-              "name": "Forex",
-              "symbols": [
-                {"name": "FX:EURUSD", "displayName": "EUR/USD"},
-                {"name": "FX:GBPUSD", "displayName": "GBP/USD"},
-                {"name": "FX:USDJPY", "displayName": "USD/JPY"},
-                {"name": "FX:USDCHF", "displayName": "USD/CHF"},
-                {"name": "FX:AUDUSD", "displayName": "AUD/USD"},
-                {"name": "FX:USDCAD", "displayName": "USD/CAD"},
-                {"name": "FX:USDBRL", "displayName": "USD/BRL"},
-                {"name": "TVC:DXY",   "displayName": "DXY Index"}
-              ]
-            }
+          "name": "Indices",
+          "symbols": [
+            {"name": "FOREXCOM:SPXUSD", "displayName": "S&P 500"},
+            {"name": "FOREXCOM:NSXUSD", "displayName": "US 100"},
+            {"name": "FOREXCOM:DJI",    "displayName": "Dow Jones"},
+            {"name": "INDEX:DEU40",     "displayName": "DAX"},
+            {"name": "FOREXCOM:UKXGBP", "displayName": "FTSE 100"},
+            {"name": "INDEX:NKY",       "displayName": "Nikkei 225"}
+          ]
+        },
+        {
+          "name": "Forex",
+          "symbols": [
+            {"name": "FX:EURUSD", "displayName": "EUR/USD"},
+            {"name": "FX:GBPUSD", "displayName": "GBP/USD"},
+            {"name": "FX:USDJPY", "displayName": "USD/JPY"},
+            {"name": "FX:AUDUSD", "displayName": "AUD/USD"},
+            {"name": "FX:USDCAD", "displayName": "USD/CAD"},
+            {"name": "FX:USDBRL", "displayName": "USD/BRL"},
+            {"name": "TVC:DXY",   "displayName": "DXY Index"}
           ]
         }
-        </script>
+      ]
+    }
+    </script>
+  </div>
+
+  <!-- COMMODITY PRICE LINKS -->
+  <div class="futures-section-label">Agricultural Commodities — Delayed Quotes</div>
+  <div class="futures-links-grid">
+    <a href="https://www.cmegroup.com/markets/agriculture/grains/corn.quotes.html" target="_blank" class="futures-link-card">
+      <div class="flc-label">Corn (ZC)</div>
+      <div class="flc-sub">CBOT · CME Group</div>
+      <div class="flc-arrow">↗</div>
+    </a>
+    <a href="https://www.cmegroup.com/markets/agriculture/grains/wheat.quotes.html" target="_blank" class="futures-link-card">
+      <div class="flc-label">SRW Wheat (ZW)</div>
+      <div class="flc-sub">CBOT · CME Group</div>
+      <div class="flc-arrow">↗</div>
+    </a>
+    <a href="https://www.cmegroup.com/markets/agriculture/grains/kc-hrw-wheat.quotes.html" target="_blank" class="futures-link-card">
+      <div class="flc-label">HRW Wheat (KE)</div>
+      <div class="flc-sub">KCBT · CME Group</div>
+      <div class="flc-arrow">↗</div>
+    </a>
+    <a href="https://www.euronext.com/en/products/commodities/milling-wheat-futures" target="_blank" class="futures-link-card">
+      <div class="flc-label">Milling Wheat (EBM)</div>
+      <div class="flc-sub">Euronext Paris</div>
+      <div class="flc-arrow">↗</div>
+    </a>
+    <a href="https://www.cmegroup.com/markets/agriculture/oilseeds/soybean.quotes.html" target="_blank" class="futures-link-card">
+      <div class="flc-label">Soybeans (ZS)</div>
+      <div class="flc-sub">CBOT · CME Group</div>
+      <div class="flc-arrow">↗</div>
+    </a>
+    <a href="https://www.cmegroup.com/markets/agriculture/oilseeds/soybean-meal.quotes.html" target="_blank" class="futures-link-card">
+      <div class="flc-label">Soybean Meal (ZM)</div>
+      <div class="flc-sub">CBOT · CME Group</div>
+      <div class="flc-arrow">↗</div>
+    </a>
+    <a href="https://www.cmegroup.com/markets/agriculture/oilseeds/soybean-oil.quotes.html" target="_blank" class="futures-link-card">
+      <div class="flc-label">Soybean Oil (ZL)</div>
+      <div class="flc-sub">CBOT · CME Group</div>
+      <div class="flc-arrow">↗</div>
+    </a>
+    <a href="https://www.theice.com/products/254671929/Sugar-No-11-Futures/data" target="_blank" class="futures-link-card">
+      <div class="flc-label">Sugar #11 (SB)</div>
+      <div class="flc-sub">ICE Futures US</div>
+      <div class="flc-arrow">↗</div>
+    </a>
+    <a href="https://www.theice.com/products/15/Coffee-C-Futures/data" target="_blank" class="futures-link-card">
+      <div class="flc-label">Coffee C (KC)</div>
+      <div class="flc-sub">ICE Futures US</div>
+      <div class="flc-arrow">↗</div>
+    </a>
+    <a href="https://www.theice.com/products/254671928/Cotton-No-2-Futures/data" target="_blank" class="futures-link-card">
+      <div class="flc-label">Cotton #2 (CT)</div>
+      <div class="flc-sub">ICE Futures US</div>
+      <div class="flc-arrow">↗</div>
+    </a>
+    <a href="https://www.cmegroup.com/markets/energy/crude-oil/light-sweet-crude.quotes.html" target="_blank" class="futures-link-card">
+      <div class="flc-label">WTI Crude Oil (CL)</div>
+      <div class="flc-sub">NYMEX · CME Group</div>
+      <div class="flc-arrow">↗</div>
+    </a>
+    <a href="https://www.theice.com/products/219/Brent-Crude-Futures/data" target="_blank" class="futures-link-card">
+      <div class="flc-label">Brent Crude</div>
+      <div class="flc-sub">ICE Futures Europe</div>
+      <div class="flc-arrow">↗</div>
+    </a>
+    <a href="https://www.cmegroup.com/markets/metals/precious/gold.quotes.html" target="_blank" class="futures-link-card">
+      <div class="flc-label">Gold (GC)</div>
+      <div class="flc-sub">COMEX · CME Group</div>
+      <div class="flc-arrow">↗</div>
+    </a>
+  </div>
+  <p style="font-size:11px;color:var(--muted2);text-align:center;padding-top:16px;">Indices &amp; forex: TradingView (delayed 10–15 min) · Commodity links open exchange pages with free delayed quotes</p>
+</div>
+```
+
+  </div>
+  <!-- Services -->
+  <div id="tab-services" class="hidden">
+    <div class="static-about-page">
+
+<!-- ══ ABOUT US ══ -->
+
+<div class="about-section-tag">JHD Commodity Advisors · About</div>
+<div class="about-section-title">About <span>Us</span></div>
+<div class="about-section-sub">London, UK · FCA Regulated · NFA Series 3 Qualified</div>
+
+<p>JHD Commodity Advisors is a London-based agricultural commodity research and advisory platform founded by <strong>James Day</strong> — an agricultural commodities specialist with over <strong>14 years of experience</strong> spanning physical procurement, derivatives trading, risk management and market intelligence across global grain and oilseed markets.</p>
+
+<p>The platform was built to address a genuine gap in the market: professional-grade agricultural research tools and market intelligence, made accessible to individual traders, analysts, merchandisers and brokers without an institutional price tag. JHD combines original weekly commentary with live data analytics — CFTC positioning, USDA supply and demand estimates, FOB price data, export sales and agricultural weather intelligence — all in one place.</p>
+
+<p>Alongside the research platform, JHD Commodity Advisors provides a range of professional services to commodity-exposed businesses, trading houses and market participants — drawing on a deep network across global origins, end-user relationships and a consistent track record of managing risk and developing scalable commodity trading strategies.</p>
+
+<div class="cred-row">
+  <span class="cred">FCA Regulated</span>
+  <span class="cred">NFA Series 3</span>
+  <span class="cred">GAFTA</span>
+  <span class="cred">FOSFA</span>
+  <span class="cred">ISDA / CSA</span>
+  <span class="cred">ANEC</span>
+</div>
+
+<div class="stat-strip">
+  <div class="stat"><div class="stat-v">>$5bn</div><div class="stat-l">Physical Purchases</div></div>
+  <div class="stat"><div class="stat-v">1.5 MMT</div><div class="stat-l">Annual Grain Volume</div></div>
+  <div class="stat"><div class="stat-v">>$400m</div><div class="stat-l">Trade Finance Secured</div></div>
+  <div class="stat"><div class="stat-v">14+</div><div class="stat-l">Years Experience</div></div>
+  <div class="stat"><div class="stat-v">15+</div><div class="stat-l">Active Origin Networks</div></div>
+  <div class="stat"><div class="stat-v">Zero</div><div class="stat-l">Defaults</div></div>
+</div>
+
+<div class="exp-grid">
+  <div class="exp-card">
+    <div class="exp-card-title">Physical Markets</div>
+    <ul>
+      <li>Wheat, Corn, Barley, Pulses</li>
+      <li>Soybeans, Canola, Veg Oils, Feedstuffs</li>
+      <li>FOB Santos, Upriver Argentina, USG, PNW</li>
+      <li>Full Panamax & Handysize execution</li>
+      <li>Multi-origin and split-discharge expertise</li>
+      <li>Tier-1 APAC end-user relationships</li>
+    </ul>
+  </div>
+  <div class="exp-card">
+    <div class="exp-card-title">Derivatives & Risk</div>
+    <ul>
+      <li>CME / CBOT, MGEX, ICE, Euronext</li>
+      <li>Futures and listed options</li>
+      <li>Inter-commodity and calendar spreads</li>
+      <li>Physical contract hedging</li>
+      <li>FX exposure management</li>
+      <li>OTC and structured hedging</li>
+    </ul>
+  </div>
+  <div class="exp-card">
+    <div class="exp-card-title">Origins Coverage</div>
+    <ul>
+      <li>Australia, USA, Canada</li>
+      <li>Brazil, Argentina</li>
+      <li>Ukraine, Black Sea, Romania</li>
+      <li>India, Kazakhstan</li>
+      <li>China & APAC buy-side network</li>
+    </ul>
+  </div>
+  <div class="exp-card">
+    <div class="exp-card-title">Research & Intelligence</div>
+    <ul>
+      <li>Weekly grain & oilseed commentary</li>
+      <li>CFTC COT positioning analysis</li>
+      <li>WASDE supply & demand interpretation</li>
+      <li>FOB price data across origins</li>
+      <li>Export sales pace analysis</li>
+      <li>Agricultural weather & crop risk</li>
+    </ul>
+  </div>
+</div>
+
+<div class="about-divider"></div>
+
+<!-- ══ SERVICES ══ -->
+
+<div class="about-section-tag">JHD Commodity Advisors · Services</div>
+<div class="about-section-title">Our <span>Services</span></div>
+<div class="about-section-sub">Three distinct strands · Research · Advisory · Trading</div>
+
+<p>JHD operates across three clearly defined service strands — each drawing on the same deep market knowledge but designed to serve different needs. Whether you are looking to access professional research tools, engage advisory expertise, or discuss a managed trading arrangement, the right conversation starts below.</p>
+
+<div class="strand-wrap">
+
+  <!-- STRAND 1 -->
+
+  <div class="strand">
+    <div class="strand-header">
+      <div class="strand-icon">📊</div>
+      <div>
+        <div class="strand-title">Research Platform</div>
+        <div class="strand-label">JHD Commodity Advisors · Public Platform</div>
       </div>
-      <!-- TradingView Widget END -->
-      <p style="font-size:12px;color:var(--muted);text-align:center;padding-top:8px;">Data provided by TradingView · Prices delayed 10–15 minutes</p>
+    </div>
+    <div class="strand-body">
+      <p>The JHD Commodity Advisors platform provides professional-grade agricultural market intelligence, live data analytics and original weekly commentary — accessible to individual traders, analysts, merchandisers and brokers. Free to join, with premium research content available through the platform's engagement economy.</p>
+      <ul class="strand-items">
+        <li>Weekly wheat & grain commentary</li>
+        <li>Live CFTC COT positioning dashboards</li>
+        <li>WASDE supply & demand analytics</li>
+        <li>Weekly export sales data</li>
+        <li>FOB price data across 6 commodities</li>
+        <li>Agricultural weather — 19 global regions</li>
+        <li>Options analytics tool</li>
+        <li>Active community of market participants</li>
+      </ul>
     </div>
   </div>
 
-  <!-- Services -->
-  <div id="tab-services" class="hidden protected">
-    <div class="static-wrap">
-      <h2>Services</h2><div class="static-rule"></div>
-      <p>JHD Commodity Advisors provides specialist advisory and broking services across agricultural commodity markets, combining deep market knowledge with 14+ years of hands-on trading and broking experience.</p>
-      <div class="service-cards">
-        <div class="service-card"><div class="sc-icon">📊</div><h4>Market Commentary</h4><p>Regular in-depth analysis across grains, oilseeds and soft commodities with actionable trade ideas.</p></div>
-        <div class="service-card"><div class="sc-icon">🌾</div><h4>Physical Cargo Procurement</h4><p>Specialist procurement advisory for agricultural cargoes, covering origin selection, basis management and logistics.</p></div>
-        <div class="service-card"><div class="sc-icon">📈</div><h4>Derivatives Broking</h4><p>Futures and options execution and strategy across CBOT, Euronext and CME agricultural contracts.</p></div>
-        <div class="service-card"><div class="sc-icon">🔍</div><h4>Research &amp; Analysis</h4><p>Bespoke fundamental and technical research reports tailored to your risk exposure and commercial needs.</p></div>
+  <!-- STRAND 2 -->
+
+  <div class="strand">
+    <div class="strand-header">
+      <div class="strand-icon">🌾</div>
+      <div>
+        <div class="strand-title">Advisory Services</div>
+        <div class="strand-label">JHD Commodity Advisors · Professional Services</div>
       </div>
-      <h3>Who We Work With</h3>
-      <ul>
-        <li>Agricultural commodity trading houses</li>
-        <li>Commodity hedge funds and family offices</li>
-        <li>Food manufacturers and processors</li>
-        <li>Grain origination businesses</li>
-        <li>Livestock and feed producers</li>
-      </ul>
-      <div class="disclaimer-box">All services are provided on a professional basis. Nothing on this platform constitutes investment advice. Past performance is not indicative of future results.</div>
     </div>
+    <div class="strand-body">
+      <p>Independent advisory services for commodity-exposed businesses, trading houses and market participants. Engagements are bespoke and priced on scope — covering market strategy, procurement, hedging and trade execution across global grain and oilseed markets.</p>
+      <ul class="strand-items">
+        <li>Commodity market advisory</li>
+        <li>Procurement strategy & market entry</li>
+        <li>Physical commodity broking — managing relations between a global network of Agri participants</li>
+        <li>Hedging using listed futures and options</li>
+        <li>Trade finance & procurement structuring</li>
+        <li>GAFTA / FOSFA contract frameworks</li>
+        <li>Origin diversification strategy</li>
+        <li>Counterparty & supplier onboarding</li>
+      </ul>
+    </div>
+  </div>
+
+  <!-- STRAND 3 -->
+
+  <div class="strand">
+    <div class="strand-header">
+      <div class="strand-icon">📈</div>
+      <div>
+        <div class="strand-title">Discretionary Trading</div>
+        <div class="strand-label">JHD Commodity Advisors · Managed Accounts</div>
+      </div>
+    </div>
+    <div class="strand-body">
+      <p>James Day is an experienced agricultural commodities trader with a strong track record of managing risk and developing scalable commodity trading strategies across major global markets. Discretionary managed account arrangements are considered on a selective basis and are introduced through direct referral only.</p>
+      <ul class="strand-items">
+        <li>Fundamentally-driven strategies</li>
+        <li>Spread and relative value trading</li>
+        <li>Inter-commodity & calendar spreads</li>
+        <li>Listed options strategies</li>
+        <li>CME, MGEX and ICE markets</li>
+        <li>Grain and oilseed focus</li>
+      </ul>
+    </div>
+  </div>
+
+</div>
+
+<div class="about-divider"></div>
+
+<!-- MARKETS COVERED -->
+
+<div class="about-section-tag">Markets & Instruments</div>
+
+<div class="mkt-label">Commodities</div>
+<div class="market-tags">
+  <span class="market-tag mt-blue">Wheat (SRW · HRW · DNS · Milling)</span>
+  <span class="market-tag mt-blue">Corn</span>
+  <span class="market-tag mt-blue">Soybeans</span>
+  <span class="market-tag mt-blue">Soybean Meal</span>
+  <span class="market-tag mt-blue">Soybean Oil</span>
+  <span class="market-tag mt-blue">Canola / Rapeseed</span>
+  <span class="market-tag mt-blue">Barley</span>
+  <span class="market-tag mt-blue">Pulses</span>
+  <span class="market-tag mt-blue">Palm Oil</span>
+</div>
+
+<div class="mkt-label">Exchanges</div>
+<div class="market-tags">
+  <span class="market-tag mt-teal">CME / CBOT</span>
+  <span class="market-tag mt-teal">MGEX</span>
+  <span class="market-tag mt-teal">ICE Futures US</span>
+  <span class="market-tag mt-teal">ICE Futures Europe</span>
+  <span class="market-tag mt-teal">Euronext Paris (MATIF)</span>
+</div>
+
+<div class="mkt-label">Instruments</div>
+<div class="market-tags">
+  <span class="market-tag mt-gold">Futures</span>
+  <span class="market-tag mt-gold">Listed Options</span>
+  <span class="market-tag mt-gold">Physical Spreads</span>
+  <span class="market-tag mt-gold">FOB Paper</span>
+  <span class="market-tag mt-gold">OTC Hedging</span>
+  <span class="market-tag mt-gold">Calendar Spreads</span>
+  <span class="market-tag mt-gold">Inter-Commodity Spreads</span>
+</div>
+
+<div class="mkt-label">Contract Frameworks</div>
+<div class="market-tags">
+  <span class="market-tag mt-coral">GAFTA</span>
+  <span class="market-tag mt-coral">FOSFA</span>
+  <span class="market-tag mt-coral">ANEC</span>
+  <span class="market-tag mt-coral">ISDA / CSA</span>
+</div>
+
+<div class="about-divider"></div>
+
+<p style="font-size:12px;color:var(--muted2);font-family:'DM Mono',monospace;line-height:1.7;">
+  JHD Commodity Advisors is a trading name of James Day. FCA regulated. NFA Series 3 qualified. All research and commentary is produced for informational purposes only and does not constitute investment advice. Past performance is not indicative of future results. Commodity trading involves substantial risk of loss. Managed account services are provided to eligible counterparties only.
+</p>
+
+</div>
   </div>
 
   <!-- Contact -->
+
   <div id="tab-contact" class="hidden">
     <div class="static-wrap">
       <h2>Contact Us</h2><div class="static-rule"></div>
@@ -510,32 +906,231 @@
   </div>
 
   <!-- About -->
-  <div id="tab-about" class="hidden protected">
-    <div class="static-wrap">
-      <h2>About Us</h2><div class="static-rule"></div>
-      <p>JHD Commodity Advisors is a specialist agricultural commodity advisory business providing market intelligence, research and broking services to trading houses, hedge funds and commercial operators across global grain, oilseed and soft commodity markets.</p>
-      <div class="about-bio">
-        <div class="about-avatar">JD</div>
-        <div class="about-bio-text">
-          <h3>James Day</h3>
-          <div class="role">Senior Agricultural Commodity Broker &amp; Advisor</div>
-          <p>James brings over 14 years of experience in agricultural commodity trading and broking, spanning physical cargo procurement and derivatives broking across grains, oilseeds and soft commodities. His career includes senior roles at TP ICAP, City Group of Industries and Condor Shipping Ltd, with deep expertise in CBOT, Euronext and CME agricultural markets.</p>
-        </div>
+
+  <div id="tab-about" class="hidden">
+    <div class="static-about-page">
+
+<!-- ══ ABOUT US ══ -->
+
+<div class="about-section-tag">JHD Commodity Advisors · About</div>
+<div class="about-section-title">About <span>Us</span></div>
+<div class="about-section-sub">London, UK · FCA Regulated · NFA Series 3 Qualified</div>
+
+<p>JHD Commodity Advisors is a London-based agricultural commodity research and advisory platform founded by <strong>James Day</strong> — an agricultural commodities specialist with over <strong>14 years of experience</strong> spanning physical procurement, derivatives trading, risk management and market intelligence across global grain and oilseed markets.</p>
+
+<p>The platform was built to address a genuine gap in the market: professional-grade agricultural research tools and market intelligence, made accessible to individual traders, analysts, merchandisers and brokers without an institutional price tag. JHD combines original weekly commentary with live data analytics — CFTC positioning, USDA supply and demand estimates, FOB price data, export sales and agricultural weather intelligence — all in one place.</p>
+
+<p>Alongside the research platform, JHD Commodity Advisors provides a range of professional services to commodity-exposed businesses, trading houses and market participants — drawing on a deep network across global origins, end-user relationships and a consistent track record of managing risk and developing scalable commodity trading strategies.</p>
+
+<div class="cred-row">
+  <span class="cred">FCA Regulated</span>
+  <span class="cred">NFA Series 3</span>
+  <span class="cred">GAFTA</span>
+  <span class="cred">FOSFA</span>
+  <span class="cred">ISDA / CSA</span>
+  <span class="cred">ANEC</span>
+</div>
+
+<div class="stat-strip">
+  <div class="stat"><div class="stat-v">>$5bn</div><div class="stat-l">Physical Purchases</div></div>
+  <div class="stat"><div class="stat-v">1.5 MMT</div><div class="stat-l">Annual Grain Volume</div></div>
+  <div class="stat"><div class="stat-v">>$400m</div><div class="stat-l">Trade Finance Secured</div></div>
+  <div class="stat"><div class="stat-v">14+</div><div class="stat-l">Years Experience</div></div>
+  <div class="stat"><div class="stat-v">15+</div><div class="stat-l">Active Origin Networks</div></div>
+  <div class="stat"><div class="stat-v">Zero</div><div class="stat-l">Defaults</div></div>
+</div>
+
+<div class="exp-grid">
+  <div class="exp-card">
+    <div class="exp-card-title">Physical Markets</div>
+    <ul>
+      <li>Wheat, Corn, Barley, Pulses</li>
+      <li>Soybeans, Canola, Veg Oils, Feedstuffs</li>
+      <li>FOB Santos, Upriver Argentina, USG, PNW</li>
+      <li>Full Panamax & Handysize execution</li>
+      <li>Multi-origin and split-discharge expertise</li>
+      <li>Tier-1 APAC end-user relationships</li>
+    </ul>
+  </div>
+  <div class="exp-card">
+    <div class="exp-card-title">Derivatives & Risk</div>
+    <ul>
+      <li>CME / CBOT, MGEX, ICE, Euronext</li>
+      <li>Futures and listed options</li>
+      <li>Inter-commodity and calendar spreads</li>
+      <li>Physical contract hedging</li>
+      <li>FX exposure management</li>
+      <li>OTC and structured hedging</li>
+    </ul>
+  </div>
+  <div class="exp-card">
+    <div class="exp-card-title">Origins Coverage</div>
+    <ul>
+      <li>Australia, USA, Canada</li>
+      <li>Brazil, Argentina</li>
+      <li>Ukraine, Black Sea, Romania</li>
+      <li>India, Kazakhstan</li>
+      <li>China & APAC buy-side network</li>
+    </ul>
+  </div>
+  <div class="exp-card">
+    <div class="exp-card-title">Research & Intelligence</div>
+    <ul>
+      <li>Weekly grain & oilseed commentary</li>
+      <li>CFTC COT positioning analysis</li>
+      <li>WASDE supply & demand interpretation</li>
+      <li>FOB price data across origins</li>
+      <li>Export sales pace analysis</li>
+      <li>Agricultural weather & crop risk</li>
+    </ul>
+  </div>
+</div>
+
+<div class="about-divider"></div>
+
+<!-- ══ SERVICES ══ -->
+
+<div class="about-section-tag">JHD Commodity Advisors · Services</div>
+<div class="about-section-title">Our <span>Services</span></div>
+<div class="about-section-sub">Three distinct strands · Research · Advisory · Trading</div>
+
+<p>JHD operates across three clearly defined service strands — each drawing on the same deep market knowledge but designed to serve different needs. Whether you are looking to access professional research tools, engage advisory expertise, or discuss a managed trading arrangement, the right conversation starts below.</p>
+
+<div class="strand-wrap">
+
+  <!-- STRAND 1 -->
+
+  <div class="strand">
+    <div class="strand-header">
+      <div class="strand-icon">📊</div>
+      <div>
+        <div class="strand-title">Research Platform</div>
+        <div class="strand-label">JHD Commodity Advisors · Public Platform</div>
       </div>
-      <h3>Our Approach</h3>
-      <p>We combine rigorous fundamental analysis — supply and demand balances, USDA data, CFTC positioning — with technical price analysis and on-the-ground market intelligence to provide commentary and advisory services that are practical, timely and commercially relevant.</p>
-      <h3>Markets Covered</h3>
-      <ul>
-        <li>Grains — Corn, Wheat (CBOT, HRW, Euronext Milling, MGEX Spring)</li>
-        <li>Oilseeds — Soybeans, Soybean Meal, Soybean Oil, Canola, Palm Oil</li>
-        <li>Soft Commodities — Sugar #11, Cotton</li>
-        <li>Macro — Energy (WTI, Brent), FX (USD, EUR, GBP), Equity indices</li>
+    </div>
+    <div class="strand-body">
+      <p>The JHD Commodity Advisors platform provides professional-grade agricultural market intelligence, live data analytics and original weekly commentary — accessible to individual traders, analysts, merchandisers and brokers. Free to join, with premium research content available through the platform's engagement economy.</p>
+      <ul class="strand-items">
+        <li>Weekly wheat & grain commentary</li>
+        <li>Live CFTC COT positioning dashboards</li>
+        <li>WASDE supply & demand analytics</li>
+        <li>Weekly export sales data</li>
+        <li>FOB price data across 6 commodities</li>
+        <li>Agricultural weather — 19 global regions</li>
+        <li>Options analytics tool</li>
+        <li>Active community of market participants</li>
       </ul>
-      <div class="disclaimer-box">JHD Commodity Advisors. All commentary and analysis published on this platform is for informational purposes only and does not constitute investment advice. Trading commodity futures and options involves significant risk of loss.</div>
     </div>
   </div>
 
+  <!-- STRAND 2 -->
+
+  <div class="strand">
+    <div class="strand-header">
+      <div class="strand-icon">🌾</div>
+      <div>
+        <div class="strand-title">Advisory Services</div>
+        <div class="strand-label">JHD Commodity Advisors · Professional Services</div>
+      </div>
+    </div>
+    <div class="strand-body">
+      <p>Independent advisory services for commodity-exposed businesses, trading houses and market participants. Engagements are bespoke and priced on scope — covering market strategy, procurement, hedging and trade execution across global grain and oilseed markets.</p>
+      <ul class="strand-items">
+        <li>Commodity market advisory</li>
+        <li>Procurement strategy & market entry</li>
+        <li>Physical commodity broking — managing relations between a global network of Agri participants</li>
+        <li>Hedging using listed futures and options</li>
+        <li>Trade finance & procurement structuring</li>
+        <li>GAFTA / FOSFA contract frameworks</li>
+        <li>Origin diversification strategy</li>
+        <li>Counterparty & supplier onboarding</li>
+      </ul>
+    </div>
+  </div>
+
+  <!-- STRAND 3 -->
+
+  <div class="strand">
+    <div class="strand-header">
+      <div class="strand-icon">📈</div>
+      <div>
+        <div class="strand-title">Discretionary Trading</div>
+        <div class="strand-label">JHD Commodity Advisors · Managed Accounts</div>
+      </div>
+    </div>
+    <div class="strand-body">
+      <p>James Day is an experienced agricultural commodities trader with a strong track record of managing risk and developing scalable commodity trading strategies across major global markets. Discretionary managed account arrangements are considered on a selective basis and are introduced through direct referral only.</p>
+      <ul class="strand-items">
+        <li>Fundamentally-driven strategies</li>
+        <li>Spread and relative value trading</li>
+        <li>Inter-commodity & calendar spreads</li>
+        <li>Listed options strategies</li>
+        <li>CME, MGEX and ICE markets</li>
+        <li>Grain and oilseed focus</li>
+      </ul>
+    </div>
+  </div>
+
+</div>
+
+<div class="about-divider"></div>
+
+<!-- MARKETS COVERED -->
+
+<div class="about-section-tag">Markets & Instruments</div>
+
+<div class="mkt-label">Commodities</div>
+<div class="market-tags">
+  <span class="market-tag mt-blue">Wheat (SRW · HRW · DNS · Milling)</span>
+  <span class="market-tag mt-blue">Corn</span>
+  <span class="market-tag mt-blue">Soybeans</span>
+  <span class="market-tag mt-blue">Soybean Meal</span>
+  <span class="market-tag mt-blue">Soybean Oil</span>
+  <span class="market-tag mt-blue">Canola / Rapeseed</span>
+  <span class="market-tag mt-blue">Barley</span>
+  <span class="market-tag mt-blue">Pulses</span>
+  <span class="market-tag mt-blue">Palm Oil</span>
+</div>
+
+<div class="mkt-label">Exchanges</div>
+<div class="market-tags">
+  <span class="market-tag mt-teal">CME / CBOT</span>
+  <span class="market-tag mt-teal">MGEX</span>
+  <span class="market-tag mt-teal">ICE Futures US</span>
+  <span class="market-tag mt-teal">ICE Futures Europe</span>
+  <span class="market-tag mt-teal">Euronext Paris (MATIF)</span>
+</div>
+
+<div class="mkt-label">Instruments</div>
+<div class="market-tags">
+  <span class="market-tag mt-gold">Futures</span>
+  <span class="market-tag mt-gold">Listed Options</span>
+  <span class="market-tag mt-gold">Physical Spreads</span>
+  <span class="market-tag mt-gold">FOB Paper</span>
+  <span class="market-tag mt-gold">OTC Hedging</span>
+  <span class="market-tag mt-gold">Calendar Spreads</span>
+  <span class="market-tag mt-gold">Inter-Commodity Spreads</span>
+</div>
+
+<div class="mkt-label">Contract Frameworks</div>
+<div class="market-tags">
+  <span class="market-tag mt-coral">GAFTA</span>
+  <span class="market-tag mt-coral">FOSFA</span>
+  <span class="market-tag mt-coral">ANEC</span>
+  <span class="market-tag mt-coral">ISDA / CSA</span>
+</div>
+
+<div class="about-divider"></div>
+
+<p style="font-size:12px;color:var(--muted2);font-family:'DM Mono',monospace;line-height:1.7;">
+  JHD Commodity Advisors is a trading name of James Day. FCA regulated. NFA Series 3 qualified. All research and commentary is produced for informational purposes only and does not constitute investment advice. Past performance is not indicative of future results. Commodity trading involves substantial risk of loss. Managed account services are provided to eligible counterparties only.
+</p>
+
+</div>
+  </div>
+
   <!-- Post Detail -->
+
   <div id="tab-detail" class="hidden">
     <header style="background:var(--bg);border-bottom:1px solid var(--border);">
       <div style="max-width:1280px;margin:0 auto;padding:12px 24px;display:flex;align-items:center;gap:12px;">
@@ -550,6 +1145,7 @@
 </div>
 
   <!-- Export Data -->
+
   <div id="tab-exports" class="hidden protected">
     <div class="page-wrap">
       <div class="page-heading"><h2>Export Data</h2><p>Global agricultural export flows, trade data and shipment analysis</p></div>
@@ -558,6 +1154,7 @@
   </div>
 
   <!-- WASDE -->
+
   <div id="tab-wasde" class="hidden protected">
     <div class="page-wrap">
       <div class="page-heading"><h2>WASDE</h2><p>World Agricultural Supply and Demand Estimates — analysis and commentary</p></div>
@@ -566,6 +1163,7 @@
   </div>
 
   <!-- Commodity Map -->
+
   <div id="tab-commoditymap" class="hidden protected">
     <div class="page-wrap">
       <div class="page-heading"><h2>Commodity Map</h2><p>Production regions, trade flows and origin analysis</p></div>
@@ -574,14 +1172,19 @@
   </div>
 
   <!-- Weather -->
+
   <div id="tab-weather" class="hidden protected">
-    <div class="page-wrap">
-      <div class="page-heading"><h2>Weather</h2><p>Crop weather analysis — key growing regions and seasonal outlooks</p></div>
-      <div id="posts-weather"><div class="spin">Loading…</div></div>
-    </div>
+    <iframe
+      src="/JHD_Weather_Hub.html"
+      id="weather-hub-iframe"
+      title="JHD Agricultural Weather Hub"
+      style="width:100%;height:calc(100vh - 110px);border:none;display:block;"
+      loading="lazy">
+    </iframe>
   </div>
 
   <!-- Options Analytics -->
+
   <div id="tab-options" class="hidden protected">
     <div class="page-wrap">
       <div class="page-heading"><h2>Options Analytics</h2><p>Volatility analysis, options strategies and derivatives market intelligence</p></div>
@@ -590,6 +1193,7 @@
   </div>
 
   <!-- FOB Data -->
+
   <div id="tab-fob" class="hidden protected">
     <div class="page-wrap">
       <div class="page-heading"><h2>FOB Data</h2><p>Free-on-board pricing, origin spreads and export basis analysis</p></div>
@@ -598,6 +1202,7 @@
   </div>
 
   <!-- Freight -->
+
   <div id="tab-freight" class="hidden protected">
     <div class="page-wrap">
       <div class="page-heading"><h2>Freight</h2><p>Dry bulk freight rates, vessel markets and shipping cost analysis</p></div>
@@ -605,7 +1210,20 @@
     </div>
   </div>
 
-    <!-- RECENT PUBLICATIONS STRIP + FOOTER — always visible outside all tabs -->
+  <!-- Technical Analysis -->
+
+  <div id="tab-technicals" class="hidden protected">
+    <div class="page-wrap">
+      <div class="page-heading">
+        <h2>Technical Analysis</h2>
+        <p>Chart analysis, key levels and technical factors across grain and oilseed markets</p>
+      </div>
+      <div id="ta-admin-form-wrap" class="hidden"></div>
+      <div id="ta-cards-wrap">
+        <div class="ta-empty">Loading charts…</div>
+      </div>
+    </div>
+  </div>
   <div class="recent-strip-wrap" id="recent-strip-wrap">
     <div class="recent-strip-inner">
       <div class="recent-strip-label">Recent Publications</div>
@@ -617,8 +1235,11 @@
   <footer class="site-footer">
     <div class="site-footer-inner">
       <div class="footer-brand-wrap">
-        <div class="footer-brand-mark" onclick="showTab('services')" title="Services">JHD</div>
-        <span class="footer-brand-name">JHD Commodity Advisors</span>
+        <div class="footer-brand-mark" onclick="showTab('services')" title="Services" style="background:transparent;display:flex;align-items:center;gap:6px;width:auto;">
+          <img src="https://i.ibb.co/PZPZGP71/IMG-2924.jpg" alt="JHD" style="height:28px;width:28px;object-fit:contain;border-radius:3px;">
+          <span style="font-family:'DM Serif Display',serif;font-size:13px;color:var(--text);">JHD</span>
+        </div>
+        <span class="footer-brand-name" style="font-family:'DM Mono',monospace;font-size:8px;color:var(--gold2);letter-spacing:0.14em;text-transform:uppercase;">Commodity Advisors</span>
       </div>
       <nav class="footer-nav">
         <button class="footer-nav-btn" onclick="showTab('services')">Services</button>
@@ -631,6 +1252,7 @@
 </div>
 
 <!-- ========================= ADMIN ========================= -->
+
 <div id="page-admin" class="hidden">
   <header class="topbar">
     <div class="topbar-inner">
@@ -649,81 +1271,85 @@
       <button class="tab-btn"        id="stab"  onclick="switchAdminTab('subs')">👥 Subscribers</button>
     </div>
 
-    <!-- New Post -->
-    <div id="admin-write">
-      <div class="section-h2">Publish New Post</div>
-      <div class="admin-field">
-        <label class="cat-label">Publish to section</label>
-        <select id="p-category">
-          <option value="commentary">Market Commentary</option>
-          <option value="research">Research</option>
-          <option value="cftc">CFTC</option>
-          <option value="exports">Export Data</option>
-          <option value="wasde">WASDE</option>
-          <option value="commoditymap">Commodity Map</option>
-          <option value="weather">Weather</option>
-          <option value="options">Options Analytics</option>
-          <option value="fob">FOB Data</option>
-          <option value="freight">Freight</option>
-        </select>
-        <input type="text" id="p-title"   placeholder="Title of this post…">
-        <input type="text" id="p-summary" placeholder="One-line summary shown on the listing…">
-        <div class="editor-mode-row">
-          <span class="editor-label">Content</span>
-          <div class="mode-toggle">
-            <button class="mode-btn active" id="mode-visual" onclick="setEditorMode('visual')">Visual</button>
-            <button class="mode-btn"        id="mode-html"   onclick="setEditorMode('html')">HTML Source</button>
-          </div>
-        </div>
-        <div id="editor-visual-wrap"><div id="quill-editor"></div></div>
-        <div id="editor-html-wrap" class="hidden">
-          <textarea id="html-source-input" placeholder="Paste your full HTML commentary file here…"></textarea>
-          <div class="html-hint">💡 Paste your complete HTML file including &lt;!DOCTYPE html&gt;. Your full design — masthead, ticker bar, fonts, sidebar — will render exactly as designed.</div>
-        </div>
-      </div>
-      <div class="publish-row">
-        <button class="btn btn-navy" id="pub-btn" onclick="publishPost()" style="padding:12px 28px;font-size:15px;">Publish Post</button>
-        <div id="pub-msg" class="hidden msg-box" style="margin:0;flex:1;"></div>
+```
+<!-- New Post -->
+<div id="admin-write">
+  <div class="section-h2">Publish New Post</div>
+  <div class="admin-field">
+    <label class="cat-label">Publish to section</label>
+    <select id="p-category">
+      <option value="commentary">Market Commentary</option>
+      <option value="research">Research</option>
+      <option value="cftc">CFTC</option>
+      <option value="exports">Export Data</option>
+      <option value="wasde">WASDE</option>
+      <option value="commoditymap">Commodity Map</option>
+      <option value="weather">Weather</option>
+      <option value="options">Options Analytics</option>
+      <option value="fob">FOB Data</option>
+      <option value="freight">Freight</option>
+      <option value="technicals">Technical Analysis</option>
+    <input type="text" id="p-title"   placeholder="Title of this post…">
+    <input type="text" id="p-summary" placeholder="One-line summary shown on the listing…">
+    <div class="editor-mode-row">
+      <span class="editor-label">Content</span>
+      <div class="mode-toggle">
+        <button class="mode-btn active" id="mode-visual" onclick="setEditorMode('visual')">Visual</button>
+        <button class="mode-btn"        id="mode-html"   onclick="setEditorMode('html')">HTML Source</button>
       </div>
     </div>
+    <div id="editor-visual-wrap"><div id="quill-editor"></div></div>
+    <div id="editor-html-wrap" class="hidden">
+      <textarea id="html-source-input" placeholder="Paste your full HTML commentary file here…"></textarea>
+      <div class="html-hint">💡 Paste your complete HTML file including &lt;!DOCTYPE html&gt;. Your full design — masthead, ticker bar, fonts, sidebar — will render exactly as designed.</div>
+    </div>
+  </div>
+  <div class="publish-row">
+    <button class="btn btn-navy" id="pub-btn" onclick="publishPost()" style="padding:12px 28px;font-size:15px;">Publish Post</button>
+    <div id="pub-msg" class="hidden msg-box" style="margin:0;flex:1;"></div>
+  </div>
+</div>
 
-    <!-- Moderate Comments -->
-    <div id="admin-mod" class="hidden">
-      <div class="section-h2">Moderate Comments</div>
-      <div id="mod-list"><div class="spin">Loading…</div></div>
-    </div>
+<!-- Moderate Comments -->
+<div id="admin-mod" class="hidden">
+  <div class="section-h2">Moderate Comments</div>
+  <div id="mod-list"><div class="spin">Loading…</div></div>
+</div>
 
-    <!-- Manage Posts -->
-    <div id="admin-posts" class="hidden">
-      <div class="section-h2">Manage Posts</div>
-      <div id="posts-manage-list"><div class="spin">Loading…</div></div>
-    </div>
+<!-- Manage Posts -->
+<div id="admin-posts" class="hidden">
+  <div class="section-h2">Manage Posts</div>
+  <div id="posts-manage-list"><div class="spin">Loading…</div></div>
+</div>
 
-    <!-- Subscribers -->
-    <div id="admin-subs" class="hidden">
-      <div class="section-h2">Subscribers</div>
-      <div class="subs-stats">
-        <div class="stat-card"><div class="stat-label">Total Subscribers</div><div class="stat-val" id="subs-total">—</div></div>
-        <div class="stat-card"><div class="stat-label">Joined This Month</div><div class="stat-val" id="subs-month">—</div></div>
-        <div class="stat-card"><div class="stat-label">Joined This Week</div><div class="stat-val" id="subs-week">—</div></div>
-      </div>
-      <div class="export-row">
-        <input class="subs-search" type="text" id="subs-search" placeholder="Search by email…" oninput="filterSubs()" style="max-width:320px;margin-bottom:0;">
-        <button class="btn btn-navy" onclick="exportCSV()" style="padding:9px 18px;">↓ Export CSV</button>
-      </div>
-      <div class="subs-table-wrap">
-        <table class="subs-table">
-          <thead><tr><th>#</th><th>Email</th><th>Joined</th></tr></thead>
-          <tbody id="subs-tbody"><tr><td colspan="3" style="text-align:center;padding:32px;color:var(--muted);">Loading…</td></tr></tbody>
-        </table>
-      </div>
-    </div>
+<!-- Subscribers -->
+<div id="admin-subs" class="hidden">
+  <div class="section-h2">Subscribers</div>
+  <div class="subs-stats">
+    <div class="stat-card"><div class="stat-label">Total Subscribers</div><div class="stat-val" id="subs-total">—</div></div>
+    <div class="stat-card"><div class="stat-label">Joined This Month</div><div class="stat-val" id="subs-month">—</div></div>
+    <div class="stat-card"><div class="stat-label">Joined This Week</div><div class="stat-val" id="subs-week">—</div></div>
+  </div>
+  <div class="export-row">
+    <input class="subs-search" type="text" id="subs-search" placeholder="Search by email…" oninput="filterSubs()" style="max-width:320px;margin-bottom:0;">
+    <button class="btn btn-navy" onclick="exportCSV()" style="padding:9px 18px;">↓ Export CSV</button>
+  </div>
+  <div class="subs-table-wrap">
+    <table class="subs-table">
+      <thead><tr><th>#</th><th>Email</th><th>Joined</th></tr></thead>
+      <tbody id="subs-tbody"><tr><td colspan="3" style="text-align:center;padding:32px;color:var(--muted);">Loading…</td></tr></tbody>
+    </table>
+  </div>
+</div>
+```
+
   </div>
 </div>
 
 <!-- ================================================================
      LOGIC
      ================================================================ -->
+
 <script>
 'use strict';
 let sb, currentUser, isAdmin=false, currentPostId=null, currentPostTab=null, quill=null, editorMode='visual';
@@ -733,7 +1359,7 @@ let allSubs=[];
 async function loadRecentStrip(){
   const scroll = document.getElementById('recent-strip-scroll');
   if(!scroll) return;
-  const catLabel = {'commentary':'Commentary','research':'Research','cftc':'CFTC','exports':'Export Data','wasde':'WASDE','commoditymap':'Commodity Map','weather':'Weather','options':'Options','fob':'FOB Data','freight':'Freight'};
+  const catLabel = {'commentary':'Commentary','research':'Research','cftc':'CFTC','exports':'Export Data','wasde':'WASDE','commoditymap':'Commodity Map','weather':'Weather','options':'Options','fob':'FOB Data','freight':'Freight','technicals':'Technical Analysis'};
   const{data,error} = await sb.from('posts').select('id,title,created_at,category').order('created_at',{ascending:false}).limit(12);
   if(error || !data || data.length === 0){
     scroll.innerHTML = '<div style="color:var(--muted2);font-size:12px;font-family:monospace;padding:8px 0;">No publications yet.</div>';
@@ -814,328 +1440,580 @@ function showAdminPage(){
 const POST_TABS=['commentary','research','cftc','exports','wasde','commoditymap','weather','options','fob','freight'];
 function showTab(name){
   window._activeTab=name;
-  ['commentary','research','cftc','futures','services','contact','about','detail','exports','wasde','commoditymap','weather','options','fob','freight']
+  ['commentary','research','cftc','futures','services','contact','about','detail','exports','wasde','commoditymap','weather','options','fob','freight','technicals']
     .forEach(t=>document.getElementById('tab-'+t).classList.add('hidden'));
   document.getElementById('tab-'+name).classList.remove('hidden');
   document.querySelectorAll('.snav-btn').forEach(b=>b.classList.toggle('active',b.dataset.tab===name));
   if(POST_TABS.includes(name)) loadPosts(name);
+  if(name==='technicals') loadTACharts();
 }
+/* ===== TECHNICAL ANALYSIS ===== */
+const TA_INDICATORS = [
+  'RSI Overbought','RSI Oversold','RSI Neutral',
+  'MACD Bullish Cross','MACD Bearish Cross',
+  'Golden Cross','Death Cross',
+  'Above 200 MA','Below 200 MA',
+  'Above 50 MA','Below 50 MA',
+  'Bullish Engulfing','Bearish Engulfing',
+  'Double Top','Double Bottom',
+  'Bull Flag','Bear Flag',
+  'Trend Breakout','Support Held','Resistance Held',
+  'Volume Divergence','Price Divergence'
+];
+
+let _taChartImage = null;
+let _taIndicatorState = {}; // key: indicator name, value: 'bull'|'bear'|'neut'|null
+
+function esc(s){ return String(s).replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;').replace(/"/g,'&quot;'); }
+
+async function loadTACharts(){
+  const wrap = document.getElementById('ta-cards-wrap');
+  const adminWrap = document.getElementById('ta-admin-form-wrap');
+
+  // Show admin form for admin users
+  if(isAdmin){
+    adminWrap.classList.remove('hidden');
+    renderTAAdminForm();
+  }
+
+  wrap.innerHTML = '<div class="ta-empty"><span class="spin" style="display:inline-block;margin-right:8px"></span>Loading charts…</div>';
+
+  try {
+    const { data, error } = await sb
+      .from('posts')
+      .select('*')
+      .eq('category','technicals')
+      .order('created_at',{ascending:false});
+
+    if(error) throw error;
+
+    if(!data || data.length === 0){
+      wrap.innerHTML = '<div class="ta-empty">No technical analysis charts published yet.</div>';
+      return;
+    }
+
+    wrap.innerHTML = '<div class="ta-grid">' +
+      data.map(post => renderTACard(post)).join('') +
+      '</div>';
+
+  } catch(e){
+    wrap.innerHTML = `<div class="ta-empty">Error loading charts: ${esc(e.message)}</div>`;
+  }
+}
+
+function renderTACard(post){
+  let meta = {};
+  try { meta = JSON.parse(post.summary || '{}'); } catch(e){}
+
+  const instrument  = meta.instrument  || post.title || 'Unknown';
+  const timeframe   = meta.timeframe   || '';
+  const bias        = meta.bias        || 'neutral';
+  const resistance  = meta.resistance  || '—';
+  const support     = meta.support     || '—';
+  const target      = meta.target      || '—';
+  const commentary  = meta.commentary  || post.content || '';
+  const chartImg    = meta.chart_image || '';
+  const indicators  = meta.indicators  || [];
+  const dateStr     = new Date(post.created_at).toLocaleDateString('en-GB',{day:'numeric',month:'short',year:'numeric'});
+
+  const biasCls = bias === 'bullish' ? 'bullish' : bias === 'bearish' ? 'bearish' : 'neutral';
+  const biasLabel = bias.charAt(0).toUpperCase() + bias.slice(1);
+
+  const chartHtml = chartImg
+    ? `<img src="${chartImg}" alt="${esc(instrument)} chart" loading="lazy">`
+    : `<div class="ta-chart-placeholder">📈 No chart uploaded</div>`;
+
+  const indHtml = indicators.length > 0
+    ? `<div class="ta-indicators">${indicators.map(i => {
+        const cls = i.signal === 'bull' ? 'bull' : i.signal === 'bear' ? 'bear' : 'neut';
+        return `<span class="ta-indicator ${cls}">${esc(i.label)}</span>`;
+      }).join('')}</div>`
+    : '';
+
+  const deleteBtn = isAdmin
+    ? `<button class="ta-delete-btn" onclick="deleteTAPost('${post.id}',event)">Delete</button>`
+    : '';
+
+  return `
+    <div class="ta-card" id="ta-${post.id}">
+      <div class="ta-card-header">
+        <div class="ta-instrument">${esc(instrument)}</div>
+        ${timeframe ? `<span class="ta-timeframe">${esc(timeframe)}</span>` : ''}
+        <span class="ta-bias ${biasCls}">${biasLabel}</span>
+      </div>
+      <div class="ta-chart-wrap">${chartHtml}</div>
+      <div class="ta-levels">
+        <div class="ta-level">
+          <div class="ta-level-label">Resistance</div>
+          <div class="ta-level-val resistance">${esc(resistance)}</div>
+        </div>
+        <div class="ta-level">
+          <div class="ta-level-label">Support</div>
+          <div class="ta-level-val support">${esc(support)}</div>
+        </div>
+        <div class="ta-level">
+          <div class="ta-level-label">Target / Pivot</div>
+          <div class="ta-level-val target">${esc(target)}</div>
+        </div>
+      </div>
+      ${commentary ? `<div class="ta-commentary">${esc(commentary)}</div>` : ''}
+      ${indHtml}
+      <div class="ta-meta">
+        <span class="ta-date">Updated ${dateStr}</span>
+        ${deleteBtn}
+      </div>
+    </div>`;
+}
+
+function renderTAAdminForm(){
+  const wrap = document.getElementById('ta-admin-form-wrap');
+  _taChartImage = null;
+  _taIndicatorState = {};
+
+  const indButtons = TA_INDICATORS.map(name =>
+    `<button class="ta-ind-toggle" data-ind="${esc(name)}" onclick="cycleTAIndicator(this,'${esc(name)}')">${esc(name)}</button>`
+  ).join('');
+
+  wrap.innerHTML = `
+    <div class="ta-form">
+      <div class="ta-form-title">📈 Publish New Technical Analysis</div>
+      <div class="ta-chart-upload" onclick="document.getElementById('ta-img-input').click()">
+        <input type="file" id="ta-img-input" accept="image/*" onchange="handleTAImageUpload(this)">
+        <div class="ta-chart-upload-label">Click to upload chart image (PNG, JPG, WebP)</div>
+        <img id="ta-chart-preview" class="ta-chart-preview" src="" alt="Chart preview">
+      </div>
+      <div class="ta-form-grid">
+        <div class="ta-form-field">
+          <label>Instrument / Contract</label>
+          <input type="text" id="ta-instrument" placeholder="e.g. ZCN26, MATIF Wheat, Soybean Meal">
+        </div>
+        <div class="ta-form-field">
+          <label>Timeframe</label>
+          <select id="ta-timeframe">
+            <option value="">Select timeframe…</option>
+            <option value="Daily">Daily</option>
+            <option value="Weekly">Weekly</option>
+            <option value="Monthly">Monthly</option>
+            <option value="4H">4-Hour</option>
+            <option value="1H">1-Hour</option>
+            <option value="15m">15-Minute</option>
+          </select>
+        </div>
+        <div class="ta-form-field">
+          <label>Overall Bias</label>
+          <select id="ta-bias">
+            <option value="neutral">Neutral</option>
+            <option value="bullish">Bullish</option>
+            <option value="bearish">Bearish</option>
+          </select>
+        </div>
+        <div class="ta-form-field">
+          <label>Resistance Level</label>
+          <input type="text" id="ta-resistance" placeholder="e.g. 487.50¢">
+        </div>
+        <div class="ta-form-field">
+          <label>Support Level</label>
+          <input type="text" id="ta-support" placeholder="e.g. 462.00¢">
+        </div>
+        <div class="ta-form-field">
+          <label>Target / Pivot</label>
+          <input type="text" id="ta-target" placeholder="e.g. 510.00¢">
+        </div>
+      </div>
+      <div class="ta-form-field" style="margin-bottom:12px">
+        <label>Technical Commentary</label>
+        <textarea id="ta-commentary" placeholder="Describe the technical setup, pattern, key observations…"></textarea>
+
+```
+  </div>
+  <div class="ta-form-field" style="margin-bottom:14px">
+    <label>Indicators &amp; Signals — click once (bullish), twice (bearish), three times (neutral), again to deselect</label>
+    <div class="ta-indicator-builder" id="ta-ind-builder">${indButtons}</div>
+  </div>
+  <button class="btn-primary" onclick="publishTAChart()" style="width:100%;padding:11px;font-size:13px;border-radius:6px;border:none;background:var(--blue);color:#fff;cursor:pointer;font-family:'DM Sans',sans-serif;font-weight:600;">
+    Publish Chart Analysis
+  </button>
+</div>`;
+```
+
+}
+
+function cycleTAIndicator(btn, name){
+const states = [null,‘bull’,‘bear’,‘neut’];
+const cur = _taIndicatorState[name] || null;
+const idx = states.indexOf(cur);
+const next = states[(idx+1) % states.length];
+_taIndicatorState[name] = next;
+btn.className = ‘ta-ind-toggle’ + (next ? ’ selected-’+next : ‘’);
+}
+
+function handleTAImageUpload(input){
+const file = input.files[0];
+if(!file) return;
+const reader = new FileReader();
+reader.onload = e => {
+_taChartImage = e.target.result;
+const preview = document.getElementById(‘ta-chart-preview’);
+preview.src = _taChartImage;
+preview.style.display = ‘block’;
+document.querySelector(’.ta-chart-upload-label’).textContent = file.name;
+};
+reader.readAsDataURL(file);
+}
+
+async function publishTAChart(){
+const instrument = (document.getElementById(‘ta-instrument’).value||’’).trim();
+if(!instrument){ alert(‘Please enter an instrument name.’); return; }
+
+const indicators = Object.entries(_taIndicatorState)
+.filter(([,v])=>v)
+.map(([label,signal])=>({label,signal}));
+
+const meta = {
+instrument,
+timeframe:    document.getElementById(‘ta-timeframe’).value,
+bias:         document.getElementById(‘ta-bias’).value,
+resistance:   document.getElementById(‘ta-resistance’).value.trim(),
+support:      document.getElementById(‘ta-support’).value.trim(),
+target:       document.getElementById(‘ta-target’).value.trim(),
+commentary:   document.getElementById(‘ta-commentary’).value.trim(),
+chart_image:  _taChartImage || ‘’,
+indicators
+};
+
+const btn = document.querySelector(’#ta-admin-form-wrap .btn-primary’);
+btn.textContent = ‘Publishing…’;
+btn.disabled = true;
+
+try {
+const { error } = await sb.from(‘posts’).insert({
+title:    instrument,
+category: ‘technicals’,
+summary:  JSON.stringify(meta),
+content:  meta.commentary,
+user_id:  currentUser.id
+});
+if(error) throw error;
+renderTAAdminForm();
+loadTACharts();
+} catch(e){
+alert(’Error: ’ + e.message);
+btn.textContent = ‘Publish Chart Analysis’;
+btn.disabled = false;
+}
+}
+
+async function deleteTAPost(id, e){
+e.stopPropagation();
+if(!confirm(‘Delete this chart analysis?’)) return;
+await sb.from(‘posts’).delete().eq(‘id’, id);
+const el = document.getElementById(‘ta-’+id);
+if(el) el.remove();
+const grid = document.querySelector(’.ta-grid’);
+if(grid && !grid.children.length)
+document.getElementById(‘ta-cards-wrap’).innerHTML = ‘<div class="ta-empty">No technical analysis charts published yet.</div>’;
+}
+
 function closeDetail(){
-  document.getElementById('tab-detail').classList.add('hidden');
-  document.getElementById('tab-'+(window._activeTab||'commentary')).classList.remove('hidden');
+document.getElementById(‘tab-detail’).classList.add(‘hidden’);
+document.getElementById(‘tab-’+(window._activeTab||‘commentary’)).classList.remove(‘hidden’);
 }
 
 /* ===== AUTH ===== */
 function switchAuthTab(t){
-  document.getElementById('form-in').classList.toggle('hidden',t!=='in');
-  document.getElementById('form-up').classList.toggle('hidden',t!=='up');
-  document.getElementById('atab-in').classList.toggle('active',t==='in');
-  document.getElementById('atab-up').classList.toggle('active',t==='up');
-  authMsg('');
+document.getElementById(‘form-in’).classList.toggle(‘hidden’,t!==‘in’);
+document.getElementById(‘form-up’).classList.toggle(‘hidden’,t!==‘up’);
+document.getElementById(‘atab-in’).classList.toggle(‘active’,t===‘in’);
+document.getElementById(‘atab-up’).classList.toggle(‘active’,t===‘up’);
+authMsg(’’);
 }
-function authMsg(text,ok){ const el=document.getElementById('auth-msg'); if(!text){el.classList.add('hidden');return;} el.textContent=text; el.className='msg-box '+(ok?'msg-ok':'msg-error'); }
+function authMsg(text,ok){ const el=document.getElementById(‘auth-msg’); if(!text){el.classList.add(‘hidden’);return;} el.textContent=text; el.className=’msg-box ’+(ok?‘msg-ok’:‘msg-error’); }
 
 async function doSignIn(){
-  const email=document.getElementById('in-email').value.trim(),pw=document.getElementById('in-pw').value;
-  if(!email||!pw){authMsg('Please fill in both fields.');return;}
-  const{error}=await sb.auth.signInWithPassword({email,password:pw});
-  if(error){authMsg(error.message);return;}
-  currentUser=(await sb.auth.getUser()).data.user;
-  isAdmin=currentUser.email.toLowerCase()===ADMIN_EMAIL.toLowerCase();
-  showAppPage();
+const email=document.getElementById(‘in-email’).value.trim(),pw=document.getElementById(‘in-pw’).value;
+if(!email||!pw){authMsg(‘Please fill in both fields.’);return;}
+const{error}=await sb.auth.signInWithPassword({email,password:pw});
+if(error){authMsg(error.message);return;}
+currentUser=(await sb.auth.getUser()).data.user;
+isAdmin=currentUser.email.toLowerCase()===ADMIN_EMAIL.toLowerCase();
+showAppPage();
 }
 
 async function doSignUp(){
-  const email=document.getElementById('up-email').value.trim(),pw=document.getElementById('up-pw').value;
-  if(!email||!pw){authMsg('Please fill in both fields.');return;}
-  if(pw.length<6){authMsg('Password must be at least 6 characters.');return;}
-  const{error}=await sb.auth.signUp({email,password:pw});
-  if(error){authMsg(error.message);return;}
-  // Record subscriber (best-effort — sign in first then insert)
-  try{
-    const{data:sess}=await sb.auth.signInWithPassword({email,password:pw});
-    if(sess?.user) await sb.from('subscribers').upsert({email},{onConflict:'email'});
-  }catch(e){}
-  authMsg('Account created successfully! Please use your credentials to sign in.',true);
+const email=document.getElementById(‘up-email’).value.trim(),pw=document.getElementById(‘up-pw’).value;
+if(!email||!pw){authMsg(‘Please fill in both fields.’);return;}
+if(pw.length<6){authMsg(‘Password must be at least 6 characters.’);return;}
+const{error}=await sb.auth.signUp({email,password:pw});
+if(error){authMsg(error.message);return;}
+// Record subscriber (best-effort — sign in first then insert)
+try{
+const{data:sess}=await sb.auth.signInWithPassword({email,password:pw});
+if(sess?.user) await sb.from(‘subscribers’).upsert({email},{onConflict:‘email’});
+}catch(e){}
+authMsg(‘Account created successfully! Please use your credentials to sign in.’,true);
 }
 
 async function doSignOut(){
-  await sb.auth.signOut(); currentUser=null; isAdmin=false; currentPostId=null;
-  document.getElementById('page-app').classList.add('hidden');
-  document.getElementById('page-admin').classList.add('hidden');
-  document.getElementById('page-auth').classList.remove('hidden');
+await sb.auth.signOut(); currentUser=null; isAdmin=false; currentPostId=null;
+document.getElementById(‘page-app’).classList.add(‘hidden’);
+document.getElementById(‘page-admin’).classList.add(‘hidden’);
+document.getElementById(‘page-auth’).classList.remove(‘hidden’);
 }
 
 /* ===== POSTS ===== */
 async function loadPosts(category){
-  const el=document.getElementById('posts-'+category);
-  if(!el) return;
-  el.innerHTML='<div class="spin">Loading…</div>';
-  const{data:posts,error}=await sb.from('posts').select('id,title,summary,created_at,category,is_pinned').eq('category',category).order('is_pinned',{ascending:false}).order('created_at',{ascending:false});
-  if(error){el.innerHTML='<div class="spin">⚠ Could not load posts.</div>';return;}
-  if(!posts||posts.length===0){
-    el.innerHTML=`<div class="empty-state"><h3>No posts yet</h3><p>${isAdmin?'Go to Admin → New Post and select this section.':'Check back soon.'}</p></div>`;return;
-  }
-  const ids=posts.map(p=>p.id);
-  const{data:cc}=await sb.from('comments').select('post_id').in('post_id',ids).eq('is_visible',true);
-  const counts={}; (cc||[]).forEach(r=>counts[r.post_id]=(counts[r.post_id]||0)+1);
-  const grid=document.createElement('div'); grid.className='posts-grid';
-  posts.forEach(p=>{
-    const n=counts[p.id]||0,card=document.createElement('div'); card.className='post-card'+(p.is_pinned?' pinned':'');
-    card.innerHTML=`${p.is_pinned?'<div class="pin-badge">📌 Pinned</div>':''}<div class="card-date">${fmtDate(p.created_at)}</div><h3>${esc(p.title)}</h3><p class="card-summary">${esc(p.summary||'')}</p><div class="card-foot"><span class="ccount">💬 ${n} comment${n!==1?'s':''}</span><span class="readmore">Read →</span></div>`;
-    card.onclick=()=>loadDetail(p.id,category); grid.appendChild(card);
-  });
-  el.innerHTML=''; el.appendChild(grid);
+const el=document.getElementById(‘posts-’+category);
+if(!el) return;
+el.innerHTML=’<div class="spin">Loading…</div>’;
+const{data:posts,error}=await sb.from(‘posts’).select(‘id,title,summary,created_at,category,is_pinned’).eq(‘category’,category).order(‘is_pinned’,{ascending:false}).order(‘created_at’,{ascending:false});
+if(error){el.innerHTML=’<div class="spin">⚠ Could not load posts.</div>’;return;}
+if(!posts||posts.length===0){
+el.innerHTML=`<div class="empty-state"><h3>No posts yet</h3><p>${isAdmin?'Go to Admin → New Post and select this section.':'Check back soon.'}</p></div>`;return;
+}
+const ids=posts.map(p=>p.id);
+const{data:cc}=await sb.from(‘comments’).select(‘post_id’).in(‘post_id’,ids).eq(‘is_visible’,true);
+const counts={}; (cc||[]).forEach(r=>counts[r.post_id]=(counts[r.post_id]||0)+1);
+const grid=document.createElement(‘div’); grid.className=‘posts-grid’;
+posts.forEach(p=>{
+const n=counts[p.id]||0,card=document.createElement(‘div’); card.className=‘post-card’+(p.is_pinned?’ pinned’:’’);
+card.innerHTML=`${p.is_pinned?'<div class="pin-badge">📌 Pinned</div>':''}<div class="card-date">${fmtDate(p.created_at)}</div><h3>${esc(p.title)}</h3><p class="card-summary">${esc(p.summary||'')}</p><div class="card-foot"><span class="ccount">💬 ${n} comment${n!==1?'s':''}</span><span class="readmore">Read →</span></div>`;
+card.onclick=()=>loadDetail(p.id,category); grid.appendChild(card);
+});
+el.innerHTML=’’; el.appendChild(grid);
 }
 
 /* ===== POST DETAIL ===== */
 async function loadDetail(postId,category){
-  currentPostId=postId; currentPostTab=category||window._activeTab;
-  ['commentary','research','cftc','futures','services','contact','about'].forEach(t=>document.getElementById('tab-'+t).classList.add('hidden'));
-  document.getElementById('tab-detail').classList.remove('hidden');
-  const labels={'commentary':'Market Commentary','research':'Research','cftc':'CFTC'};
-  const bc=document.getElementById('detail-breadcrumb');
-  if(bc) bc.textContent=labels[currentPostTab]||'';
-  const wrap=document.getElementById('detail-content');
-  wrap.innerHTML='<div class="spin">Loading…</div>';
-  const{data:post,error}=await sb.from('posts').select('*').eq('id',postId).single();
-  if(error||!post){wrap.innerHTML='<div class="spin">Post not found.</div>';return;}
-  const{data:comments}=await sb.from('comments').select('*').eq('post_id',postId).eq('is_visible',true).order('created_at',{ascending:true});
-  const commHtml=(comments&&comments.length)
-    ?comments.map(c=>`<div class="comment-item" id="ci-${c.id}"><div class="comment-header"><span class="comment-author">${esc(c.author_name||'Anonymous')}</span><span class="comment-time">${fmtDate(c.created_at)}</span></div><div class="comment-text">${esc(c.content)}</div>${isAdmin?`<div class="comment-admin-row"><button class="btn-sm-del" onclick="adminDelComment('${c.id}')">Delete</button><button class="btn-sm-hide" onclick="adminHideComment('${c.id}')">Hide</button></div>`:''}</div>`).join('')
-    :'<div class="no-comments">No comments yet — be first to share your view.</div>';
-  const isFullDoc=isFullHtmlDocument(post.content);
-  // Expand detail-wrap to full width for full HTML documents
-  const dw=wrap.closest('.detail-wrap');
-  if(dw) dw.classList.toggle('full-width', isFullDoc);
-  let contentHtml;
-  if(isFullDoc){
-    const encoded=post.content.replace(/"/g,'&quot;');
-    contentHtml=`<iframe class="post-iframe" srcdoc="${encoded}" onload="resizeIframe(this)" scrolling="no"></iframe>`;
-  } else {
-    contentHtml=`<div class="post-kicker">${fmtDate(post.created_at)}</div><h1>${esc(post.title)}</h1>${post.summary?`<div class="post-standfirst">${esc(post.summary)}</div>`:''}<div class="post-body">${post.content}</div>`;
-  }
-  wrap.innerHTML=`${contentHtml}<div class="comments-wrap"><div class="section-title">Discussion</div><div id="comments-area">${commHtml}</div><div class="comment-form-card"><h3>Leave a Comment</h3><div class="field"><label>Your name <span style="font-weight:400;color:var(--muted)">(optional)</span></label><input type="text" id="c-name" placeholder="e.g. John T."></div><div class="field"><label>Comment</label><textarea id="c-text" placeholder="Share your view on this analysis…"></textarea></div><button class="btn btn-navy" onclick="postComment()">Post Comment</button><div id="c-msg" class="hidden msg-box" style="margin-top:10px;"></div></div></div>`;
+currentPostId=postId; currentPostTab=category||window._activeTab;
+[‘commentary’,‘research’,‘cftc’,‘futures’,‘services’,‘contact’,‘about’].forEach(t=>document.getElementById(‘tab-’+t).classList.add(‘hidden’));
+document.getElementById(‘tab-detail’).classList.remove(‘hidden’);
+const labels={‘commentary’:‘Market Commentary’,‘research’:‘Research’,‘cftc’:‘CFTC’};
+const bc=document.getElementById(‘detail-breadcrumb’);
+if(bc) bc.textContent=labels[currentPostTab]||’’;
+const wrap=document.getElementById(‘detail-content’);
+wrap.innerHTML=’<div class="spin">Loading…</div>’;
+const{data:post,error}=await sb.from(‘posts’).select(’*’).eq(‘id’,postId).single();
+if(error||!post){wrap.innerHTML=’<div class="spin">Post not found.</div>’;return;}
+const{data:comments}=await sb.from(‘comments’).select(’*’).eq(‘post_id’,postId).eq(‘is_visible’,true).order(‘created_at’,{ascending:true});
+const commHtml=(comments&&comments.length)
+?comments.map(c=>`<div class="comment-item" id="ci-${c.id}"><div class="comment-header"><span class="comment-author">${esc(c.author_name||'Anonymous')}</span><span class="comment-time">${fmtDate(c.created_at)}</span></div><div class="comment-text">${esc(c.content)}</div>${isAdmin?`<div class="comment-admin-row"><button class="btn-sm-del" onclick="adminDelComment('${c.id}')">Delete</button><button class="btn-sm-hide" onclick="adminHideComment('${c.id}')">Hide</button></div>`:''}</div>`).join(’’)
+:’<div class="no-comments">No comments yet — be first to share your view.</div>’;
+const isFullDoc=isFullHtmlDocument(post.content);
+// Expand detail-wrap to full width for full HTML documents
+const dw=wrap.closest(’.detail-wrap’);
+if(dw) dw.classList.toggle(‘full-width’, isFullDoc);
+let contentHtml;
+if(isFullDoc){
+const encoded=post.content.replace(/”/g,’"’);
+contentHtml=`<iframe class="post-iframe" srcdoc="${encoded}" onload="resizeIframe(this)" scrolling="no"></iframe>`;
+} else {
+contentHtml=`<div class="post-kicker">${fmtDate(post.created_at)}</div><h1>${esc(post.title)}</h1>${post.summary?`<div class="post-standfirst">${esc(post.summary)}</div>`:''}<div class="post-body">${post.content}</div>`;
+}
+wrap.innerHTML=`${contentHtml}<div class="comments-wrap"><div class="section-title">Discussion</div><div id="comments-area">${commHtml}</div><div class="comment-form-card"><h3>Leave a Comment</h3><div class="field"><label>Your name <span style="font-weight:400;color:var(--muted)">(optional)</span></label><input type="text" id="c-name" placeholder="e.g. John T."></div><div class="field"><label>Comment</label><textarea id="c-text" placeholder="Share your view on this analysis…"></textarea></div><button class="btn btn-navy" onclick="postComment()">Post Comment</button><div id="c-msg" class="hidden msg-box" style="margin-top:10px;"></div></div></div>`;
 }
 
 function resizeIframe(iframe){
-  if(!iframe) return;
-  function doResize(){
-    try{
-      const doc = iframe.contentDocument || iframe.contentWindow.document;
-      if(!doc || !doc.body) return;
-      doc.body.style.margin = '0';
-      doc.documentElement.style.overflowX = 'hidden';
-      // Make iframe fill its container width properly
-      iframe.style.width = '100%';
-      const h = Math.max(
-        doc.documentElement.scrollHeight,
-        doc.documentElement.offsetHeight,
-        doc.body.scrollHeight,
-        doc.body.offsetHeight,
-        600
-      );
-      iframe.style.height = h + 'px';
-    } catch(e){}
-  }
-  doResize();
-  [200, 600, 1200, 2500, 4000].forEach(ms => setTimeout(doResize, ms));
-  try{
-    (iframe.contentDocument||iframe.contentWindow.document)
-      .addEventListener('click', () => { setTimeout(doResize,150); setTimeout(doResize,500); });
-  }catch(e){}
+if(!iframe) return;
+function doResize(){
+try{
+const doc = iframe.contentDocument || iframe.contentWindow.document;
+if(!doc || !doc.body) return;
+doc.body.style.margin = ‘0’;
+doc.documentElement.style.overflowX = ‘hidden’;
+// Make iframe fill its container width properly
+iframe.style.width = ‘100%’;
+const h = Math.max(
+doc.documentElement.scrollHeight,
+doc.documentElement.offsetHeight,
+doc.body.scrollHeight,
+doc.body.offsetHeight,
+600
+);
+iframe.style.height = h + ‘px’;
+} catch(e){}
 }
-function isFullHtmlDocument(c){ if(!c) return false; const t=c.trim().toLowerCase(); return t.startsWith('<!doctype')||t.startsWith('<html'); }
+doResize();
+[200, 600, 1200, 2500, 4000].forEach(ms => setTimeout(doResize, ms));
+try{
+(iframe.contentDocument||iframe.contentWindow.document)
+.addEventListener(‘click’, () => { setTimeout(doResize,150); setTimeout(doResize,500); });
+}catch(e){}
+}
+function isFullHtmlDocument(c){ if(!c) return false; const t=c.trim().toLowerCase(); return t.startsWith(’<!doctype’)||t.startsWith(’<html’); }
 
 async function postComment(){
-  const name=(document.getElementById('c-name').value.trim())||'Anonymous';
-  const content=document.getElementById('c-text').value.trim();
-  const msgEl=document.getElementById('c-msg');
-  if(!content){msgEl.textContent='Please write a comment.';msgEl.className='msg-box msg-error';msgEl.classList.remove('hidden');return;}
-  const{error}=await sb.from('comments').insert({post_id:currentPostId,author_name:name,content,is_visible:true});
-  if(error){msgEl.textContent='Error posting comment.';msgEl.className='msg-box msg-error';msgEl.classList.remove('hidden');return;}
-  document.getElementById('c-name').value=''; document.getElementById('c-text').value='';
-  msgEl.textContent='Comment posted!'; msgEl.className='msg-box msg-ok'; msgEl.classList.remove('hidden');
-  setTimeout(()=>loadDetail(currentPostId,currentPostTab),600);
+const name=(document.getElementById(‘c-name’).value.trim())||‘Anonymous’;
+const content=document.getElementById(‘c-text’).value.trim();
+const msgEl=document.getElementById(‘c-msg’);
+if(!content){msgEl.textContent=‘Please write a comment.’;msgEl.className=‘msg-box msg-error’;msgEl.classList.remove(‘hidden’);return;}
+const{error}=await sb.from(‘comments’).insert({post_id:currentPostId,author_name:name,content,is_visible:true});
+if(error){msgEl.textContent=‘Error posting comment.’;msgEl.className=‘msg-box msg-error’;msgEl.classList.remove(‘hidden’);return;}
+document.getElementById(‘c-name’).value=’’; document.getElementById(‘c-text’).value=’’;
+msgEl.textContent=‘Comment posted!’; msgEl.className=‘msg-box msg-ok’; msgEl.classList.remove(‘hidden’);
+setTimeout(()=>loadDetail(currentPostId,currentPostTab),600);
 }
-async function adminDelComment(id){ if(!confirm('Permanently delete this comment?')) return; await sb.from('comments').delete().eq('id',id); loadDetail(currentPostId,currentPostTab); }
-async function adminHideComment(id){ await sb.from('comments').update({is_visible:false}).eq('id',id); loadDetail(currentPostId,currentPostTab); }
+async function adminDelComment(id){ if(!confirm(‘Permanently delete this comment?’)) return; await sb.from(‘comments’).delete().eq(‘id’,id); loadDetail(currentPostId,currentPostTab); }
+async function adminHideComment(id){ await sb.from(‘comments’).update({is_visible:false}).eq(‘id’,id); loadDetail(currentPostId,currentPostTab); }
 
 /* ===== ADMIN ===== */
 function setEditorMode(mode){
-  editorMode=mode;
-  document.getElementById('editor-visual-wrap').classList.toggle('hidden',mode!=='visual');
-  document.getElementById('editor-html-wrap').classList.toggle('hidden',mode!=='html');
-  document.getElementById('mode-visual').classList.toggle('active',mode==='visual');
-  document.getElementById('mode-html').classList.toggle('active',mode==='html');
+editorMode=mode;
+document.getElementById(‘editor-visual-wrap’).classList.toggle(‘hidden’,mode!==‘visual’);
+document.getElementById(‘editor-html-wrap’).classList.toggle(‘hidden’,mode!==‘html’);
+document.getElementById(‘mode-visual’).classList.toggle(‘active’,mode===‘visual’);
+document.getElementById(‘mode-html’).classList.toggle(‘active’,mode===‘html’);
 }
 function initQuill(){
-  quill=new Quill('#quill-editor',{theme:'snow',modules:{toolbar:[[{header:[1,2,3,false]}],['bold','italic','underline'],[{list:'ordered'},{list:'bullet'}],['link','blockquote'],[{color:[]}],['clean']]},placeholder:'Write your post here…'});
+quill=new Quill(’#quill-editor’,{theme:‘snow’,modules:{toolbar:[[{header:[1,2,3,false]}],[‘bold’,‘italic’,‘underline’],[{list:‘ordered’},{list:‘bullet’}],[‘link’,‘blockquote’],[{color:[]}],[‘clean’]]},placeholder:‘Write your post here…’});
 }
 function switchAdminTab(t){
-  ['write','posts','mod','subs'].forEach(x=>{
-    document.getElementById('admin-'+x).classList.toggle('hidden',x!==t);
-    const btnId = x==='write'?'wtab':x==='posts'?'ptab':x==='mod'?'mtab':'stab';
-    document.getElementById(btnId).classList.toggle('active',x===t);
-  });
-  if(t==='mod')   loadAllComments();
-  if(t==='subs')  loadSubscribers();
-  if(t==='posts') loadManagePosts();
+[‘write’,‘posts’,‘mod’,‘subs’].forEach(x=>{
+document.getElementById(‘admin-’+x).classList.toggle(‘hidden’,x!==t);
+const btnId = x===‘write’?‘wtab’:x===‘posts’?‘ptab’:x===‘mod’?‘mtab’:‘stab’;
+document.getElementById(btnId).classList.toggle(‘active’,x===t);
+});
+if(t===‘mod’)   loadAllComments();
+if(t===‘subs’)  loadSubscribers();
+if(t===‘posts’) loadManagePosts();
 }
 async function publishPost(){
-  const title=document.getElementById('p-title').value.trim();
-  const summary=document.getElementById('p-summary').value.trim();
-  const category=document.getElementById('p-category').value;
-  const content=editorMode==='html'?document.getElementById('html-source-input').value.trim():(quill?quill.root.innerHTML:'');
-  const btn=document.getElementById('pub-btn');
-  if(!title){pubMsg('Please add a title.',false);return;}
-  if(!content||content==='<p><br></p>'){pubMsg('Please add content.',false);return;}
-  btn.disabled=true; btn.textContent='Publishing…';
-  const{error}=await sb.from('posts').insert({title,summary,content,category});
-  btn.disabled=false; btn.textContent='Publish Post';
-  if(error){pubMsg('Error: '+error.message,false);return;}
-  document.getElementById('p-title').value=''; document.getElementById('p-summary').value='';
-  document.getElementById('html-source-input').value=''; if(quill) quill.setText('');
-  pubMsg('Post published to '+category+'!',true);
+const title=document.getElementById(‘p-title’).value.trim();
+const summary=document.getElementById(‘p-summary’).value.trim();
+const category=document.getElementById(‘p-category’).value;
+const content=editorMode===‘html’?document.getElementById(‘html-source-input’).value.trim():(quill?quill.root.innerHTML:’’);
+const btn=document.getElementById(‘pub-btn’);
+if(!title){pubMsg(‘Please add a title.’,false);return;}
+if(!content||content===’<p><br></p>’){pubMsg(‘Please add content.’,false);return;}
+btn.disabled=true; btn.textContent=‘Publishing…’;
+const{error}=await sb.from(‘posts’).insert({title,summary,content,category});
+btn.disabled=false; btn.textContent=‘Publish Post’;
+if(error){pubMsg(‘Error: ‘+error.message,false);return;}
+document.getElementById(‘p-title’).value=’’; document.getElementById(‘p-summary’).value=’’;
+document.getElementById(‘html-source-input’).value=’’; if(quill) quill.setText(’’);
+pubMsg(‘Post published to ‘+category+’!’,true);
 }
-function pubMsg(text,ok){ const el=document.getElementById('pub-msg'); el.textContent=text; el.className='msg-box '+(ok?'msg-ok':'msg-error'); el.classList.remove('hidden'); setTimeout(()=>el.classList.add('hidden'),4500); }
+function pubMsg(text,ok){ const el=document.getElementById(‘pub-msg’); el.textContent=text; el.className=’msg-box ’+(ok?‘msg-ok’:‘msg-error’); el.classList.remove(‘hidden’); setTimeout(()=>el.classList.add(‘hidden’),4500); }
 
 async function loadAllComments(){
-  const wrap=document.getElementById('mod-list'); wrap.innerHTML='<div class="spin">Loading…</div>';
-  const{data,error}=await sb.from('comments').select('*,posts(title,category)').order('created_at',{ascending:false});
-  if(error||!data||data.length===0){wrap.innerHTML='<div class="empty-state"><h3>No comments yet</h3></div>';return;}
-  wrap.innerHTML=data.map(c=>`<div class="mod-card ${!c.is_visible?'is-hidden':''}" id="mc-${c.id}"><div class="mod-top"><div><span class="mod-who">${esc(c.author_name||'Anonymous')}</span><span class="mod-meta">${fmtDate(c.created_at)}</span>${!c.is_visible?'<span class="badge-hidden">HIDDEN</span>':''}<span class="cat-badge">${esc(c.posts?.category||'')}</span></div><span class="mod-post">${esc(c.posts?.title||'—')}</span></div><div class="mod-text">${esc(c.content)}</div><div class="mod-actions"><button class="btn-sm-del" onclick="modDelete('${c.id}')">Delete</button>${c.is_visible?`<button class="btn-sm-hide" onclick="modSetVisible('${c.id}',false)">Hide</button>`:`<button class="btn-sm-hide" onclick="modSetVisible('${c.id}',true)">Unhide</button>`}</div></div>`).join('');
+const wrap=document.getElementById(‘mod-list’); wrap.innerHTML=’<div class="spin">Loading…</div>’;
+const{data,error}=await sb.from(‘comments’).select(’*,posts(title,category)’).order(‘created_at’,{ascending:false});
+if(error||!data||data.length===0){wrap.innerHTML=’<div class="empty-state"><h3>No comments yet</h3></div>’;return;}
+wrap.innerHTML=data.map(c=>`<div class="mod-card ${!c.is_visible?'is-hidden':''}" id="mc-${c.id}"><div class="mod-top"><div><span class="mod-who">${esc(c.author_name||'Anonymous')}</span><span class="mod-meta">${fmtDate(c.created_at)}</span>${!c.is_visible?'<span class="badge-hidden">HIDDEN</span>':''}<span class="cat-badge">${esc(c.posts?.category||'')}</span></div><span class="mod-post">${esc(c.posts?.title||'—')}</span></div><div class="mod-text">${esc(c.content)}</div><div class="mod-actions"><button class="btn-sm-del" onclick="modDelete('${c.id}')">Delete</button>${c.is_visible?`<button class="btn-sm-hide" onclick="modSetVisible('${c.id}',false)">Hide</button>`:`<button class="btn-sm-hide" onclick="modSetVisible('${c.id}',true)">Unhide</button>`}</div></div>`).join(’’);
 }
-/* ---- Manage Posts ---- */
+/* –– Manage Posts –– */
 async function loadManagePosts(){
-  const wrap=document.getElementById('posts-manage-list');
-  wrap.innerHTML='<div class="spin">Loading…</div>';
-  const{data,error}=await sb.from('posts').select('id,title,summary,category,created_at').order('created_at',{ascending:false});
-  if(error||!data||data.length===0){wrap.innerHTML='<div class="empty-state"><h3>No posts yet</h3></div>';return;}
-  const catLabel={'commentary':'Market Commentary','research':'Research','cftc':'CFTC','exports':'Export Data','wasde':'WASDE','commoditymap':'Commodity Map','weather':'Weather','options':'Options Analytics','fob':'FOB Data','freight':'Freight'};
-  wrap.innerHTML=data.map(p=>`
-    <div class="mod-card" id="mp-${p.id}">
-      <div class="mod-top">
-        <div>
-          <span class="mod-who">${esc(p.title)}</span>
-          <span class="cat-badge">${catLabel[p.category]||p.category}</span>
-          <span class="mod-meta">${fmtDate(p.created_at)}</span>
-        </div>
-      </div>
-      ${p.summary?`<div class="mod-text" style="font-size:12px;color:var(--muted);">${esc(p.summary)}</div>`:''}
-      <div class="mod-actions" style="margin-top:10px;">
-        <button class="btn-sm-hide" onclick="startEditPost('${p.id}')">✏ Edit</button>
-        <button class="btn-sm-hide" style="${p.is_pinned?'color:var(--gold2);border-color:rgba(212,170,85,0.5);':''}" onclick="togglePin('${p.id}',${!!p.is_pinned})">${p.is_pinned?'📌 Unpin':'📌 Pin'}</button>
-        <button class="btn-sm-del"  onclick="deletePost('${p.id}')">Delete</button>
-      </div>
-    </div>`).join('');
+const wrap=document.getElementById(‘posts-manage-list’);
+wrap.innerHTML=’<div class="spin">Loading…</div>’;
+const{data,error}=await sb.from(‘posts’).select(‘id,title,summary,category,created_at’).order(‘created_at’,{ascending:false});
+if(error||!data||data.length===0){wrap.innerHTML=’<div class="empty-state"><h3>No posts yet</h3></div>’;return;}
+const catLabel={‘commentary’:‘Market Commentary’,‘research’:‘Research’,‘cftc’:‘CFTC’,‘exports’:‘Export Data’,‘wasde’:‘WASDE’,‘commoditymap’:‘Commodity Map’,‘weather’:‘Weather’,‘options’:‘Options Analytics’,‘fob’:‘FOB Data’,‘freight’:‘Freight’,‘technicals’:‘Technical Analysis’};
+wrap.innerHTML=data.map(p=>` <div class="mod-card" id="mp-${p.id}"> <div class="mod-top"> <div> <span class="mod-who">${esc(p.title)}</span> <span class="cat-badge">${catLabel[p.category]||p.category}</span> <span class="mod-meta">${fmtDate(p.created_at)}</span> </div> </div> ${p.summary?`<div class="mod-text" style="font-size:12px;color:var(--muted);">${esc(p.summary)}</div>`:''} <div class="mod-actions" style="margin-top:10px;"> <button class="btn-sm-hide" onclick="startEditPost('${p.id}')">✏ Edit</button> <button class="btn-sm-hide" style="${p.is_pinned?'color:var(--gold2);border-color:rgba(212,170,85,0.5);':''}" onclick="togglePin('${p.id}',${!!p.is_pinned})">${p.is_pinned?'📌 Unpin':'📌 Pin'}</button> <button class="btn-sm-del"  onclick="deletePost('${p.id}')">Delete</button> </div> </div>`).join(’’);
 }
 
 async function deletePost(id){
-  if(!confirm('Permanently delete this post and all its comments? This cannot be undone.')) return;
-  await sb.from('posts').delete().eq('id',id);
-  loadManagePosts();
+if(!confirm(‘Permanently delete this post and all its comments? This cannot be undone.’)) return;
+await sb.from(‘posts’).delete().eq(‘id’,id);
+loadManagePosts();
 }
 
 async function startEditPost(id){
-  const{data:post,error}=await sb.from('posts').select('*').eq('id',id).single();
-  if(error||!post){alert('Could not load post.');return;}
-  // Switch to write tab and populate fields
-  switchAdminTab('write');
-  document.getElementById('p-title').value  = post.title||'';
-  document.getElementById('p-summary').value= post.summary||'';
-  document.getElementById('p-category').value= post.category||'commentary';
-  // Store the id being edited
-  window._editingPostId = id;
-  document.getElementById('pub-btn').textContent = 'Save Changes';
-  // Set editor content
-  if(isFullHtmlDocument(post.content)){
-    setEditorMode('html');
-    document.getElementById('html-source-input').value = post.content;
-  } else {
-    setEditorMode('visual');
-    if(quill) quill.root.innerHTML = post.content||'';
-  }
-  // Show cancel button
-  const pubRow = document.getElementById('pub-btn').parentElement;
-  if(!document.getElementById('cancel-edit-btn')){
-    const cancelBtn = document.createElement('button');
-    cancelBtn.id='cancel-edit-btn';
-    cancelBtn.className='btn btn-ghost';
-    cancelBtn.style.background='var(--muted)';
-    cancelBtn.style.color='#fff';
-    cancelBtn.textContent='✕ Cancel Edit';
-    cancelBtn.onclick=cancelEdit;
-    pubRow.appendChild(cancelBtn);
-  }
+const{data:post,error}=await sb.from(‘posts’).select(’*’).eq(‘id’,id).single();
+if(error||!post){alert(‘Could not load post.’);return;}
+// Switch to write tab and populate fields
+switchAdminTab(‘write’);
+document.getElementById(‘p-title’).value  = post.title||’’;
+document.getElementById(‘p-summary’).value= post.summary||’’;
+document.getElementById(‘p-category’).value= post.category||‘commentary’;
+// Store the id being edited
+window._editingPostId = id;
+document.getElementById(‘pub-btn’).textContent = ‘Save Changes’;
+// Set editor content
+if(isFullHtmlDocument(post.content)){
+setEditorMode(‘html’);
+document.getElementById(‘html-source-input’).value = post.content;
+} else {
+setEditorMode(‘visual’);
+if(quill) quill.root.innerHTML = post.content||’’;
+}
+// Show cancel button
+const pubRow = document.getElementById(‘pub-btn’).parentElement;
+if(!document.getElementById(‘cancel-edit-btn’)){
+const cancelBtn = document.createElement(‘button’);
+cancelBtn.id=‘cancel-edit-btn’;
+cancelBtn.className=‘btn btn-ghost’;
+cancelBtn.style.background=‘var(–muted)’;
+cancelBtn.style.color=’#fff’;
+cancelBtn.textContent=‘✕ Cancel Edit’;
+cancelBtn.onclick=cancelEdit;
+pubRow.appendChild(cancelBtn);
+}
 }
 
 function cancelEdit(){
-  window._editingPostId=null;
-  document.getElementById('pub-btn').textContent='Publish Post';
-  document.getElementById('p-title').value='';
-  document.getElementById('p-summary').value='';
-  document.getElementById('html-source-input').value='';
-  if(quill) quill.setText('');
-  const cb=document.getElementById('cancel-edit-btn');
-  if(cb) cb.remove();
+window._editingPostId=null;
+document.getElementById(‘pub-btn’).textContent=‘Publish Post’;
+document.getElementById(‘p-title’).value=’’;
+document.getElementById(‘p-summary’).value=’’;
+document.getElementById(‘html-source-input’).value=’’;
+if(quill) quill.setText(’’);
+const cb=document.getElementById(‘cancel-edit-btn’);
+if(cb) cb.remove();
 }
 
-async function modDelete(id){ if(!confirm('Permanently delete?')) return; await sb.from('comments').delete().eq('id',id); loadAllComments(); }
-async function modSetVisible(id,vis){ await sb.from('comments').update({is_visible:vis}).eq('id',id); loadAllComments(); }
+async function modDelete(id){ if(!confirm(‘Permanently delete?’)) return; await sb.from(‘comments’).delete().eq(‘id’,id); loadAllComments(); }
+async function modSetVisible(id,vis){ await sb.from(‘comments’).update({is_visible:vis}).eq(‘id’,id); loadAllComments(); }
 
 /* ===== SUBSCRIBERS ===== */
 async function loadSubscribers(){
-  const tbody=document.getElementById('subs-tbody');
-  tbody.innerHTML='<tr><td colspan="3" style="text-align:center;padding:32px;color:var(--muted);">Loading…</td></tr>';
-  const{data,error}=await sb.from('subscribers').select('email,created_at').order('created_at',{ascending:false});
-  if(error){ tbody.innerHTML=`<tr><td colspan="3" style="text-align:center;padding:32px;color:var(--red);">Error loading subscribers.</td></tr>`; return; }
-  allSubs=data||[];
-  updateSubsStats();
-  renderSubsTable(allSubs);
+const tbody=document.getElementById(‘subs-tbody’);
+tbody.innerHTML=’<tr><td colspan="3" style="text-align:center;padding:32px;color:var(--muted);">Loading…</td></tr>’;
+const{data,error}=await sb.from(‘subscribers’).select(‘email,created_at’).order(‘created_at’,{ascending:false});
+if(error){ tbody.innerHTML=`<tr><td colspan="3" style="text-align:center;padding:32px;color:var(--red);">Error loading subscribers.</td></tr>`; return; }
+allSubs=data||[];
+updateSubsStats();
+renderSubsTable(allSubs);
 }
 function updateSubsStats(){
-  document.getElementById('subs-total').textContent=allSubs.length;
-  const now=new Date();
-  const thisMonth=allSubs.filter(s=>{ const d=new Date(s.created_at); return d.getMonth()===now.getMonth()&&d.getFullYear()===now.getFullYear(); }).length;
-  const thisWeek=allSubs.filter(s=>{ const d=new Date(s.created_at); return (now-d)<7*24*60*60*1000; }).length;
-  document.getElementById('subs-month').textContent=thisMonth;
-  document.getElementById('subs-week').textContent=thisWeek;
+document.getElementById(‘subs-total’).textContent=allSubs.length;
+const now=new Date();
+const thisMonth=allSubs.filter(s=>{ const d=new Date(s.created_at); return d.getMonth()===now.getMonth()&&d.getFullYear()===now.getFullYear(); }).length;
+const thisWeek=allSubs.filter(s=>{ const d=new Date(s.created_at); return (now-d)<7*24*60*60*1000; }).length;
+document.getElementById(‘subs-month’).textContent=thisMonth;
+document.getElementById(‘subs-week’).textContent=thisWeek;
 }
 function renderSubsTable(subs){
-  const tbody=document.getElementById('subs-tbody');
-  if(!subs||subs.length===0){
-    tbody.innerHTML='<tr><td colspan="3" style="text-align:center;padding:40px;color:var(--muted);">No subscribers yet.</td></tr>';return;
-  }
-  tbody.innerHTML=subs.map((s,i)=>`<tr><td style="color:var(--muted);font-size:13px;">${i+1}</td><td class="email-cell">${esc(s.email)}</td><td style="color:var(--muted);font-size:13px;">${fmtDate(s.created_at)}</td></tr>`).join('');
+const tbody=document.getElementById(‘subs-tbody’);
+if(!subs||subs.length===0){
+tbody.innerHTML=’<tr><td colspan="3" style="text-align:center;padding:40px;color:var(--muted);">No subscribers yet.</td></tr>’;return;
+}
+tbody.innerHTML=subs.map((s,i)=>`<tr><td style="color:var(--muted);font-size:13px;">${i+1}</td><td class="email-cell">${esc(s.email)}</td><td style="color:var(--muted);font-size:13px;">${fmtDate(s.created_at)}</td></tr>`).join(’’);
 }
 function filterSubs(){
-  const q=document.getElementById('subs-search').value.trim().toLowerCase();
-  const filtered=q?allSubs.filter(s=>s.email.toLowerCase().includes(q)):allSubs;
-  renderSubsTable(filtered);
+const q=document.getElementById(‘subs-search’).value.trim().toLowerCase();
+const filtered=q?allSubs.filter(s=>s.email.toLowerCase().includes(q)):allSubs;
+renderSubsTable(filtered);
 }
 function exportCSV(){
-  if(!allSubs.length){ alert('No subscribers to export.'); return; }
-  const rows=['Email,Joined',...allSubs.map(s=>`${s.email},${new Date(s.created_at).toLocaleDateString('en-GB')}`)];
-  const blob=new Blob([rows.join('\n')],{type:'text/csv'});
-  const url=URL.createObjectURL(blob);
-  const a=document.createElement('a'); a.href=url; a.download='jhd-subscribers.csv'; a.click();
-  URL.revokeObjectURL(url);
+if(!allSubs.length){ alert(‘No subscribers to export.’); return; }
+const rows=[‘Email,Joined’,…allSubs.map(s=>`${s.email},${new Date(s.created_at).toLocaleDateString('en-GB')}`)];
+const blob=new Blob([rows.join(’\n’)],{type:‘text/csv’});
+const url=URL.createObjectURL(blob);
+const a=document.createElement(‘a’); a.href=url; a.download=‘jhd-subscribers.csv’; a.click();
+URL.revokeObjectURL(url);
 }
 
 /* ===== HELPERS ===== */
-function esc(s){ if(!s) return ''; return String(s).replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;').replace(/"/g,'&quot;').replace(/'/g,'&#39;'); }
-function fmtDate(d){ return new Date(d).toLocaleDateString('en-GB',{day:'numeric',month:'short',year:'numeric'}); }
+function esc(s){ if(!s) return ‘’; return String(s).replace(/&/g,’&’).replace(/</g,’<’).replace(/>/g,’>’).replace(/”/g,’"’).replace(/’/g,’'’); }
+function fmtDate(d){ return new Date(d).toLocaleDateString(‘en-GB’,{day:‘numeric’,month:‘short’,year:‘numeric’}); }
 
 boot();
 
 async function togglePin(id, currentlyPinned) {
-  const{error}=await sb.from('posts').update({is_pinned:!currentlyPinned}).eq('id',id);
-  if(error){alert('Error: '+error.message);return;}
-  loadManagePosts();
+const{error}=await sb.from(‘posts’).update({is_pinned:!currentlyPinned}).eq(‘id’,id);
+if(error){alert(’Error: ’+error.message);return;}
+loadManagePosts();
 }
 </script>
-
 
 </body>
 </html>
