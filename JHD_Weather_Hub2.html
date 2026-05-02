@@ -1,0 +1,883 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width,initial-scale=1.0">
+<title>JHD Commodity Advisors — Agricultural Weather Hub</title>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/4.4.1/chart.umd.js"></script>
+<link href="https://fonts.googleapis.com/css2?family=DM+Serif+Display:ital@0;1&family=DM+Mono:wght@300;400;500&family=DM+Sans:wght@300;400;500;600&display=swap" rel="stylesheet">
+<style>
+:root{
+  --bg:#0d0f12;--card:#141720;--card2:#1c2030;
+  --border:rgba(255,255,255,0.08);--border2:rgba(255,255,255,0.14);
+  --text:#e8eaf0;--muted:#8890a4;--muted2:#555f78;
+  --blue:#4a9eff;--teal:#2ecfaa;--coral:#ff6b4a;
+  --gold:#ffb347;--purple:#a78bfa;--green:#4ade80;--red:#f87171;
+}
+*{margin:0;padding:0;box-sizing:border-box;}
+html,body{background:var(--bg);color:var(--text);font-family:'DM Sans',sans-serif;font-size:13px;line-height:1.5;}
+.wrap{width:100%;padding:20px 24px 32px;}
+
+/* HEADER */
+.hdr{display:flex;align-items:flex-start;justify-content:space-between;gap:16px;margin-bottom:16px;flex-wrap:wrap;}
+.hdr-left .tag{font-family:'DM Mono',monospace;font-size:9px;letter-spacing:0.16em;color:var(--blue);text-transform:uppercase;margin-bottom:4px;}
+.hdr-left h2{font-family:'DM Serif Display',serif;font-size:22px;font-weight:900;color:var(--text);line-height:1.1;}
+.hdr-left h2 span{color:var(--blue);}
+.hdr-right{display:flex;align-items:center;gap:8px;}
+.live-dot{width:8px;height:8px;border-radius:50%;background:var(--gold);animation:pulse 2s infinite;flex-shrink:0;}
+@keyframes pulse{0%,100%{opacity:1;}50%{opacity:0.3;}}
+.status-txt{font-family:'DM Mono',monospace;font-size:9px;color:var(--muted);}
+.sub{font-family:'DM Mono',monospace;font-size:10px;color:var(--muted2);margin-top:3px;}
+
+/* REGION TABS */
+.region-tabs{display:flex;gap:6px;margin-bottom:14px;flex-wrap:wrap;}
+.rtab{padding:6px 14px;border-radius:4px;border:1px solid var(--border2);background:var(--card);
+  color:var(--muted);font-family:'DM Mono',monospace;font-size:9px;font-weight:500;
+  letter-spacing:0.06em;text-transform:uppercase;cursor:pointer;transition:all 0.15s;}
+.rtab:hover{color:var(--text);}
+.rtab.active{background:rgba(74,158,255,0.15);color:var(--blue);border-color:var(--blue);}
+
+/* SUMMARY ROW */
+.summary-row{display:grid;grid-template-columns:repeat(auto-fill,minmax(160px,1fr));gap:8px;margin-bottom:16px;}
+.sum-card{background:var(--card);border:1px solid var(--border);border-radius:6px;padding:10px 13px;}
+.sum-l{font-family:'DM Mono',monospace;font-size:8px;color:var(--muted2);text-transform:uppercase;letter-spacing:0.06em;margin-bottom:4px;}
+.sum-v{font-family:'DM Mono',monospace;font-size:16px;font-weight:500;color:var(--text);}
+.sum-s{font-size:10px;color:var(--muted2);margin-top:2px;}
+.sum-v.alert{color:var(--coral);}
+.sum-v.ok{color:var(--teal);}
+.sum-v.warn{color:var(--gold);}
+
+/* SECTION LABEL */
+.section-label{font-family:'DM Mono',monospace;font-size:9px;letter-spacing:0.12em;
+  text-transform:uppercase;color:var(--muted2);margin-bottom:8px;
+  display:flex;align-items:center;gap:8px;}
+.section-label::after{content:'';flex:1;height:1px;background:var(--border);}
+
+/* DROUGHT SECTION */
+.drought-wrap{background:var(--card);border:1px solid var(--border);border-radius:8px;
+  overflow:hidden;margin-bottom:16px;}
+.drought-top{padding:12px 16px;border-bottom:1px solid var(--border);
+  display:flex;align-items:center;justify-content:space-between;flex-wrap:wrap;gap:8px;}
+.drought-title{font-family:'DM Serif Display',serif;font-size:14px;color:var(--text);}
+.drought-date{font-family:'DM Mono',monospace;font-size:9px;color:var(--blue);}
+.drought-body{display:grid;grid-template-columns:1fr 300px;gap:0;}
+.drought-map-wrap{background:#050709;position:relative;min-height:440px;display:flex;align-items:center;justify-content:center;}
+.drought-map-wrap .map-loading{position:absolute;inset:0;display:flex;align-items:center;justify-content:center;font-family:'DM Mono',monospace;font-size:10px;color:var(--muted);}
+.drought-side{border-left:1px solid var(--border);padding:14px;overflow-y:auto;}
+.ds-section{margin-bottom:14px;}
+.ds-title{font-family:'DM Mono',monospace;font-size:8px;color:var(--muted2);
+  text-transform:uppercase;letter-spacing:0.1em;margin-bottom:8px;}
+
+/* DROUGHT BARS */
+.db-item{margin-bottom:8px;}
+.db-header{display:flex;justify-content:space-between;margin-bottom:3px;}
+.db-label{font-size:11px;color:var(--text);}
+.db-pct{font-family:'DM Mono',monospace;font-size:10px;color:var(--muted);}
+.db-track{height:8px;background:rgba(255,255,255,0.06);border-radius:3px;overflow:hidden;}
+.db-fill{height:100%;border-radius:3px;}
+
+/* CROP RISK BOXES */
+.crop-risk{background:var(--card2);border-radius:6px;padding:10px 12px;margin-bottom:8px;}
+.cr-title{font-family:'DM Mono',monospace;font-size:8px;color:var(--muted2);
+  text-transform:uppercase;letter-spacing:0.08em;margin-bottom:6px;}
+.cr-item{display:flex;align-items:center;gap:6px;margin-bottom:4px;font-size:11px;}
+.cr-flag{width:10px;height:10px;border-radius:2px;flex-shrink:0;}
+.cr-risk{font-size:10px;color:var(--muted);margin-left:auto;font-family:'DM Mono',monospace;}
+
+/* STATE DROUGHT TABLE */
+.state-table{width:100%;border-collapse:collapse;font-size:10px;}
+.state-table th{font-family:'DM Mono',monospace;font-size:8px;color:var(--muted2);
+  text-transform:uppercase;letter-spacing:0.05em;padding:4px 6px;border-bottom:1px solid var(--border);text-align:left;}
+.state-table td{padding:4px 6px;border-bottom:1px solid rgba(255,255,255,0.04);
+  font-family:'DM Mono',monospace;}
+.state-table td:not(:first-child){text-align:right;}
+.d0{color:#d4c842;}.d1{color:#f5a623;}.d2{color:#ff6b4a;}.d3{color:#e53935;}.d4{color:#b71c1c;}
+
+/* WEATHER GRID */
+.weather-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(310px,1fr));gap:12px;margin-bottom:14px;}
+.w-card{background:var(--card);border:1px solid var(--border);border-radius:8px;padding:14px;transition:border-color 0.15s;}
+.w-card:hover{border-color:var(--border2);}
+.wc-top{display:flex;align-items:flex-start;justify-content:space-between;margin-bottom:8px;}
+.wc-region{font-family:'DM Mono',monospace;font-size:8px;color:var(--blue);text-transform:uppercase;letter-spacing:0.1em;margin-bottom:3px;}
+.wc-name{font-family:'DM Serif Display',serif;font-size:14px;color:var(--text);}
+.wc-commodity{font-family:'DM Mono',monospace;font-size:8px;color:var(--muted2);margin-top:2px;}
+.wc-right{text-align:right;}
+.wc-temp{font-family:'DM Mono',monospace;font-size:22px;font-weight:500;color:var(--text);line-height:1;}
+.wc-cond{font-size:10px;color:var(--muted2);margin-top:2px;}
+
+/* STRESS + CROP RISK BADGES */
+.badge-row{display:flex;gap:4px;flex-wrap:wrap;margin-bottom:8px;min-height:20px;}
+.badge{display:inline-block;padding:2px 7px;border-radius:3px;font-family:'DM Mono',monospace;font-size:7.5px;font-weight:500;letter-spacing:0.03em;}
+.b-heat{background:rgba(255,107,74,0.15);color:var(--coral);border:1px solid rgba(255,107,74,0.3);}
+.b-cold{background:rgba(74,158,255,0.15);color:var(--blue);border:1px solid rgba(74,158,255,0.3);}
+.b-dry{background:rgba(255,179,71,0.15);color:var(--gold);border:1px solid rgba(255,179,71,0.3);}
+.b-wet{background:rgba(46,207,170,0.15);color:var(--teal);border:1px solid rgba(46,207,170,0.3);}
+.b-normal{background:rgba(136,144,164,0.1);color:var(--muted);border:1px solid rgba(136,144,164,0.2);}
+.b-crop-risk{background:rgba(248,113,113,0.12);color:#f87171;border:1px solid rgba(248,113,113,0.3);}
+.b-crop-ok{background:rgba(74,222,128,0.1);color:#4ade80;border:1px solid rgba(74,222,128,0.25);}
+.b-crop-watch{background:rgba(255,179,71,0.12);color:var(--gold);border:1px solid rgba(255,179,71,0.3);}
+
+.wc-stats{display:grid;grid-template-columns:1fr 1fr 1fr;gap:6px;margin-bottom:10px;}
+.wcs{background:var(--card2);border-radius:4px;padding:6px 8px;}
+.wcs-l{font-family:'DM Mono',monospace;font-size:7px;color:var(--muted2);text-transform:uppercase;letter-spacing:0.06em;margin-bottom:2px;}
+.wcs-v{font-family:'DM Mono',monospace;font-size:11px;font-weight:500;color:var(--text);}
+.wcs-v.hot{color:var(--coral);}.wcs-v.wet{color:var(--teal);}.wcs-v.dry{color:var(--gold);}
+.chart-wrap{height:90px;position:relative;}
+
+.loading-card{display:flex;align-items:center;justify-content:center;min-height:180px;color:var(--muted2);font-family:'DM Mono',monospace;font-size:10px;gap:8px;}
+.spin{width:14px;height:14px;border:2px solid var(--border2);border-top-color:var(--blue);border-radius:50%;animation:sp 0.8s linear infinite;flex-shrink:0;}
+@keyframes sp{to{transform:rotate(360deg);}}
+
+.disc{font-family:'DM Mono',monospace;font-size:9px;color:var(--muted2);text-align:center;padding-top:10px;border-top:1px solid var(--border);}
+
+/* REGION ALERT PANEL */
+.rap{background:var(--card);border:1px solid var(--border);border-radius:8px;padding:14px 16px;}
+.rap-title{font-family:'DM Serif Display',serif;font-size:14px;color:var(--text);margin-bottom:10px;display:flex;align-items:center;gap:10px;}
+.rap-title span{font-family:'DM Mono',monospace;font-size:9px;color:var(--blue);text-transform:uppercase;letter-spacing:0.1em;}
+.rap-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(200px,1fr));gap:8px;}
+.rap-item{background:var(--card2);border-radius:6px;padding:8px 10px;}
+.rap-crop{font-family:'DM Mono',monospace;font-size:9px;color:var(--muted2);text-transform:uppercase;letter-spacing:0.06em;margin-bottom:4px;}
+.rap-status{font-family:'DM Mono',monospace;font-size:11px;font-weight:500;}
+.rap-detail{font-size:10px;color:var(--muted2);margin-top:2px;}
+.rs-ok{color:var(--teal);}.rs-warn{color:var(--gold);}.rs-alert{color:var(--coral);}
+@media(max-width:800px){.wrap{padding:14px;}}
+
+/* ── MODEL RUNS SECTION ─────────────────────────────────────────────── */
+.model-section{background:var(--card);border:1px solid var(--border);border-radius:10px;overflow:hidden;margin-bottom:16px;}
+.model-header{padding:14px 18px 0;border-bottom:1px solid var(--border);}
+.model-header-top{display:flex;align-items:center;justify-content:space-between;margin-bottom:10px;gap:12px;flex-wrap:wrap;}
+.model-header-title{font-family:'DM Serif Display',serif;font-size:15px;color:var(--text);}
+.model-header-sub{font-family:'DM Mono',monospace;font-size:9px;color:var(--muted2);margin-top:2px;}
+.model-tabs{display:flex;gap:0;}
+.mtab{padding:9px 18px;border:none;background:transparent;cursor:pointer;font-family:'DM Mono',monospace;font-size:10px;font-weight:500;color:var(--muted);border-bottom:2px solid transparent;margin-bottom:-1px;letter-spacing:0.04em;text-transform:uppercase;transition:all 0.15s;}
+.mtab:hover{color:var(--text);}
+.mtab.active{color:var(--blue);border-bottom-color:var(--blue);}
+.model-body{padding:16px 18px;}
+.model-region-bar{display:flex;flex-wrap:wrap;gap:5px;margin-bottom:14px;}
+.mregion-btn{font-family:'DM Mono',monospace;font-size:9px;padding:4px 10px;border-radius:3px;border:1px solid var(--border2);color:var(--muted);background:transparent;cursor:pointer;transition:all 0.15s;white-space:nowrap;}
+.mregion-btn:hover{color:var(--text);}
+.mregion-btn.active{border-color:var(--blue);color:var(--blue);background:rgba(74,158,255,0.1);}
+.model-view-row{display:flex;align-items:center;gap:8px;margin-bottom:14px;flex-wrap:wrap;}
+.model-view-label{font-family:'DM Mono',monospace;font-size:9px;color:var(--muted2);text-transform:uppercase;letter-spacing:0.06em;}
+.mview-btn{font-family:'DM Mono',monospace;font-size:9px;padding:4px 12px;border-radius:3px;border:1px solid var(--border2);color:var(--muted);background:transparent;cursor:pointer;transition:all 0.15s;}
+.mview-btn.active{border-color:var(--blue);color:var(--blue);background:rgba(74,158,255,0.1);}
+.model-chart-grid{display:grid;grid-template-columns:1fr 1fr;gap:12px;}
+.model-chart-card{background:var(--card2);border:1px solid var(--border);border-radius:7px;padding:12px;}
+.model-chart-label{font-family:'DM Mono',monospace;font-size:9px;color:var(--muted2);text-transform:uppercase;letter-spacing:0.07em;margin-bottom:8px;display:flex;align-items:center;justify-content:space-between;}
+.model-chart-wrap{height:180px;position:relative;}
+.model-legend{display:flex;gap:12px;margin-bottom:8px;flex-wrap:wrap;}
+.mleg{display:flex;align-items:center;gap:5px;font-family:'DM Mono',monospace;font-size:9px;color:var(--muted);}
+.mleg-dot{width:10px;height:3px;border-radius:2px;}
+.model-status{font-family:'DM Mono',monospace;font-size:9px;color:var(--muted2);text-align:center;padding:20px;display:flex;align-items:center;justify-content:center;gap:8px;}
+/* Map viewer */
+.map-controls{display:flex;gap:8px;margin-bottom:12px;flex-wrap:wrap;align-items:center;}
+.map-ctrl-label{font-family:'DM Mono',monospace;font-size:9px;color:var(--muted2);text-transform:uppercase;letter-spacing:0.06em;margin-right:4px;}
+.mmap-btn{font-family:'DM Mono',monospace;font-size:9px;padding:4px 12px;border-radius:3px;border:1px solid var(--border2);color:var(--muted);background:transparent;cursor:pointer;transition:all 0.15s;}
+.mmap-btn.active{border-color:var(--teal);color:var(--teal);background:rgba(46,207,170,0.08);}
+.mmap-btn.active-model{border-color:var(--blue);color:var(--blue);background:rgba(74,158,255,0.1);}
+.windy-wrap{border-radius:8px;overflow:hidden;border:1px solid var(--border);}
+.windy-wrap iframe{width:100%;height:500px;border:none;display:block;}
+.model-note{font-family:'DM Mono',monospace;font-size:9px;color:var(--muted2);margin-top:8px;line-height:1.6;}
+@media(max-width:700px){.model-chart-grid{grid-template-columns:1fr;}.model-tabs .mtab{font-size:9px;padding:7px 12px;}}
+</style>
+</head>
+<body>
+<div class="wrap">
+
+<div class="hdr">
+  <div class="hdr-left">
+    <div class="tag">JHD Commodity Advisors · Weather Intelligence</div>
+    <h2>Agricultural <span>Weather Hub</span></h2>
+    <div class="sub" id="last-updated">Loading weather data…</div>
+  </div>
+  <div class="hdr-right">
+    <div class="live-dot" id="live-dot"></div>
+    <span class="status-txt" id="status-txt">Loading…</span>
+  </div>
+</div>
+
+<div class="region-tabs">
+  <button class="rtab active" onclick="setRegion('all',this)">All Regions</button>
+  <button class="rtab" onclick="setRegion('namerica',this)">N.America</button>
+  <button class="rtab" onclick="setRegion('samerica',this)">S.America</button>
+  <button class="rtab" onclick="setRegion('europe',this)">Europe / Black Sea</button>
+  <button class="rtab" onclick="setRegion('asia',this)">Asia / Pacific</button>
+</div>
+
+<div class="summary-row">
+  <div class="sum-card"><div class="sum-l">Regions Loaded</div><div class="sum-v" id="s-loaded">—</div></div>
+  <div class="sum-card"><div class="sum-l">Heat Stress</div><div class="sum-v alert" id="s-heat">—</div><div class="sum-s">regions &gt;35°C</div></div>
+  <div class="sum-card"><div class="sum-l">Drought Risk</div><div class="sum-v warn" id="s-dry">—</div><div class="sum-s">&lt;5mm 7-day</div></div>
+  <div class="sum-card"><div class="sum-l">Frost Risk</div><div class="sum-v" id="s-frost">—</div><div class="sum-s">min &lt;0°C</div></div>
+  <div class="sum-card"><div class="sum-l">Crop Alerts</div><div class="sum-v alert" id="s-crop">—</div><div class="sum-s">at-risk regions</div></div>
+  <div class="sum-card"><div class="sum-l">Forecast</div><div class="sum-v ok">14 Days</div><div class="sum-s">Open-Meteo</div></div>
+</div>
+
+<!-- DROUGHT MONITOR — shown for all/namerica -->
+<div id="drought-section">
+  <div class="section-label">US Drought Monitor — Current Week</div>
+  <div class="drought-wrap" style="margin-bottom:16px;">
+    <div class="drought-top">
+      <div class="drought-title">CONUS Drought Monitor</div>
+      <div class="drought-date">Updated weekly · droughtmonitor.unl.edu</div>
+    </div>
+    <iframe
+      src="https://droughtmonitor.unl.edu/CurrentMap/tabid/53/Default.aspx"
+      scrolling="yes"
+      title="US Drought Monitor"
+      style="width:100%;height:560px;border:none;display:block;">
+    </iframe>
+  </div>
+</div>
+
+<!-- REGION CROP ALERT PANEL -->
+<div id="region-alert-panel" style="margin-bottom:14px;"></div>
+
+<!-- WEATHER CARDS -->
+<div class="section-label" id="weather-section-label">Key Agricultural Regions — 14-Day Outlook</div>
+<div class="weather-grid" id="weather-grid">
+  <div class="w-card loading-card"><span class="spin"></span>Fetching weather data…</div>
+</div>
+
+<div class="disc">Weather: Open-Meteo (open-meteo.com) · Drought: US Drought Monitor (droughtmonitor.unl.edu) · 14-day forecasts · Informational only · JHD Commodity Advisors</div>
+
+<!-- ── MODEL RUNS SECTION ─────────────────────────────────────────── -->
+<div class="section-label" style="margin-top:24px;margin-bottom:12px;">Numerical Weather Model Runs — GFS & ECMWF IFS</div>
+<div class="model-section">
+  <div class="model-header">
+    <div class="model-header-top">
+      <div>
+        <div class="model-header-title">GFS vs ECMWF — Agricultural Region Comparison</div>
+        <div class="model-header-sub" id="model-run-status">Select a region below to load model data</div>
+      </div>
+    </div>
+    <div class="model-tabs">
+      <button class="mtab active" onclick="setModelTab('charts',this)">📊 Forecast Charts</button>
+      <button class="mtab" onclick="setModelTab('maps',this)">🗺️ Map Viewer (Windy)</button>
+    </div>
+  </div>
+  <div class="model-body">
+    <!-- Region selector -->
+    <div class="model-region-bar" id="model-region-bar"></div>
+
+    <!-- ── FORECAST CHARTS PANEL ── -->
+    <div id="model-charts-panel">
+      <div class="model-view-row">
+        <span class="model-view-label">Show:</span>
+        <button class="mview-btn active" onclick="setModelView('compare',this)">GFS + ECMWF</button>
+        <button class="mview-btn" onclick="setModelView('gfs',this)">GFS Only</button>
+        <button class="mview-btn" onclick="setModelView('ecmwf',this)">ECMWF Only</button>
+        <span id="model-run-label" style="font-family:'DM Mono',monospace;font-size:9px;color:var(--muted2);margin-left:auto;"></span>
+      </div>
+      <div class="model-legend">
+        <div class="mleg"><div class="mleg-dot" style="background:#4a9eff"></div>GFS (NCEP, 0.25°)</div>
+        <div class="mleg"><div class="mleg-dot" style="background:#ff6b4a"></div>ECMWF IFS (0.4°)</div>
+        <div class="mleg"><div class="mleg-dot" style="background:#2ecfaa"></div>Precipitation (bars)</div>
+      </div>
+      <div id="model-chart-status" class="model-status">
+        <span class="spin"></span>
+        <span>Select a region above to load GFS and ECMWF forecasts</span>
+      </div>
+      <div id="model-chart-grid" class="model-chart-grid" style="display:none;">
+        <div class="model-chart-card">
+          <div class="model-chart-label">
+            <span>Max Temperature (°C)</span>
+            <span id="model-temp-range" style="color:var(--muted2);"></span>
+          </div>
+          <div class="model-chart-wrap"><canvas id="mc-temp"></canvas></div>
+        </div>
+        <div class="model-chart-card">
+          <div class="model-chart-label">
+            <span>Min Temperature (°C)</span>
+          </div>
+          <div class="model-chart-wrap"><canvas id="mc-tmin"></canvas></div>
+        </div>
+        <div class="model-chart-card">
+          <div class="model-chart-label">
+            <span>Daily Precipitation (mm)</span>
+            <span id="model-precip-total" style="color:var(--teal);"></span>
+          </div>
+          <div class="model-chart-wrap"><canvas id="mc-precip"></canvas></div>
+        </div>
+        <div class="model-chart-card">
+          <div class="model-chart-label">
+            <span>GFS vs ECMWF Precip Difference (mm)</span>
+          </div>
+          <div class="model-chart-wrap"><canvas id="mc-diff"></canvas></div>
+        </div>
+      </div>
+    </div>
+
+    <!-- ── MAP VIEWER PANEL ── -->
+    <div id="model-maps-panel" style="display:none;">
+      <div class="map-controls">
+        <span class="map-ctrl-label">Model:</span>
+        <button class="mmap-btn active-model" onclick="setMapModel('ecmwf',this)">ECMWF</button>
+        <button class="mmap-btn" onclick="setMapModel('gfs',this)">GFS</button>
+        <span class="map-ctrl-label" style="margin-left:12px;">Overlay:</span>
+        <button class="mmap-btn active" onclick="setMapOverlay('rain',this)">Precipitation</button>
+        <button class="mmap-btn" onclick="setMapOverlay('temp',this)">Temperature</button>
+        <button class="mmap-btn" onclick="setMapOverlay('wind',this)">Wind</button>
+        <button class="mmap-btn" onclick="setMapOverlay('pressure',this)">Pressure</button>
+        <button class="mmap-btn" onclick="setMapOverlay('clouds',this)">Clouds</button>
+      </div>
+      <div class="windy-wrap">
+        <iframe id="windy-iframe" src="about:blank" title="Windy Model Viewer" allowfullscreen></iframe>
+      </div>
+      <div class="model-note">
+        Map powered by Windy.com · ECMWF IFS and GFS model data · Click the map to see point forecasts · Use Windy controls to step through forecast hours
+      </div>
+    </div>
+  </div>
+</div>
+
+<script>
+'use strict';
+
+const REGIONS = [
+  {id:'us_midwest',    region:'namerica', name:'US Corn Belt',       country:'Iowa, USA',         lat:41.99,lon:-93.62,  commodity:'Corn · Soybeans',       crop:'corn',   crops:['Corn (ZC)','Soybeans (ZS)'],      seasons:{plant:'Apr–May',harvest:'Sep–Oct'}},
+  {id:'us_plains',     region:'namerica', name:'US S.Plains (HRW)',  country:'Kansas, USA',        lat:38.69,lon:-98.32,  commodity:'HRW Wheat (KE)',         crop:'wheat',  crops:['HRW Wheat (KE)'],                 seasons:{plant:'Sep–Oct',harvest:'Jun–Jul'}},
+  {id:'us_dakotas',    region:'namerica', name:'US N.Plains',        country:'N.Dakota, USA',      lat:47.55,lon:-100.43, commodity:'Spring Wheat · Canola',  crop:'wheat',  crops:['Spring Wheat (MWH)','Canola'],    seasons:{plant:'Apr–May',harvest:'Aug–Sep'}},
+  {id:'us_delta',      region:'namerica', name:'US Mid-South',       country:'Mississippi, USA',   lat:33.44,lon:-90.13,  commodity:'Cotton · Rice',          crop:'softs',  crops:['Cotton (CT)','Rough Rice (ZR)'],  seasons:{plant:'Mar–Apr',harvest:'Sep–Oct'}},
+  {id:'canada_prairie',region:'namerica', name:'Canadian Prairies',  country:'Saskatchewan, CA',   lat:51.17,lon:-106.67, commodity:'Spring Wheat · Canola',  crop:'wheat',  crops:['Spring Wheat','Canola (RS)'],     seasons:{plant:'Apr–May',harvest:'Aug–Sep'}},
+  {id:'brazil_mt',     region:'samerica', name:'Mato Grosso',        country:'Brazil',             lat:-12.64,lon:-55.42, commodity:'Soybeans · Safrinha Corn',crop:'soy',    crops:['Soybeans (ZS)','Corn (ZC)'],      seasons:{plant:'Oct–Jan',harvest:'Feb–Apr'}},
+  {id:'brazil_pr',     region:'samerica', name:'Paraná',             country:'Brazil',             lat:-23.42,lon:-51.93, commodity:'Soybeans',               crop:'soy',    crops:['Soybeans (ZS)'],                  seasons:{plant:'Oct–Nov',harvest:'Feb–Mar'}},
+  {id:'argentina_pam', region:'samerica', name:'Argentine Pampas',   country:'Argentina',          lat:-34.61,lon:-60.97, commodity:'Soy · Corn · Wheat',     crop:'soy',    crops:['Soybeans (ZS)','Corn (ZC)','Wheat'],seasons:{plant:'Oct–Dec',harvest:'Mar–May'}},
+  {id:'ukraine',       region:'europe',   name:'Ukraine',            country:'Ukraine',            lat:50.45,lon:30.52,   commodity:'Winter Wheat · Corn',    crop:'wheat',  crops:['Winter Wheat (ZW)','Corn (ZC)'],  seasons:{plant:'Sep–Oct',harvest:'Jul–Sep'}},
+  {id:'russia_nc',     region:'europe',   name:'N.Caucasus',         country:'Russia',             lat:45.04,lon:38.98,   commodity:'Winter Wheat',           crop:'wheat',  crops:['Winter Wheat (ZW)'],              seasons:{plant:'Sep–Oct',harvest:'Jun–Jul'}},
+  {id:'russia_volga',  region:'europe',   name:'Volga Region',       country:'Russia',             lat:51.54,lon:46.00,   commodity:'Spring Wheat',           crop:'wheat',  crops:['Spring Wheat'],                   seasons:{plant:'Apr–May',harvest:'Aug–Sep'}},
+  {id:'france',        region:'europe',   name:'Beauce Plain',       country:'France',             lat:48.22,lon:1.89,    commodity:'Milling Wheat (EBM)',    crop:'wheat',  crops:['Euronext Wheat (EBM)'],           seasons:{plant:'Oct–Nov',harvest:'Jul–Aug'}},
+  {id:'romania',       region:'europe',   name:'Wallachia',          country:'Romania',            lat:44.43,lon:26.10,   commodity:'Wheat · Corn',           crop:'wheat',  crops:['Winter Wheat','Corn (ZC)'],       seasons:{plant:'Oct/Apr',harvest:'Jun–Sep'}},
+  {id:'kazakhstan',    region:'europe',   name:'N.Kazakhstan',       country:'Kazakhstan',         lat:51.18,lon:71.45,   commodity:'Spring Wheat',           crop:'wheat',  crops:['Spring Wheat'],                   seasons:{plant:'May',harvest:'Aug–Sep'}},
+  {id:'india_punjab',  region:'asia',     name:'Punjab',             country:'India',              lat:30.90,lon:75.86,   commodity:'Wheat · Rice',           crop:'wheat',  crops:['Wheat','Rice'],                   seasons:{plant:'Nov',harvest:'Mar–Apr'}},
+  {id:'china_north',   region:'asia',     name:'N.China Plain',      country:'China',              lat:35.86,lon:114.90,  commodity:'Winter Wheat · Corn',    crop:'wheat',  crops:['Winter Wheat','Corn'],             seasons:{plant:'Sep–Oct',harvest:'Jun–Oct'}},
+  {id:'australia_wa',  region:'asia',     name:'Western Australia',  country:'Australia',          lat:-31.95,lon:117.43, commodity:'Winter Wheat',           crop:'wheat',  crops:['ASX Wheat'],                      seasons:{plant:'Apr–Jun',harvest:'Oct–Dec'}},
+  {id:'australia_nsw', region:'asia',     name:'New South Wales',    country:'Australia',          lat:-33.87,lon:151.21, commodity:'Winter Wheat',           crop:'wheat',  crops:['ASX Wheat'],                      seasons:{plant:'Apr–Jun',harvest:'Oct–Dec'}},
+];
+
+const CROP_COLORS = {wheat:'#d4aa55',corn:'#c8853a',soy:'#2ecfaa',softs:'#a78bfa'};
+const AG_STATES = [
+  {code:'KS',name:'Kansas',    crop:'HRW Wheat'},
+  {code:'OK',name:'Oklahoma',  crop:'HRW Wheat'},
+  {code:'IA',name:'Iowa',      crop:'Corn/Soy'},
+  {code:'IL',name:'Illinois',  crop:'Corn/Soy'},
+  {code:'NE',name:'Nebraska',  crop:'Corn/Soy'},
+  {code:'MN',name:'Minnesota', crop:'Corn/Soy'},
+  {code:'ND',name:'N.Dakota',  crop:'Sp.Wheat'},
+  {code:'SD',name:'S.Dakota',  crop:'Corn/Soy'},
+  {code:'TX',name:'Texas',     crop:'Cotton/HRW'},
+  {code:'WI',name:'Wisconsin', crop:'Corn/Soy'},
+];
+
+let currentRegion = 'all';
+let weatherData   = {};
+let charts        = {};
+
+// ── STRESS DETECTION ──
+function detectStress(data, loc) {
+  const daily    = data.daily || {};
+  const maxTemps = daily.temperature_2m_max || [];
+  const minTemps = daily.temperature_2m_min || [];
+  const precip   = daily.precipitation_sum  || [];
+  const totalPrecip = precip.reduce((a,b)=>a+(b||0),0);
+  const maxTemp7 = Math.max(...maxTemps.slice(0,7).map(v=>v??-99));
+  const minTemp7 = Math.min(...minTemps.slice(0,7).map(v=>v??99));
+  const precip7  = precip.slice(0,7).reduce((a,b)=>a+(b||0),0);
+
+  const weatherBadges = [];
+  if (maxTemp7 > 35)      weatherBadges.push({cls:'b-heat',txt:'HEAT STRESS'});
+  else if (maxTemp7 > 30) weatherBadges.push({cls:'b-heat',txt:'WARM'});
+  if (minTemp7 < 0)       weatherBadges.push({cls:'b-cold',txt:'FROST RISK'});
+  else if (minTemp7 < 3)  weatherBadges.push({cls:'b-cold',txt:'COLD'});
+  if (precip7 < 3)        weatherBadges.push({cls:'b-dry', txt:'DRY'});
+  if (precip7 > 60)       weatherBadges.push({cls:'b-wet', txt:'EXCESSIVE RAIN'});
+  else if (precip7 > 30)  weatherBadges.push({cls:'b-wet', txt:'WET'});
+  if (weatherBadges.length===0) weatherBadges.push({cls:'b-normal',txt:'NORMAL'});
+
+  // Crop-specific risk assessment
+  const cropBadges = [];
+  const crops = loc.crops || [];
+  crops.forEach(crop => {
+    let risk = null;
+    const c = crop.toUpperCase();
+    if (c.includes('WHEAT')) {
+      if (minTemp7 < -2) risk = {cls:'b-crop-risk', txt:`⚠ ${crop} FROST`};
+      else if (precip7 < 3 && maxTemp7 > 28) risk = {cls:'b-crop-risk', txt:`⚠ ${crop} DROUGHT`};
+      else if (precip7 > 50) risk = {cls:'b-crop-watch', txt:`~ ${crop} QUALITY RISK`};
+    } else if (c.includes('CORN') || c.includes('ZC')) {
+      if (maxTemp7 > 35) risk = {cls:'b-crop-risk', txt:`⚠ ${crop} HEAT`};
+      else if (precip7 < 3) risk = {cls:'b-crop-watch', txt:`~ ${crop} DRY STRESS`};
+    } else if (c.includes('SOY') || c.includes('ZS')) {
+      if (maxTemp7 > 35) risk = {cls:'b-crop-risk', txt:`⚠ ${crop} POD FILL HEAT`};
+      else if (precip7 < 3) risk = {cls:'b-crop-watch', txt:`~ ${crop} DRY`};
+    } else if (c.includes('COTTON') || c.includes('CT')) {
+      if (precip7 > 40) risk = {cls:'b-crop-risk', txt:`⚠ ${crop} BOLL ROT RISK`};
+      else if (minTemp7 < 5) risk = {cls:'b-crop-risk', txt:`⚠ ${crop} COLD RISK`};
+    }
+    if (risk) cropBadges.push(risk);
+  });
+
+  return {weatherBadges, cropBadges, maxTemp7, minTemp7, precip7, totalPrecip};
+}
+
+function wmoDesc(code) {
+  if (!code) return 'Clear';
+  if (code===0) return 'Clear';
+  if (code<=3)  return 'Partly cloudy';
+  if (code<=49) return 'Fog / mist';
+  if (code<=59) return 'Drizzle';
+  if (code<=69) return 'Rain';
+  if (code<=79) return 'Snow / sleet';
+  if (code<=82) return 'Showers';
+  if (code<=86) return 'Snow showers';
+  return 'Thunderstorm';
+}
+
+// ── OPEN-METEO ──
+async function fetchWeather(loc) {
+  const url = `https://api.open-meteo.com/v1/forecast?latitude=${loc.lat}&longitude=${loc.lon}` +
+    `&daily=temperature_2m_max,temperature_2m_min,precipitation_sum,et0_fao_evapotranspiration` +
+    `&current=temperature_2m,relative_humidity_2m,precipitation,wind_speed_10m,weather_code` +
+    `&forecast_days=14&timezone=auto`;
+  const r = await fetch(url);
+  if (!r.ok) throw new Error(`HTTP ${r.status}`);
+  return r.json();
+}
+
+
+// ── REGION ALERT PANEL ──
+const REGION_CROPS = {
+  all:      {title:'All Regions', crops:[
+    {label:'Corn (ZC)',          ids:['us_midwest'],                     thresholds:{heatMax:35,dryMm:3}},
+    {label:'Soybeans (ZS)',      ids:['us_midwest','brazil_mt','brazil_pr','argentina_pam'], thresholds:{heatMax:35,dryMm:3}},
+    {label:'HRW Wheat (KE)',     ids:['us_plains'],                      thresholds:{frostMin:0,dryMm:3,heatMax:30}},
+    {label:'SRW Wheat (ZW)',     ids:['ukraine','russia_nc','france','romania'], thresholds:{frostMin:-2,dryMm:3,heatMax:30}},
+    {label:'Spring Wheat',       ids:['us_dakotas','canada_prairie','russia_volga','kazakhstan'], thresholds:{frostMin:0,dryMm:3}},
+    {label:'Euronext Wheat (EBM)',ids:['france'],                        thresholds:{frostMin:-2,dryMm:5}},
+    {label:'Cotton (CT)',        ids:['us_delta'],                       thresholds:{wetMm:40,coldMin:5}},
+  ]},
+  namerica: {title:'N.America', crops:[
+    {label:'Corn (ZC)',          ids:['us_midwest'],                     thresholds:{heatMax:35,dryMm:3}},
+    {label:'Soybeans (ZS)',      ids:['us_midwest'],                     thresholds:{heatMax:35,dryMm:3}},
+    {label:'HRW Wheat (KE)',     ids:['us_plains'],                      thresholds:{frostMin:0,dryMm:3,heatMax:30}},
+    {label:'Spring Wheat',       ids:['us_dakotas','canada_prairie'],    thresholds:{frostMin:0,dryMm:3}},
+    {label:'Cotton (CT)',        ids:['us_delta'],                       thresholds:{wetMm:40,coldMin:5}},
+    {label:'Canola',             ids:['canada_prairie'],                 thresholds:{frostMin:-2,dryMm:5}},
+  ]},
+  samerica: {title:'S.America', crops:[
+    {label:'Soybeans (ZS)',      ids:['brazil_mt','brazil_pr','argentina_pam'], thresholds:{heatMax:38,dryMm:5}},
+    {label:'Corn (ZC) Safrinha', ids:['brazil_mt'],                      thresholds:{heatMax:38,dryMm:5}},
+    {label:'Corn (ZC) Pampas',   ids:['argentina_pam'],                  thresholds:{heatMax:38,dryMm:5}},
+    {label:'Wheat (Argentina)',  ids:['argentina_pam'],                  thresholds:{frostMin:0,dryMm:3}},
+  ]},
+  europe:   {title:'Europe / Black Sea', crops:[
+    {label:'Winter Wheat (ZW)',  ids:['ukraine','russia_nc','france','romania'], thresholds:{frostMin:-2,dryMm:3,heatMax:30}},
+    {label:'Spring Wheat',       ids:['russia_volga','kazakhstan'],      thresholds:{frostMin:0,dryMm:3}},
+    {label:'Euronext Wheat (EBM)',ids:['france'],                        thresholds:{frostMin:-2,dryMm:5,wetMm:50}},
+    {label:'Corn (ZC)',          ids:['ukraine','romania'],              thresholds:{heatMax:35,dryMm:3}},
+  ]},
+  asia:     {title:'Asia / Pacific', crops:[
+    {label:'Wheat (India)',      ids:['india_punjab'],                   thresholds:{heatMax:35,dryMm:3}},
+    {label:'Winter Wheat (China)',ids:['china_north'],                   thresholds:{frostMin:-5,dryMm:3,heatMax:32}},
+    {label:'ASX Wheat (W.Aust)',  ids:['australia_wa'],                  thresholds:{dryMm:3,heatMax:38}},
+    {label:'ASX Wheat (NSW)',     ids:['australia_nsw'],                 thresholds:{dryMm:3,heatMax:38}},
+  ]},
+};
+
+function renderRegionAlerts() {
+  const panel = document.getElementById('region-alert-panel');
+  const rc = REGION_CROPS[currentRegion] || REGION_CROPS.all;
+
+  const items = rc.crops.map(cropDef => {
+    // Aggregate stress across all location IDs for this crop
+    let maxT=-99, minT=99, totalP=0, count=0;
+    cropDef.ids.forEach(id => {
+      const d = weatherData[id];
+      if (!d || d.error) return;
+      const s = detectStress(d, {crops:[]});
+      maxT = Math.max(maxT, s.maxTemp7);
+      minT = Math.min(minT, s.minTemp7);
+      totalP += s.precip7;
+      count++;
+    });
+    if (count === 0) return `<div class="rap-item"><div class="rap-crop">${cropDef.label}</div><div class="rap-status rs-warn">—</div><div class="rap-detail">No data</div></div>`;
+
+    const avgP = totalP / count;
+    const t = cropDef.thresholds;
+    let status = '✓ OK', cls = 'rs-ok', detail = `Max ${maxT.toFixed(1)}°C · Rain ${avgP.toFixed(1)}mm`;
+
+    if (t.frostMin !== undefined && minT < t.frostMin) {
+      status = '⚠ FROST RISK'; cls = 'rs-alert'; detail = `Min ${minT.toFixed(1)}°C — below ${t.frostMin}°C`;
+    } else if (t.heatMax !== undefined && maxT > t.heatMax) {
+      status = '⚠ HEAT STRESS'; cls = 'rs-alert'; detail = `Max ${maxT.toFixed(1)}°C — above ${t.heatMax}°C`;
+    } else if (t.wetMm !== undefined && avgP > t.wetMm) {
+      status = '⚠ EXCESSIVE RAIN'; cls = 'rs-alert'; detail = `7d avg ${avgP.toFixed(1)}mm`;
+    } else if (t.dryMm !== undefined && avgP < t.dryMm && maxT > 22) {
+      status = '~ DRY WATCH'; cls = 'rs-warn'; detail = `7d avg only ${avgP.toFixed(1)}mm`;
+    } else if (t.coldMin !== undefined && minT < t.coldMin) {
+      status = '~ COLD RISK'; cls = 'rs-warn'; detail = `Min ${minT.toFixed(1)}°C`;
+    } else if (t.dryMm !== undefined && avgP < t.dryMm * 2) {
+      status = '~ DRY WATCH'; cls = 'rs-warn'; detail = `7d avg ${avgP.toFixed(1)}mm`;
+    }
+
+    return `<div class="rap-item">
+      <div class="rap-crop">${cropDef.label}</div>
+      <div class="rap-status ${cls}">${status}</div>
+      <div class="rap-detail">${detail}</div>
+    </div>`;
+  }).join('');
+
+  panel.innerHTML = `<div class="rap">
+    <div class="rap-title">${rc.title} <span>Crop Risk Summary</span></div>
+    <div class="rap-grid">${items}</div>
+  </div>`;
+}
+
+// ── RENDER ──
+function setRegion(r, el) {
+  currentRegion = r;
+  document.querySelectorAll('.rtab').forEach(b=>b.classList.remove('active'));
+  el.classList.add('active');
+  const showDrought = r === 'all' || r === 'namerica';
+  document.getElementById('drought-section').style.display = showDrought ? '' : 'none';
+  renderRegionAlerts();
+  renderCards();
+}
+
+function renderCards() {
+  const grid = document.getElementById('weather-grid');
+  const locs = REGIONS.filter(r => currentRegion==='all' || r.region===currentRegion);
+  Object.values(charts).forEach(c=>{try{c.destroy();}catch(e){}});
+  charts = {};
+
+  grid.innerHTML = locs.map(loc => {
+    const d = weatherData[loc.id];
+    if (!d) return `<div class="w-card loading-card"><span class="spin"></span>${loc.name}</div>`;
+    if (d.error) return `<div class="w-card loading-card" style="color:var(--red)">⚠ ${loc.name}: ${d.error}</div>`;
+    const curr   = d.current||{};
+    const stress = detectStress(d, loc);
+    const cropCol = CROP_COLORS[loc.crop]||'#4a9eff';
+    const tempCls = stress.maxTemp7>35?'hot':'';
+    const precipCls = stress.precip7<3?'dry':stress.precip7>30?'wet':'';
+    const allBadges = [...stress.weatherBadges, ...stress.cropBadges];
+    const badgeHtml = allBadges.map(b=>`<span class="badge ${b.cls}">${b.txt}</span>`).join('');
+
+    return `<div class="w-card">
+      <div class="wc-top">
+        <div>
+          <div class="wc-region">${loc.country}</div>
+          <div class="wc-name">${loc.name}</div>
+          <div class="wc-commodity" style="color:${cropCol}">${loc.commodity}</div>
+          <div class="wc-commodity" style="color:var(--muted2);font-size:7.5px;margin-top:1px;">Plant: ${loc.seasons.plant} · Harvest: ${loc.seasons.harvest}</div>
+        </div>
+        <div class="wc-right">
+          <div class="wc-temp">${curr.temperature_2m != null ? curr.temperature_2m.toFixed(1) : '—'}°C</div>
+          <div class="wc-cond">${wmoDesc(curr.weather_code)}</div>
+        </div>
+      </div>
+      <div class="badge-row">${badgeHtml}</div>
+      <div class="wc-stats">
+        <div class="wcs"><div class="wcs-l">7d Max</div><div class="wcs-v ${tempCls}">${stress.maxTemp7.toFixed(1)}°C</div></div>
+        <div class="wcs"><div class="wcs-l">7d Rain</div><div class="wcs-v ${precipCls}">${stress.precip7.toFixed(1)}mm</div></div>
+        <div class="wcs"><div class="wcs-l">Humidity</div><div class="wcs-v">${curr.relative_humidity_2m??'—'}%</div></div>
+        <div class="wcs"><div class="wcs-l">7d Min</div><div class="wcs-v">${stress.minTemp7.toFixed(1)}°C</div></div>
+        <div class="wcs"><div class="wcs-l">14d Rain</div><div class="wcs-v">${stress.totalPrecip.toFixed(1)}mm</div></div>
+        <div class="wcs"><div class="wcs-l">Wind</div><div class="wcs-v">${(curr.wind_speed_10m??0).toFixed(1)} km/h</div></div>
+      </div>
+      <div class="chart-wrap"><canvas id="ch-${loc.id}"></canvas></div>
+    </div>`;
+  }).join('');
+
+  setTimeout(() => {
+    locs.forEach(loc => {
+      const d = weatherData[loc.id];
+      if (!d||d.error) return;
+      const ctx = document.getElementById(`ch-${loc.id}`);
+      if (!ctx) return;
+      const daily = d.daily||{};
+      const labels = (daily.time||[]).map(t=>{const dt=new Date(t);return`${dt.getDate()}/${dt.getMonth()+1}`;});
+      const cropCol = CROP_COLORS[loc.crop]||'#4a9eff';
+      charts[loc.id] = new Chart(ctx,{type:'bar',data:{labels,datasets:[
+        {label:'Rain mm',data:daily.precipitation_sum||[],backgroundColor:'rgba(46,207,170,0.55)',borderRadius:2,yAxisID:'yp'},
+        {label:'Max °C', data:daily.temperature_2m_max||[],type:'line',borderColor:cropCol,backgroundColor:'transparent',borderWidth:1.5,pointRadius:0,tension:0.3,yAxisID:'yt'}
+      ]},options:{responsive:true,maintainAspectRatio:false,animation:false,
+        plugins:{legend:{display:false},tooltip:{mode:'index',intersect:false,backgroundColor:'rgba(28,32,48,0.95)',titleColor:'#e8eaf0',bodyColor:'#8890a4',borderColor:'rgba(255,255,255,0.14)',borderWidth:1}},
+        scales:{
+          x:{ticks:{color:'rgba(136,144,164,0.7)',font:{size:8},maxTicksLimit:7},grid:{display:false},border:{display:false}},
+          yt:{position:'right',ticks:{color:'rgba(136,144,164,0.7)',font:{size:8}},grid:{color:'rgba(255,255,255,0.05)'},border:{display:false}},
+          yp:{position:'left',ticks:{color:'rgba(46,207,170,0.7)',font:{size:8}},grid:{display:false},border:{display:false}}
+        }}});
+    });
+  },50);
+
+  updateSummary();
+}
+
+function updateSummary() {
+  const loaded = Object.keys(weatherData).filter(k=>!weatherData[k].error).length;
+  document.getElementById('s-loaded').textContent = `${loaded}/${REGIONS.length}`;
+  let heat=0,dry=0,frost=0,cropAlert=0;
+  REGIONS.forEach(loc=>{
+    const d=weatherData[loc.id];
+    if(!d||d.error) return;
+    const s=detectStress(d,loc);
+    if(s.maxTemp7>35) heat++;
+    if(s.precip7<3)   dry++;
+    if(s.minTemp7<0)  frost++;
+    if(s.cropBadges.some(b=>b.cls==='b-crop-risk')) cropAlert++;
+  });
+  const h=document.getElementById('s-heat'); h.textContent=heat; h.className=`sum-v ${heat>0?'alert':'ok'}`;
+  document.getElementById('s-dry').textContent=dry;
+  document.getElementById('s-frost').textContent=frost;
+  const c=document.getElementById('s-crop'); c.textContent=cropAlert; c.className=`sum-v ${cropAlert>0?'alert':'ok'}`;
+}
+
+// ── MODEL RUNS ─────────────────────────────────────────────────────────
+let _modelRegion = null;
+let _modelView   = 'compare'; // 'compare' | 'gfs' | 'ecmwf'
+let _mapModel    = 'ecmwf';
+let _mapOverlay  = 'rain';
+let _modelTab    = 'charts';
+let _mcCharts    = {};
+let _modelFetching = false;
+
+// Build region buttons for model section
+function buildModelRegionBar(){
+  const bar = document.getElementById('model-region-bar');
+  if(!bar) return;
+  bar.innerHTML = REGIONS.map((r,i) =>
+    `<button class="mregion-btn${i===0?' active':''}" onclick="selectModelRegion('${r.id}',this)">${r.name}</button>`
+  ).join('');
+  // Load first region
+  selectModelRegion(REGIONS[0].id, bar.firstElementChild);
+}
+
+async function selectModelRegion(id, btn){
+  if(btn){
+    document.querySelectorAll('.mregion-btn').forEach(b=>b.classList.remove('active'));
+    btn.classList.add('active');
+  }
+  _modelRegion = REGIONS.find(r=>r.id===id);
+  if(!_modelRegion) return;
+
+  // Update windy map
+  updateWindyIframe();
+
+  // Fetch model data if on charts tab
+  if(_modelTab === 'charts') await loadModelCharts();
+}
+
+async function loadModelCharts(){
+  if(!_modelRegion) return;
+  if(_modelFetching) return;
+  _modelFetching = true;
+
+  const statusEl = document.getElementById('model-chart-status');
+  const gridEl   = document.getElementById('model-chart-grid');
+  const runLabel = document.getElementById('model-run-label');
+  const statusBar= document.getElementById('model-run-status');
+
+  statusEl.style.display = 'flex';
+  statusEl.innerHTML = '<span class="spin"></span><span>Fetching GFS & ECMWF data for ' + _modelRegion.name + '…</span>';
+  gridEl.style.display = 'none';
+
+  try {
+    const base = `https://api.open-meteo.com/v1/forecast?latitude=${_modelRegion.lat}&longitude=${_modelRegion.lon}`;
+    const vars = `&daily=temperature_2m_max,temperature_2m_min,precipitation_sum&forecast_days=10&timezone=auto`;
+
+    const [gfsR, ecmwfR] = await Promise.all([
+      fetch(base + vars + '&models=gfs_seamless').then(r=>r.ok ? r.json() : null),
+      fetch(base + vars + '&models=ecmwf_ifs04').then(r=>r.ok ? r.json() : null)
+    ]);
+
+    if(!gfsR && !ecmwfR){ throw new Error('Both model endpoints failed'); }
+
+    statusEl.style.display = 'none';
+    gridEl.style.display   = 'grid';
+
+    const now = new Date();
+    runLabel.textContent = `Run: ${now.toLocaleDateString('en-GB',{day:'numeric',month:'short'})} ${now.getHours()}Z`;
+    statusBar.textContent = `${_modelRegion.name} — ${_modelRegion.commodity} | GFS & ECMWF IFS | 10-day`;
+
+    renderModelCharts(gfsR, ecmwfR);
+
+  } catch(e){
+    statusEl.innerHTML = `<span style="color:var(--coral)">Model fetch failed: ${e.message}</span>`;
+    statusEl.style.display = 'flex';
+  }
+  _modelFetching = false;
+}
+
+function renderModelCharts(gfs, ecmwf){
+  const show = _modelView;
+  const showGfs   = show === 'compare' || show === 'gfs';
+  const showEcmwf = show === 'compare' || show === 'ecmwf';
+
+  // Build labels from whichever model has data
+  const src  = gfs || ecmwf;
+  const times = src?.daily?.time || [];
+  const labels = times.map(t => { const d=new Date(t); return `${d.getDate()}/${d.getMonth()+1}`; });
+
+  const gfsTmax  = gfs?.daily?.temperature_2m_max    || [];
+  const gfsTmin  = gfs?.daily?.temperature_2m_min    || [];
+  const gfsPrecip= gfs?.daily?.precipitation_sum     || [];
+  const emTmax   = ecmwf?.daily?.temperature_2m_max  || [];
+  const emTmin   = ecmwf?.daily?.temperature_2m_min  || [];
+  const emPrecip = ecmwf?.daily?.precipitation_sum   || [];
+
+  // Precip diff (GFS - ECMWF)
+  const diffPrecip = labels.map((_,i) => {
+    const g = gfsPrecip[i] ?? null;
+    const e = emPrecip[i]  ?? null;
+    return (g !== null && e !== null) ? +(g - e).toFixed(1) : null;
+  });
+
+  // Precip totals
+  const gfsTotal  = gfsPrecip.reduce((a,v)=>a+(v||0),0).toFixed(1);
+  const emTotal   = emPrecip.reduce((a,v)=>a+(v||0),0).toFixed(1);
+  const precTotalEl = document.getElementById('model-precip-total');
+  if(precTotalEl) precTotalEl.textContent = showGfs&&showEcmwf ? `GFS ${gfsTotal}mm · EM ${emTotal}mm` : '';
+
+  // Max temp range annotation
+  const allMax = [...(showGfs?gfsTmax:[]), ...(showEcmwf?emTmax:[])].filter(v=>v!=null);
+  const tempRangeEl = document.getElementById('model-temp-range');
+  if(tempRangeEl && allMax.length)
+    tempRangeEl.textContent = `${Math.min(...allMax).toFixed(1)}–${Math.max(...allMax).toFixed(1)}°C`;
+
+  const chartDefs = [
+    {id:'mc-temp',   type:'line', label:'Max Temperature (°C)',
+      datasets: [
+        showGfs   && {label:'GFS Tmax',   data:gfsTmax,  borderColor:'#4a9eff', backgroundColor:'rgba(74,158,255,0.08)', borderWidth:2, pointRadius:2, tension:0.3, fill:true},
+        showEcmwf && {label:'ECMWF Tmax', data:emTmax,   borderColor:'#ff6b4a', backgroundColor:'rgba(255,107,74,0.06)', borderWidth:2, pointRadius:2, tension:0.3, fill:false, borderDash:[4,3]}
+      ].filter(Boolean),
+      yAxisLabel:'°C'},
+    {id:'mc-tmin',   type:'line', label:'Min Temperature (°C)',
+      datasets: [
+        showGfs   && {label:'GFS Tmin',   data:gfsTmin,  borderColor:'#4a9eff', backgroundColor:'transparent', borderWidth:1.5, pointRadius:2, tension:0.3},
+        showEcmwf && {label:'ECMWF Tmin', data:emTmin,   borderColor:'#ff6b4a', backgroundColor:'transparent', borderWidth:1.5, pointRadius:2, tension:0.3, borderDash:[4,3]}
+      ].filter(Boolean),
+      yAxisLabel:'°C'},
+    {id:'mc-precip', type:'bar',  label:'Precipitation (mm)',
+      datasets: [
+        showGfs   && {label:'GFS Precip',   data:gfsPrecip, backgroundColor:'rgba(74,158,255,0.6)',  borderRadius:2},
+        showEcmwf && {label:'ECMWF Precip', data:emPrecip,  backgroundColor:'rgba(255,107,74,0.55)', borderRadius:2}
+      ].filter(Boolean),
+      yAxisLabel:'mm'},
+    {id:'mc-diff',   type:'bar',  label:'GFS − ECMWF Precip Difference (mm)',
+      datasets: [{
+        label:'Difference',
+        data: diffPrecip,
+        backgroundColor: diffPrecip.map(v=>v===null?'transparent':v>0?'rgba(74,158,255,0.65)':'rgba(255,107,74,0.65)'),
+        borderRadius:2
+      }],
+      yAxisLabel:'mm'}
+  ];
+
+  const gridOpts = {color:'rgba(255,255,255,0.05)'};
+  const tickOpts = {color:'#8890a4', font:{family:"'DM Mono',monospace",size:8}};
+  const tooltipOpts = {backgroundColor:'#141720',borderColor:'rgba(255,255,255,0.14)',borderWidth:1,titleColor:'#d4aa55',bodyColor:'#e8eaf0',titleFont:{family:"'DM Mono',monospace",size:9},bodyFont:{family:"'DM Mono',monospace",size:9},padding:8};
+
+  chartDefs.forEach(def => {
+    const ctx = document.getElementById(def.id);
+    if(!ctx) return;
+    if(_mcCharts[def.id]){ _mcCharts[def.id].destroy(); }
+    _mcCharts[def.id] = new Chart(ctx, {
+      type: def.type,
+      data: {labels, datasets: def.datasets},
+      options: {
+        responsive:true, maintainAspectRatio:false, animation:false,
+        plugins:{
+          legend:{display: def.datasets.length > 1, labels:{color:'#8890a4',font:{family:"'DM Mono',monospace",size:8},boxWidth:20,padding:8}},
+          tooltip: tooltipOpts
+        },
+        scales:{
+          x:{ticks:{...tickOpts,maxTicksLimit:10,maxRotation:0}, grid:gridOpts, border:{display:false}},
+          y:{title:{display:true,text:def.yAxisLabel,color:'#8890a4',font:{family:"'DM Mono',monospace",size:8}},
+             ticks:tickOpts, grid:gridOpts, border:{display:false}}
+        }
+      }
+    });
+  });
+}
+
+function setModelView(v, btn){
+  _modelView = v;
+  document.querySelectorAll('.mview-btn').forEach(b=>b.classList.remove('active'));
+  if(btn) btn.classList.add('active');
+  if(_modelRegion) loadModelCharts();
+}
+
+function setModelTab(tab, btn){
+  _modelTab = tab;
+  document.querySelectorAll('.mtab').forEach(b=>b.classList.remove('active'));
+  if(btn) btn.classList.add('active');
+  const chartsPanel = document.getElementById('model-charts-panel');
+  const mapsPanel   = document.getElementById('model-maps-panel');
+  if(chartsPanel) chartsPanel.style.display = tab==='charts' ? '' : 'none';
+  if(mapsPanel)   mapsPanel.style.display   = tab==='maps'   ? '' : 'none';
+  if(tab==='maps')   updateWindyIframe();
+  if(tab==='charts' && _modelRegion && !_mcCharts['mc-temp']) loadModelCharts();
+}
+
+function setMapModel(model, btn){
+  _mapModel = model;
+  document.querySelectorAll('.mmap-btn.active-model').forEach(b=>b.classList.remove('active-model'));
+  if(btn) btn.classList.add('active-model');
+  updateWindyIframe();
+}
+
+function setMapOverlay(overlay, btn){
+  _mapOverlay = overlay;
+  document.querySelectorAll('.mmap-btn.active').forEach(b=>b.classList.remove('active'));
+  if(btn) btn.classList.add('active');
+  updateWindyIframe();
+}
+
+function updateWindyIframe(){
+  const iframe = document.getElementById('windy-iframe');
+  if(!iframe) return;
+  const loc = _modelRegion || REGIONS[0];
+  // Zoom level: larger regions get lower zoom
+  const zoom = loc.region === 'namerica' ? 4 : loc.region === 'samerica' ? 4 : loc.region === 'europe' ? 5 : 4;
+  const url = `https://embed.windy.com/embed.html`
+    + `?lat=${loc.lat}&lon=${loc.lon}`
+    + `&detailLat=${loc.lat}&detailLon=${loc.lon}`
+    + `&zoom=${zoom}`
+    + `&level=surface`
+    + `&overlay=${_mapOverlay}`
+    + `&product=${_mapModel}`
+    + `&menu=&message=&marker=&calendar=now&pressure=`
+    + `&type=map&location=coordinates&detail=`
+    + `&metricWind=default&metricTemp=default&radarRange=-1`;
+  iframe.src = url;
+}
+
+// Initialise model section after page loads
+function initModelSection(){
+  buildModelRegionBar();
+}
+
+async function loadAll() {
+  document.getElementById('status-txt').textContent='Fetching…';
+  document.getElementById('live-dot').style.background='var(--gold)';
+  const batch=4;
+  for(let i=0;i<REGIONS.length;i+=batch){
+    await Promise.all(REGIONS.slice(i,i+batch).map(async loc=>{
+      try{ weatherData[loc.id]=await fetchWeather(loc); }
+      catch(e){ weatherData[loc.id]={error:e.message}; }
+    }));
+    renderCards();
+    renderRegionAlerts();
+  }
+  const loaded=Object.keys(weatherData).filter(k=>!weatherData[k].error).length;
+  document.getElementById('status-txt').textContent=`Live · ${loaded}/${REGIONS.length}`;
+  document.getElementById('live-dot').style.background='var(--teal)';
+  document.getElementById('last-updated').textContent=`Updated ${new Date().toLocaleTimeString('en-GB')} · Open-Meteo · 14-day forecasts`;
+}
+
+loadAll();
+setInterval(loadAll, 30*60*1000);
+initModelSection();
+</script>
+</body>
+</html>
