@@ -316,6 +316,54 @@
 .ta-form-field input,.ta-form-field select,.ta-form-field textarea { background:var(--card2); border:1px solid var(--border); color:var(--text); padding:8px 10px; border-radius:5px; font-family:"DM Mono",monospace; font-size:12px; outline:none; }
 @media(max-width:640px){ .ta-grid{grid-template-columns:1fr;} .ta-levels{grid-template-columns:1fr 1fr;} .ta-form-grid{grid-template-columns:1fr;} }
 
+.pin-badge{display:inline-block;font-family:'DM Mono',monospace;font-size:8px;
+color:var(--gold2);background:rgba(212,170,85,0.1);border:1px solid rgba(212,170,85,0.25);
+padding:2px 8px;border-radius:3px;margin-bottom:6px;letter-spacing:0.06em;text-transform:uppercase;}
+.post-card.pinned{border-color:rgba(212,170,85,0.3);background:linear-gradient(135deg,var(--card),rgba(212,170,85,0.03));}
+
+/* ── ABOUT & SERVICES PAGE ── */
+.static-about-page{max-width:900px;margin:0 auto;padding:36px 28px 56px;}
+.about-section-tag{font-family:'DM Mono',monospace;font-size:8.5px;letter-spacing:0.18em;color:var(--blue);text-transform:uppercase;margin-bottom:8px;}
+.about-section-title{font-family:'DM Serif Display',serif;font-size:28px;color:var(--text);line-height:1.1;margin-bottom:6px;}
+.about-section-title span{color:var(--blue);}
+.about-section-sub{font-family:'DM Mono',monospace;font-size:10px;color:var(--muted2);margin-bottom:28px;}
+.about-divider{height:1px;background:var(--border);margin:36px 0;}
+.static-about-page p{color:var(--muted);font-size:13.5px;line-height:1.75;margin-bottom:14px;}
+.stat-strip{display:grid;grid-template-columns:repeat(auto-fill,minmax(150px,1fr));gap:10px;margin:24px 0;}
+.stat-strip .stat{background:var(--card);border:1px solid var(--border);border-radius:6px;padding:14px 16px;}
+.stat-strip .stat .stat-v{font-family:'DM Serif Display',serif;font-size:24px;color:var(--blue);line-height:1;}
+.stat-strip .stat .stat-l{font-family:'DM Mono',monospace;font-size:9px;color:var(--muted2);text-transform:uppercase;letter-spacing:0.06em;margin-top:5px;}
+.cred-row{display:flex;gap:8px;flex-wrap:wrap;margin:16px 0;}
+.cred{font-family:'DM Mono',monospace;font-size:9px;color:var(--gold2);background:rgba(212,170,85,0.1);border:1px solid rgba(212,170,85,0.2);padding:4px 10px;border-radius:3px;letter-spacing:0.06em;text-transform:uppercase;}
+.exp-grid{display:grid;grid-template-columns:1fr 1fr;gap:10px;margin:20px 0;}
+.exp-card{background:var(--card);border:1px solid var(--border);border-radius:8px;padding:16px 18px;}
+.exp-card-title{font-family:'DM Mono',monospace;font-size:9px;color:var(--blue);text-transform:uppercase;letter-spacing:0.1em;margin-bottom:10px;}
+.exp-card ul{list-style:none;padding:0;}
+.exp-card ul li{position:relative;padding:4px 0 4px 14px;font-size:12.5px;color:var(--muted);border-bottom:1px solid var(--border);}
+.exp-card ul li:last-child{border-bottom:none;padding-bottom:0;}
+.exp-card ul li::before{content:'—';position:absolute;left:0;color:var(--gold2);font-family:'DM Mono',monospace;font-size:10px;}
+.strand-wrap{display:flex;flex-direction:column;gap:12px;margin:20px 0;}
+.strand{background:var(--card);border:1px solid var(--border);border-radius:8px;overflow:hidden;}
+.strand-header{padding:14px 20px;border-bottom:1px solid var(--border);background:var(--card2);display:flex;align-items:center;gap:14px;}
+.strand-icon{font-size:20px;flex-shrink:0;}
+.strand-title{font-family:'DM Serif Display',serif;font-size:16px;color:var(--text);}
+.strand-label{font-family:'DM Mono',monospace;font-size:8px;color:var(--blue);text-transform:uppercase;letter-spacing:0.1em;margin-top:2px;}
+.strand-body{padding:16px 20px;}
+.strand-body p{font-size:13px;color:var(--muted);margin-bottom:12px;}
+.strand-body p:last-child{margin-bottom:0;}
+.strand-items{list-style:none;padding:0;display:grid;grid-template-columns:1fr 1fr;gap:4px;}
+.strand-items li{position:relative;padding:5px 0 5px 14px;font-size:12px;color:var(--muted);border-bottom:1px solid var(--border);}
+.strand-items li:last-child{border-bottom:none;}
+.strand-items li::before{content:'—';position:absolute;left:0;color:var(--gold2);font-family:'DM Mono',monospace;font-size:10px;}
+.market-tags{display:flex;gap:6px;flex-wrap:wrap;margin:8px 0 16px;}
+.market-tag{font-family:'DM Mono',monospace;font-size:9px;padding:4px 10px;border-radius:3px;letter-spacing:0.04em;}
+.mt-blue{color:var(--blue);background:rgba(74,158,255,0.1);border:1px solid rgba(74,158,255,0.2);}
+.mt-teal{color:var(--teal);background:rgba(46,207,170,0.1);border:1px solid rgba(46,207,170,0.2);}
+.mt-gold{color:var(--gold2);background:rgba(212,170,85,0.1);border:1px solid rgba(212,170,85,0.2);}
+.mt-coral{color:var(--coral);background:rgba(255,107,74,0.1);border:1px solid rgba(255,107,74,0.2);}
+.mkt-label{font-family:'DM Mono',monospace;font-size:9px;color:var(--muted2);text-transform:uppercase;letter-spacing:0.08em;margin:12px 0 6px;}
+@media(max-width:700px){.exp-grid{grid-template-columns:1fr;}.strand-items{grid-template-columns:1fr;}}
+
 </style>
 </head>
 <body>
@@ -434,25 +482,62 @@
   </div>
 
   <!-- Services -->
-  <div id="tab-services" class="hidden protected">
-    <div class="static-wrap">
-      <h2>Services</h2><div class="static-rule"></div>
-      <p>JHD Commodity Advisors provides specialist advisory and broking services across agricultural commodity markets, combining deep market knowledge with 14+ years of hands-on trading and broking experience.</p>
-      <div class="service-cards">
-        <div class="service-card"><div class="sc-icon">📊</div><h4>Market Commentary</h4><p>Regular in-depth analysis across grains, oilseeds and soft commodities with actionable trade ideas.</p></div>
-        <div class="service-card"><div class="sc-icon">🌾</div><h4>Physical Cargo Procurement</h4><p>Specialist procurement advisory for agricultural cargoes, covering origin selection, basis management and logistics.</p></div>
-        <div class="service-card"><div class="sc-icon">📈</div><h4>Derivatives Broking</h4><p>Futures and options execution and strategy across CBOT, Euronext and CME agricultural contracts.</p></div>
-        <div class="service-card"><div class="sc-icon">🔍</div><h4>Research &amp; Analysis</h4><p>Bespoke fundamental and technical research reports tailored to your risk exposure and commercial needs.</p></div>
+    <div id="tab-services" class="hidden">
+    <div class="static-about-page">
+      <div class="about-section-tag">JHD Commodity Advisors · About</div>
+      <div class="about-section-title">About <span>Us</span></div>
+      <div class="about-section-sub">London, UK · FCA Regulated · NFA Series 3 Qualified</div>
+      <p>JHD Commodity Advisors is a London-based agricultural commodity research and advisory platform founded by <strong style="color:var(--text);">James Day</strong> — an agricultural commodities specialist with over <strong style="color:var(--text);">14 years of experience</strong> spanning physical procurement, derivatives trading, risk management and market intelligence across global grain and oilseed markets.</p>
+      <p>The platform was built to address a genuine gap in the market: professional-grade agricultural research tools and market intelligence, made accessible to individual traders, analysts, merchandisers and brokers without an institutional price tag.</p>
+      <p>Alongside the research platform, JHD Commodity Advisors provides a range of professional services to commodity-exposed businesses, trading houses and market participants — drawing on a deep network across global origins, end-user relationships and a consistent track record of managing risk and developing scalable commodity trading strategies.</p>
+      <div class="cred-row">
+        <span class="cred">FCA Regulated</span><span class="cred">NFA Series 3</span><span class="cred">GAFTA</span><span class="cred">FOSFA</span><span class="cred">ISDA / CSA</span><span class="cred">ANEC</span>
       </div>
-      <h3>Who We Work With</h3>
-      <ul>
-        <li>Agricultural commodity trading houses</li>
-        <li>Commodity hedge funds and family offices</li>
-        <li>Food manufacturers and processors</li>
-        <li>Grain origination businesses</li>
-        <li>Livestock and feed producers</li>
-      </ul>
-      <div class="disclaimer-box">All services are provided on a professional basis. Nothing on this platform constitutes investment advice. Past performance is not indicative of future results.</div>
+      <div class="stat-strip">
+        <div class="stat"><div class="stat-v">&gt;$5bn</div><div class="stat-l">Physical Purchases</div></div>
+        <div class="stat"><div class="stat-v">1.5 MMT</div><div class="stat-l">Annual Grain Volume</div></div>
+        <div class="stat"><div class="stat-v">&gt;$400m</div><div class="stat-l">Trade Finance Secured</div></div>
+        <div class="stat"><div class="stat-v">14+</div><div class="stat-l">Years Experience</div></div>
+        <div class="stat"><div class="stat-v">15+</div><div class="stat-l">Active Origin Networks</div></div>
+        <div class="stat"><div class="stat-v">Zero</div><div class="stat-l">Defaults</div></div>
+      </div>
+      <div class="exp-grid">
+        <div class="exp-card"><div class="exp-card-title">Physical Markets</div><ul><li>Wheat, Corn, Barley, Pulses</li><li>Soybeans, Canola, Veg Oils, Feedstuffs</li><li>FOB Santos, Upriver Argentina, USG, PNW</li><li>Full Panamax &amp; Handysize execution</li><li>Multi-origin and split-discharge expertise</li><li>Tier-1 APAC end-user relationships</li></ul></div>
+        <div class="exp-card"><div class="exp-card-title">Derivatives &amp; Risk</div><ul><li>CME / CBOT, MGEX, ICE, Euronext</li><li>Futures and listed options</li><li>Inter-commodity and calendar spreads</li><li>Physical contract hedging</li><li>FX exposure management</li><li>OTC and structured hedging</li></ul></div>
+        <div class="exp-card"><div class="exp-card-title">Origins Coverage</div><ul><li>Australia, USA, Canada</li><li>Brazil, Argentina</li><li>Ukraine, Black Sea, Romania</li><li>India, Kazakhstan</li><li>China &amp; APAC buy-side network</li></ul></div>
+        <div class="exp-card"><div class="exp-card-title">Research &amp; Intelligence</div><ul><li>Weekly grain &amp; oilseed commentary</li><li>CFTC COT positioning analysis</li><li>WASDE supply &amp; demand interpretation</li><li>FOB price data across origins</li><li>Export sales pace analysis</li><li>Agricultural weather &amp; crop risk</li></ul></div>
+      </div>
+      <div class="about-divider"></div>
+      <div class="about-section-tag">JHD Commodity Advisors · Services</div>
+      <div class="about-section-title">Our <span>Services</span></div>
+      <div class="about-section-sub">Three distinct strands · Research · Advisory · Trading</div>
+      <p>JHD operates across three clearly defined service strands — each drawing on the same deep market knowledge but designed to serve different needs.</p>
+      <div class="strand-wrap">
+        <div class="strand">
+          <div class="strand-header"><div class="strand-icon">📊</div><div><div class="strand-title">Research Platform</div><div class="strand-label">JHD Commodity Advisors · Public Platform</div></div></div>
+          <div class="strand-body"><p>Professional-grade agricultural market intelligence, live data analytics and original weekly commentary — free to join.</p><ul class="strand-items"><li>Weekly wheat &amp; grain commentary</li><li>Live CFTC COT positioning dashboards</li><li>WASDE supply &amp; demand analytics</li><li>Weekly export sales data</li><li>FOB price data across 6 commodities</li><li>Agricultural weather — 19 global regions</li><li>Options analytics tool</li><li>Active community of market participants</li></ul></div>
+        </div>
+        <div class="strand">
+          <div class="strand-header"><div class="strand-icon">🌾</div><div><div class="strand-title">Advisory Services</div><div class="strand-label">JHD Commodity Advisors · Professional Services</div></div></div>
+          <div class="strand-body"><p>Independent advisory services for commodity-exposed businesses, trading houses and market participants — bespoke engagements covering market strategy, procurement, hedging and trade execution.</p><ul class="strand-items"><li>Commodity market advisory</li><li>Procurement strategy &amp; market entry</li><li>Physical commodity broking</li><li>Hedging using listed futures and options</li><li>Trade finance &amp; procurement structuring</li><li>GAFTA / FOSFA contract frameworks</li><li>Origin diversification strategy</li><li>Counterparty &amp; supplier onboarding</li></ul></div>
+        </div>
+        <div class="strand">
+          <div class="strand-header"><div class="strand-icon">📈</div><div><div class="strand-title">Discretionary Trading</div><div class="strand-label">JHD Commodity Advisors · Managed Accounts</div></div></div>
+          <div class="strand-body"><p>Discretionary managed account arrangements considered on a selective basis, introduced through direct referral only. Fundamentally-driven agricultural derivatives strategies across major global exchanges.</p><ul class="strand-items"><li>Fundamentally-driven strategies</li><li>Spread and relative value trading</li><li>Inter-commodity &amp; calendar spreads</li><li>Listed options strategies</li><li>CME, MGEX and ICE markets</li><li>Grain and oilseed focus</li></ul></div>
+        </div>
+      </div>
+      <div class="about-divider"></div>
+      <div class="about-section-tag">Markets &amp; Instruments</div>
+      <div class="mkt-label">Commodities</div>
+      <div class="market-tags"><span class="market-tag mt-blue">Wheat (SRW · HRW · DNS · Milling)</span><span class="market-tag mt-blue">Corn</span><span class="market-tag mt-blue">Soybeans</span><span class="market-tag mt-blue">Soybean Meal</span><span class="market-tag mt-blue">Soybean Oil</span><span class="market-tag mt-blue">Canola / Rapeseed</span><span class="market-tag mt-blue">Barley</span><span class="market-tag mt-blue">Pulses</span><span class="market-tag mt-blue">Palm Oil</span></div>
+      <div class="mkt-label">Exchanges</div>
+      <div class="market-tags"><span class="market-tag mt-teal">CME / CBOT</span><span class="market-tag mt-teal">MGEX</span><span class="market-tag mt-teal">ICE Futures US</span><span class="market-tag mt-teal">ICE Futures Europe</span><span class="market-tag mt-teal">Euronext Paris (MATIF)</span></div>
+      <div class="mkt-label">Instruments</div>
+      <div class="market-tags"><span class="market-tag mt-gold">Futures</span><span class="market-tag mt-gold">Listed Options</span><span class="market-tag mt-gold">Physical Spreads</span><span class="market-tag mt-gold">FOB Paper</span><span class="market-tag mt-gold">OTC Hedging</span><span class="market-tag mt-gold">Calendar Spreads</span><span class="market-tag mt-gold">Inter-Commodity Spreads</span></div>
+      <div class="mkt-label">Contract Frameworks</div>
+      <div class="market-tags"><span class="market-tag mt-coral">GAFTA</span><span class="market-tag mt-coral">FOSFA</span><span class="market-tag mt-coral">ANEC</span><span class="market-tag mt-coral">ISDA / CSA</span></div>
+      <div class="about-divider"></div>
+      <p style="font-size:12px;color:var(--muted2);font-family:'DM Mono',monospace;line-height:1.7;">JHD Commodity Advisors is a trading name of James Day. FCA regulated. NFA Series 3 qualified. All research and commentary is produced for informational purposes only and does not constitute investment advice. Past performance is not indicative of future results. Commodity trading involves substantial risk of loss.</p>
     </div>
   </div>
 
@@ -472,28 +557,62 @@
   </div>
 
   <!-- About -->
-  <div id="tab-about" class="hidden protected">
-    <div class="static-wrap">
-      <h2>About Us</h2><div class="static-rule"></div>
-      <p>JHD Commodity Advisors is a specialist agricultural commodity advisory business providing market intelligence, research and broking services to trading houses, hedge funds and commercial operators across global grain, oilseed and soft commodity markets.</p>
-      <div class="about-bio">
-        <div class="about-avatar">JD</div>
-        <div class="about-bio-text">
-          <h3>James Day</h3>
-          <div class="role">Senior Agricultural Commodity Broker &amp; Advisor</div>
-          <p>James brings over 14 years of experience in agricultural commodity trading and broking, spanning physical cargo procurement and derivatives broking across grains, oilseeds and soft commodities. His career includes senior roles at TP ICAP, City Group of Industries and Condor Shipping Ltd, with deep expertise in CBOT, Euronext and CME agricultural markets.</p>
+    <div id="tab-about" class="hidden">
+    <div class="static-about-page">
+      <div class="about-section-tag">JHD Commodity Advisors · About</div>
+      <div class="about-section-title">About <span>Us</span></div>
+      <div class="about-section-sub">London, UK · FCA Regulated · NFA Series 3 Qualified</div>
+      <p>JHD Commodity Advisors is a London-based agricultural commodity research and advisory platform founded by <strong style="color:var(--text);">James Day</strong> — an agricultural commodities specialist with over <strong style="color:var(--text);">14 years of experience</strong> spanning physical procurement, derivatives trading, risk management and market intelligence across global grain and oilseed markets.</p>
+      <p>The platform was built to address a genuine gap in the market: professional-grade agricultural research tools and market intelligence, made accessible to individual traders, analysts, merchandisers and brokers without an institutional price tag.</p>
+      <p>Alongside the research platform, JHD Commodity Advisors provides a range of professional services to commodity-exposed businesses, trading houses and market participants — drawing on a deep network across global origins, end-user relationships and a consistent track record of managing risk and developing scalable commodity trading strategies.</p>
+      <div class="cred-row">
+        <span class="cred">FCA Regulated</span><span class="cred">NFA Series 3</span><span class="cred">GAFTA</span><span class="cred">FOSFA</span><span class="cred">ISDA / CSA</span><span class="cred">ANEC</span>
+      </div>
+      <div class="stat-strip">
+        <div class="stat"><div class="stat-v">&gt;$5bn</div><div class="stat-l">Physical Purchases</div></div>
+        <div class="stat"><div class="stat-v">1.5 MMT</div><div class="stat-l">Annual Grain Volume</div></div>
+        <div class="stat"><div class="stat-v">&gt;$400m</div><div class="stat-l">Trade Finance Secured</div></div>
+        <div class="stat"><div class="stat-v">14+</div><div class="stat-l">Years Experience</div></div>
+        <div class="stat"><div class="stat-v">15+</div><div class="stat-l">Active Origin Networks</div></div>
+        <div class="stat"><div class="stat-v">Zero</div><div class="stat-l">Defaults</div></div>
+      </div>
+      <div class="exp-grid">
+        <div class="exp-card"><div class="exp-card-title">Physical Markets</div><ul><li>Wheat, Corn, Barley, Pulses</li><li>Soybeans, Canola, Veg Oils, Feedstuffs</li><li>FOB Santos, Upriver Argentina, USG, PNW</li><li>Full Panamax &amp; Handysize execution</li><li>Multi-origin and split-discharge expertise</li><li>Tier-1 APAC end-user relationships</li></ul></div>
+        <div class="exp-card"><div class="exp-card-title">Derivatives &amp; Risk</div><ul><li>CME / CBOT, MGEX, ICE, Euronext</li><li>Futures and listed options</li><li>Inter-commodity and calendar spreads</li><li>Physical contract hedging</li><li>FX exposure management</li><li>OTC and structured hedging</li></ul></div>
+        <div class="exp-card"><div class="exp-card-title">Origins Coverage</div><ul><li>Australia, USA, Canada</li><li>Brazil, Argentina</li><li>Ukraine, Black Sea, Romania</li><li>India, Kazakhstan</li><li>China &amp; APAC buy-side network</li></ul></div>
+        <div class="exp-card"><div class="exp-card-title">Research &amp; Intelligence</div><ul><li>Weekly grain &amp; oilseed commentary</li><li>CFTC COT positioning analysis</li><li>WASDE supply &amp; demand interpretation</li><li>FOB price data across origins</li><li>Export sales pace analysis</li><li>Agricultural weather &amp; crop risk</li></ul></div>
+      </div>
+      <div class="about-divider"></div>
+      <div class="about-section-tag">JHD Commodity Advisors · Services</div>
+      <div class="about-section-title">Our <span>Services</span></div>
+      <div class="about-section-sub">Three distinct strands · Research · Advisory · Trading</div>
+      <p>JHD operates across three clearly defined service strands — each drawing on the same deep market knowledge but designed to serve different needs.</p>
+      <div class="strand-wrap">
+        <div class="strand">
+          <div class="strand-header"><div class="strand-icon">📊</div><div><div class="strand-title">Research Platform</div><div class="strand-label">JHD Commodity Advisors · Public Platform</div></div></div>
+          <div class="strand-body"><p>Professional-grade agricultural market intelligence, live data analytics and original weekly commentary — free to join.</p><ul class="strand-items"><li>Weekly wheat &amp; grain commentary</li><li>Live CFTC COT positioning dashboards</li><li>WASDE supply &amp; demand analytics</li><li>Weekly export sales data</li><li>FOB price data across 6 commodities</li><li>Agricultural weather — 19 global regions</li><li>Options analytics tool</li><li>Active community of market participants</li></ul></div>
+        </div>
+        <div class="strand">
+          <div class="strand-header"><div class="strand-icon">🌾</div><div><div class="strand-title">Advisory Services</div><div class="strand-label">JHD Commodity Advisors · Professional Services</div></div></div>
+          <div class="strand-body"><p>Independent advisory services for commodity-exposed businesses, trading houses and market participants — bespoke engagements covering market strategy, procurement, hedging and trade execution.</p><ul class="strand-items"><li>Commodity market advisory</li><li>Procurement strategy &amp; market entry</li><li>Physical commodity broking</li><li>Hedging using listed futures and options</li><li>Trade finance &amp; procurement structuring</li><li>GAFTA / FOSFA contract frameworks</li><li>Origin diversification strategy</li><li>Counterparty &amp; supplier onboarding</li></ul></div>
+        </div>
+        <div class="strand">
+          <div class="strand-header"><div class="strand-icon">📈</div><div><div class="strand-title">Discretionary Trading</div><div class="strand-label">JHD Commodity Advisors · Managed Accounts</div></div></div>
+          <div class="strand-body"><p>Discretionary managed account arrangements considered on a selective basis, introduced through direct referral only. Fundamentally-driven agricultural derivatives strategies across major global exchanges.</p><ul class="strand-items"><li>Fundamentally-driven strategies</li><li>Spread and relative value trading</li><li>Inter-commodity &amp; calendar spreads</li><li>Listed options strategies</li><li>CME, MGEX and ICE markets</li><li>Grain and oilseed focus</li></ul></div>
         </div>
       </div>
-      <h3>Our Approach</h3>
-      <p>We combine rigorous fundamental analysis — supply and demand balances, USDA data, CFTC positioning — with technical price analysis and on-the-ground market intelligence to provide commentary and advisory services that are practical, timely and commercially relevant.</p>
-      <h3>Markets Covered</h3>
-      <ul>
-        <li>Grains — Corn, Wheat (CBOT, HRW, Euronext Milling, MGEX Spring)</li>
-        <li>Oilseeds — Soybeans, Soybean Meal, Soybean Oil, Canola, Palm Oil</li>
-        <li>Soft Commodities — Sugar #11, Cotton</li>
-        <li>Macro — Energy (WTI, Brent), FX (USD, EUR, GBP), Equity indices</li>
-      </ul>
-      <div class="disclaimer-box">JHD Commodity Advisors. All commentary and analysis published on this platform is for informational purposes only and does not constitute investment advice. Trading commodity futures and options involves significant risk of loss.</div>
+      <div class="about-divider"></div>
+      <div class="about-section-tag">Markets &amp; Instruments</div>
+      <div class="mkt-label">Commodities</div>
+      <div class="market-tags"><span class="market-tag mt-blue">Wheat (SRW · HRW · DNS · Milling)</span><span class="market-tag mt-blue">Corn</span><span class="market-tag mt-blue">Soybeans</span><span class="market-tag mt-blue">Soybean Meal</span><span class="market-tag mt-blue">Soybean Oil</span><span class="market-tag mt-blue">Canola / Rapeseed</span><span class="market-tag mt-blue">Barley</span><span class="market-tag mt-blue">Pulses</span><span class="market-tag mt-blue">Palm Oil</span></div>
+      <div class="mkt-label">Exchanges</div>
+      <div class="market-tags"><span class="market-tag mt-teal">CME / CBOT</span><span class="market-tag mt-teal">MGEX</span><span class="market-tag mt-teal">ICE Futures US</span><span class="market-tag mt-teal">ICE Futures Europe</span><span class="market-tag mt-teal">Euronext Paris (MATIF)</span></div>
+      <div class="mkt-label">Instruments</div>
+      <div class="market-tags"><span class="market-tag mt-gold">Futures</span><span class="market-tag mt-gold">Listed Options</span><span class="market-tag mt-gold">Physical Spreads</span><span class="market-tag mt-gold">FOB Paper</span><span class="market-tag mt-gold">OTC Hedging</span><span class="market-tag mt-gold">Calendar Spreads</span><span class="market-tag mt-gold">Inter-Commodity Spreads</span></div>
+      <div class="mkt-label">Contract Frameworks</div>
+      <div class="market-tags"><span class="market-tag mt-coral">GAFTA</span><span class="market-tag mt-coral">FOSFA</span><span class="market-tag mt-coral">ANEC</span><span class="market-tag mt-coral">ISDA / CSA</span></div>
+      <div class="about-divider"></div>
+      <p style="font-size:12px;color:var(--muted2);font-family:'DM Mono',monospace;line-height:1.7;">JHD Commodity Advisors is a trading name of James Day. FCA regulated. NFA Series 3 qualified. All research and commentary is produced for informational purposes only and does not constitute investment advice. Past performance is not indicative of future results. Commodity trading involves substantial risk of loss.</p>
     </div>
   </div>
 
@@ -978,7 +1097,7 @@ async function loadPosts(category){
   const el=document.getElementById('posts-'+category);
   if(!el) return;
   el.innerHTML='<div class="spin">Loading…</div>';
-  const{data:posts,error}=await sb.from('posts').select('id,title,summary,created_at,category').eq('category',category).order('created_at',{ascending:false});
+  const{data:posts,error}=await sb.from('posts').select('id,title,summary,created_at,category,is_pinned').eq('category',category).order('is_pinned',{ascending:false}).order('created_at',{ascending:false});
   if(error){el.innerHTML='<div class="spin">⚠ Could not load posts.</div>';return;}
   if(!posts||posts.length===0){
     el.innerHTML='<div class="empty-state"><h3>No posts yet</h3><p>'+(isAdmin?'Go to Admin → New Post and select this section.':'Check back soon.')+'</p></div>';return;
@@ -988,8 +1107,10 @@ async function loadPosts(category){
   const counts={}; (cc||[]).forEach(r=>counts[r.post_id]=(counts[r.post_id]||0)+1);
   const grid=document.createElement('div'); grid.className='posts-grid';
   posts.forEach(p=>{
-    const n=counts[p.id]||0,card=document.createElement('div'); card.className='post-card';
-    card.innerHTML='<div class="card-date">'+fmtDate(p.created_at)+'</div><h3>'+esc(p.title)+'</h3><p class="card-summary">'+esc(p.summary||'')+'</p><div class="card-foot"><span class="ccount">💬 '+n+' comment'+(n!==1?'s':'')+'</span><span class="readmore">Read →</span></div>';
+    const n=counts[p.id]||0,card=document.createElement('div');
+    card.className='post-card'+(p.is_pinned?' pinned':'');
+    card.innerHTML=(p.is_pinned?'<div class="pin-badge">📌 Pinned</div>':'')
+      +'<div class="card-date">'+fmtDate(p.created_at)+'</div><h3>'+esc(p.title)+'</h3><p class="card-summary">'+esc(p.summary||'')+'</p><div class="card-foot"><span class="ccount">💬 '+n+' comment'+(n!==1?'s':'')+'</span><span class="readmore">Read →</span></div>';
     card.onclick=()=>loadDetail(p.id,category); grid.appendChild(card);
   });
   el.innerHTML=''; el.appendChild(grid);
@@ -1139,7 +1260,7 @@ async function loadAllComments(){
 async function loadManagePosts(){
   const wrap=document.getElementById('posts-manage-list');
   wrap.innerHTML='<div class="spin">Loading…</div>';
-  const{data,error}=await sb.from('posts').select('id,title,summary,category,created_at').order('created_at',{ascending:false});
+  const{data,error}=await sb.from('posts').select('id,title,summary,category,created_at,is_pinned').order('created_at',{ascending:false});
   if(error||!data||data.length===0){wrap.innerHTML='<div class="empty-state"><h3>No posts yet</h3></div>';return;}
   const catLabel={'commentary':'Market Commentary','research':'Research','cftc':'CFTC','exports':'Export Data','wasde':'WASDE','commoditymap':'Commodity Map','weather':'Weather','options':'Options Analytics','fob':'FOB Data','freight':'Freight','technicals':'Technical Analysis'};
   wrap.innerHTML=data.map(p=>'<div class="mod-card" id="mp-'+p.id+'">'  
@@ -1150,7 +1271,8 @@ async function loadManagePosts(){
       +'</div></div>'
       +(p.summary?'<div class="mod-text" style="font-size:12px;color:var(--muted);">'+esc(p.summary)+'</div>':'')
       +'<div class="mod-actions" style="margin-top:10px;">'
-      +'<button class="btn-sm-hide" onclick="startEditPost(&quot;'+p.id+'&quot;)">Edit</button>'
+      +'<button class="btn-sm-hide" onclick="startEditPost(&quot;'+p.id+'&quot;)">✏ Edit</button>'
+      +(p.is_pinned?'<button class="btn-sm-hide" style="color:var(--gold2);border-color:rgba(212,170,85,0.5);" onclick="togglePin(&quot;'+p.id+'&quot;,true)">📌 Unpin</button>':'<button class="btn-sm-hide" onclick="togglePin(&quot;'+p.id+'&quot;,false)">📌 Pin</button>')
       +'<button class="btn-sm-del" onclick="deletePost(&quot;'+p.id+'&quot;)">Delete</button>'
       +'</div></div>').join('');
 }
@@ -1250,6 +1372,13 @@ function exportCSV(){
 /* ===== HELPERS ===== */
 function esc(s){ if(!s) return ''; return String(s).replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;').replace(/"/g,'&quot;').replace(/'/g,'&#39;'); }
 function fmtDate(d){ return new Date(d).toLocaleDateString('en-GB',{day:'numeric',month:'short',year:'numeric'}); }
+
+async function togglePin(id, currentlyPinned){
+  const{error}=await sb.from('posts').update({is_pinned:!currentlyPinned}).eq('id',id);
+  if(error){alert('Error: '+error.message);return;}
+  loadManagePosts();
+}
+
 
 boot();
 </script>
