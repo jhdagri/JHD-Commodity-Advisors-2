@@ -1464,7 +1464,6 @@ const TA_INDICATORS = [
 let _taChartImage = null;
 let _taIndicatorState = {}; // key: indicator name, value: 'bull'|'bear'|'neut'|null
 
-function esc(s){ return String(s).replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;').replace(/"/g,'&quot;'); }
 
 async function loadTACharts(){
   const wrap = document.getElementById('ta-cards-wrap');
