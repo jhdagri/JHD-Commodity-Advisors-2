@@ -1224,7 +1224,7 @@ p:last-child{margin-bottom:0;}
       </div>
     </div>
   </div>
-  <div class="recent-strip-wrap" id="recent-strip-wrap">
+  <div class="recent-strip-wrap" id="recent-strip-wrap" style="display:none;">
     <div class="recent-strip-inner">
       <div class="recent-strip-label">Recent Publications</div>
       <div class="recent-strip-scroll" id="recent-strip-scroll">
@@ -1374,22 +1374,30 @@ async function loadRecentStrip(){
 }
 
 async function boot(){
-  sb=window.supabase.createClient(SUPABASE_URL,SUPABASE_ANON);
-  document.title='JHD Commodity Advisors';
+  try {
+    if(!window.supabase){ throw new Error('Supabase library failed to load. Please hard-refresh (Ctrl+Shift+R).'); }
+    sb=window.supabase.createClient(SUPABASE_URL,SUPABASE_ANON);
+    document.title='JHD Commodity Advisors';
 
-  // Preview mode: skip login when opening as a local file or ?preview in URL
-  const isLocalFile = window.location.protocol === 'file:';
-  const isPreview   = new URLSearchParams(window.location.search).has('preview');
-  if(isLocalFile || isPreview){
-    showAppPage();
+    // Preview mode: skip login when opening as a local file or ?preview in URL
+    const isLocalFile = window.location.protocol === 'file:';
+    const isPreview   = new URLSearchParams(window.location.search).has('preview');
+    if(isLocalFile || isPreview){
+      showAppPage();
+      installProtection();
+      return;
+    }
+
+    const{data:{session}}=await sb.auth.getSession();
+    if(session){ currentUser=session.user; isAdmin=currentUser.email.toLowerCase()===ADMIN_EMAIL.toLowerCase(); showAppPage(); }
+    else document.getElementById('page-auth').classList.remove('hidden');
     installProtection();
-    return;
+  } catch(e) {
+    console.error('Boot error:', e);
+    const authCard = document.querySelector('.auth-card');
+    if(authCard) authCard.insertAdjacentHTML('afterbegin', `<div class="msg-box msg-error" style="margin-bottom:14px;">Startup error: ${e.message}</div>`);
+    document.getElementById('page-auth').classList.remove('hidden');
   }
-
-  const{data:{session}}=await sb.auth.getSession();
-  if(session){ currentUser=session.user; isAdmin=currentUser.email.toLowerCase()===ADMIN_EMAIL.toLowerCase(); showAppPage(); }
-  else document.getElementById('page-auth').classList.remove('hidden');
-  installProtection();
 }
 
 /* ===== COPY / PRINT PROTECTION ===== */
@@ -1729,19 +1737,24 @@ authMsg(’’);
 function authMsg(text,ok){ const el=document.getElementById(‘auth-msg’); if(!text){el.classList.add(‘hidden’);return;} el.textContent=text; el.className=’msg-box ’+(ok?‘msg-ok’:‘msg-error’); }
 
 async function doSignIn(){
+if(!sb){authMsg(‘Connection error. Please refresh the page.’);return;}
 const email=document.getElementById(‘in-email’).value.trim(),pw=document.getElementById(‘in-pw’).value;
 if(!email||!pw){authMsg(‘Please fill in both fields.’);return;}
+try {
 const{error}=await sb.auth.signInWithPassword({email,password:pw});
 if(error){authMsg(error.message);return;}
 currentUser=(await sb.auth.getUser()).data.user;
 isAdmin=currentUser.email.toLowerCase()===ADMIN_EMAIL.toLowerCase();
 showAppPage();
+} catch(e) { authMsg(’Sign-in failed: ’+e.message); }
 }
 
 async function doSignUp(){
+if(!sb){authMsg(‘Connection error. Please refresh the page.’);return;}
 const email=document.getElementById(‘up-email’).value.trim(),pw=document.getElementById(‘up-pw’).value;
 if(!email||!pw){authMsg(‘Please fill in both fields.’);return;}
 if(pw.length<6){authMsg(‘Password must be at least 6 characters.’);return;}
+try {
 const{error}=await sb.auth.signUp({email,password:pw});
 if(error){authMsg(error.message);return;}
 // Record subscriber (best-effort — sign in first then insert)
@@ -1750,6 +1763,7 @@ const{data:sess}=await sb.auth.signInWithPassword({email,password:pw});
 if(sess?.user) await sb.from(‘subscribers’).upsert({email},{onConflict:‘email’});
 }catch(e){}
 authMsg(‘Account created successfully! Please use your credentials to sign in.’,true);
+} catch(e){ authMsg(’Sign-up failed: ’+e.message); }
 }
 
 async function doSignOut(){
