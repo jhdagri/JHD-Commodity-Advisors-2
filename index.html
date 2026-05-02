@@ -84,9 +84,9 @@
 
     /* ===== SECTION NAV ===== */
     .section-nav { background:#0a0c10; border-bottom:1px solid var(--border); position:sticky; top:58px; z-index:190; }
-    .section-nav-inner { max-width:1280px; margin:0 auto; padding:0 24px; display:flex; overflow-x:auto; scrollbar-width:none; }
+    .section-nav-inner { width:100%; padding:0 8px; display:flex; overflow-x:auto; scrollbar-width:none; }
     .section-nav-inner::-webkit-scrollbar { display:none; }
-    .snav-btn { padding:14px 18px; border:none; background:none; cursor:pointer; font-size:13px; font-weight:600; color:var(--muted); border-bottom:3px solid transparent; white-space:nowrap; transition:color 0.15s; }
+    .snav-btn { padding:12px 13px; border:none; background:none; cursor:pointer; font-size:11.5px; font-weight:600; color:var(--muted); border-bottom:3px solid transparent; white-space:nowrap; transition:color 0.15s; letter-spacing:0.01em; }
     .snav-btn:hover { color:var(--text); }
     .snav-btn.active { color:var(--blue); border-bottom-color:var(--blue); }
 
@@ -279,7 +279,7 @@
       .user-chip { display:none; }
       .auth-card { padding:28px 20px; }
       .service-cards { grid-template-columns:1fr; }
-      .snav-btn { padding:12px 12px; font-size:12px; }
+      .snav-btn { padding:10px 10px; font-size:10.5px; }
     }
   
 /* ===== TECHNICAL ANALYSIS TAB ===== */
@@ -422,18 +422,18 @@ padding:2px 8px;border-radius:3px;margin-bottom:6px;letter-spacing:0.06em;text-t
   </header>
   <nav class="section-nav">
     <div class="section-nav-inner">
-      <button class="snav-btn active" data-tab="commentary" onclick="showTab('commentary')">Market Commentary</button>
+      <button class="snav-btn active" data-tab="commentary" onclick="showTab('commentary')">Commentary</button>
       <button class="snav-btn" data-tab="research"          onclick="showTab('research')">Research</button>
       <button class="snav-btn" data-tab="cftc"              onclick="showTab('cftc')">CFTC</button>
-      <button class="snav-btn" data-tab="futures"           onclick="showTab('futures')">Futures Price Quotes</button>
-      <button class="snav-btn" data-tab="exports"           onclick="showTab('exports')">Export Data</button>
+      <button class="snav-btn" data-tab="futures"           onclick="showTab('futures')">Futures</button>
+      <button class="snav-btn" data-tab="exports"           onclick="showTab('exports')">Exports</button>
       <button class="snav-btn" data-tab="wasde"             onclick="showTab('wasde')">WASDE</button>
       <button class="snav-btn" data-tab="commoditymap"      onclick="showTab('commoditymap')">Commodity Map</button>
       <button class="snav-btn" data-tab="weather"           onclick="showTab('weather')">Weather</button>
-      <button class="snav-btn" data-tab="options"           onclick="showTab('options')">Options Analytics</button>
+      <button class="snav-btn" data-tab="options"           onclick="showTab('options')">Options</button>
       <button class="snav-btn" data-tab="fob"               onclick="showTab('fob')">FOB Data</button>
       <button class="snav-btn" data-tab="freight"           onclick="showTab('freight')">Freight</button>
-      <button class="snav-btn" data-tab="technicals"        onclick="showTab('technicals')">Technical Analysis</button>
+      <button class="snav-btn" data-tab="technicals"        onclick="showTab('technicals')">Technicals</button>
     </div>
   </nav>
 
