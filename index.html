@@ -75,7 +75,7 @@
 
     /* ===== TOPBAR ===== */
     .topbar { background:#080a0d; border-bottom:1px solid var(--border2); position:sticky; top:0; z-index:200; box-shadow:0 2px 20px rgba(0,0,0,0.5); }
-    .topbar-inner { max-width:1280px; margin:0 auto; padding:0 24px; height:58px; display:flex; align-items:center; justify-content:space-between; }
+    .topbar-inner { width:100%; padding:0 24px; height:58px; display:flex; align-items:center; justify-content:space-between; }
     .topbar-brand { display:flex; align-items:center; gap:10px; cursor:pointer; user-select:none; }
     .brand-mark { width:34px; height:34px; background:var(--gold); border-radius:5px; display:flex; align-items:center; justify-content:center; font-weight:900; font-size:11px; color:#080a0d; flex-shrink:0; letter-spacing:-0.5px; font-family:"DM Mono",monospace; }
     .brand-name { font-size:15px; font-weight:600; color:var(--text); letter-spacing:0.01em; font-family:"DM Sans",sans-serif; }
@@ -84,7 +84,7 @@
 
     /* ===== SECTION NAV ===== */
     .section-nav { background:#0a0c10; border-bottom:1px solid var(--border); position:sticky; top:58px; z-index:190; }
-    .section-nav-inner { width:100%; padding:0 8px; display:flex; overflow-x:auto; scrollbar-width:none; }
+    .section-nav-inner { width:100%; padding:0 16px; display:flex; overflow-x:auto; scrollbar-width:none; }
     .section-nav-inner::-webkit-scrollbar { display:none; }
     .snav-btn { padding:12px 13px; border:none; background:none; cursor:pointer; font-size:11.5px; font-weight:600; color:var(--muted); border-bottom:3px solid transparent; white-space:nowrap; transition:color 0.15s; letter-spacing:0.01em; }
     .snav-btn:hover { color:var(--text); }
@@ -107,7 +107,7 @@
     .auth-submit { width:100%; padding:11px; margin-top:4px; }
 
     /* ===== CONTENT ===== */
-    .page-wrap { max-width:1280px; margin:0 auto; padding:40px 24px 60px; }
+    .page-wrap { width:100%; padding:40px 32px 60px; }
     .page-heading { margin-bottom:32px; padding-bottom:20px; border-bottom:1px solid var(--border); }
     .page-heading h2 { font-size:24px; font-weight:700; color:var(--text); margin-bottom:4px; font-family:"DM Serif Display",serif; }
     .page-heading p { color:var(--muted); font-size:14px; }
@@ -124,9 +124,9 @@
     .empty-state h3 { font-size:18px; color:var(--text); margin-bottom:8px; font-family:"DM Serif Display",serif; }
 
     /* ===== POST DETAIL ===== */
-    .detail-wrap { max-width:1280px; margin:0 auto; padding:32px 24px 80px; }
+    .detail-wrap { width:100%; padding:32px 32px 80px; }
     .detail-wrap.full-width { max-width:100%; padding:0 0 80px; }
-    .detail-wrap.full-width .comments-wrap { max-width:1280px; margin:0 auto; padding:0 24px; }
+    .detail-wrap.full-width .comments-wrap { width:100%; padding:0 32px; }
     .post-iframe { width:1px; min-width:100%; border:none; border-radius:0; display:block; min-height:600px; overflow:hidden; }
     .post-kicker { font-size:11px; font-weight:500; text-transform:uppercase; letter-spacing:1px; color:var(--blue); margin-bottom:12px; font-family:"DM Mono",monospace; }
     .detail-wrap h1 { font-size:32px; font-weight:900; color:var(--text); line-height:1.15; letter-spacing:-0.02em; margin-bottom:14px; font-family:"DM Serif Display",serif; }
@@ -160,14 +160,14 @@
     .comment-form-card h3 { font-size:16px; font-weight:600; color:var(--text); margin-bottom:16px; font-family:"DM Serif Display",serif; }
 
     /* ===== FUTURES ===== */
-    .futures-wrap { max-width:1280px; margin:0 auto; padding:32px 24px 60px; }
+    .futures-wrap { width:100%; padding:32px 32px 60px; }
     .futures-heading { margin-bottom:28px; padding-bottom:18px; border-bottom:1px solid var(--border); }
     .futures-heading h2 { font-size:24px; font-weight:700; color:var(--text); margin-bottom:4px; font-family:"DM Serif Display",serif; }
     .futures-heading p { font-size:14px; color:var(--muted); }
     .tv-widget-wrap { background:var(--card); border:1px solid var(--border2); border-radius:10px; overflow:hidden; margin-bottom:20px; }
 
     /* ===== STATIC PAGES ===== */
-    .static-wrap { max-width:1280px; margin:0 auto; padding:40px 24px 80px; }
+    .static-wrap { width:100%; padding:40px 32px 80px; }
     .static-wrap h2 { font-size:28px; font-weight:900; color:var(--text); margin-bottom:8px; font-family:"DM Serif Display",serif; }
     .static-rule { width:40px; height:2px; background:var(--blue); border-radius:2px; margin-bottom:28px; }
     .static-wrap p { font-size:16px; line-height:1.8; color:var(--text); margin-bottom:18px; }
@@ -192,7 +192,7 @@
     .disclaimer-box { background:rgba(74,158,255,0.05); border:1px solid var(--border); border-left:3px solid var(--blue); border-radius:6px; padding:16px 18px; margin-top:32px; font-size:13px; color:var(--muted); line-height:1.6; }
 
     /* ===== ADMIN ===== */
-    .admin-wrap { max-width:1280px; margin:0 auto; padding:40px 24px 80px; }
+    .admin-wrap { width:100%; padding:40px 32px 80px; }
     .admin-tab-row { display:flex; border-bottom:2px solid var(--border); margin-bottom:36px; flex-wrap:wrap; }
     .tab-btn { padding:10px 20px; border:none; background:none; cursor:pointer; font-size:14px; font-weight:600; color:var(--muted); border-bottom:2px solid transparent; margin-bottom:-2px; }
     .tab-btn.active { color:var(--blue); border-bottom-color:var(--blue); }
@@ -249,7 +249,7 @@
     .tv-widget-wrap { background:transparent; border:1px solid var(--border); border-radius:10px; overflow:hidden; margin-bottom:8px; }
     /* RECENT STRIP */
     .recent-strip-wrap { background:#080a0d; border-top:1px solid var(--border); padding:20px 0 0; }
-    .recent-strip-inner { max-width:1280px; margin:0 auto; padding:0 24px; }
+    .recent-strip-inner { width:100%; padding:0 32px; }
     .recent-strip-label { font-family:"DM Mono",monospace; font-size:7.5pt; letter-spacing:0.14em; text-transform:uppercase; color:var(--muted2); margin-bottom:12px; }
     .recent-strip-scroll { display:flex; gap:12px; overflow-x:auto; padding-bottom:16px; scrollbar-width:thin; scrollbar-color:var(--border) transparent; }
     .recent-strip-scroll::-webkit-scrollbar { height:4px; }
@@ -262,7 +262,7 @@
     .recent-doc-date { font-family:"DM Mono",monospace; font-size:7pt; color:var(--muted2); }
     /* SITE FOOTER */
     .site-footer { background:#080a0d; border-top:1px solid var(--border); }
-    .site-footer-inner { max-width:1280px; margin:0 auto; padding:16px 24px; display:flex; align-items:center; gap:20px; flex-wrap:wrap; }
+    .site-footer-inner { width:100%; padding:16px 32px; display:flex; align-items:center; gap:20px; flex-wrap:wrap; }
     .footer-brand-wrap { display:flex; align-items:center; gap:8px; }
     .footer-brand-mark { width:28px; height:28px; background:var(--gold); border-radius:4px; display:flex; align-items:center; justify-content:center; font-family:"DM Mono",monospace; font-size:9pt; font-weight:700; color:#080a0d; flex-shrink:0; cursor:pointer; }
     .footer-brand-name { font-family:"DM Sans",sans-serif; font-size:12px; font-weight:600; color:var(--muted); }
@@ -619,7 +619,7 @@ padding:2px 8px;border-radius:3px;margin-bottom:6px;letter-spacing:0.06em;text-t
   <!-- Post Detail -->
   <div id="tab-detail" class="hidden">
     <header style="background:var(--bg);border-bottom:1px solid var(--border);">
-      <div style="max-width:1280px;margin:0 auto;padding:12px 24px;display:flex;align-items:center;gap:12px;">
+      <div style="width:100%;padding:12px 32px;display:flex;align-items:center;gap:12px;">
         <button class="btn btn-navy" onclick="closeDetail()" style="padding:7px 16px;font-size:13px;">← Back</button>
         <span id="detail-breadcrumb" style="font-size:13px;color:var(--muted);"></span>
       </div>
