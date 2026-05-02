@@ -1218,9 +1218,46 @@ loading="lazy">
 <h2>Technical Analysis</h2>
 <p>Chart analysis, key levels and technical factors across grain and oilseed markets</p>
 </div>
-<div id="ta-admin-form-wrap" class="hidden"></div>
+<div id="ta-admin-form-wrap" class="hidden">
+<div class="ta-form">
+<div class="ta-form-title">Publish New Technical Analysis</div>
+<div id="ta-chart-upload-area" style="border:2px dashed var(--border2);border-radius:8px;padding:24px;text-align:center;cursor:pointer;margin-bottom:12px;" onclick="document.getElementById('ta-img-input').click()">
+<input type="file" id="ta-img-input" accept="image/*" onchange="handleTAImageUpload(this)" style="display:none;">
+<div id="ta-upload-label" style="font-family:DM Mono,monospace;font-size:11px;color:var(--muted2);">Click to upload chart image</div>
+<img id="ta-chart-preview" style="max-width:100%;max-height:280px;border-radius:6px;margin-top:10px;display:none;" src="" alt="preview">
+</div>
+<div class="ta-form-grid">
+<div class="ta-form-field"><label>Instrument</label><input type="text" id="ta-instrument" placeholder="e.g. ZCN26, MATIF Wheat"></div>
+<div class="ta-form-field"><label>Timeframe</label>
+<select id="ta-timeframe">
+<option value="">Select...</option>
+<option value="Daily">Daily</option>
+<option value="Weekly">Weekly</option>
+<option value="Monthly">Monthly</option>
+<option value="4H">4-Hour</option>
+<option value="1H">1-Hour</option>
+</select>
+</div>
+<div class="ta-form-field"><label>Bias</label>
+<select id="ta-bias">
+<option value="neutral">Neutral</option>
+<option value="bullish">Bullish</option>
+<option value="bearish">Bearish</option>
+</select>
+</div>
+<div class="ta-form-field"><label>Resistance</label><input type="text" id="ta-resistance" placeholder="e.g. 487.50"></div>
+<div class="ta-form-field"><label>Support</label><input type="text" id="ta-support" placeholder="e.g. 462.00"></div>
+<div class="ta-form-field"><label>Target</label><input type="text" id="ta-target" placeholder="e.g. 510.00"></div>
+</div>
+<div class="ta-form-field" style="margin-bottom:12px;">
+<label>Commentary</label>
+<textarea id="ta-commentary" style="resize:vertical;min-height:80px;" placeholder="Describe the technical setup..."></textarea>
+</div>
+<button onclick="publishTAChart()" style="width:100%;padding:11px;font-size:13px;border-radius:6px;border:none;background:var(--blue);color:#fff;cursor:pointer;font-weight:600;">Publish Chart Analysis</button>
+</div>
+</div>
 <div id="ta-cards-wrap">
-<div class="ta-empty">Loading charts…</div>
+<div class="ta-empty">Loading...</div>
 </div>
 </div>
 </div>
@@ -1457,373 +1494,207 @@ if(POST_TABS.includes(name)) loadPosts(name);
 if(name==='technicals') loadTACharts();
 }
 /* ===== TECHNICAL ANALYSIS ===== */
-const TA_INDICATORS = [
-'RSI Overbought','RSI Oversold','RSI Neutral',
-'MACD Bullish Cross','MACD Bearish Cross',
-'Golden Cross','Death Cross',
-'Above 200 MA','Below 200 MA',
-'Above 50 MA','Below 50 MA',
-'Bullish Engulfing','Bearish Engulfing',
-'Double Top','Double Bottom',
-'Bull Flag','Bear Flag',
-'Trend Breakout','Support Held','Resistance Held',
-'Volume Divergence','Price Divergence'
-];
-
-let _taChartImage = null;
-let _taIndicatorState = {}; // key: indicator name, value: 'bull'|'bear'|'neut'|null
-
-
 async function loadTACharts(){
-const wrap = document.getElementById('ta-cards-wrap');
-const adminWrap = document.getElementById('ta-admin-form-wrap');
-
-// Show admin form for admin users
-if(isAdmin){
-adminWrap.classList.remove('hidden');
-renderTAAdminForm();
-}
-
-wrap.innerHTML = '<div class="ta-empty"><span class="spin" style="display:inline-block;margin-right:8px"></span>Loading charts…</div>';
-
-try {
-const { data, error } = await sb
-.from('posts')
-.select('*')
-.eq('category','technicals')
-.order('created_at',{ascending:false});
-
-if(error) throw error;
-
-if(!data || data.length === 0){
-wrap.innerHTML = '<div class="ta-empty">No technical analysis charts published yet.</div>';
+var wrap = document.getElementById('ta-cards-wrap');
+if(!wrap) return;
+wrap.innerHTML = '<div class="ta-empty"><span class="spin" style="display:inline-block;margin-right:8px"></span>Loading...</div>';
+var result = await sb.from('posts').select('*').eq('category','technicals').order('created_at',{ascending:false});
+var data = result.data;
+var error = result.error;
+if(error || !data || data.length === 0){
+wrap.innerHTML = '<div class="ta-empty">No technical analysis published yet.</div>';
 return;
 }
-
-wrap.innerHTML = '<div class="ta-grid">' +
-data.map(post => renderTACard(post)).join('') +
-'</div>';
-
-} catch(e){
-wrap.innerHTML = `<div class="ta-empty">Error loading charts: ${esc(e.message)}</div>`;
+var html = '<div class="ta-grid">';
+for(var i=0;i<data.length;i++){
+var p = data[i];
+var meta = {};
+try{ meta = JSON.parse(p.summary || '{}'); }catch(e){}
+var d = new Date(p.created_at).toLocaleDateString('en-GB',{day:'numeric',month:'short',year:'numeric'});
+var bias = meta.bias || 'neutral';
+var biasCls = bias === 'bullish' ? 'bullish' : bias === 'bearish' ? 'bearish' : 'neutral';
+html += '<div class="ta-card" id="ta-' + p.id + '">';
+html += '<div class="ta-card-header">';
+html += '<div class="ta-instrument">' + esc(meta.instrument || p.title) + '</div>';
+if(meta.timeframe) html += '<span class="ta-timeframe">' + esc(meta.timeframe) + '</span>';
+html += '<span class="ta-bias ' + biasCls + '">' + bias.charAt(0).toUpperCase() + bias.slice(1) + '</span>';
+html += '</div>';
+if(meta.chart_image) html += '<div class="ta-chart-wrap"><img src="' + meta.chart_image + '" alt="chart" loading="lazy"></div>';
+html += '<div class="ta-levels">';
+html += '<div class="ta-level"><div class="ta-level-label">Resistance</div><div class="ta-level-val resistance">' + esc(meta.resistance || '--') + '</div></div>';
+html += '<div class="ta-level"><div class="ta-level-label">Support</div><div class="ta-level-val support">' + esc(meta.support || '--') + '</div></div>';
+html += '<div class="ta-level"><div class="ta-level-label">Target</div><div class="ta-level-val target">' + esc(meta.target || '--') + '</div></div>';
+html += '</div>';
+if(meta.commentary) html += '<div class="ta-commentary">' + esc(meta.commentary) + '</div>';
+html += '<div class="ta-meta"><span class="ta-date">Updated ' + d + '</span>';
+if(isAdmin) html += '<button class="ta-delete-btn" data-id="' + p.id + '" onclick="deleteTAPost(this.dataset.id,event)">Delete</button>';
+html += '</div></div>';
 }
-}
-
-function renderTACard(post){
-let meta = {};
-try { meta = JSON.parse(post.summary || '{}'); } catch(e){}
-
-const instrument = meta.instrument || post.title || 'Unknown';
-const timeframe = meta.timeframe || '';
-const bias = meta.bias || 'neutral';
-const resistance = meta.resistance || '—';
-const support = meta.support || '—';
-const target = meta.target || '—';
-const commentary = meta.commentary || post.content || '';
-const chartImg = meta.chart_image || '';
-const indicators = meta.indicators || [];
-const dateStr = new Date(post.created_at).toLocaleDateString('en-GB',{day:'numeric',month:'short',year:'numeric'});
-
-const biasCls = bias === 'bullish' ? 'bullish' : bias === 'bearish' ? 'bearish' : 'neutral';
-const biasLabel = bias.charAt(0).toUpperCase() + bias.slice(1);
-
-const chartHtml = chartImg
-? `<img src="${chartImg}" alt="${esc(instrument)} chart" loading="lazy">`
-: `<div class="ta-chart-placeholder">📈 No chart uploaded</div>`;
-
-const indHtml = indicators.length > 0
-? `<div class="ta-indicators">${indicators.map(i => {
-const cls = i.signal === 'bull' ? 'bull' : i.signal === 'bear' ? 'bear' : 'neut';
-return `<span class="ta-indicator ${cls}">${esc(i.label)}</span>`;
-}).join('')}</div>`
-: '';
-
-const deleteBtn = isAdmin
-? `<button class="ta-delete-btn" onclick="deleteTAPost('${post.id}',event)">Delete</button>`
-: '';
-
-return `
-<div class="ta-card" id="ta-${post.id}">
-<div class="ta-card-header">
-<div class="ta-instrument">${esc(instrument)}</div>
-${timeframe ? `<span class="ta-timeframe">${esc(timeframe)}</span>` : ''}
-<span class="ta-bias ${biasCls}">${biasLabel}</span>
-</div>
-<div class="ta-chart-wrap">${chartHtml}</div>
-<div class="ta-levels">
-<div class="ta-level">
-<div class="ta-level-label">Resistance</div>
-<div class="ta-level-val resistance">${esc(resistance)}</div>
-</div>
-<div class="ta-level">
-<div class="ta-level-label">Support</div>
-<div class="ta-level-val support">${esc(support)}</div>
-</div>
-<div class="ta-level">
-<div class="ta-level-label">Target / Pivot</div>
-<div class="ta-level-val target">${esc(target)}</div>
-</div>
-</div>
-${commentary ? `<div class="ta-commentary">${esc(commentary)}</div>` : ''}
-${indHtml}
-<div class="ta-meta">
-<span class="ta-date">Updated ${dateStr}</span>
-${deleteBtn}
-</div>
-</div>`;
-}
-
-function renderTAAdminForm(){
-const wrap = document.getElementById('ta-admin-form-wrap');
-_taChartImage = null;
-_taIndicatorState = {};
-
-const indButtons = TA_INDICATORS.map(name =>
-`<button class="ta-ind-toggle" data-ind="${esc(name)}" onclick="cycleTAIndicator(this,'${esc(name)}')">${esc(name)}</button>`
-).join('');
-
-wrap.innerHTML = `
-<div class="ta-form">
-<div class="ta-form-title">📈 Publish New Technical Analysis</div>
-<div class="ta-chart-upload" onclick="document.getElementById('ta-img-input').click()">
-<input type="file" id="ta-img-input" accept="image/*" onchange="handleTAImageUpload(this)">
-<div class="ta-chart-upload-label">Click to upload chart image (PNG, JPG, WebP)</div>
-<img id="ta-chart-preview" class="ta-chart-preview" src="" alt="Chart preview">
-</div>
-<div class="ta-form-grid">
-<div class="ta-form-field">
-<label>Instrument / Contract</label>
-<input type="text" id="ta-instrument" placeholder="e.g. ZCN26, MATIF Wheat, Soybean Meal">
-</div>
-<div class="ta-form-field">
-<label>Timeframe</label>
-<select id="ta-timeframe">
-<option value="">Select timeframe…</option>
-<option value="Daily">Daily</option>
-<option value="Weekly">Weekly</option>
-<option value="Monthly">Monthly</option>
-<option value="4H">4-Hour</option>
-<option value="1H">1-Hour</option>
-<option value="15m">15-Minute</option>
-</select>
-</div>
-<div class="ta-form-field">
-<label>Overall Bias</label>
-<select id="ta-bias">
-<option value="neutral">Neutral</option>
-<option value="bullish">Bullish</option>
-<option value="bearish">Bearish</option>
-</select>
-</div>
-<div class="ta-form-field">
-<label>Resistance Level</label>
-<input type="text" id="ta-resistance" placeholder="e.g. 487.50¢">
-</div>
-<div class="ta-form-field">
-<label>Support Level</label>
-<input type="text" id="ta-support" placeholder="e.g. 462.00¢">
-</div>
-<div class="ta-form-field">
-<label>Target / Pivot</label>
-<input type="text" id="ta-target" placeholder="e.g. 510.00¢">
-</div>
-</div>
-<div class="ta-form-field" style="margin-bottom:12px">
-<label>Technical Commentary</label>
-<textarea id="ta-commentary" placeholder="Describe the technical setup, pattern, key observations…"></textarea>
-
-```
-</div>
-<div class="ta-form-field" style="margin-bottom:14px">
-<label>Indicators &amp; Signals — click once (bullish), twice (bearish), three times (neutral), again to deselect</label>
-<div class="ta-indicator-builder" id="ta-ind-builder">${indButtons}</div>
-</div>
-<button class="btn-primary" onclick="publishTAChart()" style="width:100%;padding:11px;font-size:13px;border-radius:6px;border:none;background:var(--blue);color:#fff;cursor:pointer;font-family:'DM Sans',sans-serif;font-weight:600;">
-Publish Chart Analysis
-</button>
-</div>`;
-```
-
-}
-
-function cycleTAIndicator(btn, name){
-const states = [null,‘bull’,‘bear’,‘neut’];
-const cur = _taIndicatorState[name] || null;
-const idx = states.indexOf(cur);
-const next = states[(idx+1) % states.length];
-_taIndicatorState[name] = next;
-btn.className = ‘ta-ind-toggle’ + (next ? ’ selected-’+next : ‘’);
-}
-
-function handleTAImageUpload(input){
-const file = input.files[0];
-if(!file) return;
-const reader = new FileReader();
-reader.onload = e => {
-_taChartImage = e.target.result;
-const preview = document.getElementById(‘ta-chart-preview’);
-preview.src = _taChartImage;
-preview.style.display = ‘block’;
-document.querySelector(’.ta-chart-upload-label’).textContent = file.name;
-};
-reader.readAsDataURL(file);
-}
-
-async function publishTAChart(){
-const instrument = (document.getElementById(‘ta-instrument’).value||’’).trim();
-if(!instrument){ alert(‘Please enter an instrument name.’); return; }
-
-const indicators = Object.entries(_taIndicatorState)
-.filter(([,v])=>v)
-.map(([label,signal])=>({label,signal}));
-
-const meta = {
-instrument,
-timeframe: document.getElementById(‘ta-timeframe’).value,
-bias: document.getElementById(‘ta-bias’).value,
-resistance: document.getElementById(‘ta-resistance’).value.trim(),
-support: document.getElementById(‘ta-support’).value.trim(),
-target: document.getElementById(‘ta-target’).value.trim(),
-commentary: document.getElementById(‘ta-commentary’).value.trim(),
-chart_image: _taChartImage || ‘’,
-indicators
-};
-
-const btn = document.querySelector(’#ta-admin-form-wrap .btn-primary’);
-btn.textContent = ‘Publishing…’;
-btn.disabled = true;
-
-try {
-const { error } = await sb.from(‘posts’).insert({
-title: instrument,
-category: ‘technicals’,
-summary: JSON.stringify(meta),
-content: meta.commentary,
-user_id: currentUser.id
-});
-if(error) throw error;
-renderTAAdminForm();
-loadTACharts();
-} catch(e){
-alert(’Error: ’ + e.message);
-btn.textContent = ‘Publish Chart Analysis’;
-btn.disabled = false;
+html += '</div>';
+wrap.innerHTML = html;
+if(isAdmin){
+var adminWrap = document.getElementById('ta-admin-form-wrap');
+if(adminWrap) adminWrap.classList.remove('hidden');
 }
 }
 
 async function deleteTAPost(id, e){
 e.stopPropagation();
-if(!confirm(‘Delete this chart analysis?’)) return;
-await sb.from(‘posts’).delete().eq(‘id’, id);
-const el = document.getElementById(‘ta-’+id);
+if(!confirm('Delete this chart?')) return;
+await sb.from('posts').delete().eq('id', id);
+var el = document.getElementById('ta-' + id);
 if(el) el.remove();
-const grid = document.querySelector(’.ta-grid’);
-if(grid && !grid.children.length)
-document.getElementById(‘ta-cards-wrap’).innerHTML = ‘<div class="ta-empty">No technical analysis charts published yet.</div>’;
+}
+
+var _taChartImage = null;
+function handleTAImageUpload(input){
+var file = input.files[0];
+if(!file) return;
+var reader = new FileReader();
+reader.onload = function(e){
+_taChartImage = e.target.result;
+var preview = document.getElementById('ta-chart-preview');
+preview.src = _taChartImage;
+preview.style.display = 'block';
+document.getElementById('ta-upload-label').textContent = file.name;
+};
+reader.readAsDataURL(file);
+}
+
+async function publishTAChart(){
+if(!sb){ alert('Not connected. Please refresh.'); return; }
+var instrument = document.getElementById('ta-instrument').value.trim();
+if(!instrument){ alert('Please enter an instrument name.'); return; }
+var meta = {
+instrument: instrument,
+timeframe: document.getElementById('ta-timeframe').value,
+bias: document.getElementById('ta-bias').value,
+resistance: document.getElementById('ta-resistance').value.trim(),
+support: document.getElementById('ta-support').value.trim(),
+target: document.getElementById('ta-target').value.trim(),
+commentary: document.getElementById('ta-commentary').value.trim(),
+chart_image: _taChartImage || '',
+indicators: []
+};
+var result = await sb.from('posts').insert({
+title: instrument,
+category: 'technicals',
+summary: JSON.stringify(meta),
+content: meta.commentary,
+user_id: currentUser.id
+});
+if(result.error){ alert('Error: ' + result.error.message); return; }
+_taChartImage = null;
+document.getElementById('ta-instrument').value = '';
+document.getElementById('ta-commentary').value = '';
+document.getElementById('ta-chart-preview').style.display = 'none';
+document.getElementById('ta-upload-label').textContent = 'Click to upload chart image';
+loadTACharts();
 }
 
 function closeDetail(){
-document.getElementById(‘tab-detail’).classList.add(‘hidden’);
-document.getElementById(‘tab-’+(window._activeTab||‘commentary’)).classList.remove(‘hidden’);
+document.getElementById('tab-detail').classList.add('hidden');
+document.getElementById('tab-'+(window._activeTab||'commentary')).classList.remove('hidden');
 }
 
 /* ===== AUTH ===== */
 function switchAuthTab(t){
-document.getElementById(‘form-in’).classList.toggle(‘hidden’,t!==‘in’);
-document.getElementById(‘form-up’).classList.toggle(‘hidden’,t!==‘up’);
-document.getElementById(‘atab-in’).classList.toggle(‘active’,t===‘in’);
-document.getElementById(‘atab-up’).classList.toggle(‘active’,t===‘up’);
-authMsg(’’);
+document.getElementById('form-in').classList.toggle('hidden',t!=='in');
+document.getElementById('form-up').classList.toggle('hidden',t!=='up');
+document.getElementById('atab-in').classList.toggle('active',t==='in');
+document.getElementById('atab-up').classList.toggle('active',t==='up');
+authMsg('');
 }
-function authMsg(text,ok){ const el=document.getElementById(‘auth-msg’); if(!text){el.classList.add(‘hidden’);return;} el.textContent=text; el.className=’msg-box ’+(ok?‘msg-ok’:‘msg-error’); }
+function authMsg(text,ok){ const el=document.getElementById('auth-msg'); if(!text){el.classList.add('hidden');return;} el.textContent=text; el.className='msg-box '+(ok?'msg-ok':'msg-error'); }
 
 async function doSignIn(){
-if(!sb){authMsg(‘Connection error. Please refresh the page.’);return;}
-const email=document.getElementById(‘in-email’).value.trim(),pw=document.getElementById(‘in-pw’).value;
-if(!email||!pw){authMsg(‘Please fill in both fields.’);return;}
+if(!sb){authMsg('Connection error. Please refresh the page.');return;}
+const email=document.getElementById('in-email').value.trim(),pw=document.getElementById('in-pw').value;
+if(!email||!pw){authMsg('Please fill in both fields.');return;}
 try {
 const{error}=await sb.auth.signInWithPassword({email,password:pw});
 if(error){authMsg(error.message);return;}
 currentUser=(await sb.auth.getUser()).data.user;
 isAdmin=currentUser.email.toLowerCase()===ADMIN_EMAIL.toLowerCase();
 showAppPage();
-} catch(e) { authMsg(’Sign-in failed: ’+e.message); }
+} catch(e) { authMsg('Sign-in failed: '+e.message); }
 }
 
 async function doSignUp(){
-if(!sb){authMsg(‘Connection error. Please refresh the page.’);return;}
-const email=document.getElementById(‘up-email’).value.trim(),pw=document.getElementById(‘up-pw’).value;
-if(!email||!pw){authMsg(‘Please fill in both fields.’);return;}
-if(pw.length<6){authMsg(‘Password must be at least 6 characters.’);return;}
+if(!sb){authMsg('Connection error. Please refresh the page.');return;}
+const email=document.getElementById('up-email').value.trim(),pw=document.getElementById('up-pw').value;
+if(!email||!pw){authMsg('Please fill in both fields.');return;}
+if(pw.length<6){authMsg('Password must be at least 6 characters.');return;}
 try {
 const{error}=await sb.auth.signUp({email,password:pw});
 if(error){authMsg(error.message);return;}
 // Record subscriber (best-effort — sign in first then insert)
 try{
 const{data:sess}=await sb.auth.signInWithPassword({email,password:pw});
-if(sess?.user) await sb.from(‘subscribers’).upsert({email},{onConflict:‘email’});
+if(sess?.user) await sb.from('subscribers').upsert({email},{onConflict:'email'});
 }catch(e){}
-authMsg(‘Account created successfully! Please use your credentials to sign in.’,true);
-} catch(e){ authMsg(’Sign-up failed: ’+e.message); }
+authMsg('Account created successfully! Please use your credentials to sign in.',true);
+} catch(e){ authMsg('Sign-up failed: '+e.message); }
 }
 
 async function doSignOut(){
 await sb.auth.signOut(); currentUser=null; isAdmin=false; currentPostId=null;
-document.getElementById(‘page-app’).classList.add(‘hidden’);
-document.getElementById(‘page-admin’).classList.add(‘hidden’);
-document.getElementById(‘page-auth’).classList.remove(‘hidden’);
+document.getElementById('page-app').classList.add('hidden');
+document.getElementById('page-admin').classList.add('hidden');
+document.getElementById('page-auth').classList.remove('hidden');
 }
 
 /* ===== POSTS ===== */
 async function loadPosts(category){
-const el=document.getElementById(‘posts-’+category);
+const el=document.getElementById('posts-'+category);
 if(!el) return;
-el.innerHTML=’<div class="spin">Loading…</div>’;
-const{data:posts,error}=await sb.from(‘posts’).select(‘id,title,summary,created_at,category,is_pinned’).eq(‘category’,category).order(‘is_pinned’,{ascending:false}).order(‘created_at’,{ascending:false});
-if(error){el.innerHTML=’<div class="spin">⚠ Could not load posts.</div>’;return;}
+el.innerHTML='<div class="spin">Loading…</div>';
+const{data:posts,error}=await sb.from('posts').select('id,title,summary,created_at,category,is_pinned').eq('category',category).order('is_pinned',{ascending:false}).order('created_at',{ascending:false});
+if(error){el.innerHTML='<div class="spin">⚠ Could not load posts.</div>';return;}
 if(!posts||posts.length===0){
 el.innerHTML=`<div class="empty-state"><h3>No posts yet</h3><p>${isAdmin?'Go to Admin → New Post and select this section.':'Check back soon.'}</p></div>`;return;
 }
 const ids=posts.map(p=>p.id);
-const{data:cc}=await sb.from(‘comments’).select(‘post_id’).in(‘post_id’,ids).eq(‘is_visible’,true);
+const{data:cc}=await sb.from('comments').select('post_id').in('post_id',ids).eq('is_visible',true);
 const counts={}; (cc||[]).forEach(r=>counts[r.post_id]=(counts[r.post_id]||0)+1);
-const grid=document.createElement(‘div’); grid.className=‘posts-grid’;
+const grid=document.createElement('div'); grid.className='posts-grid';
 posts.forEach(p=>{
-const n=counts[p.id]||0,card=document.createElement(‘div’); card.className=‘post-card’+(p.is_pinned?’ pinned’:’’);
+const n=counts[p.id]||0,card=document.createElement('div'); card.className='post-card'+(p.is_pinned?' pinned':'');
 card.innerHTML=`${p.is_pinned?'<div class="pin-badge">📌 Pinned</div>':''}<div class="card-date">${fmtDate(p.created_at)}</div><h3>${esc(p.title)}</h3><p class="card-summary">${esc(p.summary||'')}</p><div class="card-foot"><span class="ccount">💬 ${n} comment${n!==1?'s':''}</span><span class="readmore">Read →</span></div>`;
 card.onclick=()=>loadDetail(p.id,category); grid.appendChild(card);
 });
-el.innerHTML=’’; el.appendChild(grid);
+el.innerHTML=''; el.appendChild(grid);
 }
 
 /* ===== POST DETAIL ===== */
 async function loadDetail(postId,category){
 currentPostId=postId; currentPostTab=category||window._activeTab;
-[‘commentary’,‘research’,‘cftc’,‘futures’,‘services’,‘contact’,‘about’].forEach(t=>document.getElementById(‘tab-’+t).classList.add(‘hidden’));
-document.getElementById(‘tab-detail’).classList.remove(‘hidden’);
-const labels={‘commentary’:‘Market Commentary’,‘research’:‘Research’,‘cftc’:‘CFTC’};
-const bc=document.getElementById(‘detail-breadcrumb’);
-if(bc) bc.textContent=labels[currentPostTab]||’’;
-const wrap=document.getElementById(‘detail-content’);
-wrap.innerHTML=’<div class="spin">Loading…</div>’;
-const{data:post,error}=await sb.from(‘posts’).select(’*’).eq(‘id’,postId).single();
-if(error||!post){wrap.innerHTML=’<div class="spin">Post not found.</div>’;return;}
-const{data:comments}=await sb.from(‘comments’).select(’*’).eq(‘post_id’,postId).eq(‘is_visible’,true).order(‘created_at’,{ascending:true});
+['commentary','research','cftc','futures','services','contact','about'].forEach(t=>document.getElementById('tab-'+t).classList.add('hidden'));
+document.getElementById('tab-detail').classList.remove('hidden');
+const labels={'commentary':'Market Commentary','research':'Research','cftc':'CFTC'};
+const bc=document.getElementById('detail-breadcrumb');
+if(bc) bc.textContent=labels[currentPostTab]||'';
+const wrap=document.getElementById('detail-content');
+wrap.innerHTML='<div class="spin">Loading…</div>';
+const{data:post,error}=await sb.from('posts').select('*').eq('id',postId).single();
+if(error||!post){wrap.innerHTML='<div class="spin">Post not found.</div>';return;}
+const{data:comments}=await sb.from('comments').select('*').eq('post_id',postId).eq('is_visible',true).order('created_at',{ascending:true});
 const commHtml=(comments&&comments.length)
-?comments.map(c=>`<div class="comment-item" id="ci-${c.id}"><div class="comment-header"><span class="comment-author">${esc(c.author_name||'Anonymous')}</span><span class="comment-time">${fmtDate(c.created_at)}</span></div><div class="comment-text">${esc(c.content)}</div>${isAdmin?`<div class="comment-admin-row"><button class="btn-sm-del" onclick="adminDelComment('${c.id}')">Delete</button><button class="btn-sm-hide" onclick="adminHideComment('${c.id}')">Hide</button></div>`:''}</div>`).join(’’)
-:’<div class="no-comments">No comments yet — be first to share your view.</div>’;
+?comments.map(c=>`<div class="comment-item" id="ci-${c.id}"><div class="comment-header"><span class="comment-author">${esc(c.author_name||'Anonymous')}</span><span class="comment-time">${fmtDate(c.created_at)}</span></div><div class="comment-text">${esc(c.content)}</div>${isAdmin?`<div class="comment-admin-row"><button class="btn-sm-del" onclick="adminDelComment('${c.id}')">Delete</button><button class="btn-sm-hide" onclick="adminHideComment('${c.id}')">Hide</button></div>`:''}</div>`).join('')
+:'<div class="no-comments">No comments yet — be first to share your view.</div>';
 const isFullDoc=isFullHtmlDocument(post.content);
 // Expand detail-wrap to full width for full HTML documents
-const dw=wrap.closest(’.detail-wrap’);
-if(dw) dw.classList.toggle(‘full-width’, isFullDoc);
+const dw=wrap.closest('.detail-wrap');
+if(dw) dw.classList.toggle('full-width', isFullDoc);
 let contentHtml;
 if(isFullDoc){
-const encoded=post.content.replace(/”/g,’"’);
+const encoded=post.content.replace(/"/g,'&quot;');
 contentHtml=`<iframe class="post-iframe" srcdoc="${encoded}" onload="resizeIframe(this)" scrolling="no"></iframe>`;
 } else {
 contentHtml=`<div class="post-kicker">${fmtDate(post.created_at)}</div><h1>${esc(post.title)}</h1>${post.summary?`<div class="post-standfirst">${esc(post.summary)}</div>`:''}<div class="post-body">${post.content}</div>`;
 }
 wrap.innerHTML=`${contentHtml}<div class="comments-wrap"><div class="section-title">Discussion</div><div id="comments-area">${commHtml}</div><div class="comment-form-card"><h3>Leave a Comment</h3><div class="field"><label>Your name <span style="font-weight:400;color:var(--muted)">(optional)</span></label><input type="text" id="c-name" placeholder="e.g. John T."></div><div class="field"><label>Comment</label><textarea id="c-text" placeholder="Share your view on this analysis…"></textarea></div><button class="btn btn-navy" onclick="postComment()">Post Comment</button><div id="c-msg" class="hidden msg-box" style="margin-top:10px;"></div></div></div>`;
+
 }
 
 function resizeIframe(iframe){
