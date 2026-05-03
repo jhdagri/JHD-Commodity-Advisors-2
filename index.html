@@ -1595,7 +1595,7 @@ if(!document.getElementById(‘cancel-edit-btn’)){
 const cancelBtn = document.createElement(‘button’);
 cancelBtn.id=‘cancel-edit-btn’;
 cancelBtn.className=‘btn btn-ghost’;
-cancelBtn.style.background=‘var(–muted)’;
+cancelBtn.style.background=‘var(--muted)’;
 cancelBtn.style.color=’#fff’;
 cancelBtn.textContent=‘x Cancel Edit’;
 cancelBtn.onclick=cancelEdit;
@@ -1657,7 +1657,7 @@ URL.revokeObjectURL(url);
 }
 
 /* ===== HELPERS ===== */
-function esc(s){ if(!s) return ‘’; return String(s).replace(/&/g,’&’).replace(/</g,’<’).replace(/>/g,’>’).replace(/”/g,’\x22’).replace(/’/g,’'’); }
+function esc(s){ if(!s) return ''; return String(s).replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;').replace(/"/g,'\x22').replace(/'/g,'&#39;'); }
 function fmtDate(d){ return new Date(d).toLocaleDateString(‘en-GB’,{day:‘numeric’,month:‘short’,year:‘numeric’}); }
 
 async function togglePin(id, currentlyPinned){
