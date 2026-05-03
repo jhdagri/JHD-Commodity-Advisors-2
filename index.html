@@ -1294,7 +1294,8 @@ async function doSignOut(){
 /* ===== POSTS ===== */
 async function loadPosts(category){
   const el=document.getElementById('posts-'+category);
-  if(!el) return;
+  if(!el){ console.log('loadPosts: no element for posts-'+category); return; }
+  console.log('loadPosts called, category='+category+', currentUser='+JSON.stringify(currentUser?currentUser.email:'NULL'));
   // Show content gate for non-logged-in users on gated tabs
   if(!currentUser){
     el.innerHTML='<div class="content-gate">'
