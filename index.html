@@ -1005,6 +1005,7 @@ let allSubs=[];
 
 /* ===== RECENT STRIP ===== */
 async function loadRecentStrip(){
+  if(!sb) return;
   const scroll = document.getElementById('recent-strip-scroll');
   if(!scroll) return;
   const catLabel = {'commentary':'Commentary','research':'Research','cftc':'CFTC','exports':'Export Data','wasde':'WASDE','commoditymap':'Commodity Map','weather':'Weather','options':'Options','fob':'FOB Data','freight':'Freight','technicals':'Technical Analysis'};
@@ -1036,7 +1037,7 @@ async function boot(){
   const{data:{session}}=await sb.auth.getSession();
   if(session){
     currentUser=session.user;
-    isAdmin=currentUser.email.toLowerCase()===ADMIN_EMAIL.toLowerCase();
+    isAdmin=(currentUser&&currentUser.email?currentUser.email.toLowerCase():'')===ADMIN_EMAIL.toLowerCase();
     showAppPage();
   } else {
     // Check if URL has a public tab requested
@@ -1062,7 +1063,7 @@ function installProtection(){
   document.addEventListener('keydown', e=>{
     const inProtected = e.target.closest('.protected') || document.querySelector('.protected:not(.hidden)');
     if(!inProtected) return;
-    const k=e.key.toLowerCase();
+    if(!e.key) return; const k=e.key.toLowerCase();
     // Block copy, select all, save, print
     if((e.ctrlKey||e.metaKey) && ['c','a','s','p','u'].includes(k)){
       e.preventDefault(); return false;
@@ -1085,7 +1086,7 @@ function showAppPage(){
   var adminBtn=document.getElementById('admin-btn');
   if(adminBtn) adminBtn.classList.toggle('hidden',!isAdmin);
   var chip=document.getElementById('app-chip');
-  if(chip) chip.textContent=currentUser?currentUser.email:'';
+  if(chip) chip.textContent=currentUser&&currentUser.email?currentUser.email:'';
   // Show sign-in button for non-logged-in public visitors
   var signinNav=document.getElementById('nav-signin-btn');
   if(signinNav) signinNav.style.display=currentUser?'none':'flex';
@@ -1274,7 +1275,7 @@ async function doSignIn(){
   const{error}=await sb.auth.signInWithPassword({email,password:pw});
   if(error){authMsg(error.message);return;}
   currentUser=(await sb.auth.getUser()).data.user;
-  isAdmin=currentUser.email.toLowerCase()===ADMIN_EMAIL.toLowerCase();
+  isAdmin=(currentUser&&currentUser.email?currentUser.email.toLowerCase():'')===ADMIN_EMAIL.toLowerCase();
   showAppPage();
 }
 
@@ -1316,7 +1317,7 @@ async function doSignUp(){
         last_login_date: today
       });
       currentUser=newUser;
-      isAdmin=currentUser.email.toLowerCase()===ADMIN_EMAIL.toLowerCase();
+      isAdmin=(currentUser&&currentUser.email?currentUser.email.toLowerCase():'')===ADMIN_EMAIL.toLowerCase();
       showAppPage();
       return;
     }
