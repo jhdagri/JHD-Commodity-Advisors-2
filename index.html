@@ -1378,15 +1378,15 @@ el.innerHTML='<div class="content-gate">'
 +'<button class="btn btn-navy" onclick="showAuthPage()" style="padding:10px 22px;">Sign In</button>'
 +'<button class="btn btn-gold" onclick="showAuthPage()" style="padding:10px 22px;">Join Free</button>'
 +'</div>'
-+'<div class="gate-bu-teaser">🌾 Join free and earn 50 Bushels instantly — rise from Merchandiser to Market Maker</div>'
++'<div class="gate-bu-teaser">🌾 Join free and earn 50 Bushels instantly -- rise from Merchandiser to Market Maker</div>'
 +'</div>';
 return;
 }
-el.innerHTML='<div class="spin">Loading…</div>';
+el.innerHTML='<div class="spin">Loading...</div>';
 const{data:posts,error}=await sb.from('posts').select('id,title,summary,created_at,category,is_pinned').eq('category',category).order('is_pinned',{ascending:false}).order('created_at',{ascending:false});
 if(error){el.innerHTML='<div class="spin">⚠ Could not load posts.</div>';return;}
 if(!posts||posts.length===0){
-el.innerHTML='<div class="empty-state"><h3>No posts yet</h3><p>'+(isAdmin?'Go to Admin → New Post and select this section.':'Check back soon.')+'</p></div>';return;
+el.innerHTML='<div class="empty-state"><h3>No posts yet</h3><p>'+(isAdmin?'Go to Admin -> New Post and select this section.':'Check back soon.')+'</p></div>';return;
 }
 const ids=posts.map(p=>p.id);
 const{data:cc}=await sb.from('comments').select('post_id').in('post_id',ids).eq('is_visible',true);
@@ -1396,7 +1396,7 @@ posts.forEach(p=>{
 const n=counts[p.id]||0,card=document.createElement('div');
 card.className='post-card'+(p.is_pinned?' pinned':'');
 card.innerHTML=(p.is_pinned?'<div class="pin-badge">📌 Pinned</div>':'')
-+'<div class="card-date">'+fmtDate(p.created_at)+'</div><h3>'+esc(p.title)+'</h3><p class="card-summary">'+esc(p.summary||'')+'</p><div class="card-foot"><span class="ccount">💬 '+n+' comment'+(n!==1?'s':'')+'</span><span class="readmore">Read →</span></div>';
++'<div class="card-date">'+fmtDate(p.created_at)+'</div><h3>'+esc(p.title)+'</h3><p class="card-summary">'+esc(p.summary||'')+'</p><div class="card-foot"><span class="ccount">💬 '+n+' comment'+(n!==1?'s':'')+'</span><span class="readmore">Read -></span></div>';
 card.onclick=()=>loadDetail(p.id,category); grid.appendChild(card);
 });
 el.innerHTML=''; el.appendChild(grid);
@@ -1411,7 +1411,7 @@ const labels={'commentary':'Market Commentary','research':'Research','cftc':'CFT
 const bc=document.getElementById('detail-breadcrumb');
 if(bc) bc.textContent=labels[currentPostTab]||'';
 const wrap=document.getElementById('detail-content');
-wrap.innerHTML='<div class="spin">Loading…</div>';
+wrap.innerHTML='<div class="spin">Loading...</div>';
 const{data:post,error}=await sb.from('posts').select('*').eq('id',postId).single();
 if(error||!post){wrap.innerHTML='<div class="spin">Post not found.</div>';return;}
 const{data:comments}=await sb.from('comments').select('*').eq('post_id',postId).eq('is_visible',true).order('created_at',{ascending:true});
@@ -1420,7 +1420,7 @@ const commHtml=(comments&&comments.length)
 var adminBtns=isAdmin?('<div class="comment-admin-row"><button class="btn-sm-del" onclick="adminDelComment(&quot;'+c.id+'&quot;)">Delete</button><button class="btn-sm-hide" onclick="adminHideComment(&quot;'+c.id+'&quot;)">Hide</button></div>'):'';
 return '<div class="comment-item" id="ci-'+c.id+'"><div class="comment-header"><span class="comment-author">'+esc(c.author_name||'Anonymous')+'</span><span class="comment-time">'+fmtDate(c.created_at)+'</span></div><div class="comment-text">'+esc(c.content)+'</div>'+adminBtns+'</div>';
 }).join('')
-:'<div class="no-comments">No comments yet — be first to share your view.</div>';
+:'<div class="no-comments">No comments yet -- be first to share your view.</div>';
 const isFullDoc=isFullHtmlDocument(post.content);
 // Expand detail-wrap to full width for full HTML documents
 const dw=wrap.closest('.detail-wrap');
@@ -1433,7 +1433,7 @@ contentHtml='<iframe class="post-iframe" srcdoc="'+encoded+'" onload="resizeIfra
 var standfirst = post.summary ? '<div class="post-standfirst">'+esc(post.summary)+'</div>' : '';
 contentHtml = '<div class="post-kicker">'+fmtDate(post.created_at)+'</div><h1>'+esc(post.title)+'</h1>'+standfirst+'<div class="post-body">'+post.content+'</div>';
 }
-wrap.innerHTML=contentHtml+'<div class="comments-wrap"><div class="section-title">Discussion</div><div id="comments-area">'+commHtml+'</div><div class="comment-form-card"><h3>Leave a Comment</h3><div class="field"><label>Your name <span style="font-weight:400;color:var(--muted)">(optional)</span></label><input type="text" id="c-name" placeholder="e.g. John T."></div><div class="field"><label>Comment</label><textarea id="c-text" placeholder="Share your view on this analysis…"></textarea></div><button class="btn btn-navy" onclick="postComment()">Post Comment</button><div id="c-msg" class="hidden msg-box" style="margin-top:10px;"></div></div></div>';
+wrap.innerHTML=contentHtml+'<div class="comments-wrap"><div class="section-title">Discussion</div><div id="comments-area">'+commHtml+'</div><div class="comment-form-card"><h3>Leave a Comment</h3><div class="field"><label>Your name <span style="font-weight:400;color:var(--muted)">(optional)</span></label><input type="text" id="c-name" placeholder="e.g. John T."></div><div class="field"><label>Comment</label><textarea id="c-text" placeholder="Share your view on this analysis..."></textarea></div><button class="btn btn-navy" onclick="postComment()">Post Comment</button><div id="c-msg" class="hidden msg-box" style="margin-top:10px;"></div></div></div>';
 
 }
 
@@ -1535,7 +1535,7 @@ return ‘<div class="mod-card'+hiddenCls+'" id="mc-'+c.id+'">’
 +’<span class="mod-meta">’+fmtDate(c.created_at)+’</span>’
 +hiddenBadge
 +’<span class="cat-badge">’+esc(c.posts?.category||’’)+’</span>’
-+’</div><span class="mod-post">’+esc(c.posts?.title||’—’)+’</span></div>’
++’</div><span class="mod-post">’+esc(c.posts?.title||’–’)+’</span></div>’
 +’<div class="mod-text">’+esc(c.content)+’</div>’
 +’<div class="mod-actions">’
 +’<button class="btn-sm-del" onclick="modDelete(&quot;'+c.id+'&quot;)">Delete</button>’
@@ -1558,7 +1558,7 @@ wrap.innerHTML=data.map(p=>’<div class="mod-card" id="mp-'+p.id+'">’
 +’</div></div>’
 +(p.summary?’<div class="mod-text" style="font-size:12px;color:var(--muted);">’+esc(p.summary)+’</div>’:’’)
 +’<div class="mod-actions" style="margin-top:10px;">’
-+’<button class="btn-sm-hide" onclick="startEditPost(&quot;'+p.id+'&quot;)">✏ Edit</button>’
++’<button class="btn-sm-hide" onclick="startEditPost(&quot;'+p.id+'&quot;)"> Edit</button>’
 +(p.is_pinned?’<button class="btn-sm-hide" style="color:var(--gold2);border-color:rgba(212,170,85,0.5);" onclick="togglePin(&quot;'+p.id+'&quot;,true)">📌 Unpin</button>’:’<button class="btn-sm-hide" onclick="togglePin(&quot;'+p.id+'&quot;,false)">📌 Pin</button>’)
 +’<button class="btn-sm-del" onclick="deletePost(&quot;'+p.id+'&quot;)">Delete</button>’
 +’</div></div>’).join(’’);
@@ -1597,7 +1597,7 @@ cancelBtn.id=‘cancel-edit-btn’;
 cancelBtn.className=‘btn btn-ghost’;
 cancelBtn.style.background=‘var(–muted)’;
 cancelBtn.style.color=’#fff’;
-cancelBtn.textContent=‘✕ Cancel Edit’;
+cancelBtn.textContent=‘x Cancel Edit’;
 cancelBtn.onclick=cancelEdit;
 pubRow.appendChild(cancelBtn);
 }
@@ -1698,7 +1698,7 @@ var num = Math.floor(Math.random() * 90) + 10;
 document.getElementById(‘up-username’).value = base + num;
 }
 
-/* ── Bushel DB operations ── */
+/* – Bushel DB operations – */
 async function getBushels() {
 if (!sb || !currentUser) return null;
 var result = await sb.from(‘user_bushels’).select(‘balance,last_login_date’).eq(‘user_id’, currentUser.id).single();
@@ -1721,7 +1721,7 @@ if (!sb || !currentUser) return;
 var data = await getBushels();
 var today = new Date().toISOString().slice(0, 10);
 if (!data) {
-// No record yet — create with welcome bonus
+// No record yet – create with welcome bonus
 await sb.from(‘user_bushels’).insert({user_id: currentUser.id, balance: 50, last_login_date: today});
 loadBushelBalance();
 return;
@@ -1749,7 +1749,7 @@ window._bushelBalance = bal;
 window._bushelLevel = level;
 }
 
-/* ── Bushel Panel ── */
+/* – Bushel Panel – */
 function openBushelPanel() {
 document.getElementById(‘bushel-overlay’).classList.add(‘open’);
 document.getElementById(‘bushel-panel’).classList.add(‘open’);
@@ -1789,13 +1789,13 @@ levelsHtml += ‘<div class="bp-level-row' + (isCurrent ? ' current-level' : '')
 + ‘<div class="bp-level-dot" style="background:' + (isDone ? 'var(--gold2)' : 'var(--border2)') + '"></div>’
 + ‘<div class="bp-level-name">’ + lv.icon + ’ ’ + lv.name + ‘</div>’
 + ‘<div class="bp-level-req">’ + (lv.min === 0 ? ‘Starting’ : lv.min + ’ bu’) + ‘</div>’
-+ ‘<div class="bp-level-check">’ + (isDone ? ‘✅’ : ‘’) + ‘</div>’
++ ‘<div class="bp-level-check">’ + (isDone ? ‘’ : ‘’) + ‘</div>’
 + ‘</div>’;
 }
 document.getElementById(‘bp-levels-list’).innerHTML = levelsHtml;
 }
 
-/* ── Award bushel on comment post ── */
+/* – Award bushel on comment post – */
 var _origPostComment = null;
 function wrapPostCommentWithBushels() {
 var orig = window.postComment;
