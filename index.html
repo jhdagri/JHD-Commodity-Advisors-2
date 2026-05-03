@@ -1033,8 +1033,9 @@ async function boot(){
     return;
   }
 
-  const{data:{session}}=await sb.auth.getSession();
-  if(session){
+  const sessionResult=await sb.auth.getSession();
+  const session=sessionResult.data&&sessionResult.data.session;
+  if(session&&session.user){
     currentUser=session.user;
     isAdmin=(currentUser&&currentUser.email?currentUser.email.toLowerCase():'')===ADMIN_EMAIL.toLowerCase();
     showAppPage();
@@ -1226,9 +1227,13 @@ function authMsg(text,ok){ const el=document.getElementById('auth-msg'); if(!tex
 async function doSignIn(){
   const email=document.getElementById('in-email').value.trim(),pw=document.getElementById('in-pw').value;
   if(!email||!pw){authMsg('Please fill in both fields.');return;}
-  const{error}=await sb.auth.signInWithPassword({email,password:pw});
+  const{data,error}=await sb.auth.signInWithPassword({email,password:pw});
   if(error){authMsg(error.message);return;}
-  currentUser=(await sb.auth.getUser()).data.user;
+  if(data&&data.user){
+    currentUser=data.user;
+  } else {
+    currentUser=(await sb.auth.getUser()).data.user;
+  }
   isAdmin=(currentUser&&currentUser.email?currentUser.email.toLowerCase():'')===ADMIN_EMAIL.toLowerCase();
   showAppPage();
 }
