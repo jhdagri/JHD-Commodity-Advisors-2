@@ -1649,7 +1649,7 @@ renderSubsTable(filtered);
 }
 function exportCSV(){
 if(!allSubs.length){ alert(‘No subscribers to export.’); return; }
-const rows=[‘Email,Joined’,…allSubs.map(s=>s.email+’,’+new Date(s.created_at).toLocaleDateString(‘en-GB’))];
+const rows=[‘Email,Joined’,...allSubs.map(s=>s.email+’,’+new Date(s.created_at).toLocaleDateString(‘en-GB’))];
 const blob=new Blob([rows.join(’\n’)],{type:‘text/csv’});
 const url=URL.createObjectURL(blob);
 const a=document.createElement(‘a’); a.href=url; a.download=‘jhd-subscribers.csv’; a.click();
@@ -1686,7 +1686,7 @@ var AGRI_USERNAMES = [
 ];
 
 function getLevelForBalance(bal) {
-for (var i = LEVELS.length - 1; i >= 0; i–) {
+for (var i = LEVELS.length - 1; i >= 0; i–-) {
 if (bal >= LEVELS[i].min) return LEVELS[i];
 }
 return LEVELS[0];
