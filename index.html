@@ -523,7 +523,6 @@ padding:2px 8px;border-radius:3px;margin-bottom:6px;letter-spacing:0.06em;text-t
         </div>
         <button class="btn btn-gold hidden" id="admin-btn" onclick="showAdminPage()">⚙ Admin</button>
         <button class="btn btn-ghost" onclick="doSignOut()">Sign Out</button>
-        <button class="btn btn-navy" id="nav-signin-btn" onclick="showAuthPage()" style="display:none;">Sign In / Join Free</button>
       </div>
     </div>
   </header>
@@ -1040,15 +1039,7 @@ async function boot(){
     isAdmin=(currentUser&&currentUser.email?currentUser.email.toLowerCase():'')===ADMIN_EMAIL.toLowerCase();
     showAppPage();
   } else {
-    // Check if URL has a public tab requested
-    var urlParams = new URLSearchParams(window.location.search);
-    var requestedTab = urlParams.get('tab') || window.location.hash.replace('#','');
-    if(requestedTab && PUBLIC_TABS.includes(requestedTab)){
-      showAppPage();
-      showTab(requestedTab);
-    } else {
-      document.getElementById('page-auth').classList.remove('hidden');
-    }
+    document.getElementById('page-auth').classList.remove('hidden');
   }
   installProtection();
 }
@@ -1087,16 +1078,10 @@ function showAppPage(){
   if(adminBtn) adminBtn.classList.toggle('hidden',!isAdmin);
   var chip=document.getElementById('app-chip');
   if(chip) chip.textContent=currentUser&&currentUser.email?currentUser.email:'';
-  // Show sign-in button for non-logged-in public visitors
-  var signinNav=document.getElementById('nav-signin-btn');
-  if(signinNav) signinNav.style.display=currentUser?'none':'flex';
   var bushelChip=document.getElementById('bushel-chip');
   if(bushelChip) bushelChip.classList.toggle('hidden',!currentUser);
-  var signOutBtn=document.querySelector('.btn-ghost[onclick="doSignOut()"]');
-  if(signOutBtn) signOutBtn.style.display=currentUser?'':'none';
   showTab(window._activeTab||'commentary');
   loadRecentStrip();
-  updateNavForAuthState();
   // Bushel system init
   if(currentUser){
     checkDailyLogin();
@@ -1113,15 +1098,7 @@ function showAdminPage(){
 
 /* ===== TAB ROUTING ===== */
 const POST_TABS=['commentary','research','cftc','exports','wasde','commoditymap','weather','options','fob','freight'];
-// Tabs publicly accessible without login (per platform model doc)
-const PUBLIC_TABS=['cftc','wasde','weather','exports','commoditymap','futures'];
 function showTab(name){
-  // Non-logged-in users can only see public tabs
-  if(!currentUser && !PUBLIC_TABS.includes(name) && !['services','contact','about'].includes(name)){
-    document.getElementById('page-auth').classList.remove('hidden');
-    document.getElementById('page-app').classList.add('hidden');
-    return;
-  }
   window._activeTab=name;
   ['commentary','research','cftc','futures','services','contact','about','detail','exports','wasde','commoditymap','weather','options','fob','freight','technicals']
     .forEach(t=>document.getElementById('tab-'+t).classList.add('hidden'));
@@ -1229,30 +1206,7 @@ async function publishTAChart(){
 }
 
 // Show lock indicators on nav tabs that require login (for public visitors)
-function updateNavForAuthState(){
-  var publicTabs = ['cftc','wasde','weather','exports','commoditymap','futures'];
-  document.querySelectorAll('.snav-btn').forEach(function(btn){
-    var tab = btn.dataset.tab;
-    if(!tab) return;
-    var isPublic = publicTabs.includes(tab) || ['services','contact','about'].includes(tab);
-    var baseText = btn.getAttribute('data-label') || btn.textContent.replace(' 🔒','').trim();
-    btn.setAttribute('data-label', baseText);
-    if(!currentUser && !isPublic){
-      btn.textContent = baseText + ' 🔒';
-      btn.title = 'Sign in to access';
-      btn.style.opacity = '0.6';
-    } else {
-      btn.textContent = baseText;
-      btn.title = '';
-      btn.style.opacity = '';
-    }
-  });
-}
 
-function showAuthPage(){
-  document.getElementById('page-app').classList.add('hidden');
-  document.getElementById('page-auth').classList.remove('hidden');
-}
 
 function closeDetail(){
   document.getElementById('tab-detail').classList.add('hidden');
@@ -1352,9 +1306,9 @@ async function loadPosts(category){
   }
   el.innerHTML='<div class="spin">Loading...</div>';
   const{data:posts,error}=await sb.from('posts').select('id,title,summary,created_at,category,is_pinned').eq('category',category).order('is_pinned',{ascending:false}).order('created_at',{ascending:false});
-  if(error){el.innerHTML='<div class="spin">⚠ Could not load posts.</div>';return;}
+  if(error){el.innerHTML='<div class="spin">⚠ Error: '+error.message+'</div>';return;}
   if(!posts||posts.length===0){
-    el.innerHTML='<div class="empty-state"><h3>No posts yet</h3><p>'+(isAdmin?'Go to Admin -> New Post and select this section.':'Check back soon.')+'</p></div>';return;
+    el.innerHTML='<div class="empty-state"><h3>No posts yet in '+category+'</h3><p>'+(isAdmin?'Go to Admin -> New Post and select this section.':'Check back soon.')+'</p></div>';return;
   }
   const ids=posts.map(p=>p.id);
   const{data:cc}=await sb.from('comments').select('post_id').in('post_id',ids).eq('is_visible',true);
