@@ -586,7 +586,7 @@ const ADMIN_EMAIL = 'jhdagri@gmail.com';
 <div class="tv-widget-wrap">
 <div class="tradingview-widget-container">
 <div class="tradingview-widget-container__widget"></div>
-<script type="text/javascript" src="https://s3.tradingview.com/external-embedding/embed-widget-market-overview.js" async>
+<script type="text/javascript" src="https://s3.tradingview.com/external-embedding/embed-widget-market-overview.js">
 {"colorTheme":"dark","dateRange":"1D","showChart":true,"locale":"en","largeChartUrl":"","isTransparent":true,"showSymbolLogo":false,"showFloatingTooltip":false,"width":"100%","height":660,"plotLineColorGrowing":"rgba(74,158,255,1)","plotLineColorFalling":"rgba(255,107,74,1)","gridLineColor":"rgba(255,255,255,0.06)","scaleFontColor":"rgba(232,234,240,0.9)","belowLineFillColorGrowing":"rgba(74,158,255,0.1)","belowLineFillColorFalling":"rgba(255,107,74,0.1)","belowLineFillColorGrowingBottom":"rgba(74,158,255,0)","belowLineFillColorFallingBottom":"rgba(255,107,74,0)","symbolActiveColor":"rgba(74,158,255,0.1)","tabs":[{"title":"Grains","symbols":[{"s":"CBOT:ZC1!","d":"Corn"},{"s":"CBOT:ZW1!","d":"SRW Wheat (Chicago)"},{"s":"CBOT:KE1!","d":"HRW Wheat (KC)"},{"s":"EURONEXT:EBM1!","d":"Milling Wheat (Euronext)"},{"s":"CBOT:ZO1!","d":"Oats"},{"s":"CBOT:ZR1!","d":"Rough Rice"}],"originalTitle":"Grains"},{"title":"Oilseeds","symbols":[{"s":"CBOT:ZS1!","d":"Soybeans"},{"s":"CBOT:ZM1!","d":"Soybean Meal"},{"s":"CBOT:ZL1!","d":"Soybean Oil"},{"s":"ICEEUR:ICA1!","d":"Canola (ICE)"},{"s":"BMD:FCPO1!","d":"Palm Oil (Bursa)"}],"originalTitle":"Oilseeds"},{"title":"Softs","symbols":[{"s":"ICE:SB1!","d":"Sugar #11"},{"s":"ICE:KC1!","d":"Coffee C"},{"s":"ICE:CT1!","d":"Cotton #2"},{"s":"ICE:CC1!","d":"Cocoa"}],"originalTitle":"Softs"},{"title":"Energy & Metals","symbols":[{"s":"NYMEX:CL1!","d":"WTI Crude Oil"},{"s":"ICEEUR:B1!","d":"Brent Crude"},{"s":"COMEX:GC1!","d":"Gold"},{"s":"COMEX:SI1!","d":"Silver"}],"originalTitle":"Energy & Metals"},{"title":"Currencies","symbols":[{"s":"FX:EURUSD","d":"EUR/USD"},{"s":"FX:AUDUSD","d":"AUD/USD"},{"s":"FX:USDCAD","d":"USD/CAD"},{"s":"FX:USDBRL","d":"USD/BRL"},{"s":"FX:USDRUB","d":"USD/RUB"},{"s":"TVC:DXY","d":"DXY (USD Index)"}],"originalTitle":"Currencies"}]}
 </script>
 </div>
@@ -1046,7 +1046,7 @@ if(error || !data || data.length === 0){
 scroll.innerHTML = '<div style="color:var(--muted2);font-size:12px;font-family:monospace;padding:8px 0;">No publications yet.</div>';
 return;
 }
-scroll.innerHTML = data.map(p => '<div class="recent-doc-card" onclick="loadDetail(&quot;'+p.id+'&quot;,&quot;'+p.category+'&quot;)">'
+scroll.innerHTML = data.map(p => '<div class="recent-doc-card" onclick="loadDetail(\x22'+p.id+'\x22,\x22'+p.category+'\x22)">'
 +'<div class="recent-doc-cat">'+(catLabel[p.category]||p.category)+'</div>'
 +'<div class="recent-doc-title">'+esc(p.title)+'</div>'
 +'<div class="recent-doc-date">'+fmtDate(p.created_at)+'</div>'
@@ -1417,7 +1417,7 @@ if(error||!post){wrap.innerHTML='<div class="spin">Post not found.</div>';return
 const{data:comments}=await sb.from('comments').select('*').eq('post_id',postId).eq('is_visible',true).order('created_at',{ascending:true});
 const commHtml=(comments&&comments.length)
 ?comments.map(c=>{
-var adminBtns=isAdmin?('<div class="comment-admin-row"><button class="btn-sm-del" onclick="adminDelComment(&quot;'+c.id+'&quot;)">Delete</button><button class="btn-sm-hide" onclick="adminHideComment(&quot;'+c.id+'&quot;)">Hide</button></div>'):'';
+var adminBtns=isAdmin?('<div class="comment-admin-row"><button class="btn-sm-del" onclick="adminDelComment(\x22'+c.id+'\x22)">Delete</button><button class="btn-sm-hide" onclick="adminHideComment(\x22'+c.id+'\x22)">Hide</button></div>'):'';
 return '<div class="comment-item" id="ci-'+c.id+'"><div class="comment-header"><span class="comment-author">'+esc(c.author_name||'Anonymous')+'</span><span class="comment-time">'+fmtDate(c.created_at)+'</span></div><div class="comment-text">'+esc(c.content)+'</div>'+adminBtns+'</div>';
 }).join('')
 :'<div class="no-comments">No comments yet -- be first to share your view.</div>';
@@ -1427,7 +1427,7 @@ const dw=wrap.closest('.detail-wrap');
 if(dw) dw.classList.toggle('full-width', isFullDoc);
 let contentHtml;
 if(isFullDoc){
-const encoded=post.content.replace(/"/g,'&quot;');
+const encoded=post.content.replace(/"/g,'\x22');
 contentHtml='<iframe class="post-iframe" srcdoc="'+encoded+'" onload="resizeIframe(this)" scrolling="no"></iframe>';
 } else {
 var standfirst = post.summary ? '<div class="post-standfirst">'+esc(post.summary)+'</div>' : '';
@@ -1527,8 +1527,8 @@ wrap.innerHTML=data.map(function(c){
 var hiddenCls=!c.is_visible?’ is-hidden’:’’;
 var hiddenBadge=!c.is_visible?’<span class="badge-hidden">HIDDEN</span>’:’’;
 var visBtn=c.is_visible
-?(’<button class="btn-sm-hide" onclick="modSetVisible(&quot;'+c.id+'&quot;,false)">Hide</button>’)
-:(’<button class="btn-sm-hide" onclick="modSetVisible(&quot;'+c.id+'&quot;,true)">Unhide</button>’);
+?(’<button class="btn-sm-hide" onclick="modSetVisible(\x22'+c.id+'\x22,false)">Hide</button>’)
+:(’<button class="btn-sm-hide" onclick="modSetVisible(\x22'+c.id+'\x22,true)">Unhide</button>’);
 return ‘<div class="mod-card'+hiddenCls+'" id="mc-'+c.id+'">’
 +’<div class="mod-top"><div>’
 +’<span class="mod-who">’+esc(c.author_name||‘Anonymous’)+’</span>’
@@ -1538,7 +1538,7 @@ return ‘<div class="mod-card'+hiddenCls+'" id="mc-'+c.id+'">’
 +’</div><span class="mod-post">’+esc(c.posts?.title||’–’)+’</span></div>’
 +’<div class="mod-text">’+esc(c.content)+’</div>’
 +’<div class="mod-actions">’
-+’<button class="btn-sm-del" onclick="modDelete(&quot;'+c.id+'&quot;)">Delete</button>’
++’<button class="btn-sm-del" onclick="modDelete(\x22'+c.id+'\x22)">Delete</button>’
 +visBtn
 +’</div></div>’;
 }).join(’’);
@@ -1558,9 +1558,9 @@ wrap.innerHTML=data.map(p=>’<div class="mod-card" id="mp-'+p.id+'">’
 +’</div></div>’
 +(p.summary?’<div class="mod-text" style="font-size:12px;color:var(--muted);">’+esc(p.summary)+’</div>’:’’)
 +’<div class="mod-actions" style="margin-top:10px;">’
-+’<button class="btn-sm-hide" onclick="startEditPost(&quot;'+p.id+'&quot;)"> Edit</button>’
-+(p.is_pinned?’<button class="btn-sm-hide" style="color:var(--gold2);border-color:rgba(212,170,85,0.5);" onclick="togglePin(&quot;'+p.id+'&quot;,true)">📌 Unpin</button>’:’<button class="btn-sm-hide" onclick="togglePin(&quot;'+p.id+'&quot;,false)">📌 Pin</button>’)
-+’<button class="btn-sm-del" onclick="deletePost(&quot;'+p.id+'&quot;)">Delete</button>’
++’<button class="btn-sm-hide" onclick="startEditPost(\x22'+p.id+'\x22)"> Edit</button>’
++(p.is_pinned?’<button class="btn-sm-hide" style="color:var(--gold2);border-color:rgba(212,170,85,0.5);" onclick="togglePin(\x22'+p.id+'\x22,true)">📌 Unpin</button>’:’<button class="btn-sm-hide" onclick="togglePin(\x22'+p.id+'\x22,false)">📌 Pin</button>’)
++’<button class="btn-sm-del" onclick="deletePost(\x22'+p.id+'\x22)">Delete</button>’
 +’</div></div>’).join(’’);
 }
 
@@ -1657,7 +1657,7 @@ URL.revokeObjectURL(url);
 }
 
 /* ===== HELPERS ===== */
-function esc(s){ if(!s) return ‘’; return String(s).replace(/&/g,’&’).replace(/</g,’<’).replace(/>/g,’>’).replace(/”/g,’"’).replace(/’/g,’'’); }
+function esc(s){ if(!s) return ‘’; return String(s).replace(/&/g,’&’).replace(/</g,’<’).replace(/>/g,’>’).replace(/”/g,’\x22’).replace(/’/g,’'’); }
 function fmtDate(d){ return new Date(d).toLocaleDateString(‘en-GB’,{day:‘numeric’,month:‘short’,year:‘numeric’}); }
 
 async function togglePin(id, currentlyPinned){
