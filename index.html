@@ -1220,7 +1220,7 @@ async function loadDetail(postId, category){
   if(dw) dw.classList.toggle('full-width', isFullDoc);
   var contentHtml;
   if(isFullDoc){
-    var encoded = post.content.replace(/"/g,'\x22');
+    var encoded = post.content.replace(/"/g,'&quot;');
     contentHtml = '<iframe class="post-iframe" srcdoc="'+encoded+'" onload="resizeIframe(this)" scrolling="no"></iframe>';
   } else {
     var standfirst = post.summary ? '<div class="post-standfirst">'+esc(post.summary)+'</div>' : '';
