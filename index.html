@@ -1313,7 +1313,7 @@ async function publishPost(){
   if(!title){ pubMsg('Please add a title.',false); return; }
   if(!content||content==='<p><br></p>'){ pubMsg('Please add content.',false); return; }
   btn.disabled=true; btn.textContent='Publishing...';
-  var r = await sb.from('posts').insert({title:title,summary:summary,content:content,category:category,user_id:currentUser?currentUser.id:null});
+  var r = await sb.from('posts').insert({title:title,summary:summary,content:content,category:category});
   btn.disabled=false; btn.textContent='Publish Post';
   if(r.error){ pubMsg('Error: '+r.error.message,false); return; }
   document.getElementById('p-title').value='';
