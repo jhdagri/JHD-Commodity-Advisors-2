@@ -1073,7 +1073,7 @@ async function loadExportSales(forceRefresh) {
     _exportDataCache = data;
     renderExportDashboard(data, el);
   } catch (e) {
-    el.innerHTML = '<div class="exp-error"><strong>Could not load export data.</strong><br><br>' + e.message + '<br><br>The Netlify function may not be deployed yet, or CME's server is temporarily unavailable. Data is published every Thursday.</div>';
+    el.innerHTML = '<div class="exp-error"><strong>Could not load export data.</strong><br><br>' + e.message + '<br><br>The Netlify function may not be deployed yet, or CME server is temporarily unavailable. Data is published every Thursday.</div>';
   }
 }
 
@@ -1179,7 +1179,7 @@ function renderExportDashboard(data, el) {
     out += '</div>';
   }
 
-  out += '<div style="font-family:'DM Mono',monospace;font-size:8px;color:var(--muted2);margin-top:8px;">Source: CME Group / The Hightower Report &middot; USDA Weekly Export Sales &middot; Updated each Thursday &middot; Not investment advice</div>';
+  out += '<div style="font-family:DM Mono,monospace;font-size:8px;color:var(--muted2);margin-top:8px;">Source: CME Group / The Hightower Report &middot; USDA Weekly Export Sales &middot; Updated each Thursday &middot; Not investment advice</div>';
   el.innerHTML = out;
 }
 
