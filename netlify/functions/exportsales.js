@@ -1,107 +1,95 @@
-const pdf = require('pdf-parse');
+// USDA ESRQS - free XML, no auth, updates every Thursday
+const XML_URL = 'https://apps.fas.usda.gov/esrqs/StaticReports/CWRCommoditySummary.xml';
 
-const PDF_URL = 'https://www.cmegroup.com/trading/agricultural/files/ht_charts/grnxpts_cbt.pdf';
+const WANTED = [
+  'ALL WHEAT', 'CORN', 'SOYBEANS', 'SOYBEAN CAKE AND MEAL',
+  'SOYBEAN OIL', 'COTTON - UPLAND'
+];
 
-function parseNum(s) {
-  if (!s) return null;
-  const n = parseFloat(s.replace(/,/g, ''));
+const LABELS = {
+  'ALL WHEAT':             'All Wheat',
+  'CORN':                  'Corn',
+  'SOYBEANS':              'Soybeans',
+  'SOYBEAN CAKE AND MEAL': 'Soy Meal',
+  'SOYBEAN OIL':           'Soy Oil',
+  'COTTON - UPLAND':       'Cotton',
+};
+
+function attr(tag, name) {
+  const m = tag.match(new RegExp(name + '="([^"]*)"'));
+  return m ? m[1] : null;
+}
+
+function num(s) {
+  const n = parseFloat(s);
   return isNaN(n) ? null : n;
-}
-
-function parsePct(s) {
-  if (!s) return null;
-  const n = parseFloat(s.replace('%', ''));
-  return isNaN(n) ? null : n;
-}
-
-function parseSummary(text) {
-  const commodities = ['Corn', 'Soybeans', 'Soymeal', 'Soybean Oil', 'Wheat', 'Cotton'];
-  const results = {};
-  for (const comm of commodities) {
-    const esc = comm.replace(' ', '\\s+');
-    const rx = new RegExp(
-      esc + '\\s+([\\d,]+)\\s+([\\d,]+)\\s+([\\d,]+)\\s+(Above|Below|Inside|-)\\s+([\\d,]+)\\s+([\\d.]+%)\\s+([\\d.]+%)', 'i'
-    );
-    const m = text.match(rx);
-    if (m) {
-      results[comm] = {
-        current: parseNum(m[1]), next: parseNum(m[2]), total: parseNum(m[3]),
-        vs_est: m[4], cumulative: parseNum(m[5]),
-        pct_usda: parsePct(m[6]), pct_5yr: parsePct(m[7]),
-      };
-    }
-  }
-  return results;
-}
-
-function parseHistory(text, commodity) {
-  const weekRow = /(\d{1,2}-[A-Za-z]{3})\s+([\d,]+)\s+([\d,]+)\s+([\d,]+)\s+([\d,]+)\s+([\d,]+)\s+([\d.]+%)\s+([\d.]+%)\s+([\d,]+)/g;
-  const esc = commodity.replace(' ', '\\s+');
-  const sectionRx = new RegExp(esc + '[\\s\\S]{0,2000}?(?=Soybeans|Soybean Meal|Soybean Oil|Wheat|Cotton|$)', 'i');
-  const section = text.match(sectionRx);
-  if (!section) return [];
-  const rows = [];
-  let m;
-  while ((m = weekRow.exec(section[0])) !== null) {
-    rows.push({
-      week: m[1], current: parseNum(m[2]), next: parseNum(m[3]),
-      total: parseNum(m[4]), cumulative: parseNum(m[5]),
-      outstanding: parseNum(m[6]), pct_usda: parsePct(m[7]),
-      pct_5yr: parsePct(m[8]), pace_to_hit: parseNum(m[9]),
-    });
-    if (rows.length >= 4) break;
-  }
-  return rows;
-}
-
-function parseTopBuyers(text, commodity) {
-  const esc = commodity.replace(' ', '\\s+');
-  const sectionRx = new RegExp(
-    esc + '\\s*-\\s*Top Buyers[\\s\\S]{0,800}?(?=Corn -|Soybeans -|Soymeal -|Soybean Oil -|Wheat -|Cotton -|USDA WEEKLY|$)', 'i'
-  );
-  const sec = text.match(sectionRx);
-  if (!sec) return [];
-  const rowRx = /^([A-Z][a-zA-Z\s]+?)\s+([\d,]+|-[\d,]+)\s+(\d+)\s+([\d,]+|-[\d,]+)/gm;
-  const buyers = [];
-  let m;
-  while ((m = rowRx.exec(sec[0])) !== null) {
-    const name = m[1].trim();
-    if (['Total', 'Destination', 'Current'].includes(name)) continue;
-    buyers.push({ destination: name, current: parseNum(m[2]), next: parseNum(m[3]), total: parseNum(m[4]) });
-    if (buyers.length >= 5) break;
-  }
-  return buyers;
-}
-
-function parseReportDate(text) {
-  const m = text.match(/USDA WEEKLY EXPORT SALES\s+([A-Za-z]+ \d+,\s*\d{4})/i);
-  return m ? m[1].trim() : null;
 }
 
 exports.handler = async () => {
   try {
-    const resp = await fetch(PDF_URL, {
+    const resp = await fetch(XML_URL, {
       headers: { 'User-Agent': 'Mozilla/5.0 (compatible; JHD-Agri/1.0)' }
     });
-    if (!resp.ok) throw new Error('CME fetch failed: ' + resp.status);
+    if (!resp.ok) throw new Error('USDA fetch failed: ' + resp.status);
 
-    const buffer = await resp.arrayBuffer();
-    const data = await pdf(Buffer.from(buffer));
-    const text = data.text;
+    const xml = await resp.text();
+    const tagRx = /<Details\s[^>]+\/?>/g;
+    const rows = [];
+    let m;
+    while ((m = tagRx.exec(xml)) !== null) {
+      const t = m[0];
+      rows.push({
+        name:      attr(t, 'CommodityName'),
+        date:      attr(t, 'PeriodEndingDate'),
+        myear:     attr(t, 'MarketingYear'),
+        week:      attr(t, 'MarketingYearWeekNumber'),
+        netSales:  num(attr(t, 'NetSales')),
+        exports:   num(attr(t, 'WeeklyExports')),
+        outstand:  num(attr(t, 'OutstandingSales')),
+        accum:     num(attr(t, 'AccumulatedExports')),
+        total:     num(attr(t, 'TotalCommitment')),
+        prevAccum: num(attr(t, 'PreviousMKTYearAccumulatedExports')),
+        nextOut:   num(attr(t, 'NextMKTYearOutstandingSales')),
+        nextNet:   num(attr(t, 'NextMKTYearNetSales')),
+        wasde:     num(attr(t, 'WASDEReportProjectionsQuantity')),
+      });
+    }
 
-    const summary = parseSummary(text);
-    const reportDate = parseReportDate(text);
-    const history = {
-      Corn:     parseHistory(text, 'Corn'),
-      Soybeans: parseHistory(text, 'Soybeans'),
-      Wheat:    parseHistory(text, 'Wheat'),
-      Soymeal:  parseHistory(text, 'Soymeal'),
-    };
-    const topBuyers = {
-      Corn:     parseTopBuyers(text, 'Corn'),
-      Soybeans: parseTopBuyers(text, 'Soybeans'),
-      Wheat:    parseTopBuyers(text, 'Wheat'),
-    };
+    const dates = [...new Set(rows.map(r => r.date))].sort();
+    const latestDate = dates[dates.length - 1];
+    const recentDates = dates.slice(-4);
+
+    const summary = {};
+    const history = {};
+
+    for (const want of WANTED) {
+      const commRows = rows.filter(r => r.name === want);
+      if (!commRows.length) continue;
+      const label = LABELS[want];
+
+      const latest = commRows.find(r => r.date === latestDate);
+      if (latest) {
+        const pctUsda = (latest.wasde > 0 && latest.accum)
+          ? Math.round((latest.accum / (latest.wasde * 1000)) * 1000) / 10
+          : null;
+        const vsYrAgo = (latest.accum && latest.prevAccum)
+          ? Math.round((latest.accum / latest.prevAccum - 1) * 1000) / 10
+          : null;
+
+        summary[label] = {
+          date: latest.date, week: latest.week, myear: latest.myear,
+          netSales: latest.netSales, nextNet: latest.nextNet,
+          exports: latest.exports, outstanding: latest.outstand,
+          accumulated: latest.accum, totalCommit: latest.total,
+          pctUsda, vsYrAgo,
+        };
+      }
+
+      history[label] = [...recentDates].reverse().map(d => {
+        const r = commRows.find(row => row.date === d);
+        return r ? { date: r.date, netSales: r.netSales, nextNet: r.nextNet, exports: r.exports, accumulated: r.accum, outstanding: r.outstand } : null;
+      }).filter(Boolean).reverse();
+    }
 
     return {
       statusCode: 200,
@@ -110,13 +98,10 @@ exports.handler = async () => {
         'Access-Control-Allow-Origin': '*',
         'Cache-Control': 'public, max-age=3600',
       },
-      body: JSON.stringify({ reportDate, summary, history, topBuyers, fetchedAt: new Date().toISOString() })
+      body: JSON.stringify({ reportDate: latestDate, summary, history, source: 'USDA ESRQS', fetchedAt: new Date().toISOString() })
     };
 
   } catch (err) {
-    return {
-      statusCode: 500,
-      body: JSON.stringify({ error: err.message })
-    };
+    return { statusCode: 500, body: JSON.stringify({ error: err.message }) };
   }
 };
