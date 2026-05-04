@@ -6,6 +6,7 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>JHD Commodity Advisors</title>
   <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2/dist/umd/supabase.js"></script>
+  <link rel="shortcut icon" type="image/jpeg" href="https://i.ibb.co/PZPZGP71/IMG-2924.jpg">
   <link href="https://cdn.quilljs.com/1.3.7/quill.snow.css" rel="stylesheet">
   <script src="https://cdn.quilljs.com/1.3.7/quill.js"></script>
   <style>
@@ -491,7 +492,7 @@ padding:2px 8px;border-radius:3px;margin-bottom:6px;letter-spacing:0.06em;text-t
         <div class="field"><label>Password <span style="font-weight:400;color:var(--muted)">(min 6 chars)</span></label><input type="password" id="up-pw" placeholder="Choose a password"></div>
         <div class="field"><label>Username</label>
           <div class="username-field-wrap">
-            <input type="text" id="up-username" placeholder="e.g. GrainTrader47" style="padding-right:90px;">
+            <input type="text" id="up-username" placeholder="e.g. GrainTrader47" style="padding-right:90px;" oninput="checkUsernameAvail(this.value)" maxlength="20">
             <button class="username-gen-btn" onclick="generateUsername()">Generate</button>
           </div>
         </div>
@@ -839,7 +840,7 @@ padding:2px 8px;border-radius:3px;margin-bottom:6px;letter-spacing:0.06em;text-t
   </div>
 
     <!-- RECENT PUBLICATIONS STRIP + FOOTER — always visible outside all tabs -->
-  <div class="recent-strip-wrap" id="recent-strip-wrap" style="display:none;">
+  <div class="recent-strip-wrap" id="recent-strip-wrap">
     <div class="recent-strip-inner">
       <div class="recent-strip-label">Recent Publications</div>
       <div class="recent-strip-scroll" id="recent-strip-scroll">
@@ -939,6 +940,7 @@ padding:2px 8px;border-radius:3px;margin-bottom:6px;letter-spacing:0.06em;text-t
           <option value="freight">Freight</option>
           <option value="technicals">Technical Analysis</option>
         </select>
+        <input type="datetime-local" id="p-date" style="margin-bottom:12px;color:var(--muted);" title="Leave blank for now -- set a date to backdate">
         <input type="text" id="p-title"   placeholder="Title of this post…">
         <input type="text" id="p-summary" placeholder="One-line summary shown on the listing…">
         <div class="editor-mode-row">
@@ -1059,6 +1061,10 @@ function showAppPage(){
   if(chip) chip.textContent = currentUser ? currentUser.email : '';
   var bushelChip = document.getElementById('bushel-chip');
   if(bushelChip) bushelChip.classList.toggle('hidden', !currentUser);
+  var signinNav = document.getElementById('nav-signin-btn');
+  if(signinNav) signinNav.style.display = currentUser ? 'none' : 'flex';
+  var signoutBtn = document.querySelector('.btn-ghost[onclick="doSignOut()"]');
+  if(signoutBtn) signoutBtn.style.display = currentUser ? '' : 'none';
   showTab(window._activeTab || 'commentary');
   loadRecentStrip();
   if(currentUser){ checkDailyLogin(); loadBushelBalance(); wrapPostCommentWithBushels(); }
@@ -1116,6 +1122,10 @@ async function doSignUp(){
   var jobTitle = (document.getElementById('up-jobtitle').value||'').trim();
   var company = (document.getElementById('up-company').value||'').trim();
   if(!email||!pw){ authMsg('Please fill in email and password.'); return; }
+  if(username && (username.length < 3 || username.length > 20)){ authMsg('Username must be 3-20 characters.'); return; }
+  if(username && !/^[a-zA-Z0-9_]+$/.test(username)){ authMsg('Username: letters, numbers and _ only.'); return; }
+  var fbEl = document.getElementById('username-feedback');
+  if(fbEl && fbEl.textContent === 'Username taken'){ authMsg('That username is already taken. Please choose another.'); return; }
   if(pw.length<6){ authMsg('Password must be at least 6 characters.'); return; }
   if(!username){ generateUsername(); username = document.getElementById('up-username').value; }
   var signUpResult = await sb.auth.signUp({email:email, password:pw});
@@ -1210,7 +1220,7 @@ async function loadDetail(postId, category){
   if(dw) dw.classList.toggle('full-width', isFullDoc);
   var contentHtml;
   if(isFullDoc){
-    var encoded = post.content.replace(/"/g,'&quot;');
+    var encoded = post.content.replace(/"/g,'\x22');
     contentHtml = '<iframe class="post-iframe" srcdoc="'+encoded+'" onload="resizeIframe(this)" scrolling="no"></iframe>';
   } else {
     var standfirst = post.summary ? '<div class="post-standfirst">'+esc(post.summary)+'</div>' : '';
@@ -1252,6 +1262,8 @@ async function postComment(){
   var content = document.getElementById('c-text').value.trim();
   var msgEl = document.getElementById('c-msg');
   if(!content){ msgEl.textContent='Please write a comment.'; msgEl.className='msg-box msg-error'; msgEl.classList.remove('hidden'); return; }
+  var wordCount = content.trim().split(/\s+/).filter(function(w){ return w.length>0; }).length;
+  if(content.length < 80 || wordCount < 15){ msgEl.textContent='Comments must be at least 80 characters and 15 words. Help us keep discussion substantive.'; msgEl.className='msg-box msg-error'; msgEl.classList.remove('hidden'); return; }
   var r = await sb.from('comments').insert({post_id:currentPostId, author_name:name, content:content, is_visible:true});
   if(r.error){ msgEl.textContent='Error posting comment.'; msgEl.className='msg-box msg-error'; msgEl.classList.remove('hidden'); return; }
   document.getElementById('c-name').value='';
@@ -1313,11 +1325,15 @@ async function publishPost(){
   if(!title){ pubMsg('Please add a title.',false); return; }
   if(!content||content==='<p><br></p>'){ pubMsg('Please add content.',false); return; }
   btn.disabled=true; btn.textContent='Publishing...';
-  var r = await sb.from('posts').insert({title:title,summary:summary,content:content,category:category});
+  var dateVal = document.getElementById('p-date').value;
+  var insertData = {title:title, summary:summary, content:content, category:category};
+  if(dateVal) insertData.created_at = new Date(dateVal).toISOString();
+  var r = await sb.from('posts').insert(insertData);
   btn.disabled=false; btn.textContent='Publish Post';
   if(r.error){ pubMsg('Error: '+r.error.message,false); return; }
   document.getElementById('p-title').value='';
   document.getElementById('p-summary').value='';
+  document.getElementById('p-date').value='';
   document.getElementById('html-source-input').value='';
   if(quill) quill.setText('');
   pubMsg('Published to '+category+'!',true);
@@ -1403,6 +1419,7 @@ function cancelEdit(){
   document.getElementById('pub-btn').textContent='Publish Post';
   document.getElementById('p-title').value='';
   document.getElementById('p-summary').value='';
+  document.getElementById('p-date').value='';
   document.getElementById('html-source-input').value='';
   if(quill) quill.setText('');
   var cb=document.getElementById('cancel-edit-btn');
@@ -1529,6 +1546,24 @@ function getLevelForBalance(bal){
   if(bal>=100)  return LEVELS[1];
   return LEVELS[0];
 }
+var _usernameTimer = null;
+function checkUsernameAvail(val){
+  var fb = document.getElementById('username-feedback');
+  if(!fb) return;
+  if(!val){ fb.textContent=''; return; }
+  if(val.length < 3){ fb.style.color='var(--coral)'; fb.textContent='Too short (min 3 chars)'; return; }
+  if(val.length > 20){ fb.style.color='var(--coral)'; fb.textContent='Too long (max 20 chars)'; return; }
+  if(!/^[a-zA-Z0-9_]+$/.test(val)){ fb.style.color='var(--coral)'; fb.textContent='Letters, numbers and _ only'; return; }
+  fb.style.color='var(--muted)'; fb.textContent='Checking...';
+  clearTimeout(_usernameTimer);
+  _usernameTimer = setTimeout(async function(){
+    if(!sb) return;
+    var r = await sb.from('profiles').select('id').eq('username', val).maybeSingle();
+    if(r.data){ fb.style.color='var(--coral)'; fb.textContent='Username taken'; }
+    else { fb.style.color='var(--teal)'; fb.textContent='Available'; }
+  }, 500);
+}
+
 function generateUsername(){
   var base=AGRI_USERNAMES[Math.floor(Math.random()*AGRI_USERNAMES.length)];
   var num=Math.floor(Math.random()*90)+10;
