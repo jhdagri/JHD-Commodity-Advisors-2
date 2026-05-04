@@ -437,7 +437,46 @@ padding:2px 8px;border-radius:3px;margin-bottom:6px;letter-spacing:0.06em;text-t
 .gate-actions { display:flex; gap:10px; justify-content:center; flex-wrap:wrap; }
 .gate-bu-teaser { display:flex; align-items:center; gap:8px; margin-top:16px; padding:10px 14px; background:rgba(212,170,85,0.06); border:1px solid rgba(212,170,85,0.15); border-radius:8px; font-family:'DM Mono',monospace; font-size:10px; color:var(--muted2); }
 
-</style>
+
+    /* ===== EXPORT SALES DASHBOARD ===== */
+    .exp-header { display:flex; align-items:center; justify-content:space-between; margin-bottom:24px; flex-wrap:wrap; gap:12px; }
+    .exp-datestamp { font-family:'DM Mono',monospace; font-size:11px; color:var(--teal); background:rgba(46,207,170,0.1); border:1px solid rgba(46,207,170,0.25); padding:4px 12px; border-radius:3px; }
+    .exp-summary-grid { display:grid; grid-template-columns:repeat(auto-fit,minmax(200px,1fr)); gap:12px; margin-bottom:28px; }
+    .exp-card { background:var(--card); border:1px solid var(--border); border-radius:6px; padding:14px 16px; }
+    .exp-card-title { font-family:'DM Mono',monospace; font-size:9px; text-transform:uppercase; letter-spacing:0.14em; color:var(--muted); margin-bottom:8px; }
+    .exp-card-main { display:flex; align-items:baseline; gap:8px; margin-bottom:4px; }
+    .exp-card-val { font-family:'DM Mono',monospace; font-size:18px; font-weight:500; color:var(--text); }
+    .exp-card-unit { font-family:'DM Mono',monospace; font-size:9px; color:var(--muted2); }
+    .exp-badge { font-family:'DM Mono',monospace; font-size:8px; padding:2px 7px; border-radius:2px; font-weight:600; letter-spacing:0.05em; }
+    .exp-badge-above { background:rgba(46,207,170,0.15); color:var(--teal); border:1px solid rgba(46,207,170,0.3); }
+    .exp-badge-below { background:rgba(255,107,74,0.15); color:var(--coral); border:1px solid rgba(255,107,74,0.3); }
+    .exp-badge-inside{ background:rgba(136,144,164,0.15); color:var(--muted); border:1px solid rgba(136,144,164,0.25); }
+    .exp-pct-row { display:flex; gap:16px; margin-top:6px; }
+    .exp-pct-item { font-family:'DM Mono',monospace; font-size:8px; }
+    .exp-pct-label { color:var(--muted2); }
+    .exp-pct-val { color:var(--text); font-weight:500; }
+    .exp-bar-track { height:4px; background:rgba(255,255,255,0.08); border-radius:2px; margin-top:6px; }
+    .exp-bar-fill { height:100%; border-radius:2px; transition:width 0.6s ease; }
+    .exp-section-title { font-family:'DM Mono',monospace; font-size:9px; text-transform:uppercase; letter-spacing:0.14em; color:var(--blue); margin:24px 0 12px; padding-bottom:6px; border-bottom:1px solid var(--border2); }
+    .exp-table { width:100%; border-collapse:collapse; font-family:'DM Mono',monospace; font-size:10px; margin-bottom:24px; }
+    .exp-table th { font-size:7.5px; text-transform:uppercase; letter-spacing:0.1em; color:var(--muted2); padding:6px 10px; text-align:right; border-bottom:1px solid var(--border2); background:var(--card); }
+    .exp-table th:first-child { text-align:left; }
+    .exp-table td { padding:7px 10px; text-align:right; border-bottom:1px solid var(--border); color:var(--muted); }
+    .exp-table td:first-child { text-align:left; color:var(--text); font-weight:500; }
+    .exp-table tr:last-child td { border-bottom:none; }
+    .exp-table tr:hover td { background:rgba(255,255,255,0.02); }
+    .exp-buyers-grid { display:grid; grid-template-columns:repeat(auto-fit,minmax(280px,1fr)); gap:16px; margin-bottom:24px; }
+    .exp-buyers-card { background:var(--card); border:1px solid var(--border); border-radius:6px; padding:14px; }
+    .exp-buyers-title { font-family:'DM Mono',monospace; font-size:8px; text-transform:uppercase; letter-spacing:0.12em; color:var(--blue); margin-bottom:10px; }
+    .exp-buyer-row { display:flex; justify-content:space-between; align-items:center; padding:4px 0; border-bottom:1px solid var(--border); font-family:'DM Mono',monospace; font-size:9px; }
+    .exp-buyer-row:last-child { border-bottom:none; }
+    .exp-buyer-name { color:var(--muted); }
+    .exp-buyer-val { color:var(--text); font-weight:500; }
+    .exp-refresh-btn { font-family:'DM Mono',monospace; font-size:9px; padding:5px 14px; border:1px solid var(--blue); background:transparent; color:var(--blue); border-radius:3px; cursor:pointer; letter-spacing:0.06em; transition:all 0.15s; }
+    .exp-refresh-btn:hover { background:var(--blue); color:#000; }
+    .exp-error { background:rgba(255,107,74,0.08); border:1px solid rgba(255,107,74,0.25); border-radius:6px; padding:20px 24px; font-family:'DM Mono',monospace; font-size:11px; color:var(--coral); }
+
+  </style>
 </head>
 <body>
 
@@ -740,8 +779,11 @@ padding:2px 8px;border-radius:3px;margin-bottom:6px;letter-spacing:0.06em;text-t
   <!-- Export Data -->
   <div id="tab-exports" class="hidden">
     <div class="page-wrap">
-      <div class="page-heading"><h2>Export Data</h2><p>Global agricultural export flows, trade data and shipment analysis</p></div>
-      <div id="posts-exports"><div class="spin">Loading…</div></div>
+      <div class="page-heading">
+        <h2>Export Sales</h2>
+        <p>USDA Weekly Export Sales &mdash; auto-updated each Thursday via CME Group</p>
+      </div>
+      <div id="exports-dashboard"><div class="spin">Loading export data…</div></div>
     </div>
   </div>
 
@@ -1006,6 +1048,140 @@ var allSubs=[];
 
 var POST_TABS=['commentary','research','cftc','exports','wasde','commoditymap','weather','options','fob','freight'];
 var ADMIN_EMAIL_LC = ADMIN_EMAIL.toLowerCase();
+
+
+/* ===== EXPORT SALES DASHBOARD ===== */
+var _exportDataCache = null;
+
+async function loadExportSales(forceRefresh) {
+  var el = document.getElementById('exports-dashboard');
+  if (!el) return;
+
+  // Use cache if available and not forcing refresh
+  if (_exportDataCache && !forceRefresh) {
+    renderExportDashboard(_exportDataCache, el);
+    return;
+  }
+
+  el.innerHTML = '<div class="spin">Fetching latest export data…</div>';
+
+  try {
+    var resp = await fetch('/.netlify/functions/exportsales');
+    if (!resp.ok) throw new Error('Function returned ' + resp.status);
+    var data = await resp.json();
+    if (data.error) throw new Error(data.error);
+    _exportDataCache = data;
+    renderExportDashboard(data, el);
+  } catch (e) {
+    el.innerHTML = '<div class="exp-error"><strong>Could not load export data.</strong><br><br>' + e.message + '<br><br>The Netlify function may not be deployed yet, or CME's server is temporarily unavailable. Data is published every Thursday.</div>';
+  }
+}
+
+function fmtMT(v) {
+  if (v === null || v === undefined) return '--';
+  if (v >= 1000000) return (v / 1000000).toFixed(2) + 'M MT';
+  if (v >= 1000) return (v / 1000).toFixed(0) + 'K MT';
+  return v.toLocaleString() + ' MT';
+}
+
+function badgeHtml(vs) {
+  if (!vs || vs === '-') return '';
+  var cls = vs === 'Above' ? 'exp-badge-above' : vs === 'Below' ? 'exp-badge-below' : 'exp-badge-inside';
+  return '<span class="exp-badge ' + cls + '">' + vs + ' est.</span>';
+}
+
+function barColor(pct) {
+  if (pct >= 80) return 'var(--teal)';
+  if (pct >= 60) return 'var(--gold)';
+  return 'var(--coral)';
+}
+
+function renderExportDashboard(data, el) {
+  var s = data.summary || {};
+  var h = data.history || {};
+  var b = data.topBuyers || {};
+  var date = data.reportDate || 'Latest';
+
+  var commodities = [
+    { key: 'Corn',        color: 'var(--coral)', label: 'CORN' },
+    { key: 'Soybeans',    color: 'var(--teal)',  label: 'SOYBEANS' },
+    { key: 'Wheat',       color: 'var(--gold)',  label: 'WHEAT' },
+    { key: 'Soymeal',     color: 'var(--blue)',  label: 'SOY MEAL' },
+    { key: 'Soybean Oil', color: 'var(--purple)', label: 'BEAN OIL' },
+    { key: 'Cotton',      color: 'var(--muted)',  label: 'COTTON' },
+  ];
+
+  var out = '<div class="exp-header">';
+  out += '<div><div class="exp-datestamp">Week ending ' + date + '</div></div>';
+  out += '<button class="exp-refresh-btn" onclick="loadExportSales(true)">&#8635; Refresh</button>';
+  out += '</div>';
+
+  // Summary cards
+  out += '<div class="exp-summary-grid">';
+  commodities.forEach(function(c) {
+    var d = s[c.key] || {};
+    var pct = d.pct_usda || 0;
+    out += '<div class="exp-card">';
+    out += '<div class="exp-card-title" style="color:' + c.color + '">' + c.label + '</div>';
+    out += '<div class="exp-card-main">';
+    out += '<span class="exp-card-val">' + fmtMT(d.total) + '</span>';
+    if (d.vs_est) out += badgeHtml(d.vs_est);
+    out += '</div>';
+    out += '<div class="exp-pct-row">';
+    out += '<div class="exp-pct-item"><span class="exp-pct-label">% USDA </span><span class="exp-pct-val">' + (d.pct_usda || '--') + '%</span></div>';
+    out += '<div class="exp-pct-item"><span class="exp-pct-label">5yr avg </span><span class="exp-pct-val">' + (d.pct_5yr || '--') + '%</span></div>';
+    out += '</div>';
+    if (pct) {
+      out += '<div class="exp-bar-track"><div class="exp-bar-fill" style="width:' + Math.min(pct, 100) + '%;background:' + barColor(pct) + ';"></div></div>';
+    }
+    out += '</div>';
+  });
+  out += '</div>';
+
+  // Weekly history tables for Corn, Soybeans, Wheat
+  var histComms = ['Corn', 'Soybeans', 'Wheat', 'Soymeal'];
+  histComms.forEach(function(key) {
+    var rows = h[key];
+    if (!rows || !rows.length) return;
+    out += '<div class="exp-section-title">' + key + ' &mdash; 4-Week History</div>';
+    out += '<table class="exp-table">';
+    out += '<thead><tr><th>Week</th><th>Current MY</th><th>Next MY</th><th>Weekly Total</th><th>Cumulative</th><th>% USDA</th><th>5yr Avg</th><th>Pace to Hit</th></tr></thead><tbody>';
+    rows.forEach(function(r, i) {
+      var rowStyle = i === 0 ? ' style="color:var(--text)"' : '';
+      out += '<tr' + rowStyle + '>';
+      out += '<td>' + r.week + '</td>';
+      out += '<td>' + fmtMT(r.current) + '</td>';
+      out += '<td>' + fmtMT(r.next) + '</td>';
+      out += '<td>' + fmtMT(r.total) + '</td>';
+      out += '<td>' + fmtMT(r.cumulative) + '</td>';
+      out += '<td>' + (r.pct_usda || '--') + '%</td>';
+      out += '<td>' + (r.pct_5yr || '--') + '%</td>';
+      out += '<td>' + fmtMT(r.pace_to_hit) + '</td>';
+      out += '</tr>';
+    });
+    out += '</tbody></table>';
+  });
+
+  // Top buyers for Corn, Soybeans, Wheat
+  var buyerComms = Object.keys(b).filter(function(k) { return b[k] && b[k].length; });
+  if (buyerComms.length) {
+    out += '<div class="exp-section-title">Top Buyers This Week</div>';
+    out += '<div class="exp-buyers-grid">';
+    buyerComms.forEach(function(key) {
+      out += '<div class="exp-buyers-card">';
+      out += '<div class="exp-buyers-title">' + key + '</div>';
+      b[key].forEach(function(row) {
+        out += '<div class="exp-buyer-row"><span class="exp-buyer-name">' + row.destination + '</span>';
+        out += '<span class="exp-buyer-val">' + fmtMT(row.total) + '</span></div>';
+      });
+      out += '</div>';
+    });
+    out += '</div>';
+  }
+
+  out += '<div style="font-family:'DM Mono',monospace;font-size:8px;color:var(--muted2);margin-top:8px;">Source: CME Group / The Hightower Report &middot; USDA Weekly Export Sales &middot; Updated each Thursday &middot; Not investment advice</div>';
+  el.innerHTML = out;
+}
 
 /* ===== BOOT ===== */
 async function boot(){
