@@ -1324,11 +1324,22 @@ async function publishPost(){
   var btn = document.getElementById('pub-btn');
   if(!title){ pubMsg('Please add a title.',false); return; }
   if(!content||content==='<p><br></p>'){ pubMsg('Please add content.',false); return; }
-  btn.disabled=true; btn.textContent='Publishing...';
+  btn.disabled=true; btn.textContent= window._editingPostId ? 'Saving...' : 'Publishing...';
   var dateVal = document.getElementById('p-date').value;
+  var r;
+  if(window._editingPostId){
+    var updateData = {title:title, summary:summary, content:content, category:category};
+    if(dateVal) updateData.created_at = new Date(dateVal).toISOString();
+    r = await sb.from('posts').update(updateData).eq('id', window._editingPostId);
+    btn.disabled=false; btn.textContent='Save Changes';
+    if(r.error){ pubMsg('Error: '+r.error.message,false); return; }
+    pubMsg('Post updated!',true);
+    cancelEdit();
+    return;
+  }
   var insertData = {title:title, summary:summary, content:content, category:category};
   if(dateVal) insertData.created_at = new Date(dateVal).toISOString();
-  var r = await sb.from('posts').insert(insertData);
+  r = await sb.from('posts').insert(insertData);
   btn.disabled=false; btn.textContent='Publish Post';
   if(r.error){ pubMsg('Error: '+r.error.message,false); return; }
   document.getElementById('p-title').value='';
