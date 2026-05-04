@@ -999,97 +999,71 @@ padding:2px 8px;border-radius:3px;margin-bottom:6px;letter-spacing:0.06em;text-t
      ================================================================ -->
 <script>
 'use strict';
-let sb, currentUser, isAdmin=false, currentPostId=null, currentPostTab=null, quill=null, editorMode='visual';
-let allSubs=[];
+var sb, currentUser, isAdmin=false, currentPostId=null, currentPostTab=null, quill=null, editorMode='visual';
+var allSubs=[];
 
-/* ===== RECENT STRIP ===== */
-async function loadRecentStrip(){
-  if(!sb) return;
-  const scroll = document.getElementById('recent-strip-scroll');
-  if(!scroll) return;
-  const catLabel = {'commentary':'Commentary','research':'Research','cftc':'CFTC','exports':'Export Data','wasde':'WASDE','commoditymap':'Commodity Map','weather':'Weather','options':'Options','fob':'FOB Data','freight':'Freight','technicals':'Technical Analysis'};
-  const{data,error} = await sb.from('posts').select('id,title,created_at,category').order('created_at',{ascending:false}).limit(12);
-  if(error || !data || data.length === 0){
-    scroll.innerHTML = '<div style="color:var(--muted2);font-size:12px;font-family:monospace;padding:8px 0;">No publications yet.</div>';
-    return;
-  }
-  scroll.innerHTML = data.map(p => '<div class="recent-doc-card" onclick="loadDetail(\x22'+p.id+'\x22,\x22'+p.category+'\x22)">'
-      +'<div class="recent-doc-cat">'+(catLabel[p.category]||p.category)+'</div>'
-      +'<div class="recent-doc-title">'+esc(p.title)+'</div>'
-      +'<div class="recent-doc-date">'+fmtDate(p.created_at)+'</div>'
-      +'</div>').join('');
-}
+var POST_TABS=['commentary','research','cftc','exports','wasde','commoditymap','weather','options','fob','freight'];
+var ADMIN_EMAIL_LC = ADMIN_EMAIL.toLowerCase();
 
+/* ===== BOOT ===== */
 async function boot(){
-  sb=window.supabase.createClient(SUPABASE_URL,SUPABASE_ANON);
-  document.title='JHD Commodity Advisors';
+  sb = window.supabase.createClient(SUPABASE_URL, SUPABASE_ANON);
+  document.title = 'JHD Commodity Advisors';
 
-  // Preview mode: skip login when opening as a local file or ?preview in URL
-  const isLocalFile = window.location.protocol === 'file:';
-  const isPreview   = new URLSearchParams(window.location.search).has('preview');
-  if(isLocalFile || isPreview){
-    showAppPage();
-    installProtection();
-    return;
-  }
+  var isLocal = window.location.protocol === 'file:';
+  var isPreview = new URLSearchParams(window.location.search).has('preview');
+  if(isLocal || isPreview){ showAppPage(); installProtection(); return; }
 
-  const sessionResult=await sb.auth.getSession();
-  const session=sessionResult.data&&sessionResult.data.session;
-  if(session&&session.user){
-    currentUser=session.user;
-    isAdmin=(currentUser&&currentUser.email?currentUser.email.toLowerCase():'')===ADMIN_EMAIL.toLowerCase();
-    showAppPage();
-  } else {
+  try {
+    var r = await sb.auth.getSession();
+    var session = r.data && r.data.session;
+    if(session && session.user){
+      currentUser = session.user;
+      isAdmin = currentUser.email.toLowerCase() === ADMIN_EMAIL_LC;
+      showAppPage();
+    } else {
+      document.getElementById('page-auth').classList.remove('hidden');
+    }
+  } catch(e) {
     document.getElementById('page-auth').classList.remove('hidden');
   }
   installProtection();
 }
 
-/* ===== COPY / PRINT PROTECTION ===== */
+/* ===== PROTECTION ===== */
 function installProtection(){
-  // Block right-click on protected content
-  document.addEventListener('contextmenu', e=>{
+  document.addEventListener('contextmenu', function(e){
     if(e.target.closest('.protected')){ e.preventDefault(); return false; }
   });
-  // Block keyboard shortcuts on protected content
-  document.addEventListener('keydown', e=>{
-    const inProtected = e.target.closest('.protected') || document.querySelector('.protected:not(.hidden)');
+  document.addEventListener('keydown', function(e){
+    if(!e.key) return;
+    var inProtected = e.target.closest('.protected') || document.querySelector('.protected:not(.hidden)');
     if(!inProtected) return;
-    if(!e.key) return; const k=e.key.toLowerCase();
-    // Block copy, select all, save, print
-    if((e.ctrlKey||e.metaKey) && ['c','a','s','p','u'].includes(k)){
-      e.preventDefault(); return false;
-    }
-    // Block F12 devtools (best effort)
+    var k = e.key.toLowerCase();
+    if((e.ctrlKey||e.metaKey) && ['c','a','s','p','u'].includes(k)){ e.preventDefault(); return false; }
     if(e.key==='F12'){ e.preventDefault(); return false; }
-    // Block PrintScreen
-    if(e.key==='PrintScreen'){ e.preventDefault(); return false; }
   });
-  // Block drag-to-copy on protected areas
-  document.addEventListener('dragstart', e=>{
+  document.addEventListener('dragstart', function(e){
     if(e.target.closest('.protected')){ e.preventDefault(); return false; }
   });
 }
 
 /* ===== PAGE ROUTING ===== */
 function showAppPage(){
-  ['page-auth','page-admin'].forEach(id=>document.getElementById(id).classList.add('hidden'));
+  document.getElementById('page-auth').classList.add('hidden');
+  document.getElementById('page-admin').classList.add('hidden');
   document.getElementById('page-app').classList.remove('hidden');
-  var adminBtn=document.getElementById('admin-btn');
-  if(adminBtn) adminBtn.classList.toggle('hidden',!isAdmin);
-  var chip=document.getElementById('app-chip');
-  if(chip) chip.textContent=currentUser&&currentUser.email?currentUser.email:'';
-  var bushelChip=document.getElementById('bushel-chip');
-  if(bushelChip) bushelChip.classList.toggle('hidden',!currentUser);
-  showTab(window._activeTab||'commentary');
+  var adminBtn = document.getElementById('admin-btn');
+  if(adminBtn) adminBtn.classList.toggle('hidden', !isAdmin);
+  var chip = document.getElementById('app-chip');
+  if(chip) chip.textContent = currentUser ? currentUser.email : '';
+  var bushelChip = document.getElementById('bushel-chip');
+  if(bushelChip) bushelChip.classList.toggle('hidden', !currentUser);
+  showTab(window._activeTab || 'commentary');
   loadRecentStrip();
-  // Bushel system init
-  if(currentUser){
-    checkDailyLogin();
-    loadBushelBalance();
-    wrapPostCommentWithBushels();
-  }
+  if(currentUser){ checkDailyLogin(); loadBushelBalance(); wrapPostCommentWithBushels(); }
 }
+
 function showAdminPage(){
   document.getElementById('page-app').classList.add('hidden');
   document.getElementById('page-admin').classList.remove('hidden');
@@ -1098,194 +1072,74 @@ function showAdminPage(){
 }
 
 /* ===== TAB ROUTING ===== */
-const POST_TABS=['commentary','research','cftc','exports','wasde','commoditymap','weather','options','fob','freight'];
 function showTab(name){
-  window._activeTab=name;
+  window._activeTab = name;
   ['commentary','research','cftc','futures','services','contact','about','detail','exports','wasde','commoditymap','weather','options','fob','freight','technicals']
-    .forEach(t=>document.getElementById('tab-'+t).classList.add('hidden'));
+    .forEach(function(t){ document.getElementById('tab-'+t).classList.add('hidden'); });
   document.getElementById('tab-'+name).classList.remove('hidden');
-  document.querySelectorAll('.snav-btn').forEach(b=>b.classList.toggle('active',b.dataset.tab===name));
-  if(POST_TABS.includes(name)) loadPosts(name);
+  document.querySelectorAll('.snav-btn').forEach(function(b){ b.classList.toggle('active', b.dataset.tab===name); });
+  if(POST_TABS.indexOf(name) > -1) loadPosts(name);
   if(name==='technicals') loadTACharts();
-}
-
-/* ===== TECHNICAL ANALYSIS ===== */
-async function loadTACharts(){
-  var wrap = document.getElementById('ta-cards-wrap');
-  if(!wrap) return;
-  wrap.innerHTML = '<div class="ta-empty">Loading...</div>';
-  var result = await sb.from('posts').select('*').eq('category','technicals').order('created_at',{ascending:false});
-  if(result.error || !result.data || result.data.length === 0){
-    wrap.innerHTML = '<div class="ta-empty">No technical analysis published yet.</div>';
-    if(result.data && result.data.length === 0 && isAdmin){
-      document.getElementById('ta-admin-form-wrap').classList.remove('hidden');
-    }
-    return;
-  }
-  var html = '<div class="ta-grid">';
-  for(var i=0;i<result.data.length;i++){
-    var p = result.data[i];
-    var meta = {};
-    try{ meta = JSON.parse(p.summary || '{}'); }catch(ex){}
-    var d = new Date(p.created_at).toLocaleDateString('en-GB',{day:'numeric',month:'short',year:'numeric'});
-    var bias = meta.bias || 'neutral';
-    var biasCls = bias === 'bullish' ? 'bullish' : bias === 'bearish' ? 'bearish' : 'neutral';
-    html += '<div class="ta-card" id="ta-' + p.id + '">';
-    html += '<div class="ta-card-header">';
-    html += '<div class="ta-instrument">' + esc(meta.instrument || p.title) + '</div>';
-    if(meta.timeframe) html += '<span class="ta-timeframe">' + esc(meta.timeframe) + '</span>';
-    html += '<span class="ta-bias ' + biasCls + '">' + bias.charAt(0).toUpperCase() + bias.slice(1) + '</span>';
-    html += '</div>';
-    if(meta.chart_image) html += '<div class="ta-chart-wrap"><img src="' + meta.chart_image + '" alt="chart" loading="lazy"></div>';
-    html += '<div class="ta-levels">';
-    html += '<div class="ta-level"><div class="ta-level-label">Resistance</div><div class="ta-level-val resistance">' + esc(meta.resistance || '--') + '</div></div>';
-    html += '<div class="ta-level"><div class="ta-level-label">Support</div><div class="ta-level-val support">' + esc(meta.support || '--') + '</div></div>';
-    html += '<div class="ta-level"><div class="ta-level-label">Target</div><div class="ta-level-val target">' + esc(meta.target || '--') + '</div></div>';
-    html += '</div>';
-    if(meta.commentary) html += '<div class="ta-commentary">' + esc(meta.commentary) + '</div>';
-    html += '<div class="ta-meta"><span class="ta-date">Updated ' + d + '</span>';
-    if(isAdmin) html += '<button class="ta-delete-btn" data-id="' + p.id + '" onclick="deleteTAPost(this.dataset.id,event)">Delete</button>';
-    html += '</div></div>';
-  }
-  html += '</div>';
-  wrap.innerHTML = html;
-  if(isAdmin) document.getElementById('ta-admin-form-wrap').classList.remove('hidden');
-}
-
-async function deleteTAPost(id, e){
-  e.stopPropagation();
-  if(!confirm('Delete this chart?')) return;
-  await sb.from('posts').delete().eq('id', id);
-  var el = document.getElementById('ta-' + id);
-  if(el) el.remove();
-}
-
-var _taChartImage = null;
-function handleTAImageUpload(input){
-  var file = input.files[0];
-  if(!file) return;
-  var reader = new FileReader();
-  reader.onload = function(ev){
-    _taChartImage = ev.target.result;
-    var preview = document.getElementById('ta-chart-preview');
-    preview.src = _taChartImage;
-    preview.style.display = 'block';
-    document.getElementById('ta-upload-label').textContent = file.name;
-  };
-  reader.readAsDataURL(file);
-}
-
-async function publishTAChart(){
-  if(!sb){ alert('Not connected. Please refresh.'); return; }
-  var instrument = document.getElementById('ta-instrument').value.trim();
-  if(!instrument){ alert('Please enter an instrument name.'); return; }
-  var meta = {
-    instrument: instrument,
-    timeframe: document.getElementById('ta-timeframe').value,
-    bias: document.getElementById('ta-bias').value,
-    resistance: document.getElementById('ta-resistance').value.trim(),
-    support: document.getElementById('ta-support').value.trim(),
-    target: document.getElementById('ta-target').value.trim(),
-    commentary: document.getElementById('ta-commentary').value.trim(),
-    chart_image: _taChartImage || '',
-    indicators: []
-  };
-  var result = await sb.from('posts').insert({
-    title: instrument,
-    category: 'technicals',
-    summary: JSON.stringify(meta),
-    content: meta.commentary,
-    user_id: currentUser.id
-  });
-  if(result.error){ alert('Error: ' + result.error.message); return; }
-  _taChartImage = null;
-  document.getElementById('ta-instrument').value = '';
-  document.getElementById('ta-commentary').value = '';
-  document.getElementById('ta-chart-preview').style.display = 'none';
-  document.getElementById('ta-upload-label').textContent = 'Click to upload chart image';
-  loadTACharts();
-}
-
-// Show lock indicators on nav tabs that require login (for public visitors)
-
-
-function closeDetail(){
-  document.getElementById('tab-detail').classList.add('hidden');
-  document.getElementById('tab-'+(window._activeTab||'commentary')).classList.remove('hidden');
 }
 
 /* ===== AUTH ===== */
 function switchAuthTab(t){
-  document.getElementById('form-in').classList.toggle('hidden',t!=='in');
-  document.getElementById('form-up').classList.toggle('hidden',t!=='up');
-  document.getElementById('atab-in').classList.toggle('active',t==='in');
-  document.getElementById('atab-up').classList.toggle('active',t==='up');
+  document.getElementById('form-in').classList.toggle('hidden', t!=='in');
+  document.getElementById('form-up').classList.toggle('hidden', t!=='up');
+  document.getElementById('atab-in').classList.toggle('active', t==='in');
+  document.getElementById('atab-up').classList.toggle('active', t==='up');
   authMsg('');
 }
-function authMsg(text,ok){ const el=document.getElementById('auth-msg'); if(!text){el.classList.add('hidden');return;} el.textContent=text; el.className='msg-box '+(ok?'msg-ok':'msg-error'); }
+function authMsg(text, ok){
+  var el = document.getElementById('auth-msg');
+  if(!text){ el.classList.add('hidden'); return; }
+  el.textContent = text;
+  el.className = 'msg-box ' + (ok ? 'msg-ok' : 'msg-error');
+}
 
 async function doSignIn(){
-  const email=document.getElementById('in-email').value.trim(),pw=document.getElementById('in-pw').value;
-  if(!email||!pw){authMsg('Please fill in both fields.');return;}
-  const{data,error}=await sb.auth.signInWithPassword({email,password:pw});
-  if(error){authMsg(error.message);return;}
-  if(data&&data.user){
-    currentUser=data.user;
-  } else {
-    currentUser=(await sb.auth.getUser()).data.user;
-  }
-  isAdmin=(currentUser&&currentUser.email?currentUser.email.toLowerCase():'')===ADMIN_EMAIL.toLowerCase();
+  var email = document.getElementById('in-email').value.trim();
+  var pw = document.getElementById('in-pw').value;
+  if(!email||!pw){ authMsg('Please fill in both fields.'); return; }
+  var result = await sb.auth.signInWithPassword({email:email, password:pw});
+  if(result.error){ authMsg(result.error.message); return; }
+  currentUser = result.data.user;
+  isAdmin = currentUser && currentUser.email ? currentUser.email.toLowerCase() === ADMIN_EMAIL_LC : false;
   showAppPage();
 }
 
 async function doSignUp(){
-  var email=(document.getElementById('up-email').value||'').trim();
-  var pw=document.getElementById('up-pw').value||'';
-  var displayName=(document.getElementById('up-name').value||'').trim();
-  var username=(document.getElementById('up-username').value||'').trim();
-  var jobTitle=(document.getElementById('up-jobtitle').value||'').trim();
-  var company=(document.getElementById('up-company').value||'').trim();
-  if(!email||!pw){authMsg('Please fill in email and password.');return;}
-  if(pw.length<6){authMsg('Password must be at least 6 characters.');return;}
-  if(!username){
-    generateUsername();
-    username=document.getElementById('up-username').value;
-  }
-  var signUpResult=await sb.auth.signUp({email,password:pw});
-  if(signUpResult.error){authMsg(signUpResult.error.message);return;}
-  // Sign in immediately to get session
-  try{
-    var sessResult=await sb.auth.signInWithPassword({email,password:pw});
-    var newUser=sessResult.data&&sessResult.data.user;
+  var email = (document.getElementById('up-email').value||'').trim();
+  var pw = document.getElementById('up-pw').value||'';
+  var displayName = (document.getElementById('up-name').value||'').trim();
+  var username = (document.getElementById('up-username').value||'').trim();
+  var jobTitle = (document.getElementById('up-jobtitle').value||'').trim();
+  var company = (document.getElementById('up-company').value||'').trim();
+  if(!email||!pw){ authMsg('Please fill in email and password.'); return; }
+  if(pw.length<6){ authMsg('Password must be at least 6 characters.'); return; }
+  if(!username){ generateUsername(); username = document.getElementById('up-username').value; }
+  var signUpResult = await sb.auth.signUp({email:email, password:pw});
+  if(signUpResult.error){ authMsg(signUpResult.error.message); return; }
+  try {
+    var sessResult = await sb.auth.signInWithPassword({email:email, password:pw});
+    var newUser = sessResult.data && sessResult.data.user;
     if(newUser){
-      // Create profile
-      await sb.from('profiles').upsert({
-        id: newUser.id,
-        display_name: displayName || username,
-        username: username,
-        job_title: jobTitle || null,
-        company: company || null
-      });
-      // Record subscriber
-      await sb.from('subscribers').upsert({email},{onConflict:'email'});
-      // Award welcome bushels (50bu)
-      var today=new Date().toISOString().slice(0,10);
-      await sb.from('user_bushels').upsert({
-        user_id: newUser.id,
-        balance: 50,
-        last_login_date: today
-      });
-      currentUser=newUser;
-      isAdmin=(currentUser&&currentUser.email?currentUser.email.toLowerCase():'')===ADMIN_EMAIL.toLowerCase();
+      currentUser = newUser;
+      await sb.from('profiles').upsert({id:newUser.id, display_name:displayName||username, username:username, job_title:jobTitle||null, company:company||null});
+      await sb.from('subscribers').upsert({email:email},{onConflict:'email'});
+      var today = new Date().toISOString().slice(0,10);
+      await sb.from('user_bushels').upsert({user_id:newUser.id, balance:50, last_login_date:today});
+      isAdmin = currentUser.email.toLowerCase() === ADMIN_EMAIL_LC;
       showAppPage();
       return;
     }
-  }catch(e){}
-  authMsg('Account created! Please sign in with your credentials.',true);
+  } catch(e){}
+  authMsg('Account created! Please sign in.', true);
 }
 
 async function doSignOut(){
-  await sb.auth.signOut(); currentUser=null; isAdmin=false; currentPostId=null;
+  await sb.auth.signOut();
+  currentUser = null; isAdmin = false; currentPostId = null;
   document.getElementById('page-app').classList.add('hidden');
   document.getElementById('page-admin').classList.add('hidden');
   document.getElementById('page-auth').classList.remove('hidden');
@@ -1293,119 +1147,141 @@ async function doSignOut(){
 
 /* ===== POSTS ===== */
 async function loadPosts(category){
-  const el=document.getElementById('posts-'+category);
-  if(!el){ console.log('loadPosts: no element for posts-'+category); return; }
-  console.log('loadPosts called, category='+category+', currentUser='+JSON.stringify(currentUser?currentUser.email:'NULL'));
-  // Show content gate for non-logged-in users on gated tabs
+  var el = document.getElementById('posts-'+category);
+  if(!el) return;
   if(!currentUser){
-    el.innerHTML='<div class="content-gate">'
-      +'<div class="gate-icon">🔒</div>'
-      +'<h3>Sign In to Read</h3>'
-      +'<p>Create a free account to access market commentary, research and community discussion. CFTC, WASDE, Weather and Export data tools are available without signing in.</p>'
-      +'<div class="gate-actions">'
-      +'<button class="btn btn-navy" onclick="showAuthPage()" style="padding:10px 22px;">Sign In</button>'
-      +'<button class="btn btn-gold" onclick="showAuthPage()" style="padding:10px 22px;">Join Free</button>'
-      +'</div>'
-      +'<div class="gate-bu-teaser">🌾 Join free and earn 50 Bushels instantly -- rise from Merchandiser to Market Maker</div>'
-      +'</div>';
+    el.innerHTML = '<div class="content-gate"><div class="gate-icon">🔒</div><h3>Sign In to Read</h3><p>Create a free account to access market commentary and research.</p><div class="gate-actions"><button class="btn btn-navy" onclick="location.reload()" style="padding:10px 22px;">Sign In / Join Free</button></div></div>';
     return;
   }
-  el.innerHTML='<div class="spin">Loading...</div>';
-  const{data:posts,error}=await sb.from('posts').select('id,title,summary,created_at,category,is_pinned').eq('category',category).order('is_pinned',{ascending:false}).order('created_at',{ascending:false});
-  if(error){el.innerHTML='<div class="spin">⚠ Error: '+error.message+'</div>';return;}
-  if(!posts||posts.length===0){
-    el.innerHTML='<div class="empty-state"><h3>No posts yet in '+category+'</h3><p>'+(isAdmin?'Go to Admin -> New Post and select this section.':'Check back soon.')+'</p></div>';return;
+  el.innerHTML = '<div class="spin">Loading...</div>';
+  var result = await sb.from('posts').select('id,title,summary,created_at,category,is_pinned').eq('category',category).order('is_pinned',{ascending:false}).order('created_at',{ascending:false});
+  if(result.error){ el.innerHTML = '<div class="spin">Error: '+result.error.message+'</div>'; return; }
+  if(!result.data || result.data.length===0){
+    el.innerHTML = '<div class="empty-state"><h3>No posts yet</h3><p>'+(isAdmin?'Go to Admin to publish.':'Check back soon.')+'</p></div>';
+    return;
   }
-  const ids=posts.map(p=>p.id);
-  const{data:cc}=await sb.from('comments').select('post_id').in('post_id',ids).eq('is_visible',true);
-  const counts={}; (cc||[]).forEach(r=>counts[r.post_id]=(counts[r.post_id]||0)+1);
-  const grid=document.createElement('div'); grid.className='posts-grid';
-  posts.forEach(p=>{
-    const n=counts[p.id]||0,card=document.createElement('div');
-    card.className='post-card'+(p.is_pinned?' pinned':'');
-    card.innerHTML=(p.is_pinned?'<div class="pin-badge">📌 Pinned</div>':'')
-      +'<div class="card-date">'+fmtDate(p.created_at)+'</div><h3>'+esc(p.title)+'</h3><p class="card-summary">'+esc(p.summary||'')+'</p><div class="card-foot"><span class="ccount">💬 '+n+' comment'+(n!==1?'s':'')+'</span><span class="readmore">Read -></span></div>';
-    card.onclick=()=>loadDetail(p.id,category); grid.appendChild(card);
+  var ids = result.data.map(function(p){ return p.id; });
+  var ccResult = await sb.from('comments').select('post_id').in('post_id',ids).eq('is_visible',true);
+  var counts = {};
+  if(ccResult.data) ccResult.data.forEach(function(r){ counts[r.post_id] = (counts[r.post_id]||0)+1; });
+  var grid = document.createElement('div');
+  grid.className = 'posts-grid';
+  result.data.forEach(function(p){
+    var n = counts[p.id]||0;
+    var card = document.createElement('div');
+    card.className = 'post-card' + (p.is_pinned?' pinned':'');
+    card.innerHTML = (p.is_pinned?'<div class="pin-badge">📌 Pinned</div>':'')
+      +'<div class="card-date">'+fmtDate(p.created_at)+'</div>'
+      +'<h3>'+esc(p.title)+'</h3>'
+      +'<p class="card-summary">'+esc(p.summary||'')+'</p>'
+      +'<div class="card-foot"><span class="ccount">💬 '+n+' comment'+(n!==1?'s':'')+'</span><span class="readmore">Read -></span></div>';
+    card.onclick = function(){ loadDetail(p.id, category); };
+    grid.appendChild(card);
   });
-  el.innerHTML=''; el.appendChild(grid);
+  el.innerHTML = '';
+  el.appendChild(grid);
 }
 
 /* ===== POST DETAIL ===== */
-async function loadDetail(postId,category){
-  currentPostId=postId; currentPostTab=category||window._activeTab;
-  ['commentary','research','cftc','futures','services','contact','about'].forEach(t=>document.getElementById('tab-'+t).classList.add('hidden'));
+async function loadDetail(postId, category){
+  currentPostId = postId;
+  currentPostTab = category || window._activeTab;
+  ['commentary','research','cftc','futures','services','contact','about','exports','wasde','commoditymap','weather','options','fob','freight','technicals'].forEach(function(t){
+    document.getElementById('tab-'+t).classList.add('hidden');
+  });
   document.getElementById('tab-detail').classList.remove('hidden');
-  const labels={'commentary':'Market Commentary','research':'Research','cftc':'CFTC'};
-  const bc=document.getElementById('detail-breadcrumb');
-  if(bc) bc.textContent=labels[currentPostTab]||'';
-  const wrap=document.getElementById('detail-content');
-  wrap.innerHTML='<div class="spin">Loading...</div>';
-  const{data:post,error}=await sb.from('posts').select('*').eq('id',postId).single();
-  if(error||!post){wrap.innerHTML='<div class="spin">Post not found.</div>';return;}
-  const{data:comments}=await sb.from('comments').select('*').eq('post_id',postId).eq('is_visible',true).order('created_at',{ascending:true});
-  const commHtml=(comments&&comments.length)
-    ?comments.map(c=>{
-      var adminBtns=isAdmin?('<div class="comment-admin-row"><button class="btn-sm-del" onclick="adminDelComment(\x22'+c.id+'\x22)">Delete</button><button class="btn-sm-hide" onclick="adminHideComment(\x22'+c.id+'\x22)">Hide</button></div>'):'';
-      return '<div class="comment-item" id="ci-'+c.id+'"><div class="comment-header"><span class="comment-author">'+esc(c.author_name||'Anonymous')+'</span><span class="comment-time">'+fmtDate(c.created_at)+'</span></div><div class="comment-text">'+esc(c.content)+'</div>'+adminBtns+'</div>';
-    }).join('')
-    :'<div class="no-comments">No comments yet -- be first to share your view.</div>';
-  const isFullDoc=isFullHtmlDocument(post.content);
-  // Expand detail-wrap to full width for full HTML documents
-  const dw=wrap.closest('.detail-wrap');
+  var bc = document.getElementById('detail-breadcrumb');
+  if(bc) bc.textContent = currentPostTab||'';
+  var wrap = document.getElementById('detail-content');
+  wrap.innerHTML = '<div class="spin">Loading...</div>';
+  var r = await sb.from('posts').select('*').eq('id',postId).single();
+  if(r.error||!r.data){ wrap.innerHTML='<div class="spin">Post not found.</div>'; return; }
+  var post = r.data;
+  var cr = await sb.from('comments').select('*').eq('post_id',postId).eq('is_visible',true).order('created_at',{ascending:true});
+  var comments = cr.data||[];
+  var commHtml = comments.length
+    ? comments.map(function(c){
+        var adminBtns = isAdmin ? '<div class="comment-admin-row"><button class="btn-sm-del" onclick="adminDelComment(\x27'+c.id+'\x27)">Delete</button><button class="btn-sm-hide" onclick="adminHideComment(\x27'+c.id+'\x27)">Hide</button></div>' : '';
+        return '<div class="comment-item" id="ci-'+c.id+'"><div class="comment-header"><span class="comment-author">'+esc(c.author_name||'Anonymous')+'</span><span class="comment-time">'+fmtDate(c.created_at)+'</span></div><div class="comment-text">'+esc(c.content)+'</div>'+adminBtns+'</div>';
+      }).join('')
+    : '<div class="no-comments">No comments yet -- be first to share your view.</div>';
+  var isFullDoc = isFullHtmlDocument(post.content);
+  var dw = wrap.closest('.detail-wrap');
   if(dw) dw.classList.toggle('full-width', isFullDoc);
-  let contentHtml;
+  var contentHtml;
   if(isFullDoc){
-    const encoded=post.content.replace(/"/g,'\x22');
-    contentHtml='<iframe class="post-iframe" srcdoc="'+encoded+'" onload="resizeIframe(this)" scrolling="no"></iframe>';
+    var encoded = post.content.replace(/"/g,'\x22');
+    contentHtml = '<iframe class="post-iframe" srcdoc="'+encoded+'" onload="resizeIframe(this)" scrolling="no"></iframe>';
   } else {
     var standfirst = post.summary ? '<div class="post-standfirst">'+esc(post.summary)+'</div>' : '';
     contentHtml = '<div class="post-kicker">'+fmtDate(post.created_at)+'</div><h1>'+esc(post.title)+'</h1>'+standfirst+'<div class="post-body">'+post.content+'</div>';
   }
-  wrap.innerHTML=contentHtml+'<div class="comments-wrap"><div class="section-title">Discussion</div><div id="comments-area">'+commHtml+'</div><div class="comment-form-card"><h3>Leave a Comment</h3><div class="field"><label>Your name <span style="font-weight:400;color:var(--muted)">(optional)</span></label><input type="text" id="c-name" placeholder="e.g. John T."></div><div class="field"><label>Comment</label><textarea id="c-text" placeholder="Share your view on this analysis..."></textarea></div><button class="btn btn-navy" onclick="postComment()">Post Comment</button><div id="c-msg" class="hidden msg-box" style="margin-top:10px;"></div></div></div>';
+  wrap.innerHTML = contentHtml+'<div class="comments-wrap"><div class="section-title">Discussion</div><div id="comments-area">'+commHtml+'</div><div class="comment-form-card"><h3>Leave a Comment</h3><div class="field"><label>Your name <span style="font-weight:400;color:var(--muted)">(optional)</span></label><input type="text" id="c-name" placeholder="e.g. John T."></div><div class="field"><label>Comment</label><textarea id="c-text" placeholder="Share your view on this analysis..."></textarea></div><button class="btn btn-navy" onclick="postComment()">Post Comment</button><div id="c-msg" class="hidden msg-box" style="margin-top:10px;"></div></div></div>';
+}
+
+function closeDetail(){
+  document.getElementById('tab-detail').classList.add('hidden');
+  document.getElementById('tab-'+(window._activeTab||'commentary')).classList.remove('hidden');
 }
 
 function resizeIframe(iframe){
   if(!iframe) return;
   function doResize(){
     try{
-      const doc = iframe.contentDocument || iframe.contentWindow.document;
-      if(!doc || !doc.body) return;
-      doc.body.style.margin = '0';
-      doc.documentElement.style.overflowX = 'hidden';
-      // Make iframe fill its container width properly
-      iframe.style.width = '100%';
-      const h = Math.max(
-        doc.documentElement.scrollHeight,
-        doc.documentElement.offsetHeight,
-        doc.body.scrollHeight,
-        doc.body.offsetHeight,
-        600
-      );
-      iframe.style.height = h + 'px';
-    } catch(e){}
+      var doc = iframe.contentDocument || iframe.contentWindow.document;
+      if(!doc||!doc.body) return;
+      doc.body.style.margin='0';
+      doc.documentElement.style.overflowX='hidden';
+      iframe.style.width='100%';
+      var h = Math.max(doc.documentElement.scrollHeight,doc.body.scrollHeight,600);
+      iframe.style.height = h+'px';
+    }catch(e){}
   }
   doResize();
-  [200, 600, 1200, 2500, 4000].forEach(ms => setTimeout(doResize, ms));
-  try{
-    (iframe.contentDocument||iframe.contentWindow.document)
-      .addEventListener('click', () => { setTimeout(doResize,150); setTimeout(doResize,500); });
-  }catch(e){}
+  [200,600,1200,2500].forEach(function(ms){ setTimeout(doResize,ms); });
 }
-function isFullHtmlDocument(c){ if(!c) return false; const t=c.trim().toLowerCase(); return t.startsWith('<!doctype')||t.startsWith('<html'); }
+
+function isFullHtmlDocument(c){
+  if(!c) return false;
+  var t = c.trim().toLowerCase();
+  return t.startsWith('<!doctype')||t.startsWith('<html');
+}
 
 async function postComment(){
-  const name=(document.getElementById('c-name').value.trim())||'Anonymous';
-  const content=document.getElementById('c-text').value.trim();
-  const msgEl=document.getElementById('c-msg');
-  if(!content){msgEl.textContent='Please write a comment.';msgEl.className='msg-box msg-error';msgEl.classList.remove('hidden');return;}
-  const{error}=await sb.from('comments').insert({post_id:currentPostId,author_name:name,content,is_visible:true});
-  if(error){msgEl.textContent='Error posting comment.';msgEl.className='msg-box msg-error';msgEl.classList.remove('hidden');return;}
-  document.getElementById('c-name').value=''; document.getElementById('c-text').value='';
+  var name = (document.getElementById('c-name').value.trim())||'Anonymous';
+  var content = document.getElementById('c-text').value.trim();
+  var msgEl = document.getElementById('c-msg');
+  if(!content){ msgEl.textContent='Please write a comment.'; msgEl.className='msg-box msg-error'; msgEl.classList.remove('hidden'); return; }
+  var r = await sb.from('comments').insert({post_id:currentPostId, author_name:name, content:content, is_visible:true});
+  if(r.error){ msgEl.textContent='Error posting comment.'; msgEl.className='msg-box msg-error'; msgEl.classList.remove('hidden'); return; }
+  document.getElementById('c-name').value='';
+  document.getElementById('c-text').value='';
   msgEl.textContent='Comment posted!'; msgEl.className='msg-box msg-ok'; msgEl.classList.remove('hidden');
-  setTimeout(()=>loadDetail(currentPostId,currentPostTab),600);
+  setTimeout(function(){ loadDetail(currentPostId,currentPostTab); }, 600);
 }
-async function adminDelComment(id){ if(!confirm('Permanently delete this comment?')) return; await sb.from('comments').delete().eq('id',id); loadDetail(currentPostId,currentPostTab); }
-async function adminHideComment(id){ await sb.from('comments').update({is_visible:false}).eq('id',id); loadDetail(currentPostId,currentPostTab); }
+
+async function adminDelComment(id){
+  if(!confirm('Delete this comment?')) return;
+  await sb.from('comments').delete().eq('id',id);
+  loadDetail(currentPostId,currentPostTab);
+}
+async function adminHideComment(id){
+  await sb.from('comments').update({is_visible:false}).eq('id',id);
+  loadDetail(currentPostId,currentPostTab);
+}
+
+/* ===== RECENT STRIP ===== */
+async function loadRecentStrip(){
+  if(!sb||!currentUser) return;
+  var scroll = document.getElementById('recent-strip-scroll');
+  if(!scroll) return;
+  var catLabel = {commentary:'Commentary',research:'Research',cftc:'CFTC',exports:'Export Data',wasde:'WASDE',commoditymap:'Commodity Map',weather:'Weather',options:'Options',fob:'FOB Data',freight:'Freight',technicals:'Technical Analysis'};
+  var r = await sb.from('posts').select('id,title,created_at,category').order('created_at',{ascending:false}).limit(12);
+  if(r.error||!r.data||!r.data.length){ scroll.innerHTML='<div style="color:var(--muted2);font-size:12px;font-family:monospace;padding:8px 0;">No publications yet.</div>'; return; }
+  scroll.innerHTML = r.data.map(function(p){
+    return '<div class="recent-doc-card" onclick="loadDetail(\x27'+p.id+'\x27,\x27'+p.category+'\x27)"><div class="recent-doc-cat">'+(catLabel[p.category]||p.category)+'</div><div class="recent-doc-title">'+esc(p.title)+'</div><div class="recent-doc-date">'+fmtDate(p.created_at)+'</div></div>';
+  }).join('');
+}
 
 /* ===== ADMIN ===== */
 function setEditorMode(mode){
@@ -1419,113 +1295,105 @@ function initQuill(){
   quill=new Quill('#quill-editor',{theme:'snow',modules:{toolbar:[[{header:[1,2,3,false]}],['bold','italic','underline'],[{list:'ordered'},{list:'bullet'}],['link','blockquote'],[{color:[]}],['clean']]},placeholder:'Write your post here...'});
 }
 function switchAdminTab(t){
-  ['write','posts','mod','subs'].forEach(x=>{
+  ['write','posts','mod','subs'].forEach(function(x){
     document.getElementById('admin-'+x).classList.toggle('hidden',x!==t);
-    const btnId = x==='write'?'wtab':x==='posts'?'ptab':x==='mod'?'mtab':'stab';
+    var btnId = x==='write'?'wtab':x==='posts'?'ptab':x==='mod'?'mtab':'stab';
     document.getElementById(btnId).classList.toggle('active',x===t);
   });
-  if(t==='mod')   loadAllComments();
-  if(t==='subs')  loadSubscribers();
+  if(t==='mod') loadAllComments();
+  if(t==='subs') loadSubscribers();
   if(t==='posts') loadManagePosts();
 }
 async function publishPost(){
-  const title=document.getElementById('p-title').value.trim();
-  const summary=document.getElementById('p-summary').value.trim();
-  const category=document.getElementById('p-category').value;
-  const content=editorMode==='html'?document.getElementById('html-source-input').value.trim():(quill?quill.root.innerHTML:'');
-  const btn=document.getElementById('pub-btn');
-  if(!title){pubMsg('Please add a title.',false);return;}
-  if(!content||content==='<p><br></p>'){pubMsg('Please add content.',false);return;}
+  var title = document.getElementById('p-title').value.trim();
+  var summary = document.getElementById('p-summary').value.trim();
+  var category = document.getElementById('p-category').value;
+  var content = editorMode==='html' ? document.getElementById('html-source-input').value.trim() : (quill?quill.root.innerHTML:'');
+  var btn = document.getElementById('pub-btn');
+  if(!title){ pubMsg('Please add a title.',false); return; }
+  if(!content||content==='<p><br></p>'){ pubMsg('Please add content.',false); return; }
   btn.disabled=true; btn.textContent='Publishing...';
-  const{error}=await sb.from('posts').insert({title,summary,content,category});
+  var r = await sb.from('posts').insert({title:title,summary:summary,content:content,category:category});
   btn.disabled=false; btn.textContent='Publish Post';
-  if(error){pubMsg('Error: '+error.message,false);return;}
-  document.getElementById('p-title').value=''; document.getElementById('p-summary').value='';
-  document.getElementById('html-source-input').value=''; if(quill) quill.setText('');
-  pubMsg('Post published to '+category+'!',true);
+  if(r.error){ pubMsg('Error: '+r.error.message,false); return; }
+  document.getElementById('p-title').value='';
+  document.getElementById('p-summary').value='';
+  document.getElementById('html-source-input').value='';
+  if(quill) quill.setText('');
+  pubMsg('Published to '+category+'!',true);
 }
-function pubMsg(text,ok){ const el=document.getElementById('pub-msg'); el.textContent=text; el.className='msg-box '+(ok?'msg-ok':'msg-error'); el.classList.remove('hidden'); setTimeout(()=>el.classList.add('hidden'),4500); }
+function pubMsg(text,ok){
+  var el=document.getElementById('pub-msg');
+  el.textContent=text; el.className='msg-box '+(ok?'msg-ok':'msg-error'); el.classList.remove('hidden');
+  setTimeout(function(){ el.classList.add('hidden'); },4500);
+}
 
 async function loadAllComments(){
-  const wrap=document.getElementById('mod-list'); wrap.innerHTML='<div class="spin">Loading...</div>';
-  const{data,error}=await sb.from('comments').select('*,posts(title,category)').order('created_at',{ascending:false});
-  if(error||!data||data.length===0){wrap.innerHTML='<div class="empty-state"><h3>No comments yet</h3></div>';return;}
-  wrap.innerHTML=data.map(function(c){
+  var wrap=document.getElementById('mod-list'); wrap.innerHTML='<div class="spin">Loading...</div>';
+  var r=await sb.from('comments').select('*,posts(title,category)').order('created_at',{ascending:false});
+  if(r.error||!r.data||!r.data.length){ wrap.innerHTML='<div class="empty-state"><h3>No comments yet</h3></div>'; return; }
+  wrap.innerHTML=r.data.map(function(c){
     var hiddenCls=!c.is_visible?' is-hidden':'';
     var hiddenBadge=!c.is_visible?'<span class="badge-hidden">HIDDEN</span>':'';
     var visBtn=c.is_visible
-      ?('<button class="btn-sm-hide" onclick="modSetVisible(\x22'+c.id+'\x22,false)">Hide</button>')
-      :('<button class="btn-sm-hide" onclick="modSetVisible(\x22'+c.id+'\x22,true)">Unhide</button>');
-    return '<div class="mod-card'+hiddenCls+'" id="mc-'+c.id+'">'
-      +'<div class="mod-top"><div>'
+      ?'<button class="btn-sm-hide" onclick="modSetVisible(\x27'+c.id+'\x27,false)">Hide</button>'
+      :'<button class="btn-sm-hide" onclick="modSetVisible(\x27'+c.id+'\x27,true)">Unhide</button>';
+    return '<div class="mod-card'+hiddenCls+'" id="mc-'+c.id+'"><div class="mod-top"><div>'
       +'<span class="mod-who">'+esc(c.author_name||'Anonymous')+'</span>'
       +'<span class="mod-meta">'+fmtDate(c.created_at)+'</span>'
       +hiddenBadge
-      +'<span class="cat-badge">'+esc(c.posts?.category||'')+'</span>'
-      +'</div><span class="mod-post">'+esc(c.posts?.title||'--')+'</span></div>'
+      +'<span class="cat-badge">'+esc((c.posts&&c.posts.category)||'')+'</span>'
+      +'</div><span class="mod-post">'+esc((c.posts&&c.posts.title)||'')+'</span></div>'
       +'<div class="mod-text">'+esc(c.content)+'</div>'
-      +'<div class="mod-actions">'
-      +'<button class="btn-sm-del" onclick="modDelete(\x22'+c.id+'\x22)">Delete</button>'
-      +visBtn
-      +'</div></div>';
+      +'<div class="mod-actions"><button class="btn-sm-del" onclick="modDelete(\x27'+c.id+'\x27)">Delete</button>'+visBtn+'</div></div>';
   }).join('');
 }
-/* ---- Manage Posts ---- */
+
 async function loadManagePosts(){
-  const wrap=document.getElementById('posts-manage-list');
+  var wrap=document.getElementById('posts-manage-list');
   wrap.innerHTML='<div class="spin">Loading...</div>';
-  const{data,error}=await sb.from('posts').select('id,title,summary,category,created_at,is_pinned').order('created_at',{ascending:false});
-  if(error||!data||data.length===0){wrap.innerHTML='<div class="empty-state"><h3>No posts yet</h3></div>';return;}
-  const catLabel={'commentary':'Market Commentary','research':'Research','cftc':'CFTC','exports':'Export Data','wasde':'WASDE','commoditymap':'Commodity Map','weather':'Weather','options':'Options Analytics','fob':'FOB Data','freight':'Freight','technicals':'Technical Analysis'};
-  wrap.innerHTML=data.map(p=>'<div class="mod-card" id="mp-'+p.id+'">'  
-      +'<div class="mod-top"><div>'
+  var r=await sb.from('posts').select('id,title,summary,category,created_at,is_pinned').order('created_at',{ascending:false});
+  if(r.error||!r.data||!r.data.length){ wrap.innerHTML='<div class="empty-state"><h3>No posts yet</h3></div>'; return; }
+  var catLabel={commentary:'Market Commentary',research:'Research',cftc:'CFTC',exports:'Export Data',wasde:'WASDE',commoditymap:'Commodity Map',weather:'Weather',options:'Options Analytics',fob:'FOB Data',freight:'Freight',technicals:'Technical Analysis'};
+  wrap.innerHTML=r.data.map(function(p){
+    return '<div class="mod-card" id="mp-'+p.id+'"><div class="mod-top"><div>'
       +'<span class="mod-who">'+esc(p.title)+'</span>'
       +'<span class="cat-badge">'+(catLabel[p.category]||p.category)+'</span>'
       +'<span class="mod-meta">'+fmtDate(p.created_at)+'</span>'
       +'</div></div>'
       +(p.summary?'<div class="mod-text" style="font-size:12px;color:var(--muted);">'+esc(p.summary)+'</div>':'')
       +'<div class="mod-actions" style="margin-top:10px;">'
-      +'<button class="btn-sm-hide" onclick="startEditPost(\x22'+p.id+'\x22)"> Edit</button>'
-      +(p.is_pinned?'<button class="btn-sm-hide" style="color:var(--gold2);border-color:rgba(212,170,85,0.5);" onclick="togglePin(\x22'+p.id+'\x22,true)">📌 Unpin</button>':'<button class="btn-sm-hide" onclick="togglePin(\x22'+p.id+'\x22,false)">📌 Pin</button>')
-      +'<button class="btn-sm-del" onclick="deletePost(\x22'+p.id+'\x22)">Delete</button>'
-      +'</div></div>').join('');
+      +'<button class="btn-sm-hide" onclick="startEditPost(\x27'+p.id+'\x27)">Edit</button>'
+      +(p.is_pinned?'<button class="btn-sm-hide" style="color:var(--gold2);" onclick="togglePin(\x27'+p.id+'\x27,true)">Unpin</button>':'<button class="btn-sm-hide" onclick="togglePin(\x27'+p.id+'\x27,false)">Pin</button>')
+      +'<button class="btn-sm-del" onclick="deletePost(\x27'+p.id+'\x27)">Delete</button>'
+      +'</div></div>';
+  }).join('');
 }
 
 async function deletePost(id){
-  if(!confirm('Permanently delete this post and all its comments? This cannot be undone.')) return;
+  if(!confirm('Permanently delete this post?')) return;
   await sb.from('posts').delete().eq('id',id);
   loadManagePosts();
 }
 
 async function startEditPost(id){
-  const{data:post,error}=await sb.from('posts').select('*').eq('id',id).single();
-  if(error||!post){alert('Could not load post.');return;}
-  // Switch to write tab and populate fields
+  var r=await sb.from('posts').select('*').eq('id',id).single();
+  if(r.error||!r.data){ alert('Could not load post.'); return; }
+  var post=r.data;
   switchAdminTab('write');
-  document.getElementById('p-title').value  = post.title||'';
-  document.getElementById('p-summary').value= post.summary||'';
-  document.getElementById('p-category').value= post.category||'commentary';
-  // Store the id being edited
-  window._editingPostId = id;
-  document.getElementById('pub-btn').textContent = 'Save Changes';
-  // Set editor content
-  if(isFullHtmlDocument(post.content)){
-    setEditorMode('html');
-    document.getElementById('html-source-input').value = post.content;
-  } else {
-    setEditorMode('visual');
-    if(quill) quill.root.innerHTML = post.content||'';
-  }
-  // Show cancel button
-  const pubRow = document.getElementById('pub-btn').parentElement;
+  document.getElementById('p-title').value=post.title||'';
+  document.getElementById('p-summary').value=post.summary||'';
+  document.getElementById('p-category').value=post.category||'commentary';
+  window._editingPostId=id;
+  document.getElementById('pub-btn').textContent='Save Changes';
+  if(isFullHtmlDocument(post.content)){ setEditorMode('html'); document.getElementById('html-source-input').value=post.content; }
+  else { setEditorMode('visual'); if(quill) quill.root.innerHTML=post.content||''; }
+  var pubRow=document.getElementById('pub-btn').parentElement;
   if(!document.getElementById('cancel-edit-btn')){
-    const cancelBtn = document.createElement('button');
-    cancelBtn.id='cancel-edit-btn';
-    cancelBtn.className='btn btn-ghost';
-    cancelBtn.style.background='var(--muted)';
-    cancelBtn.style.color='#fff';
-    cancelBtn.textContent='x Cancel Edit';
-    cancelBtn.onclick=cancelEdit;
+    var cancelBtn=document.createElement('button');
+    cancelBtn.id='cancel-edit-btn'; cancelBtn.className='btn btn-ghost';
+    cancelBtn.style.background='var(--muted)'; cancelBtn.style.color='#fff';
+    cancelBtn.textContent='Cancel'; cancelBtn.onclick=cancelEdit;
     pubRow.appendChild(cancelBtn);
   }
 }
@@ -1537,49 +1405,45 @@ function cancelEdit(){
   document.getElementById('p-summary').value='';
   document.getElementById('html-source-input').value='';
   if(quill) quill.setText('');
-  const cb=document.getElementById('cancel-edit-btn');
+  var cb=document.getElementById('cancel-edit-btn');
   if(cb) cb.remove();
 }
 
-async function modDelete(id){ if(!confirm('Permanently delete?')) return; await sb.from('comments').delete().eq('id',id); loadAllComments(); }
+async function modDelete(id){ if(!confirm('Delete?')) return; await sb.from('comments').delete().eq('id',id); loadAllComments(); }
 async function modSetVisible(id,vis){ await sb.from('comments').update({is_visible:vis}).eq('id',id); loadAllComments(); }
+async function togglePin(id,currentlyPinned){ await sb.from('posts').update({is_pinned:!currentlyPinned}).eq('id',id); loadManagePosts(); }
 
 /* ===== SUBSCRIBERS ===== */
 async function loadSubscribers(){
-  const tbody=document.getElementById('subs-tbody');
+  var tbody=document.getElementById('subs-tbody');
   tbody.innerHTML='<tr><td colspan="3" style="text-align:center;padding:32px;color:var(--muted);">Loading...</td></tr>';
-  const{data,error}=await sb.from('subscribers').select('email,created_at').order('created_at',{ascending:false});
-  if(error){ tbody.innerHTML='<tr><td colspan="3" style="text-align:center;padding:32px;color:var(--red);">Error loading subscribers.</td></tr>'; return; }
-  allSubs=data||[];
-  updateSubsStats();
+  var r=await sb.from('subscribers').select('email,created_at').order('created_at',{ascending:false});
+  if(r.error){ tbody.innerHTML='<tr><td colspan="3" style="color:var(--red);text-align:center;padding:32px;">Error loading.</td></tr>'; return; }
+  allSubs=r.data||[];
+  document.getElementById('subs-total').textContent=allSubs.length;
+  var now=new Date();
+  document.getElementById('subs-month').textContent=allSubs.filter(function(s){ var d=new Date(s.created_at); return d.getMonth()===now.getMonth()&&d.getFullYear()===now.getFullYear(); }).length;
+  document.getElementById('subs-week').textContent=allSubs.filter(function(s){ return (now-new Date(s.created_at))<7*24*60*60*1000; }).length;
   renderSubsTable(allSubs);
 }
-function updateSubsStats(){
-  document.getElementById('subs-total').textContent=allSubs.length;
-  const now=new Date();
-  const thisMonth=allSubs.filter(s=>{ const d=new Date(s.created_at); return d.getMonth()===now.getMonth()&&d.getFullYear()===now.getFullYear(); }).length;
-  const thisWeek=allSubs.filter(s=>{ const d=new Date(s.created_at); return (now-d)<7*24*60*60*1000; }).length;
-  document.getElementById('subs-month').textContent=thisMonth;
-  document.getElementById('subs-week').textContent=thisWeek;
-}
 function renderSubsTable(subs){
-  const tbody=document.getElementById('subs-tbody');
-  if(!subs||subs.length===0){
-    tbody.innerHTML='<tr><td colspan="3" style="text-align:center;padding:40px;color:var(--muted);">No subscribers yet.</td></tr>';return;
-  }
-  tbody.innerHTML=subs.map((s,i)=>'<tr><td style="color:var(--muted);font-size:13px;">'+(i+1)+'</td><td class="email-cell">'+esc(s.email)+'</td><td style="color:var(--muted);font-size:13px;">'+fmtDate(s.created_at)+'</td></tr>').join('');
+  var tbody=document.getElementById('subs-tbody');
+  if(!subs||!subs.length){ tbody.innerHTML='<tr><td colspan="3" style="text-align:center;padding:40px;color:var(--muted);">No subscribers yet.</td></tr>'; return; }
+  tbody.innerHTML=subs.map(function(s,i){
+    return '<tr><td style="color:var(--muted);font-size:13px;">'+(i+1)+'</td><td class="email-cell">'+esc(s.email)+'</td><td style="color:var(--muted);font-size:13px;">'+fmtDate(s.created_at)+'</td></tr>';
+  }).join('');
 }
 function filterSubs(){
-  const q=document.getElementById('subs-search').value.trim().toLowerCase();
-  const filtered=q?allSubs.filter(s=>s.email.toLowerCase().includes(q)):allSubs;
-  renderSubsTable(filtered);
+  var q=document.getElementById('subs-search').value.trim().toLowerCase();
+  renderSubsTable(q?allSubs.filter(function(s){ return s.email.toLowerCase().includes(q); }):allSubs);
 }
 function exportCSV(){
   if(!allSubs.length){ alert('No subscribers to export.'); return; }
-  const rows=['Email,Joined',...allSubs.map(s=>s.email+','+new Date(s.created_at).toLocaleDateString('en-GB'))];
-  const blob=new Blob([rows.join('\n')],{type:'text/csv'});
-  const url=URL.createObjectURL(blob);
-  const a=document.createElement('a'); a.href=url; a.download='jhd-subscribers.csv'; a.click();
+  var rows=['Email,Joined'];
+  allSubs.forEach(function(s){ rows.push(s.email+','+new Date(s.created_at).toLocaleDateString('en-GB')); });
+  var blob=new Blob([rows.join('\n')],{type:'text/csv'});
+  var url=URL.createObjectURL(blob);
+  var a=document.createElement('a'); a.href=url; a.download='jhd-subscribers.csv'; a.click();
   URL.revokeObjectURL(url);
 }
 
@@ -1587,150 +1451,144 @@ function exportCSV(){
 function esc(s){ if(!s) return ''; return String(s).replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;').replace(/"/g,'\x22').replace(/'/g,'&#39;'); }
 function fmtDate(d){ return new Date(d).toLocaleDateString('en-GB',{day:'numeric',month:'short',year:'numeric'}); }
 
-async function togglePin(id, currentlyPinned){
-  const{error}=await sb.from('posts').update({is_pinned:!currentlyPinned}).eq('id',id);
-  if(error){alert('Error: '+error.message);return;}
-  loadManagePosts();
-}
-
-
-/* ===== BUSHEL SYSTEM ===== */
-var LEVELS = [
-  {name:'Merchandiser', min:0,    max:99,   icon:'🌱'},
-  {name:'Originator',   min:100,  max:299,  icon:'📦'},
-  {name:'Trader',       min:300,  max:599,  icon:'🚢'},
-  {name:'Risk Manager', min:600,  max:999,  icon:'📊'},
-  {name:'Head of Desk', min:1000, max:2499, icon:'🏦'},
-  {name:'Market Maker', min:2500, max:99999,icon:'🌍'},
-];
-
-var AGRI_USERNAMES = [
-  'CornBull','WheatDesk','GrainMerchant','FOBTrader','BasisBid',
-  'SpreadTrader','CropWatcher','CarryMarket','FlatPriceJim','HedgeDesk',
-  'BullSpread','CalendarSpread','OriginsBid','CIFBuyer','BasisTrader',
-  'CargoCorn','GrainArb','SoybeanBull','MATIFTrader','CBOTDesk',
-  'AgriAlpha','CropBull','FloorTrader','PNWWheat','USGCorn',
-  'BlackSeaGrain','UpriverBid','HandysizeCargo','PanamaxDesk','DryBulkPro'
-];
-
-
-
-function generateUsername() {
-  var base = AGRI_USERNAMES[Math.floor(Math.random() * AGRI_USERNAMES.length)];
-  var num = Math.floor(Math.random() * 90) + 10;
-  document.getElementById('up-username').value = base + num;
-}
-
-/* -- Bushel DB operations -- */
-async function getBushels() {
-  if (!sb || !currentUser) return null;
-  var result = await sb.from('user_bushels').select('balance,last_login_date').eq('user_id', currentUser.id).single();
-  return result.data;
-}
-
-async function awardBushels(amount, reason) {
-  if (!sb || !currentUser) return;
-  var existing = await getBushels();
-  if (!existing) {
-    await sb.from('user_bushels').insert({user_id: currentUser.id, balance: amount, last_login_date: null});
-  } else {
-    await sb.from('user_bushels').update({balance: existing.balance + amount}).eq('user_id', currentUser.id);
-  }
-  loadBushelBalance();
-}
-
-async function checkDailyLogin() {
-  if (!sb || !currentUser) return;
-  var data = await getBushels();
-  var today = new Date().toISOString().slice(0, 10);
-  if (!data) {
-    // No record yet -- create with welcome bonus
-    await sb.from('user_bushels').insert({user_id: currentUser.id, balance: 50, last_login_date: today});
-    loadBushelBalance();
+/* ===== TECHNICAL ANALYSIS ===== */
+async function loadTACharts(){
+  var wrap=document.getElementById('ta-cards-wrap');
+  if(!wrap) return;
+  wrap.innerHTML='<div class="ta-empty">Loading...</div>';
+  var r=await sb.from('posts').select('*').eq('category','technicals').order('created_at',{ascending:false});
+  if(r.error||!r.data||!r.data.length){
+    wrap.innerHTML='<div class="ta-empty">No technical analysis published yet.</div>';
+    if(isAdmin) document.getElementById('ta-admin-form-wrap').classList.remove('hidden');
     return;
   }
-  if (data.last_login_date !== today) {
-    var newBalance = (data.balance || 0) + 2;
-    await sb.from('user_bushels').update({balance: newBalance, last_login_date: today}).eq('user_id', currentUser.id);
-    loadBushelBalance();
-  }
+  var html='<div class="ta-grid">';
+  r.data.forEach(function(p){
+    var meta={};
+    try{ meta=JSON.parse(p.summary||'{}'); }catch(ex){}
+    var d=new Date(p.created_at).toLocaleDateString('en-GB',{day:'numeric',month:'short',year:'numeric'});
+    var bias=meta.bias||'neutral';
+    html+='<div class="ta-card" id="ta-'+p.id+'">'
+      +'<div class="ta-card-header"><div class="ta-instrument">'+esc(meta.instrument||p.title)+'</div>'
+      +(meta.timeframe?'<span class="ta-timeframe">'+esc(meta.timeframe)+'</span>':'')
+      +'<span class="ta-bias '+bias+'">'+bias.charAt(0).toUpperCase()+bias.slice(1)+'</span></div>'
+      +(meta.chart_image?'<div class="ta-chart-wrap"><img src="'+meta.chart_image+'" alt="chart" loading="lazy"></div>':'')
+      +'<div class="ta-levels">'
+      +'<div class="ta-level"><div class="ta-level-label">Resistance</div><div class="ta-level-val resistance">'+esc(meta.resistance||'--')+'</div></div>'
+      +'<div class="ta-level"><div class="ta-level-label">Support</div><div class="ta-level-val support">'+esc(meta.support||'--')+'</div></div>'
+      +'<div class="ta-level"><div class="ta-level-label">Target</div><div class="ta-level-val target">'+esc(meta.target||'--')+'</div></div>'
+      +'</div>'
+      +(meta.commentary?'<div class="ta-commentary">'+esc(meta.commentary)+'</div>':'')
+      +'<div class="ta-meta"><span class="ta-date">Updated '+d+'</span>'
+      +(isAdmin?'<button class="ta-delete-btn" onclick="deleteTAPost(\x27'+p.id+'\x27,event)">Delete</button>':'')
+      +'</div></div>';
+  });
+  html+='</div>';
+  wrap.innerHTML=html;
+  if(isAdmin) document.getElementById('ta-admin-form-wrap').classList.remove('hidden');
+}
+async function deleteTAPost(id,e){ e.stopPropagation(); if(!confirm('Delete?')) return; await sb.from('posts').delete().eq('id',id); var el=document.getElementById('ta-'+id); if(el) el.remove(); }
+var _taChartImage=null;
+function handleTAImageUpload(input){
+  var file=input.files[0]; if(!file) return;
+  var reader=new FileReader();
+  reader.onload=function(ev){ _taChartImage=ev.target.result; var preview=document.getElementById('ta-chart-preview'); preview.src=_taChartImage; preview.style.display='block'; document.getElementById('ta-upload-label').textContent=file.name; };
+  reader.readAsDataURL(file);
+}
+async function publishTAChart(){
+  if(!sb){ alert('Not connected.'); return; }
+  var instrument=document.getElementById('ta-instrument').value.trim();
+  if(!instrument){ alert('Please enter an instrument name.'); return; }
+  var meta={instrument:instrument,timeframe:document.getElementById('ta-timeframe').value,bias:document.getElementById('ta-bias').value,resistance:document.getElementById('ta-resistance').value.trim(),support:document.getElementById('ta-support').value.trim(),target:document.getElementById('ta-target').value.trim(),commentary:document.getElementById('ta-commentary').value.trim(),chart_image:_taChartImage||''};
+  var r=await sb.from('posts').insert({title:instrument,category:'technicals',summary:JSON.stringify(meta),content:meta.commentary,user_id:currentUser.id});
+  if(r.error){ alert('Error: '+r.error.message); return; }
+  _taChartImage=null;
+  document.getElementById('ta-instrument').value='';
+  document.getElementById('ta-commentary').value='';
+  document.getElementById('ta-chart-preview').style.display='none';
+  document.getElementById('ta-upload-label').textContent='Click to upload chart image';
+  loadTACharts();
 }
 
-async function loadBushelBalance() {
-  var data = await getBushels();
-  var bal = data ? (data.balance || 0) : 0;
-  var level = LEVELS[0];
-  // Update topbar chip
-  var chip = document.getElementById('bushel-chip');
-  if (chip) chip.classList.remove('hidden');
-  var balEl = document.getElementById('topbar-bu-balance');
-  if (balEl) balEl.textContent = bal + ' bu';
-  var lvlEl = document.getElementById('topbar-bu-level');
-  if (lvlEl) lvlEl.textContent = level.icon + ' ' + level.name;
-  // Store for panel
-  window._bushelBalance = bal;
-  window._bushelLevel = level;
+/* ===== BUSHEL SYSTEM ===== */
+var LEVELS=[
+  {name:'Merchandiser',min:0,max:99,icon:'🌱'},
+  {name:'Originator',min:100,max:299,icon:'📦'},
+  {name:'Trader',min:300,max:599,icon:'🚢'},
+  {name:'Risk Manager',min:600,max:999,icon:'📊'},
+  {name:'Head of Desk',min:1000,max:2499,icon:'🏦'},
+  {name:'Market Maker',min:2500,max:99999,icon:'🌍'}
+];
+var AGRI_USERNAMES=['CornBull','WheatDesk','GrainMerchant','FOBTrader','BasisBid','SpreadTrader','CropWatcher','CarryMarket','FlatPriceJim','HedgeDesk','BullSpread','CalendarSpread','OriginsBid','CIFBuyer','BasisTrader','CargoCorn','GrainArb','SoybeanBull','MATIFTrader','CBOTDesk','AgriAlpha','CropBull','FloorTrader','PNWWheat','USGCorn','BlackSeaGrain','UpriverBid','HandysizeCargo','PanamaxDesk','DryBulkPro'];
+
+function getLevelForBalance(bal){
+  if(bal>=2500) return LEVELS[5];
+  if(bal>=1000) return LEVELS[4];
+  if(bal>=600)  return LEVELS[3];
+  if(bal>=300)  return LEVELS[2];
+  if(bal>=100)  return LEVELS[1];
+  return LEVELS[0];
 }
-
-/* -- Bushel Panel -- */
-function openBushelPanel() {
-  document.getElementById('bushel-overlay').classList.add('open');
-  document.getElementById('bushel-panel').classList.add('open');
-  renderBushelPanel();
+function generateUsername(){
+  var base=AGRI_USERNAMES[Math.floor(Math.random()*AGRI_USERNAMES.length)];
+  var num=Math.floor(Math.random()*90)+10;
+  document.getElementById('up-username').value=base+num;
 }
-
-function closeBushelPanel() {
-  document.getElementById('bushel-overlay').classList.remove('open');
-  document.getElementById('bushel-panel').classList.remove('open');
+async function getBushels(){
+  if(!sb||!currentUser) return null;
+  var r=await sb.from('user_bushels').select('balance,last_login_date').eq('user_id',currentUser.id).single();
+  return r.data;
 }
-
-function renderBushelPanel() {
-  var bal = window._bushelBalance || 0;
-  var level = window._bushelLevel || LEVELS[0];
-  var nextLevel = LEVELS[LEVELS.indexOf(level) + 1] || null;
-
-  document.getElementById('bp-balance-val').textContent = bal;
-  document.getElementById('bp-level-badge').textContent = level.icon + ' ' + level.name;
-
-  // Progress bar
-  var prog = document.getElementById('bp-progress');
-  if (nextLevel) {
-    var pct = Math.min(100, Math.round((bal - level.min) / (nextLevel.min - level.min) * 100));
-    prog.innerHTML = '<div class="bp-progress-bar-bg"><div class="bp-progress-bar-fill" style="width:' + pct + '%"></div></div>'
-      + '<div class="bp-progress-label"><span>' + bal + ' bu</span><span>' + nextLevel.min + ' bu for ' + nextLevel.name + '</span></div>';
-  } else {
-    prog.innerHTML = '<div style="font-family:DM Mono,monospace;font-size:9px;color:var(--gold2);margin-top:8px;">MAX LEVEL ACHIEVED</div>';
-  }
-
-  // Levels list
-  var levelsHtml = '';
-  for (var i = 0; i < LEVELS.length; i++) {
-    var lv = LEVELS[i];
-    var isCurrent = lv.name === level.name;
-    var isDone = bal >= lv.min;
-    levelsHtml += '<div class="bp-level-row' + (isCurrent ? ' current-level' : '') + '">'
-      + '<div class="bp-level-dot" style="background:' + (isDone ? 'var(--gold2)' : 'var(--border2)') + '"></div>'
-      + '<div class="bp-level-name">' + lv.icon + ' ' + lv.name + '</div>'
-      + '<div class="bp-level-req">' + (lv.min === 0 ? 'Starting' : lv.min + ' bu') + '</div>'
-      + '<div class="bp-level-check">' + (isDone ? '' : '') + '</div>'
-      + '</div>';
-  }
-  document.getElementById('bp-levels-list').innerHTML = levelsHtml;
+async function awardBushels(amount){
+  if(!sb||!currentUser) return;
+  var existing=await getBushels();
+  if(!existing) await sb.from('user_bushels').insert({user_id:currentUser.id,balance:amount,last_login_date:null});
+  else await sb.from('user_bushels').update({balance:existing.balance+amount}).eq('user_id',currentUser.id);
+  loadBushelBalance();
 }
-
-/* -- Award bushel on comment post -- */
-var _origPostComment = null;
-function wrapPostCommentWithBushels() {
-  var orig = window.postComment;
-  if (!orig || orig._bushelWrapped) return;
-  window.postComment = async function() {
-    await orig();
-    // Award 3bu for commenting (best-effort)
-    try { await awardBushels(5, 'comment'); } catch(e) {}
-  };
-  window.postComment._bushelWrapped = true;
+async function checkDailyLogin(){
+  if(!sb||!currentUser) return;
+  var data=await getBushels();
+  var today=new Date().toISOString().slice(0,10);
+  if(!data){ await sb.from('user_bushels').insert({user_id:currentUser.id,balance:50,last_login_date:today}); loadBushelBalance(); return; }
+  if(data.last_login_date!==today){ await sb.from('user_bushels').update({balance:(data.balance||0)+2,last_login_date:today}).eq('user_id',currentUser.id); loadBushelBalance(); }
 }
-
+async function loadBushelBalance(){
+  var data=await getBushels();
+  var bal=data?(data.balance||0):0;
+  var level=getLevelForBalance(bal);
+  var chip=document.getElementById('bushel-chip'); if(chip) chip.classList.remove('hidden');
+  var balEl=document.getElementById('topbar-bu-balance'); if(balEl) balEl.textContent=bal+' bu';
+  var lvlEl=document.getElementById('topbar-bu-level'); if(lvlEl) lvlEl.textContent=level.icon+' '+level.name;
+  window._bushelBalance=bal; window._bushelLevel=level;
+}
+function openBushelPanel(){ document.getElementById('bushel-overlay').classList.add('open'); document.getElementById('bushel-panel').classList.add('open'); renderBushelPanel(); }
+function closeBushelPanel(){ document.getElementById('bushel-overlay').classList.remove('open'); document.getElementById('bushel-panel').classList.remove('open'); }
+function renderBushelPanel(){
+  var bal=window._bushelBalance||0;
+  var level=window._bushelLevel||LEVELS[0];
+  var nextLevel=LEVELS[LEVELS.indexOf(level)+1]||null;
+  document.getElementById('bp-balance-val').textContent=bal;
+  document.getElementById('bp-level-badge').textContent=level.icon+' '+level.name;
+  var prog=document.getElementById('bp-progress');
+  if(nextLevel){
+    var pct=Math.min(100,Math.round((bal-level.min)/(nextLevel.min-level.min)*100));
+    prog.innerHTML='<div class="bp-progress-bar-bg"><div class="bp-progress-bar-fill" style="width:'+pct+'%"></div></div><div class="bp-progress-label"><span>'+bal+' bu</span><span>'+nextLevel.min+' bu for '+nextLevel.name+'</span></div>';
+  } else { prog.innerHTML='<div style="font-size:9px;color:var(--gold2);margin-top:8px;">MAX LEVEL ACHIEVED</div>'; }
+  var html='';
+  LEVELS.forEach(function(lv){
+    var isCurrent=lv.name===level.name;
+    var isDone=bal>=lv.min;
+    html+='<div class="bp-level-row'+(isCurrent?' current-level':'')+'"><div class="bp-level-dot" style="background:'+(isDone?'var(--gold2)':'var(--border2)')+'"></div><div class="bp-level-name">'+lv.icon+' '+lv.name+'</div><div class="bp-level-req">'+(lv.min===0?'Starting':lv.min+' bu')+'</div><div class="bp-level-check">'+(isDone?'✅':'')+'</div></div>';
+  });
+  document.getElementById('bp-levels-list').innerHTML=html;
+}
+function wrapPostCommentWithBushels(){
+  var orig=window.postComment;
+  if(!orig||orig._bushelWrapped) return;
+  window.postComment=async function(){ await orig(); try{ await awardBushels(5); }catch(e){} };
+  window.postComment._bushelWrapped=true;
+}
 
 boot();
 </script>
