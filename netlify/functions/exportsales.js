@@ -1,10 +1,6 @@
-// USDA ESRQS - free XML, no auth, updates every Thursday
-const XML_URL = 'https://apps.fas.usda.gov/esrqs/StaticReports/CWRCommoditySummary.xml';
-
-const WANTED = [
-  'ALL WHEAT', 'CORN', 'SOYBEANS', 'SOYBEAN CAKE AND MEAL',
-  'SOYBEAN OIL', 'COTTON - UPLAND'
-];
+// USDA ESRQS - CWR (oilseeds/wheat) + CGR (coarse grains incl. corn)
+const CWR_URL = 'https://apps.fas.usda.gov/esrqs/StaticReports/CWRCommoditySummary.xml';
+const CGR_URL = 'https://apps.fas.usda.gov/esrqs/StaticReports/CGRCommoditySummary.xml';
 
 const LABELS = {
   'ALL WHEAT':             'All Wheat',
@@ -12,6 +8,8 @@ const LABELS = {
   'SOYBEANS':              'Soybeans',
   'SOYBEAN CAKE AND MEAL': 'Soy Meal',
   'SOYBEAN OIL':           'Soy Oil',
+  'SORGHUM':               'Sorghum',
+  'BARLEY':                'Barley',
   'COTTON - UPLAND':       'Cotton',
 };
 
@@ -25,40 +23,51 @@ function num(s) {
   return isNaN(n) ? null : n;
 }
 
+function parseXml(xml) {
+  const tagRx = /<Details\s[^>]+\/?>/g;
+  const rows = [];
+  let m;
+  while ((m = tagRx.exec(xml)) !== null) {
+    const t = m[0];
+    rows.push({
+      name:      attr(t, 'CommodityName'),
+      date:      attr(t, 'PeriodEndingDate'),
+      myear:     attr(t, 'MarketingYear'),
+      week:      attr(t, 'MarketingYearWeekNumber'),
+      netSales:  num(attr(t, 'NetSales')),
+      exports:   num(attr(t, 'WeeklyExports')),
+      outstand:  num(attr(t, 'OutstandingSales')),
+      accum:     num(attr(t, 'AccumulatedExports')),
+      total:     num(attr(t, 'TotalCommitment')),
+      prevAccum: num(attr(t, 'PreviousMKTYearAccumulatedExports')),
+      nextNet:   num(attr(t, 'NextMKTYearNetSales')),
+      wasde:     num(attr(t, 'WASDEReportProjectionsQuantity')),
+    });
+  }
+  return rows;
+}
+
 exports.handler = async () => {
   try {
-    const resp = await fetch(XML_URL, {
-      headers: { 'User-Agent': 'Mozilla/5.0 (compatible; JHD-Agri/1.0)' }
-    });
-    if (!resp.ok) throw new Error('USDA fetch failed: ' + resp.status);
+    const headers = { 'User-Agent': 'Mozilla/5.0 (compatible; JHD-Agri/1.0)' };
 
-    const xml = await resp.text();
-    const tagRx = /<Details\s[^>]+\/?>/g;
-    const rows = [];
-    let m;
-    while ((m = tagRx.exec(xml)) !== null) {
-      const t = m[0];
-      rows.push({
-        name:      attr(t, 'CommodityName'),
-        date:      attr(t, 'PeriodEndingDate'),
-        myear:     attr(t, 'MarketingYear'),
-        week:      attr(t, 'MarketingYearWeekNumber'),
-        netSales:  num(attr(t, 'NetSales')),
-        exports:   num(attr(t, 'WeeklyExports')),
-        outstand:  num(attr(t, 'OutstandingSales')),
-        accum:     num(attr(t, 'AccumulatedExports')),
-        total:     num(attr(t, 'TotalCommitment')),
-        prevAccum: num(attr(t, 'PreviousMKTYearAccumulatedExports')),
-        nextOut:   num(attr(t, 'NextMKTYearOutstandingSales')),
-        nextNet:   num(attr(t, 'NextMKTYearNetSales')),
-        wasde:     num(attr(t, 'WASDEReportProjectionsQuantity')),
-      });
-    }
+    // Fetch both reports in parallel
+    const [cwrResp, cgrResp] = await Promise.all([
+      fetch(CWR_URL, { headers }),
+      fetch(CGR_URL, { headers }),
+    ]);
 
-    const dates = [...new Set(rows.map(r => r.date))].sort();
+    const cwrXml = cwrResp.ok ? await cwrResp.text() : '';
+    const cgrXml = cgrResp.ok ? await cgrResp.text() : '';
+
+    // Combine rows from both reports
+    const rows = [...parseXml(cwrXml), ...parseXml(cgrXml)];
+
+    const dates = [...new Set(rows.map(r => r.date).filter(Boolean))].sort();
     const latestDate = dates[dates.length - 1];
     const recentDates = dates.slice(-4);
 
+    const WANTED = Object.keys(LABELS);
     const summary = {};
     const history = {};
 
@@ -75,7 +84,6 @@ exports.handler = async () => {
         const vsYrAgo = (latest.accum && latest.prevAccum)
           ? Math.round((latest.accum / latest.prevAccum - 1) * 1000) / 10
           : null;
-
         summary[label] = {
           date: latest.date, week: latest.week, myear: latest.myear,
           netSales: latest.netSales, nextNet: latest.nextNet,

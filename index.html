@@ -1143,10 +1143,12 @@ function renderExportDashboard(data, el) {
   var date = data.reportDate || 'Latest';
 
   var commodities = [
-    { key: 'All Wheat',  color: 'var(--gold)',   label: 'ALL WHEAT' },
-    { key: 'Soybeans',   color: 'var(--teal)',   label: 'SOYBEANS' },
-    { key: 'Soy Meal',   color: 'var(--blue)',   label: 'SOY MEAL' },
-    { key: 'Soy Oil',    color: 'var(--coral)',  label: 'SOY OIL' },
+    { key: 'Corn',      color: 'var(--coral)',  label: 'CORN' },
+    { key: 'All Wheat', color: 'var(--gold)',   label: 'ALL WHEAT' },
+    { key: 'Soybeans',  color: 'var(--teal)',   label: 'SOYBEANS' },
+    { key: 'Soy Meal',  color: 'var(--blue)',   label: 'SOY MEAL' },
+    { key: 'Soy Oil',   color: 'var(--muted)',  label: 'SOY OIL' },
+    { key: 'Sorghum',   color: 'var(--purple)', label: 'SORGHUM' },
   ];
 
   var out = '<div class="exp-header">';
@@ -1177,7 +1179,7 @@ function renderExportDashboard(data, el) {
   out += '</div>';
 
   // Weekly history tables for Corn, Soybeans, Wheat
-  var histComms = ['All Wheat', 'Soybeans', 'Soy Meal', 'Soy Oil'];
+  var histComms = ['Corn', 'All Wheat', 'Soybeans', 'Soy Meal'];
   histComms.forEach(function(key) {
     var rows = h[key];
     if (!rows || !rows.length) return;
