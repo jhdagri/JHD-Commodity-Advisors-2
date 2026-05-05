@@ -513,6 +513,70 @@ padding:2px 8px;border-radius:3px;margin-bottom:6px;letter-spacing:0.06em;text-t
     .frt-datestamp { font-family:'DM Mono',monospace; font-size:11px; color:var(--teal); background:rgba(46,207,170,0.1); border:1px solid rgba(46,207,170,0.25); padding:4px 12px; border-radius:3px; }
     .frt-note { font-family:'DM Mono',monospace; font-size:7.5px; color:var(--muted2); margin-top:20px; line-height:1.6; }
 
+    /* ===== PROFILE PANEL ===== */
+    .profile-overlay{position:fixed;inset:0;background:rgba(0,0,0,0.55);z-index:999;opacity:0;pointer-events:none;transition:opacity 0.25s;}
+    .profile-overlay.open{opacity:1;pointer-events:all;}
+    .profile-panel{position:fixed;right:-420px;top:0;width:100%;max-width:400px;height:100%;background:var(--card);border-left:1px solid var(--border2);z-index:1000;display:flex;flex-direction:column;transition:right 0.28s cubic-bezier(0.4,0,0.2,1);overflow-y:auto;}
+    .profile-panel.open{right:0;}
+    .pp-header{padding:22px 24px 16px;border-bottom:1px solid var(--border);display:flex;justify-content:space-between;align-items:flex-start;}
+    .pp-title{font-family:'DM Serif Display',serif;font-size:18px;color:var(--text);}
+    .pp-sub{font-family:'DM Mono',monospace;font-size:9px;color:var(--blue);text-transform:uppercase;letter-spacing:0.1em;margin-top:3px;}
+    .pp-close{background:none;border:none;color:var(--muted);font-size:22px;cursor:pointer;padding:0 4px;line-height:1;}
+    .pp-body{padding:20px 24px;flex:1;}
+    .pp-avatar{width:64px;height:64px;border-radius:50%;background:var(--blue);display:flex;align-items:center;justify-content:center;font-family:'DM Mono',monospace;font-size:20px;font-weight:700;color:#fff;margin:0 auto 16px;}
+    .pp-username{text-align:center;font-family:'DM Serif Display',serif;font-size:17px;color:var(--text);margin-bottom:4px;}
+    .pp-level{text-align:center;font-family:'DM Mono',monospace;font-size:10px;color:var(--blue);text-transform:uppercase;letter-spacing:0.08em;margin-bottom:20px;}
+    .pp-section{margin-bottom:20px;}
+    .pp-section-title{font-family:'DM Mono',monospace;font-size:9px;text-transform:uppercase;letter-spacing:0.12em;color:var(--muted2);margin-bottom:10px;padding-bottom:6px;border-bottom:1px solid var(--border);}
+    .pp-field{margin-bottom:12px;}
+    .pp-field label{display:block;font-size:11px;font-weight:700;text-transform:uppercase;letter-spacing:0.6px;color:var(--muted);margin-bottom:4px;}
+    .pp-field input{width:100%;padding:9px 12px;border:1px solid var(--border2);border-radius:5px;font-size:13px;font-family:inherit;color:var(--text);background:var(--card2);}
+    .pp-field input:focus{outline:none;border-color:var(--blue);}
+    .pp-save-row{display:flex;gap:10px;margin-top:16px;}
+    .pp-view-btn{display:block;text-align:center;padding:8px;font-size:12px;color:var(--muted);font-family:'DM Mono',monospace;cursor:pointer;text-decoration:none;margin-top:8px;}
+    .pp-view-btn:hover{color:var(--blue);}
+
+    /* ===== ONBOARDING MODAL ===== */
+    .onboard-overlay{position:fixed;inset:0;background:rgba(0,0,0,0.72);z-index:1100;display:flex;align-items:center;justify-content:center;padding:20px;}
+    .onboard-overlay.hidden{display:none!important;}
+    .onboard-modal{background:var(--card);border:1px solid var(--border2);border-radius:14px;padding:36px;max-width:460px;width:100%;box-shadow:0 24px 60px rgba(0,0,0,0.5);}
+    .onboard-logo{text-align:center;margin-bottom:20px;}
+    .onboard-title{font-family:'DM Serif Display',serif;font-size:24px;color:var(--text);text-align:center;margin-bottom:6px;}
+    .onboard-sub{font-family:'DM Mono',monospace;font-size:10px;color:var(--blue);text-align:center;text-transform:uppercase;letter-spacing:0.1em;margin-bottom:24px;}
+    .onboard-welcome{background:rgba(46,207,170,0.08);border:1px solid rgba(46,207,170,0.25);border-radius:8px;padding:14px 16px;margin-bottom:24px;text-align:center;}
+    .onboard-welcome .ow-bushels{font-family:'DM Serif Display',serif;font-size:28px;color:var(--teal);margin-bottom:4px;}
+    .onboard-welcome .ow-label{font-size:12px;color:var(--muted);}
+    .onboard-checklist{list-style:none;padding:0;margin-bottom:24px;}
+    .onboard-checklist li{display:flex;align-items:center;gap:12px;padding:10px 0;border-bottom:1px solid var(--border);font-size:14px;color:var(--text);}
+    .onboard-checklist li:last-child{border-bottom:none;}
+    .oc-check{width:20px;height:20px;border-radius:50%;display:flex;align-items:center;justify-content:center;font-size:11px;flex-shrink:0;}
+    .oc-check.done{background:rgba(46,207,170,0.2);border:1px solid rgba(46,207,170,0.4);color:var(--teal);}
+    .oc-check.todo{background:rgba(74,158,255,0.12);border:1px solid rgba(74,158,255,0.3);color:var(--blue);}
+
+    /* ===== PREMIUM GATING ===== */
+    .premium-badge{display:inline-block;font-family:'DM Mono',monospace;font-size:8px;color:var(--gold);background:rgba(255,179,71,0.12);border:1px solid rgba(255,179,71,0.3);padding:2px 8px;border-radius:3px;margin-left:6px;vertical-align:middle;letter-spacing:0.06em;text-transform:uppercase;}
+    .post-card.premium{border-color:rgba(255,179,71,0.25);}
+    .premium-gate{text-align:center;padding:60px 32px;background:var(--card);border:1px solid rgba(255,179,71,0.25);border-radius:12px;margin:32px 0;}
+    .premium-gate .pg-icon{font-size:40px;margin-bottom:16px;}
+    .premium-gate h3{font-family:'DM Serif Display',serif;font-size:22px;color:var(--text);margin-bottom:8px;}
+    .premium-gate p{font-size:14px;color:var(--muted);line-height:1.65;max-width:380px;margin:0 auto 20px;}
+    .premium-gate .pg-cost{font-family:'DM Mono',monospace;font-size:12px;color:var(--gold);background:rgba(255,179,71,0.1);border:1px solid rgba(255,179,71,0.2);border-radius:4px;padding:6px 14px;margin-bottom:20px;display:inline-block;}
+    .premium-check-row{background:rgba(255,179,71,0.05);border:1px solid rgba(255,179,71,0.2);border-radius:6px;padding:10px 14px;margin-bottom:16px;display:flex;align-items:center;gap:8px;}
+    .premium-check-row label{font-size:13px;color:var(--gold);cursor:pointer;font-weight:500;flex:1;}
+    .premium-check-row .pc-hint{font-size:11px;color:var(--muted);}
+
+    /* ===== PUBLIC PROFILE ===== */
+    .pub-profile-wrap{max-width:620px;margin:0 auto;padding:32px 24px 60px;}
+    .pub-profile-header{display:flex;align-items:center;gap:20px;margin-bottom:28px;padding-bottom:24px;border-bottom:1px solid var(--border);}
+    .pub-avatar{width:72px;height:72px;border-radius:50%;background:var(--blue);display:flex;align-items:center;justify-content:center;font-family:'DM Mono',monospace;font-size:24px;font-weight:700;color:#fff;flex-shrink:0;}
+    .pub-info h2{font-family:'DM Serif Display',serif;font-size:22px;color:var(--text);margin-bottom:4px;}
+    .pub-info .pub-handle{font-family:'DM Mono',monospace;font-size:12px;color:var(--blue);}
+    .pub-info .pub-role{font-size:13px;color:var(--muted);margin-top:4px;}
+    .pub-stats{display:grid;grid-template-columns:repeat(3,1fr);gap:12px;margin-bottom:28px;}
+    .pub-stat{background:var(--card);border:1px solid var(--border);border-radius:8px;padding:14px 16px;text-align:center;}
+    .pub-stat-val{font-family:'DM Mono',monospace;font-size:22px;color:var(--blue);}
+    .pub-stat-label{font-family:'DM Mono',monospace;font-size:9px;color:var(--muted2);text-transform:uppercase;letter-spacing:0.06em;margin-top:4px;}
+
   </style>
 </head>
 <body>
@@ -592,7 +656,7 @@ padding:2px 8px;border-radius:3px;margin-bottom:6px;letter-spacing:0.06em;text-t
         <span class="brand-name">JHD Commodity Advisors</span>
       </div>
       <div class="topbar-right">
-        <span class="user-chip" id="app-chip"></span>
+        <span class="user-chip" id="app-chip" onclick="openProfilePanel()" style="cursor:pointer;" title="My Profile"></span>
         <div class="bushel-chip hidden" id="bushel-chip" onclick="openBushelPanel()">
           <span class="bu-icon">🌾</span>
           <span class="bu-balance" id="topbar-bu-balance">0 bu</span>
@@ -921,6 +985,17 @@ padding:2px 8px;border-radius:3px;margin-bottom:6px;letter-spacing:0.06em;text-t
     </div>
   </div>
 
+  <!-- Public Profile -->
+  <div id="tab-profile" class="hidden">
+    <header style="background:var(--bg);border-bottom:1px solid var(--border);">
+      <div style="width:100%;padding:12px 32px;display:flex;align-items:center;gap:12px;">
+        <button class="btn btn-navy" onclick="closeProfile()" style="padding:7px 16px;font-size:13px;">Back</button>
+        <span style="font-size:13px;color:var(--muted);">Member Profile</span>
+      </div>
+    </header>
+    <div id="pub-profile-content"><div class="spin">Loading...</div></div>
+  </div>
+
     <!-- RECENT PUBLICATIONS STRIP + FOOTER — always visible outside all tabs -->
   <div class="recent-strip-wrap" id="recent-strip-wrap">
     <div class="recent-strip-inner">
@@ -982,6 +1057,60 @@ padding:2px 8px;border-radius:3px;margin-bottom:6px;letter-spacing:0.06em;text-t
 </div>
 </div>
 
+<!-- PROFILE PANEL -->
+<div class="profile-overlay" id="profile-overlay" onclick="closeProfilePanel()"></div>
+<div class="profile-panel" id="profile-panel">
+  <div class="pp-header">
+    <div>
+      <div class="pp-title">My Profile</div>
+      <div class="pp-sub" id="pp-sub-label">JHD Commodity Advisors</div>
+    </div>
+    <button class="pp-close" onclick="closeProfilePanel()">&#215;</button>
+  </div>
+  <div class="pp-body">
+    <div class="pp-avatar" id="pp-avatar">JD</div>
+    <div class="pp-username" id="pp-username-display">Loading...</div>
+    <div class="pp-level" id="pp-level-display"></div>
+    <div class="pp-section">
+      <div class="pp-section-title">Edit Profile</div>
+      <div class="pp-field"><label>Display Name</label><input type="text" id="pp-display-name" placeholder="e.g. James Day"></div>
+      <div class="pp-field"><label>Username</label><input type="text" id="pp-username-input" placeholder="e.g. GrainTrader47" maxlength="20"></div>
+      <div class="pp-field"><label>Job Title</label><input type="text" id="pp-job-title" placeholder="e.g. Grain Merchandiser"></div>
+      <div class="pp-field"><label>Company</label><input type="text" id="pp-company" placeholder="e.g. Cargill, TP ICAP"></div>
+      <div class="pp-save-row">
+        <button class="btn btn-navy" onclick="saveProfileChanges()" style="flex:1;">Save Changes</button>
+        <button class="btn btn-ghost" onclick="viewOwnPublicProfile()" style="flex:1;">View Public Profile</button>
+      </div>
+      <div id="pp-msg" class="hidden msg-box" style="margin-top:10px;"></div>
+    </div>
+    <div class="pp-section">
+      <div class="pp-section-title">Account</div>
+      <div style="font-size:13px;color:var(--muted);padding:8px 0;" id="pp-email-display"></div>
+    </div>
+  </div>
+</div>
+
+<!-- ONBOARDING MODAL -->
+<div class="onboard-overlay hidden" id="onboard-overlay">
+  <div class="onboard-modal">
+    <div class="onboard-logo"><img src="https://i.ibb.co/PZPZGP71/IMG-2924.jpg" alt="JHD" style="width:56px;height:56px;object-fit:contain;border-radius:8px;"></div>
+    <div class="onboard-title">Welcome to JHD Commodity Advisors</div>
+    <div class="onboard-sub">Your account is active</div>
+    <div class="onboard-welcome">
+      <div class="ow-bushels">&#127807; 50 bu</div>
+      <div class="ow-label">Welcome bonus credited to your account</div>
+    </div>
+    <ul class="onboard-checklist">
+      <li><div class="oc-check done">&#10003;</div><span>Account created successfully</span></li>
+      <li><div class="oc-check done">&#10003;</div><span>Welcome bonus of 50 Bushels earned</span></li>
+      <li><div class="oc-check todo">&#8594;</div><span>Explore the <strong>Commentary</strong> tab for weekly analysis</span></li>
+      <li><div class="oc-check todo">&#8594;</div><span>Read your first post to join the discussion</span></li>
+      <li><div class="oc-check todo">&#8594;</div><span>Leave a comment to earn <strong>+5 bu</strong></span></li>
+    </ul>
+    <button class="btn btn-gold" onclick="closeOnboardingModal()" style="width:100%;padding:13px;font-size:15px;">Start Exploring &#8594;</button>
+  </div>
+</div>
+
 <!-- ========================= ADMIN ========================= -->
 <div id="page-admin" class="hidden">
   <header class="topbar">
@@ -1036,6 +1165,13 @@ padding:2px 8px;border-radius:3px;margin-bottom:6px;letter-spacing:0.06em;text-t
         <div id="editor-html-wrap" class="hidden">
           <textarea id="html-source-input" placeholder="Paste your full HTML commentary file here…"></textarea>
           <div class="html-hint">💡 Paste your complete HTML file including &lt;!DOCTYPE html&gt;. Your full design — masthead, ticker bar, fonts, sidebar — will render exactly as designed.</div>
+        </div>
+      </div>
+      <div class="publish-row" style="margin-bottom:12px;">
+        <div class="premium-check-row" style="width:100%;">
+          <input type="checkbox" id="p-is-premium" style="width:16px;height:16px;cursor:pointer;accent-color:var(--gold);">
+          <label for="p-is-premium">&#128274; Premium Post -- requires Bushels to unlock</label>
+          <span class="pc-hint">100 bu to read</span>
         </div>
       </div>
       <div class="publish-row">
@@ -1436,7 +1572,7 @@ function showAdminPage(){
 /* ===== TAB ROUTING ===== */
 function showTab(name){
   window._activeTab = name;
-  ['commentary','research','cftc','futures','services','contact','about','detail','exports','wasde','commoditymap','weather','options','fob','freight','technicals']
+  ['commentary','research','cftc','futures','services','contact','about','detail','exports','wasde','commoditymap','weather','options','fob','freight','technicals','profile']
     .forEach(function(t){ document.getElementById('tab-'+t).classList.add('hidden'); });
   document.getElementById('tab-'+name).classList.remove('hidden');
   document.querySelectorAll('.snav-btn').forEach(function(b){ b.classList.toggle('active', b.dataset.tab===name);
@@ -1499,6 +1635,7 @@ async function doSignUp(){
       await sb.from('user_bushels').upsert({user_id:newUser.id, balance:50, last_login_date:today});
       isAdmin = currentUser.email.toLowerCase() === ADMIN_EMAIL_LC;
       showAppPage();
+      setTimeout(showOnboardingModal, 900);
       return;
     }
   } catch(e){}
@@ -1536,13 +1673,15 @@ async function loadPosts(category){
   grid.className = 'posts-grid';
   result.data.forEach(function(p){
     var n = counts[p.id]||0;
+    var isPrem = p.summary && p.summary.indexOf('[PREMIUM]') === 0;
+    var displaySum = isPrem ? p.summary.replace('[PREMIUM] ','').replace('[PREMIUM]','') : (p.summary||'');
     var card = document.createElement('div');
-    card.className = 'post-card' + (p.is_pinned?' pinned':'');
-    card.innerHTML = (p.is_pinned?'<div class="pin-badge">📌 Pinned</div>':'')
-      +'<div class="card-date">'+fmtDate(p.created_at)+'</div>'
+    card.className = 'post-card' + (p.is_pinned?' pinned':'') + (isPrem?' premium':'');
+    card.innerHTML = (p.is_pinned?'<div class="pin-badge">&#128204; Pinned</div>':'')
+      +'<div class="card-date">'+fmtDate(p.created_at)+(isPrem?'<span class="premium-badge">&#128274; Premium</span>':'')+'</div>'
       +'<h3>'+esc(p.title)+'</h3>'
-      +'<p class="card-summary">'+esc(p.summary||'')+'</p>'
-      +'<div class="card-foot"><span class="ccount">💬 '+n+' comment'+(n!==1?'s':'')+'</span><span class="readmore">Read -></span></div>';
+      +'<p class="card-summary">'+esc(displaySum)+'</p>'
+      +'<div class="card-foot"><span class="ccount">&#128172; '+n+' comment'+(n!==1?'s':'')+'</span><span class="readmore">Read -></span></div>';
     card.onclick = function(){ loadDetail(p.id, category); };
     grid.appendChild(card);
   });
@@ -1554,7 +1693,7 @@ async function loadPosts(category){
 async function loadDetail(postId, category){
   currentPostId = postId;
   currentPostTab = category || window._activeTab;
-  ['commentary','research','cftc','futures','services','contact','about','exports','wasde','commoditymap','weather','options','fob','freight','technicals'].forEach(function(t){
+  ['commentary','research','cftc','futures','services','contact','about','exports','wasde','commoditymap','weather','options','fob','freight','technicals','profile'].forEach(function(t){
     document.getElementById('tab-'+t).classList.add('hidden');
   });
   document.getElementById('tab-detail').classList.remove('hidden');
@@ -1565,6 +1704,17 @@ async function loadDetail(postId, category){
   var r = await sb.from('posts').select('*').eq('id',postId).single();
   if(r.error||!r.data){ wrap.innerHTML='<div class="spin">Post not found.</div>'; return; }
   var post = r.data;
+
+  // Premium gate check
+  var isPremium = post.summary && post.summary.indexOf('[PREMIUM]') === 0;
+  if(isPremium && !isAdmin){
+    var bal = window._bushelBalance || 0;
+    if(bal < 100){
+      wrap.innerHTML = '<div class="premium-gate"><div class="pg-icon">&#128274;</div><h3>Premium Content</h3><p>This post requires a Bushels balance of at least 100 to read. Earn Bushels by commenting, logging in daily, and engaging with the community.</p><div class="pg-cost">100 bu required &mdash; you have ' + bal + ' bu</div><button class="btn btn-ghost" onclick="openBushelPanel()">How to Earn Bushels &#8250;</button></div>';
+      return;
+    }
+  }
+
   var cr = await sb.from('comments').select('*').eq('post_id',postId).eq('is_visible',true).order('created_at',{ascending:true});
   var comments = cr.data||[];
   var commHtml = comments.length
@@ -1581,7 +1731,8 @@ async function loadDetail(postId, category){
     var encoded = post.content.replace(/"/g,'&quot;');
     contentHtml = '<iframe class="post-iframe" srcdoc="'+encoded+'" onload="resizeIframe(this)" scrolling="no"></iframe>';
   } else {
-    var standfirst = post.summary ? '<div class="post-standfirst">'+esc(post.summary)+'</div>' : '';
+    var displaySummary = isPremium ? post.summary.replace('[PREMIUM] ','').replace('[PREMIUM]','') : (post.summary||'');
+    var standfirst = displaySummary ? '<div class="post-standfirst">'+esc(displaySummary)+'</div>' : '';
     contentHtml = '<div class="post-kicker">'+fmtDate(post.created_at)+'</div><h1>'+esc(post.title)+'</h1>'+standfirst+'<div class="post-body">'+post.content+'</div>';
   }
   wrap.innerHTML = contentHtml+'<div class="comments-wrap"><div class="section-title">Discussion</div><div id="comments-area">'+commHtml+'</div><div class="comment-form-card"><h3>Leave a Comment</h3><div class="field"><label>Your name <span style="font-weight:400;color:var(--muted)">(optional)</span></label><input type="text" id="c-name" placeholder="e.g. John T."></div><div class="field"><label>Comment</label><textarea id="c-text" placeholder="Share your view on this analysis..."></textarea></div><button class="btn btn-navy" onclick="postComment()">Post Comment</button><div id="c-msg" class="hidden msg-box" style="margin-top:10px;"></div></div></div>';
@@ -1680,6 +1831,9 @@ async function publishPost(){
   var category = document.getElementById('p-category').value;
   var content = editorMode==='html' ? document.getElementById('html-source-input').value.trim() : (quill?quill.root.innerHTML:'');
   var btn = document.getElementById('pub-btn');
+  var premCb = document.getElementById('p-is-premium');
+  var isPremium = premCb && premCb.checked;
+  if(isPremium && summary.indexOf('[PREMIUM]') !== 0) summary = '[PREMIUM] ' + summary;
   if(!title){ pubMsg('Please add a title.',false); return; }
   if(!content||content==='<p><br></p>'){ pubMsg('Please add content.',false); return; }
   btn.disabled=true; btn.textContent= window._editingPostId ? 'Saving...' : 'Publishing...';
@@ -1705,6 +1859,7 @@ async function publishPost(){
   document.getElementById('p-date').value='';
   document.getElementById('html-source-input').value='';
   if(quill) quill.setText('');
+  if(premCb) premCb.checked=false;
   pubMsg('Published to '+category+'!',true);
 }
 function pubMsg(text,ok){
@@ -1766,9 +1921,12 @@ async function startEditPost(id){
   if(r.error||!r.data){ alert('Could not load post.'); return; }
   var post=r.data;
   switchAdminTab('write');
+  var isPrem = post.summary && post.summary.indexOf('[PREMIUM]') === 0;
+  var displaySummary = isPrem ? post.summary.replace('[PREMIUM] ','').replace('[PREMIUM]','') : (post.summary||'');
   document.getElementById('p-title').value=post.title||'';
-  document.getElementById('p-summary').value=post.summary||'';
+  document.getElementById('p-summary').value=displaySummary;
   document.getElementById('p-category').value=post.category||'commentary';
+  var premCb=document.getElementById('p-is-premium'); if(premCb) premCb.checked=isPrem;
   window._editingPostId=id;
   document.getElementById('pub-btn').textContent='Save Changes';
   if(isFullHtmlDocument(post.content)){ setEditorMode('html'); document.getElementById('html-source-input').value=post.content; }
@@ -1791,6 +1949,7 @@ function cancelEdit(){
   document.getElementById('p-date').value='';
   document.getElementById('html-source-input').value='';
   if(quill) quill.setText('');
+  var premCb=document.getElementById('p-is-premium'); if(premCb) premCb.checked=false;
   var cb=document.getElementById('cancel-edit-btn');
   if(cb) cb.remove();
 }
@@ -1886,7 +2045,7 @@ async function publishTAChart(){
   var instrument=document.getElementById('ta-instrument').value.trim();
   if(!instrument){ alert('Please enter an instrument name.'); return; }
   var meta={instrument:instrument,timeframe:document.getElementById('ta-timeframe').value,bias:document.getElementById('ta-bias').value,resistance:document.getElementById('ta-resistance').value.trim(),support:document.getElementById('ta-support').value.trim(),target:document.getElementById('ta-target').value.trim(),commentary:document.getElementById('ta-commentary').value.trim(),chart_image:_taChartImage||''};
-  var r=await sb.from('posts').insert({title:instrument,category:'technicals',summary:JSON.stringify(meta),content:meta.commentary,user_id:currentUser.id});
+  var r=await sb.from('posts').insert({title:instrument,category:'technicals',summary:JSON.stringify(meta),content:meta.commentary});
   if(r.error){ alert('Error: '+r.error.message); return; }
   _taChartImage=null;
   document.getElementById('ta-instrument').value='';
@@ -1992,6 +2151,112 @@ function wrapPostCommentWithBushels(){
   if(!orig||orig._bushelWrapped) return;
   window.postComment=async function(){ await orig(); try{ await awardBushels(5); }catch(e){} };
   window.postComment._bushelWrapped=true;
+}
+
+/* ===== PROFILE PANEL ===== */
+async function openProfilePanel(){
+  if(!currentUser) return;
+  document.getElementById('profile-overlay').classList.add('open');
+  document.getElementById('profile-panel').classList.add('open');
+  await renderProfilePanel();
+}
+function closeProfilePanel(){
+  document.getElementById('profile-overlay').classList.remove('open');
+  document.getElementById('profile-panel').classList.remove('open');
+}
+async function renderProfilePanel(){
+  if(!sb||!currentUser) return;
+  var r = await sb.from('profiles').select('*').eq('id',currentUser.id).maybeSingle();
+  var p = r.data || {};
+  var displayName = p.display_name || p.username || currentUser.email.split('@')[0];
+  var initials = displayName.slice(0,2).toUpperCase();
+  document.getElementById('pp-avatar').textContent = initials;
+  document.getElementById('pp-username-display').textContent = '@' + (p.username || 'member');
+  var level = window._bushelLevel ? window._bushelLevel.icon + ' ' + window._bushelLevel.name : 'Merchandiser';
+  document.getElementById('pp-level-display').textContent = level;
+  document.getElementById('pp-display-name').value = p.display_name || '';
+  document.getElementById('pp-username-input').value = p.username || '';
+  document.getElementById('pp-job-title').value = p.job_title || '';
+  document.getElementById('pp-company').value = p.company || '';
+  document.getElementById('pp-email-display').textContent = currentUser.email;
+}
+async function saveProfileChanges(){
+  if(!sb||!currentUser) return;
+  var username = document.getElementById('pp-username-input').value.trim();
+  var displayName = document.getElementById('pp-display-name').value.trim();
+  var jobTitle = document.getElementById('pp-job-title').value.trim();
+  var company = document.getElementById('pp-company').value.trim();
+  var msgEl = document.getElementById('pp-msg');
+  if(username && (username.length < 3 || username.length > 20)){
+    msgEl.textContent='Username must be 3-20 characters.'; msgEl.className='msg-box msg-error'; msgEl.classList.remove('hidden'); return;
+  }
+  if(username && !/^[a-zA-Z0-9_]+$/.test(username)){
+    msgEl.textContent='Username: letters, numbers and _ only.'; msgEl.className='msg-box msg-error'; msgEl.classList.remove('hidden'); return;
+  }
+  var r = await sb.from('profiles').upsert({id:currentUser.id, display_name:displayName||username, username:username, job_title:jobTitle||null, company:company||null});
+  if(r.error){ msgEl.textContent='Error: '+r.error.message; msgEl.className='msg-box msg-error'; msgEl.classList.remove('hidden'); return; }
+  msgEl.textContent='Profile updated!'; msgEl.className='msg-box msg-ok'; msgEl.classList.remove('hidden');
+  document.getElementById('pp-username-display').textContent = '@' + (username || 'member');
+  setTimeout(function(){ msgEl.classList.add('hidden'); }, 3000);
+}
+function viewOwnPublicProfile(){
+  if(!currentUser) return;
+  closeProfilePanel();
+  loadPublicProfile(currentUser.id);
+}
+
+/* ===== ONBOARDING MODAL ===== */
+function showOnboardingModal(){
+  var key = 'jhd_ob_' + (currentUser ? currentUser.id : 'x');
+  if(localStorage.getItem(key)) return;
+  document.getElementById('onboard-overlay').classList.remove('hidden');
+}
+function closeOnboardingModal(){
+  document.getElementById('onboard-overlay').classList.add('hidden');
+  var key = 'jhd_ob_' + (currentUser ? currentUser.id : 'x');
+  localStorage.setItem(key, '1');
+}
+
+/* ===== PUBLIC PROFILE ===== */
+async function loadPublicProfile(userId){
+  window._prevProfileTab = window._activeTab || 'commentary';
+  ['commentary','research','cftc','futures','services','contact','about','exports','wasde','commoditymap','weather','options','fob','freight','technicals','detail'].forEach(function(t){
+    var el = document.getElementById('tab-'+t);
+    if(el) el.classList.add('hidden');
+  });
+  document.getElementById('tab-profile').classList.remove('hidden');
+  var wrap = document.getElementById('pub-profile-content');
+  wrap.innerHTML = '<div class="spin">Loading profile...</div>';
+  var r = await sb.from('profiles').select('*').eq('id', userId).maybeSingle();
+  var p = r.data || {};
+  var balR = await sb.from('user_bushels').select('balance').eq('user_id', userId).maybeSingle();
+  var bal = (balR.data && balR.data.balance) || 0;
+  var level = getLevelForBalance(bal);
+  var displayName = p.display_name || p.username || 'JHD Member';
+  var initials = displayName.slice(0,2).toUpperCase();
+  var isSelf = currentUser && currentUser.id === userId;
+  var html = '<div class="pub-profile-wrap">'
+    + '<div class="pub-profile-header">'
+    + '<div class="pub-avatar">' + initials + '</div>'
+    + '<div class="pub-info">'
+    + '<h2>' + esc(displayName) + '</h2>'
+    + '<div class="pub-handle">@' + esc(p.username || 'member') + '</div>'
+    + (p.job_title ? '<div class="pub-role">' + esc(p.job_title) + (p.company ? ' &middot; ' + esc(p.company) : '') + '</div>' : '')
+    + '</div></div>'
+    + '<div class="pub-stats">'
+    + '<div class="pub-stat"><div class="pub-stat-val">' + bal + '</div><div class="pub-stat-label">Bushels</div></div>'
+    + '<div class="pub-stat"><div class="pub-stat-val">' + level.icon + '</div><div class="pub-stat-label">' + level.name + '</div></div>'
+    + '<div class="pub-stat"><div class="pub-stat-val">--</div><div class="pub-stat-label">Comments</div></div>'
+    + '</div>'
+    + (isSelf ? '<div style="text-align:center;"><button class="btn btn-ghost" onclick="openProfilePanel()" style="font-size:13px;">Edit My Profile</button></div>' : '')
+    + '</div>';
+  wrap.innerHTML = html;
+}
+function closeProfile(){
+  document.getElementById('tab-profile').classList.add('hidden');
+  var prev = window._prevProfileTab || 'commentary';
+  window._activeTab = prev;
+  document.getElementById('tab-'+prev).classList.remove('hidden');
 }
 
 boot();
