@@ -864,8 +864,11 @@ padding:2px 8px;border-radius:3px;margin-bottom:6px;letter-spacing:0.06em;text-t
   <!-- Freight -->
   <div id="tab-freight" class="hidden protected">
     <div class="page-wrap">
-      <div class="page-heading"><h2>Freight</h2><p>Dry bulk freight rates, vessel markets and shipping cost analysis</p></div>
-      <div id="posts-freight"><div class="spin">Loading…</div></div>
+      <div class="page-heading">
+        <h2>Freight Dashboard</h2>
+        <p>Baltic dry bulk indices &amp; grain freight rates &mdash; updated daily</p>
+      </div>
+      <div id="freight-dashboard"><div class="spin">Loading freight data…</div></div>
     </div>
   </div>
 
@@ -1140,12 +1143,10 @@ function renderExportDashboard(data, el) {
   var date = data.reportDate || 'Latest';
 
   var commodities = [
-    { key: 'Corn',        color: 'var(--coral)', label: 'CORN' },
-    { key: 'Soybeans',    color: 'var(--teal)',  label: 'SOYBEANS' },
-    { key: 'Wheat',       color: 'var(--gold)',  label: 'WHEAT' },
-    { key: 'Soymeal',     color: 'var(--blue)',  label: 'SOY MEAL' },
-    { key: 'Soybean Oil', color: 'var(--purple)', label: 'BEAN OIL' },
-    { key: 'Cotton',      color: 'var(--muted)',  label: 'COTTON' },
+    { key: 'All Wheat',  color: 'var(--gold)',   label: 'ALL WHEAT' },
+    { key: 'Soybeans',   color: 'var(--teal)',   label: 'SOYBEANS' },
+    { key: 'Soy Meal',   color: 'var(--blue)',   label: 'SOY MEAL' },
+    { key: 'Soy Oil',    color: 'var(--coral)',  label: 'SOY OIL' },
   ];
 
   var out = '<div class="exp-header">';
@@ -1176,7 +1177,7 @@ function renderExportDashboard(data, el) {
   out += '</div>';
 
   // Weekly history tables for Corn, Soybeans, Wheat
-  var histComms = ['Corn', 'Soybeans', 'Wheat', 'Soymeal'];
+  var histComms = ['All Wheat', 'Soybeans', 'Soy Meal', 'Soy Oil'];
   histComms.forEach(function(key) {
     var rows = h[key];
     if (!rows || !rows.length) return;
@@ -1436,7 +1437,9 @@ function showTab(name){
   ['commentary','research','cftc','futures','services','contact','about','detail','exports','wasde','commoditymap','weather','options','fob','freight','technicals']
     .forEach(function(t){ document.getElementById('tab-'+t).classList.add('hidden'); });
   document.getElementById('tab-'+name).classList.remove('hidden');
-  document.querySelectorAll('.snav-btn').forEach(function(b){ b.classList.toggle('active', b.dataset.tab===name); });
+  document.querySelectorAll('.snav-btn').forEach(function(b){ b.classList.toggle('active', b.dataset.tab===name);
+  if(name === 'exports') loadExportSales(false);
+  if(name === 'freight') loadFreightDashboard(false); });
   if(POST_TABS.indexOf(name) > -1) loadPosts(name);
   if(name==='technicals') loadTACharts();
 }
