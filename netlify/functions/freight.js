@@ -33,7 +33,7 @@ exports.handler = async () => {
       if (rows && rows.length > 0 && rows[0].data) {
         return {
           statusCode: 200,
-          headers: { 'Content-Type': 'application/json', 'Access-Control-Allow-Origin': '*', 'Cache-Control': 'public, max-age=3600' },
+          headers: { 'Content-Type': 'application/json', 'Access-Control-Allow-Origin': '*', 'Cache-Control': 'no-cache, no-store' },
           body: JSON.stringify({ ...rows[0].data, source: 'Manual update', fetchedAt: rows[0].created_at })
         };
       }
@@ -45,7 +45,7 @@ exports.handler = async () => {
   // Return static fallback
   return {
     statusCode: 200,
-    headers: { 'Content-Type': 'application/json', 'Access-Control-Allow-Origin': '*', 'Cache-Control': 'public, max-age=3600' },
+    headers: { 'Content-Type': 'application/json', 'Access-Control-Allow-Origin': '*', 'Cache-Control': 'no-cache, no-store' },
     body: JSON.stringify({ ...STATIC_DATA, source: 'Static fallback - update in admin', fetchedAt: new Date().toISOString() })
   };
 };
