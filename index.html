@@ -20,6 +20,7 @@
       --card2:#1c2030;      /* nested cards */
       --gold:#ffb347;       /* amber accent (brand) */
       --gold-lt:#d4aa55;    /* gold hover */
+      --gold2:#d4aa55;      /* alias used throughout */
       --blue:#4a9eff;       /* primary interactive blue */
       --teal:#2ecfaa;       /* positive/success */
       --coral:#ff6b4a;      /* warning/loss */
@@ -98,15 +99,15 @@
     .auth-left {
       flex:1; min-height:100vh; background:linear-gradient(160deg,#080a0d 0%,#0d1420 60%,#0a1228 100%);
       border-right:1px solid var(--border2); padding:52px 48px; display:flex; flex-direction:column;
-      position:sticky; top:0; max-height:100vh; overflow:hidden;
+      position:sticky; top:0; max-height:100vh; overflow-y:auto;
     }
     .auth-left-logo { display:flex; align-items:center; gap:12px; margin-bottom:52px; }
     .auth-left-logo img { width:40px; height:40px; object-fit:contain; border-radius:6px; }
     .auth-left-logo-text { font-family:'DM Serif Display',serif; font-size:15px; color:var(--text); }
-    .auth-left-logo-text span { color:var(--gold2); }
+    .auth-left-logo-text span { color:var(--gold); }
     .auth-left-headline {
-      font-family:'DM Serif Display',serif; font-size:42px; line-height:1.1;
-      color:var(--text); margin-bottom:16px; letter-spacing:-0.02em;
+      font-family:'DM Serif Display',serif; font-size:32px; line-height:1.15;
+      color:var(--text); margin-bottom:14px; letter-spacing:-0.01em;
     }
     .auth-left-headline em { color:var(--gold2); font-style:italic; }
     .auth-left-tagline {
@@ -114,20 +115,21 @@
       text-transform:uppercase; letter-spacing:0.16em; margin-bottom:36px;
     }
     .auth-left-desc { font-size:15px; color:var(--muted); line-height:1.75; max-width:360px; margin-bottom:36px; }
-    .avp-list { display:flex; flex-direction:column; gap:20px; }
-    .avp-item { display:flex; align-items:flex-start; gap:16px; }
+    .avp-list { display:flex; flex-direction:column; gap:22px; }
+    .avp-item { display:flex; align-items:flex-start; gap:18px; }
     .avp-icon-wrap {
-      width:36px; height:36px; border-radius:8px; flex-shrink:0;
+      width:44px; height:44px; border-radius:10px; flex-shrink:0;
       display:flex; align-items:center; justify-content:center;
       border:1px solid rgba(255,255,255,0.1);
     }
-    .avp-icon-wrap.blue { background:rgba(74,158,255,0.12); }
-    .avp-icon-wrap.gold { background:rgba(212,170,85,0.12); }
-    .avp-icon-wrap.teal { background:rgba(46,207,170,0.12); }
+    .avp-icon-wrap.blue  { background:rgba(74,158,255,0.12); }
+    .avp-icon-wrap.gold  { background:rgba(212,170,85,0.12); }
+    .avp-icon-wrap.teal  { background:rgba(46,207,170,0.12); }
+    .avp-icon-wrap.coral { background:rgba(255,107,74,0.10); border-color:rgba(255,107,74,0.2); }
     .avp-icon-wrap svg { display:block; }
     .avp-text-wrap {}
-    .avp-title { font-family:'DM Mono',monospace; font-size:10px; font-weight:600; color:var(--text); letter-spacing:0.08em; text-transform:uppercase; margin-bottom:3px; }
-    .avp-body { font-size:13px; color:var(--muted); line-height:1.6; }
+    .avp-title { font-family:'DM Mono',monospace; font-size:11px; font-weight:600; color:var(--text); letter-spacing:0.08em; text-transform:uppercase; margin-bottom:5px; }
+    .avp-body { font-size:14px; color:var(--muted); line-height:1.7; }
     .avp-body strong { color:var(--gold2); font-weight:600; }
     .auth-left-footer { margin-top:auto; padding-top:36px; font-family:'DM Mono',monospace; font-size:9px; color:var(--muted2); letter-spacing:0.06em; }
 
@@ -743,37 +745,51 @@ padding:2px 8px;border-radius:3px;margin-bottom:6px;letter-spacing:0.06em;text-t
       <img src="https://i.ibb.co/PZPZGP71/IMG-2924.jpg" alt="JHD">
       <div class="auth-left-logo-text">JHD <span>Commodity Advisors</span></div>
     </div>
-    <div class="auth-left-tagline">Agricultural Research and Hedging Services</div>
-    <div class="auth-left-headline">Harvesting<br>the power<br>of <em>people</em></div>
-    <div class="auth-left-desc">Professional agricultural market intelligence, built on the collective knowledge of the trading community. Contribute, engage and unlock premium research &mdash; <em>you reap what you sow.</em></div>
+    <div class="auth-left-tagline">Agricultural Research and Hedging Services &nbsp;<span style="background:rgba(255,179,71,0.15);border:1px solid rgba(255,179,71,0.35);color:var(--gold);font-size:8px;padding:2px 8px;border-radius:3px;letter-spacing:0.12em;vertical-align:middle;">BETA</span></div>
+    <div class="auth-left-headline">Harvesting the power of <em>people</em></div>
+    <div class="auth-left-desc">We are currently in beta &mdash; features are being added regularly and your feedback helps shape the platform. Professional agricultural market intelligence, built on the collective knowledge of the trading community. Contribute, engage and unlock premium research &mdash; <em>you reap what you sow.</em></div>
     <div class="avp-list">
+
       <div class="avp-item">
         <div class="avp-icon-wrap blue">
-          <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="#4a9eff" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M12 2L2 7l10 5 10-5-10-5z"/><path d="M2 17l10 5 10-5"/><path d="M2 12l10 5 10-5"/></svg>
+          <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="#4a9eff" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M12 2L2 7l10 5 10-5-10-5z"/><path d="M2 17l10 5 10-5"/><path d="M2 12l10 5 10-5"/></svg>
         </div>
         <div class="avp-text-wrap">
           <div class="avp-title">Earn Bushels</div>
-          <div class="avp-body">Comment, share insights, submit crop reports. Start with <strong>50 bu free</strong> on sign-up.</div>
+          <div class="avp-body">JHD's internal currency rewards participation. Earn <strong>Bushels</strong> every time you comment on a post, share a trade idea, submit a crop report or log in daily. New members receive a <strong>50 bu welcome bonus</strong> on sign-up &mdash; enough to unlock your first premium post immediately.</div>
         </div>
       </div>
+
       <div class="avp-item">
         <div class="avp-icon-wrap gold">
-          <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="#d4aa55" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="11" width="18" height="11" rx="2" ry="2"/><path d="M7 11V7a5 5 0 0 1 10 0v4"/></svg>
+          <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="#d4aa55" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="11" width="18" height="11" rx="2" ry="2"/><path d="M7 11V7a5 5 0 0 1 10 0v4"/></svg>
         </div>
         <div class="avp-text-wrap">
-          <div class="avp-title">Unlock Premium</div>
-          <div class="avp-body">Use Bushels to access <strong>premium research</strong>, options analytics, FOB data and exclusive commentary.</div>
+          <div class="avp-title">Unlock Premium Research</div>
+          <div class="avp-body">Spend your Bushels to access <strong>in-depth market commentary</strong>, options flow analysis, FOB pricing data, freight indices and proprietary WASDE breakdowns. Premium posts are authored by experienced commodity traders and updated weekly. The more you contribute, the more you unlock &mdash; for free.</div>
         </div>
       </div>
+
       <div class="avp-item">
         <div class="avp-icon-wrap teal">
-          <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="#2ecfaa" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><polyline points="23 6 13.5 15.5 8.5 10.5 1 18"/><polyline points="17 6 23 6 23 12"/></svg>
+          <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="#2ecfaa" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><polyline points="23 6 13.5 15.5 8.5 10.5 1 18"/><polyline points="17 6 23 6 23 12"/></svg>
         </div>
         <div class="avp-text-wrap">
-          <div class="avp-title">Rise Through Ranks</div>
-          <div class="avp-body">Progress from <strong>Merchandiser</strong> to <strong>Market Maker</strong> as your Bushel balance grows.</div>
+          <div class="avp-title">Rise Through the Ranks</div>
+          <div class="avp-body">Progress from <strong>Merchandiser</strong> through <strong>Trader</strong>, <strong>Broker</strong> and <strong>Analyst</strong> to <strong>Market Maker</strong> as your Bushel balance grows. Higher levels unlock discounts on premium content, early access to new research and recognition across the platform community.</div>
         </div>
       </div>
+
+      <div class="avp-item">
+        <div class="avp-icon-wrap coral">
+          <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="#ff6b4a" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"/><circle cx="9" cy="7" r="4"/><path d="M23 21v-2a4 4 0 0 0-3-3.87"/><path d="M16 3.13a4 4 0 0 1 0 7.75"/></svg>
+        </div>
+        <div class="avp-text-wrap">
+          <div class="avp-title">Community Sentiment Metrics</div>
+          <div class="avp-body">Tap into the <strong>collective intelligence</strong> of a network of grain traders, merchandisers and analysts. Price calls, crop condition votes and directional sentiment surveys aggregate across the community in real time &mdash; giving you a live read on how the market is positioned beyond the CFTC data.</div>
+        </div>
+      </div>
+
     </div>
     <div class="auth-left-footer">jhdcommodityadvisors.com &nbsp;&middot;&nbsp; Informational use only &nbsp;&middot;&nbsp; Not investment advice</div>
   </div>
