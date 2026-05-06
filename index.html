@@ -98,34 +98,39 @@
     #page-auth { min-height:100vh; display:flex; flex-direction:row; position:relative; }
     .auth-left {
       flex:1; min-height:100vh; background:linear-gradient(160deg,#080a0d 0%,#0d1420 60%,#0a1228 100%);
-      border-right:1px solid var(--border2); padding:52px 48px 52px; display:flex; flex-direction:column;
+      border-right:1px solid var(--border2); padding:200px 52px 52px; display:flex; flex-direction:column;
       position:sticky; top:0; max-height:100vh; overflow-y:auto;
     }
 
     /* Centred logo on the dividing line */
     .auth-center-logo {
-      position:absolute; left:50%; top:44px; transform:translateX(-50%);
+      position:absolute; left:50%; top:36px; transform:translateX(-50%);
       z-index:20; display:flex; flex-direction:column; align-items:center; gap:10px;
-      background:var(--bg); border:1px solid var(--border2);
-      border-radius:14px; padding:16px 24px 14px;
-      box-shadow:0 8px 32px rgba(0,0,0,0.5);
+      background:var(--card); border:1px solid var(--border2);
+      border-radius:14px; padding:18px 28px 16px;
+      box-shadow:0 8px 40px rgba(0,0,0,0.6);
       white-space:nowrap;
     }
-    .auth-center-logo img { width:52px; height:52px; object-fit:contain; border-radius:8px; }
+    .auth-center-logo img { width:56px; height:56px; object-fit:contain; border-radius:8px; }
     .auth-center-logo-name {
-      font-family:'DM Serif Display',serif; font-size:17px; color:var(--text);
-      text-align:center; line-height:1.2;
+      font-family:'DM Serif Display',serif; font-size:18px; color:var(--text);
+      text-align:center; line-height:1.2; letter-spacing:0.01em;
     }
     .auth-center-logo-name span { color:var(--gold); }
 
+    /* Shared eyebrow — same on both sides */
+    .auth-eyebrow {
+      font-family:'DM Mono',monospace; font-size:10px; color:var(--blue);
+      text-transform:uppercase; letter-spacing:0.18em; margin-bottom:12px;
+    }
     .auth-left-headline {
       font-family:'DM Serif Display',serif; font-size:32px; line-height:1.15;
-      color:var(--text); margin-bottom:14px; letter-spacing:-0.01em; margin-top:116px;
+      color:var(--text); margin-bottom:14px; letter-spacing:-0.01em;
     }
     .auth-left-headline em { color:var(--gold2); font-style:italic; }
     .auth-left-tagline {
-      font-family:'DM Mono',monospace; font-size:11px; color:var(--blue);
-      text-transform:uppercase; letter-spacing:0.16em; margin-bottom:12px;
+      font-family:'DM Mono',monospace; font-size:10px; color:var(--blue);
+      text-transform:uppercase; letter-spacing:0.18em; margin-bottom:12px;
     }
     .auth-left-desc { font-size:14.5px; color:var(--muted); line-height:1.75; margin-bottom:32px; }
     .avp-list { display:flex; flex-direction:column; gap:22px; }
@@ -146,27 +151,16 @@
     .avp-body strong { color:var(--gold2); font-weight:600; }
     .auth-left-footer { margin-top:auto; padding-top:36px; font-family:'DM Mono',monospace; font-size:9px; color:var(--muted2); letter-spacing:0.06em; }
 
-
-    .auth-left-footer { margin-top:auto; padding-top:36px; font-family:'DM Mono',monospace; font-size:9px; color:var(--muted2); letter-spacing:0.06em; }
-
-    /* RIGHT — form panel */
+    /* RIGHT — form panel — matches left padding-top exactly */
     .auth-right {
       width:50%; flex-shrink:0; min-height:100vh; background:var(--bg);
-      display:flex; flex-direction:column; align-items:center;
-      justify-content:center; padding:160px 56px 52px;
+      display:flex; flex-direction:column; align-items:flex-start;
+      justify-content:flex-start; padding:200px 64px 52px;
     }
-    .auth-card {
-      width:100%; max-width:380px;
-    }
-    .auth-card-eyebrow {
-      font-family:'DM Mono',monospace; font-size:9px; color:var(--blue);
-      text-transform:uppercase; letter-spacing:0.18em; margin-bottom:10px;
-    }
-    .auth-card h2 {
-      font-family:'DM Serif Display',serif; font-size:30px; color:var(--text);
-      margin-bottom:6px; letter-spacing:-0.01em; line-height:1.15;
-    }
-    .auth-card-sub { font-size:14px; color:var(--muted); margin-bottom:32px; line-height:1.5; }
+    .auth-card { width:100%; max-width:400px; }
+    .auth-card-eyebrow { font-family:'DM Mono',monospace; font-size:10px; color:var(--blue); text-transform:uppercase; letter-spacing:0.18em; margin-bottom:12px; }
+    .auth-card h2 { font-family:'DM Serif Display',serif; font-size:32px; color:var(--text); margin-bottom:14px; letter-spacing:-0.01em; line-height:1.15; }
+    .auth-card-sub { font-size:14.5px; color:var(--muted); margin-bottom:32px; line-height:1.75; }
     .auth-tab-row {
       display:flex; gap:0; border:1px solid var(--border2); border-radius:7px;
       padding:3px; margin-bottom:28px; background:var(--card);
@@ -212,7 +206,7 @@
       .auth-center-logo img { width:36px; height:36px; }
       .auth-center-logo-name { font-size:15px; }
       .auth-left { position:static; min-height:auto; max-height:none; padding:28px 28px 28px; border-right:none; border-bottom:1px solid var(--border2); }
-      .auth-left-headline { font-size:26px; margin-top:0; }
+      .auth-left-headline { font-size:26px; }
       .auth-left-footer { display:none; }
       .avp-list { display:none; }
       .auth-right { width:100%; padding:36px 24px 52px; min-height:auto; }
