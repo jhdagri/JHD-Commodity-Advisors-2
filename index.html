@@ -737,6 +737,92 @@ padding:2px 8px;border-radius:3px;margin-bottom:6px;letter-spacing:0.06em;text-t
     .pub-stat-val{font-family:'DM Mono',monospace;font-size:22px;color:var(--blue);}
     .pub-stat-label{font-family:'DM Mono',monospace;font-size:9px;color:var(--muted2);text-transform:uppercase;letter-spacing:0.06em;margin-top:4px;}
 
+    /* ===== SENTIMENT TAB ===== */
+    .sent-grid { display:grid; grid-template-columns:1fr 1fr; gap:20px; margin-bottom:28px; }
+    .sent-card { background:var(--card); border:1px solid var(--border); border-radius:10px; overflow:hidden; }
+    .sent-card-header { padding:14px 18px 12px; border-bottom:1px solid var(--border); display:flex; align-items:center; justify-content:space-between; }
+    .sent-card-title { font-family:'DM Mono',monospace; font-size:10px; font-weight:600; text-transform:uppercase; letter-spacing:0.12em; color:var(--text); }
+    .sent-card-week { font-family:'DM Mono',monospace; font-size:9px; color:var(--muted2); }
+    .sent-card-body { padding:16px 18px; }
+
+    /* Commodity sentiment bars */
+    .sent-commodity-row { margin-bottom:16px; }
+    .sent-commodity-row:last-child { margin-bottom:0; }
+    .sent-comm-label { display:flex; justify-content:space-between; align-items:center; margin-bottom:6px; }
+    .sent-comm-name { font-family:'DM Mono',monospace; font-size:10px; font-weight:600; color:var(--text); text-transform:uppercase; letter-spacing:0.06em; }
+    .sent-comm-count { font-family:'DM Mono',monospace; font-size:9px; color:var(--muted2); }
+    .sent-bar-wrap { height:20px; border-radius:4px; overflow:hidden; display:flex; background:var(--card2); }
+    .sent-bar-bull  { background:#22c55e; height:100%; display:flex; align-items:center; justify-content:center; font-family:'DM Mono',monospace; font-size:8px; color:#fff; font-weight:700; min-width:0; transition:width 0.4s; }
+    .sent-bar-neutral { background:var(--muted2); height:100%; display:flex; align-items:center; justify-content:center; font-family:'DM Mono',monospace; font-size:8px; color:#fff; font-weight:700; min-width:0; transition:width 0.4s; }
+    .sent-bar-bear  { background:var(--coral); height:100%; display:flex; align-items:center; justify-content:center; font-family:'DM Mono',monospace; font-size:8px; color:#fff; font-weight:700; min-width:0; transition:width 0.4s; }
+    .sent-bar-legend { display:flex; gap:12px; margin-top:4px; }
+    .sent-bar-legend-item { display:flex; align-items:center; gap:4px; font-family:'DM Mono',monospace; font-size:8px; color:var(--muted2); }
+    .sent-bar-legend-dot { width:7px; height:7px; border-radius:50%; }
+
+    /* Vote buttons */
+    .sent-vote-row { display:flex; gap:8px; margin-top:10px; }
+    .sent-vote-btn { flex:1; padding:8px 6px; border:1px solid var(--border2); border-radius:6px; background:var(--card2); cursor:pointer; font-family:'DM Mono',monospace; font-size:10px; font-weight:600; text-transform:uppercase; letter-spacing:0.06em; color:var(--muted); transition:all 0.15s; text-align:center; }
+    .sent-vote-btn:hover { border-color:var(--muted); color:var(--text); }
+    .sent-vote-btn.bull  { border-color:#22c55e; color:#22c55e; background:rgba(34,197,94,0.08); }
+    .sent-vote-btn.neutral { border-color:var(--muted2); color:var(--muted); background:rgba(85,95,120,0.15); }
+    .sent-vote-btn.bear  { border-color:var(--coral); color:var(--coral); background:rgba(255,107,74,0.08); }
+    .sent-vote-btn.selected { font-weight:700; }
+    .sent-voted-msg { font-family:'DM Mono',monospace; font-size:9px; color:var(--teal); margin-top:8px; }
+
+    /* Price calls */
+    .price-call-form { background:var(--card); border:1px solid var(--border); border-radius:10px; padding:18px 20px; margin-bottom:20px; }
+    .price-call-form-title { font-family:'DM Mono',monospace; font-size:10px; font-weight:600; text-transform:uppercase; letter-spacing:0.12em; color:var(--text); margin-bottom:14px; }
+    .price-call-row { display:flex; gap:10px; align-items:flex-end; flex-wrap:wrap; }
+    .price-call-field { flex:1; min-width:100px; }
+    .price-call-field label { display:block; font-family:'DM Mono',monospace; font-size:9px; text-transform:uppercase; letter-spacing:0.1em; color:var(--muted); margin-bottom:5px; }
+    .price-call-field select, .price-call-field input { width:100%; padding:9px 12px; background:var(--card2); border:1px solid var(--border2); border-radius:6px; font-size:13px; color:var(--text); font-family:inherit; outline:none; }
+    .price-call-field select:focus, .price-call-field input:focus { border-color:var(--blue); }
+    .dir-btn-row { display:flex; gap:6px; }
+    .dir-btn { flex:1; padding:9px 4px; border:1px solid var(--border2); border-radius:6px; background:var(--card2); cursor:pointer; font-family:'DM Mono',monospace; font-size:10px; font-weight:600; color:var(--muted); text-align:center; transition:all 0.15s; }
+    .dir-btn.bull.active   { border-color:#22c55e; color:#22c55e; background:rgba(34,197,94,0.1); }
+    .dir-btn.neutral.active{ border-color:var(--muted2); color:var(--muted); background:rgba(85,95,120,0.2); }
+    .dir-btn.bear.active   { border-color:var(--coral); color:var(--coral); background:rgba(255,107,74,0.1); }
+    .dir-btn:hover { border-color:var(--muted); }
+
+    /* Price calls feed */
+    .call-feed { display:flex; flex-direction:column; gap:10px; }
+    .call-card { background:var(--card); border:1px solid var(--border); border-radius:8px; padding:14px 16px; display:flex; align-items:flex-start; gap:14px; }
+    .call-dir-badge { font-family:'DM Mono',monospace; font-size:9px; font-weight:700; padding:4px 10px; border-radius:4px; letter-spacing:0.08em; text-transform:uppercase; flex-shrink:0; margin-top:1px; }
+    .call-dir-badge.bull    { background:rgba(34,197,94,0.12); color:#22c55e; border:1px solid rgba(34,197,94,0.3); }
+    .call-dir-badge.neutral { background:rgba(85,95,120,0.15); color:var(--muted); border:1px solid var(--border2); }
+    .call-dir-badge.bear    { background:rgba(255,107,74,0.1); color:var(--coral); border:1px solid rgba(255,107,74,0.3); }
+    .call-meta { flex:1; }
+    .call-commodity { font-family:'DM Mono',monospace; font-size:11px; font-weight:700; color:var(--text); margin-bottom:3px; }
+    .call-commodity span { color:var(--muted2); font-weight:400; font-size:10px; margin-left:6px; }
+    .call-note { font-size:13px; color:var(--muted); line-height:1.55; margin-bottom:4px; }
+    .call-foot { font-family:'DM Mono',monospace; font-size:9px; color:var(--muted2); }
+    .call-target { font-family:'DM Mono',monospace; font-size:11px; color:var(--gold2); font-weight:600; }
+
+    /* Crop condition */
+    .crop-grid { display:grid; grid-template-columns:repeat(3,1fr); gap:10px; margin-bottom:14px; }
+    .crop-cond-btn { padding:12px 8px; border:1px solid var(--border2); border-radius:8px; background:var(--card2); cursor:pointer; text-align:center; font-family:'DM Mono',monospace; font-size:10px; font-weight:600; color:var(--muted); text-transform:uppercase; letter-spacing:0.06em; transition:all 0.15s; }
+    .crop-cond-btn:hover { border-color:var(--muted); }
+    .crop-cond-btn.good.active    { border-color:#22c55e; color:#22c55e; background:rgba(34,197,94,0.08); }
+    .crop-cond-btn.fair.active    { border-color:var(--gold2); color:var(--gold2); background:rgba(212,170,85,0.08); }
+    .crop-cond-btn.poor.active    { border-color:var(--coral); color:var(--coral); background:rgba(255,107,74,0.08); }
+    .crop-cond-icon { font-size:18px; margin-bottom:5px; }
+    .crop-results-row { display:flex; justify-content:space-between; align-items:center; padding:7px 0; border-bottom:1px solid var(--border); font-family:'DM Mono',monospace; font-size:10px; }
+    .crop-results-row:last-child { border-bottom:none; }
+    .sent-full-width { grid-column:1/-1; }
+
+    /* Sentiment summary strip */
+    .sent-summary-strip { background:var(--card); border:1px solid var(--border); border-radius:10px; padding:16px 20px; display:grid; grid-template-columns:repeat(5,1fr); gap:0; margin-bottom:28px; }
+    .sent-summary-item { text-align:center; padding:0 12px; border-right:1px solid var(--border); }
+    .sent-summary-item:last-child { border-right:none; }
+    .sent-summary-commodity { font-family:'DM Mono',monospace; font-size:9px; text-transform:uppercase; letter-spacing:0.08em; color:var(--muted2); margin-bottom:6px; }
+    .sent-summary-direction { font-family:'DM Serif Display',serif; font-size:15px; }
+    .sent-summary-direction.bull { color:#22c55e; }
+    .sent-summary-direction.bear { color:var(--coral); }
+    .sent-summary-direction.neutral { color:var(--muted); }
+    .sent-summary-pct { font-family:'DM Mono',monospace; font-size:9px; color:var(--muted2); margin-top:3px; }
+
+    @media(max-width:900px){ .sent-grid { grid-template-columns:1fr; } .crop-grid { grid-template-columns:1fr 1fr 1fr; } .sent-summary-strip { grid-template-columns:repeat(3,1fr); } }
+
   </style>
 </head>
 <body>
@@ -903,6 +989,7 @@ padding:2px 8px;border-radius:3px;margin-bottom:6px;letter-spacing:0.06em;text-t
       <button class="snav-btn" data-tab="fob"               onclick="showTab('fob')">FOB Data</button>
       <button class="snav-btn" data-tab="freight"           onclick="showTab('freight')">Freight</button>
       <button class="snav-btn" data-tab="technicals"        onclick="showTab('technicals')">Technicals</button>
+      <button class="snav-btn" data-tab="sentiment"         onclick="showTab('sentiment')">Sentiment</button>
       <button class="snav-btn" data-tab="grainstore"        onclick="openGrainStore()" style="color:var(--gold2);">&#127807; Grain Store</button>
     </div>
   </nav>
@@ -1205,6 +1292,159 @@ padding:2px 8px;border-radius:3px;margin-bottom:6px;letter-spacing:0.06em;text-t
         </div>
       </div>
       <div id="ta-cards-wrap"><div class="ta-empty">Loading...</div></div>
+    </div>
+  </div>
+
+  <!-- SENTIMENT TAB -->
+  <div id="tab-sentiment" class="hidden protected">
+    <div class="page-wrap">
+      <div class="page-heading">
+        <h2>Community Sentiment</h2>
+        <p>Live directional views, price calls and crop condition surveys from across the JHD trading community</p>
+      </div>
+
+      <!-- Summary strip -->
+      <div class="sent-summary-strip" id="sent-summary-strip">
+        <div class="sent-summary-item"><div class="sent-summary-commodity">Wheat</div><div class="sent-summary-direction neutral" id="ss-wheat-dir">--</div><div class="sent-summary-pct" id="ss-wheat-pct">No votes</div></div>
+        <div class="sent-summary-item"><div class="sent-summary-commodity">Corn</div><div class="sent-summary-direction neutral" id="ss-corn-dir">--</div><div class="sent-summary-pct" id="ss-corn-pct">No votes</div></div>
+        <div class="sent-summary-item"><div class="sent-summary-commodity">Soybeans</div><div class="sent-summary-direction neutral" id="ss-soybeans-dir">--</div><div class="sent-summary-pct" id="ss-soybeans-pct">No votes</div></div>
+        <div class="sent-summary-item"><div class="sent-summary-commodity">Canola</div><div class="sent-summary-direction neutral" id="ss-canola-dir">--</div><div class="sent-summary-pct" id="ss-canola-pct">No votes</div></div>
+        <div class="sent-summary-item"><div class="sent-summary-commodity">Palm Oil</div><div class="sent-summary-direction neutral" id="ss-palmoil-dir">--</div><div class="sent-summary-pct" id="ss-palmoil-pct">No votes</div></div>
+      </div>
+
+      <div class="sent-grid">
+
+        <!-- WEEKLY DIRECTION POLL -->
+        <div class="sent-card">
+          <div class="sent-card-header">
+            <div class="sent-card-title">Weekly Direction Poll</div>
+            <div class="sent-card-week" id="sent-week-label">Week --</div>
+          </div>
+          <div class="sent-card-body">
+            <p style="font-size:13px;color:var(--muted);margin-bottom:16px;line-height:1.6;">Where do you think prices go this week? Cast your vote across each market. One vote per commodity per week. Earn <strong style="color:var(--gold2);">+5 bu</strong> per vote.</p>
+            <div id="sent-poll-list">
+              <div class="spin">Loading...</div>
+            </div>
+            <div class="sent-bar-legend" style="margin-top:16px;">
+              <div class="sent-bar-legend-item"><div class="sent-bar-legend-dot" style="background:#22c55e;"></div>Bullish</div>
+              <div class="sent-bar-legend-item"><div class="sent-bar-legend-dot" style="background:var(--muted2);"></div>Neutral</div>
+              <div class="sent-bar-legend-item"><div class="sent-bar-legend-dot" style="background:var(--coral);"></div>Bearish</div>
+            </div>
+          </div>
+        </div>
+
+        <!-- CROP CONDITION SURVEY -->
+        <div class="sent-card">
+          <div class="sent-card-header">
+            <div class="sent-card-title">Crop Condition Survey</div>
+            <div class="sent-card-week" id="crop-week-label">Week --</div>
+          </div>
+          <div class="sent-card-body">
+            <p style="font-size:13px;color:var(--muted);margin-bottom:16px;line-height:1.6;">Rate crop conditions in your region. Your on-the-ground view adds to the community aggregate. Earn <strong style="color:var(--gold2);">+5 bu</strong> per submission.</p>
+            <div class="price-call-field" style="margin-bottom:12px;">
+              <label>Commodity</label>
+              <select id="crop-commodity">
+                <option value="Wheat">Wheat</option>
+                <option value="Corn">Corn</option>
+                <option value="Soybeans">Soybeans</option>
+                <option value="Canola">Canola</option>
+                <option value="Cotton">Cotton</option>
+              </select>
+            </div>
+            <div class="price-call-field" style="margin-bottom:14px;">
+              <label>Region</label>
+              <select id="crop-region">
+                <option value="UK / Northern Europe">UK / Northern Europe</option>
+                <option value="France / Western Europe">France / Western Europe</option>
+                <option value="Eastern Europe / Ukraine">Eastern Europe / Ukraine</option>
+                <option value="Russia / Black Sea">Russia / Black Sea</option>
+                <option value="US Plains">US Plains</option>
+                <option value="US Midwest">US Midwest</option>
+                <option value="Brazil">Brazil</option>
+                <option value="Argentina">Argentina</option>
+                <option value="Australia">Australia</option>
+                <option value="Canada">Canada</option>
+                <option value="India">India</option>
+              </select>
+            </div>
+            <div class="crop-grid">
+              <button class="crop-cond-btn good" id="crop-btn-good" onclick="setCropCond('good')"><div class="crop-cond-icon">&#9651;</div>Good</button>
+              <button class="crop-cond-btn fair" id="crop-btn-fair" onclick="setCropCond('fair')"><div class="crop-cond-icon">&#9632;</div>Fair</button>
+              <button class="crop-cond-btn poor" id="crop-btn-poor" onclick="setCropCond('poor')"><div class="crop-cond-icon">&#9661;</div>Poor</button>
+            </div>
+            <button class="btn btn-navy" style="width:100%;padding:10px;" onclick="submitCropCondition()">Submit Condition +5 bu</button>
+            <div id="crop-msg" class="hidden msg-box" style="margin-top:10px;"></div>
+            <div style="margin-top:18px;">
+              <div style="font-family:'DM Mono',monospace;font-size:9px;text-transform:uppercase;letter-spacing:0.12em;color:var(--muted2);margin-bottom:10px;padding-bottom:6px;border-bottom:1px solid var(--border);">This Week -- Community Results</div>
+              <div id="crop-results-list"><div style="font-size:13px;color:var(--muted2);">No submissions yet this week.</div></div>
+            </div>
+          </div>
+        </div>
+
+        <!-- PRICE CALLS -->
+        <div class="sent-card sent-full-width">
+          <div class="sent-card-header">
+            <div class="sent-card-title">Price Calls</div>
+            <div class="sent-card-week">Share your view -- earn +5 bu</div>
+          </div>
+          <div class="sent-card-body">
+            <div class="price-call-form">
+              <div class="price-call-form-title">Submit a Price Call</div>
+              <div class="price-call-row">
+                <div class="price-call-field" style="max-width:140px;">
+                  <label>Commodity</label>
+                  <select id="pc-commodity">
+                    <option>Wheat (SRW)</option>
+                    <option>Wheat (HRW)</option>
+                    <option>Wheat (MATIF)</option>
+                    <option>Corn (CBOT)</option>
+                    <option>Soybeans</option>
+                    <option>Soy Meal</option>
+                    <option>Canola</option>
+                    <option>Palm Oil</option>
+                    <option>Sugar</option>
+                  </select>
+                </div>
+                <div class="price-call-field" style="max-width:130px;">
+                  <label>Timeframe</label>
+                  <select id="pc-timeframe">
+                    <option>1 Week</option>
+                    <option>1 Month</option>
+                    <option>Q2 2026</option>
+                    <option>Q3 2026</option>
+                    <option>End 2026</option>
+                  </select>
+                </div>
+                <div class="price-call-field" style="max-width:120px;">
+                  <label>Target Price</label>
+                  <input type="number" id="pc-target" placeholder="e.g. 525" min="0" step="0.25">
+                </div>
+                <div class="price-call-field" style="flex:2;">
+                  <label>Direction</label>
+                  <div class="dir-btn-row">
+                    <button class="dir-btn bull"    id="dir-bull"    onclick="setDirection('bull')">&#9650; Bull</button>
+                    <button class="dir-btn neutral" id="dir-neutral" onclick="setDirection('neutral')">&#9644; Neutral</button>
+                    <button class="dir-btn bear"    id="dir-bear"    onclick="setDirection('bear')">&#9660; Bear</button>
+                  </div>
+                </div>
+              </div>
+              <div style="margin-top:12px;">
+                <label style="display:block;font-family:'DM Mono',monospace;font-size:9px;text-transform:uppercase;letter-spacing:0.1em;color:var(--muted);margin-bottom:5px;">Reasoning <span style="text-transform:none;font-weight:400;">(optional -- min 20 chars if provided)</span></label>
+                <textarea id="pc-note" rows="2" style="width:100%;padding:9px 12px;background:var(--card2);border:1px solid var(--border2);border-radius:6px;font-size:13px;color:var(--text);font-family:inherit;resize:vertical;outline:none;" placeholder="e.g. Funds still net short, Russian crop estimates being revised lower..."></textarea>
+              </div>
+              <div style="margin-top:12px;display:flex;gap:10px;align-items:center;">
+                <button class="btn btn-navy" onclick="submitPriceCall()" style="padding:10px 22px;">Submit Call +5 bu</button>
+                <div id="pc-msg" class="hidden msg-box" style="flex:1;margin:0;"></div>
+              </div>
+            </div>
+
+            <!-- Calls feed -->
+            <div style="font-family:'DM Mono',monospace;font-size:9px;text-transform:uppercase;letter-spacing:0.12em;color:var(--muted2);margin-bottom:12px;padding-bottom:6px;border-bottom:1px solid var(--border);">Recent Community Calls</div>
+            <div id="price-calls-feed"><div class="spin">Loading...</div></div>
+          </div>
+        </div>
+
+      </div>
     </div>
   </div>
 
@@ -2007,7 +2247,7 @@ function showAdminPage(){
 /* ===== TAB ROUTING ===== */
 function showTab(name){
   window._activeTab = name;
-  ['commentary','research','cftc','futures','services','contact','about','detail','exports','wasde','commoditymap','weather','options','fob','freight','technicals','profile']
+  ['commentary','research','cftc','futures','services','contact','about','detail','exports','wasde','commoditymap','weather','options','fob','freight','technicals','profile','sentiment']
     .forEach(function(t){ document.getElementById('tab-'+t).classList.add('hidden'); });
   document.getElementById('tab-'+name).classList.remove('hidden');
   document.querySelectorAll('.snav-btn').forEach(function(b){ b.classList.toggle('active', b.dataset.tab===name);
@@ -2015,6 +2255,7 @@ function showTab(name){
   if(name === 'freight') loadFreightDashboard(false); });
   if(POST_TABS.indexOf(name) > -1) loadPosts(name);
   if(name==='technicals') loadTACharts();
+  if(name==='sentiment') loadSentimentTab();
 }
 
 /* ===== AUTH ===== */
@@ -2128,7 +2369,7 @@ async function loadPosts(category){
 async function loadDetail(postId, category){
   currentPostId = postId;
   currentPostTab = category || window._activeTab;
-  ['commentary','research','cftc','futures','services','contact','about','exports','wasde','commoditymap','weather','options','fob','freight','technicals','profile'].forEach(function(t){
+  ['commentary','research','cftc','futures','services','contact','about','exports','wasde','commoditymap','weather','options','fob','freight','technicals','profile','sentiment'].forEach(function(t){
     document.getElementById('tab-'+t).classList.add('hidden');
   });
   document.getElementById('tab-detail').classList.remove('hidden');
@@ -2821,6 +3062,214 @@ function openPrivacyPolicy(){
 }
 function closePrivacyPolicy(){
   document.getElementById('privacy-overlay').classList.remove('open');
+}
+
+/* ===== COMMUNITY SENTIMENT ===== */
+var SENT_COMMODITIES = ['Wheat','Corn','Soybeans','Canola','Palm Oil'];
+var _selectedCropCond = null;
+var _selectedDirection = null;
+var _sentWeekKey = null;
+
+function getSentWeekKey(){
+  var now = new Date();
+  var startOfYear = new Date(now.getFullYear(), 0, 1);
+  var week = Math.ceil(((now - startOfYear) / 86400000 + startOfYear.getDay() + 1) / 7);
+  return now.getFullYear() + '-W' + String(week).padStart(2,'0');
+}
+
+async function loadSentimentTab(){
+  _sentWeekKey = getSentWeekKey();
+  document.getElementById('sent-week-label').textContent = 'Week ' + _sentWeekKey;
+  document.getElementById('crop-week-label').textContent = 'Week ' + _sentWeekKey;
+  await Promise.all([
+    loadDirectionPoll(),
+    loadPriceCalls(),
+    loadCropResults()
+  ]);
+}
+
+/* ---- Direction poll ---- */
+async function loadDirectionPoll(){
+  var wrap = document.getElementById('sent-poll-list');
+  if(!wrap) return;
+  var r = await sb.from('sentiment_votes').select('commodity,direction').eq('week_key', _sentWeekKey);
+  var votes = r.data || [];
+  var myVotes = {};
+  if(currentUser){
+    var mine = await sb.from('sentiment_votes').select('commodity,direction').eq('week_key',_sentWeekKey).eq('user_id',currentUser.id);
+    (mine.data||[]).forEach(function(v){ myVotes[v.commodity] = v.direction; });
+  }
+  var tally = {};
+  SENT_COMMODITIES.forEach(function(c){ tally[c] = {bull:0,neutral:0,bear:0,total:0}; });
+  votes.forEach(function(v){
+    if(tally[v.commodity]){
+      tally[v.commodity][v.direction] = (tally[v.commodity][v.direction]||0)+1;
+      tally[v.commodity].total++;
+    }
+  });
+  // Update summary strip
+  SENT_COMMODITIES.forEach(function(c){
+    var key = c.toLowerCase().replace(' ','');
+    var t = tally[c];
+    var dirEl = document.getElementById('ss-'+key+'-dir');
+    var pctEl = document.getElementById('ss-'+key+'-pct');
+    if(!dirEl) return;
+    if(t.total === 0){ dirEl.textContent='--'; dirEl.className='sent-summary-direction neutral'; pctEl.textContent='No votes'; return; }
+    var dom = t.bull>=t.bear && t.bull>=t.neutral ? 'bull' : t.bear>=t.bull && t.bear>=t.neutral ? 'bear' : 'neutral';
+    var pct = Math.round(t[dom]/t.total*100);
+    dirEl.textContent = dom==='bull' ? 'Bullish' : dom==='bear' ? 'Bearish' : 'Neutral';
+    dirEl.className = 'sent-summary-direction '+dom;
+    pctEl.textContent = pct+'% ('+t.total+' votes)';
+  });
+  // Render bars
+  wrap.innerHTML = SENT_COMMODITIES.map(function(c){
+    var t = tally[c];
+    var bPct = t.total ? Math.round(t.bull/t.total*100) : 0;
+    var nPct = t.total ? Math.round(t.neutral/t.total*100) : 0;
+    var rPct = t.total ? 100-bPct-nPct : 0;
+    var myDir = myVotes[c];
+    var voted = !!myDir;
+    var btns = voted
+      ? '<div class="sent-voted-msg">&#10003; You voted <strong>'+myDir+'</strong> this week</div>'
+      : '<div class="sent-vote-row">'
+        + '<button class="sent-vote-btn bull" onclick="castVote(\''+c+'\',\'bull\')">&#9650; Bullish</button>'
+        + '<button class="sent-vote-btn neutral" onclick="castVote(\''+c+'\',\'neutral\')">&#9644; Neutral</button>'
+        + '<button class="sent-vote-btn bear" onclick="castVote(\''+c+'\',\'bear\')">&#9660; Bearish</button>'
+        + '</div>';
+    return '<div class="sent-commodity-row">'
+      +'<div class="sent-comm-label"><span class="sent-comm-name">'+c+'</span><span class="sent-comm-count">'+t.total+' vote'+(t.total!==1?'s':'')+'</span></div>'
+      +'<div class="sent-bar-wrap">'
+      +(bPct>0?'<div class="sent-bar-bull" style="width:'+bPct+'%">'+(bPct>8?bPct+'%':'')+'</div>':'')
+      +(nPct>0?'<div class="sent-bar-neutral" style="width:'+nPct+'%">'+(nPct>8?nPct+'%':'')+'</div>':'')
+      +(rPct>0?'<div class="sent-bar-bear" style="width:'+rPct+'%">'+(rPct>8?rPct+'%':'')+'</div>':'')
+      +'</div>'
+      +btns
+      +'</div>';
+  }).join('');
+}
+
+async function castVote(commodity, direction){
+  if(!currentUser){ alert('Please sign in to vote.'); return; }
+  var r = await sb.from('sentiment_votes').insert({
+    user_id:currentUser.id, commodity:commodity, direction:direction, week_key:_sentWeekKey
+  });
+  if(r.error){ alert('Error: '+r.error.message); return; }
+  await creditBushels(5, 'Sentiment vote: '+commodity);
+  await loadDirectionPoll();
+}
+
+/* ---- Crop condition ---- */
+function setCropCond(val){
+  _selectedCropCond = val;
+  ['good','fair','poor'].forEach(function(v){
+    var b = document.getElementById('crop-btn-'+v);
+    if(b) b.classList.toggle('active', v===val);
+  });
+}
+
+async function submitCropCondition(){
+  if(!currentUser){ alert('Please sign in.'); return; }
+  if(!_selectedCropCond){ alert('Please select a condition rating.'); return; }
+  var commodity = document.getElementById('crop-commodity').value;
+  var region    = document.getElementById('crop-region').value;
+  var msgEl = document.getElementById('crop-msg');
+  var r = await sb.from('crop_conditions').insert({
+    user_id:currentUser.id, commodity:commodity, region:region,
+    condition:_selectedCropCond, week_key:_sentWeekKey
+  });
+  if(r.error){ msgEl.textContent='Error: '+r.error.message; msgEl.className='msg-box msg-error'; msgEl.classList.remove('hidden'); return; }
+  await creditBushels(5, 'Crop condition submission');
+  msgEl.textContent='Submitted! +5 bu credited.'; msgEl.className='msg-box msg-ok'; msgEl.classList.remove('hidden');
+  setTimeout(function(){ msgEl.classList.add('hidden'); }, 3000);
+  _selectedCropCond=null;
+  ['good','fair','poor'].forEach(function(v){ var b=document.getElementById('crop-btn-'+v); if(b) b.classList.remove('active'); });
+  await loadCropResults();
+}
+
+async function loadCropResults(){
+  var wrap = document.getElementById('crop-results-list');
+  if(!wrap) return;
+  var r = await sb.from('crop_conditions').select('commodity,region,condition').eq('week_key',_sentWeekKey).order('created_at',{ascending:false}).limit(20);
+  var rows = r.data||[];
+  if(!rows.length){ wrap.innerHTML='<div style="font-size:13px;color:var(--muted2);">No submissions yet this week.</div>'; return; }
+  var grouped = {};
+  rows.forEach(function(row){
+    var key = row.commodity+' -- '+row.region;
+    if(!grouped[key]) grouped[key]={good:0,fair:0,poor:0,total:0};
+    grouped[key][row.condition]++;
+    grouped[key].total++;
+  });
+  wrap.innerHTML = Object.keys(grouped).map(function(k){
+    var g = grouped[k];
+    var dom = g.good>=g.fair&&g.good>=g.poor?'good':g.poor>=g.good&&g.poor>=g.fair?'poor':'fair';
+    var colours = {good:'#22c55e',fair:'var(--gold2)',poor:'var(--coral)'};
+    return '<div class="crop-results-row"><span style="font-size:12px;color:var(--muted);">'+k+'</span><span style="font-family:\'DM Mono\',monospace;font-size:10px;font-weight:700;color:'+colours[dom]+';">'+dom.toUpperCase()+' ('+g.total+')</span></div>';
+  }).join('');
+}
+
+/* ---- Price calls ---- */
+function setDirection(dir){
+  _selectedDirection = dir;
+  ['bull','neutral','bear'].forEach(function(d){
+    var b = document.getElementById('dir-'+d);
+    if(b){ b.classList.toggle('active', d===dir); }
+  });
+}
+
+async function submitPriceCall(){
+  if(!currentUser){ alert('Please sign in.'); return; }
+  if(!_selectedDirection){ alert('Please select a direction.'); return; }
+  var commodity = document.getElementById('pc-commodity').value;
+  var timeframe = document.getElementById('pc-timeframe').value;
+  var target    = document.getElementById('pc-target').value;
+  var note      = document.getElementById('pc-note').value.trim();
+  var msgEl     = document.getElementById('pc-msg');
+  if(note && note.length < 20){ msgEl.textContent='Reasoning must be at least 20 chars.'; msgEl.className='msg-box msg-error'; msgEl.classList.remove('hidden'); return; }
+  var r = await sb.from('price_calls').insert({
+    user_id:currentUser.id, commodity:commodity, timeframe:timeframe,
+    direction:_selectedDirection, target_price:target?parseFloat(target):null,
+    note:note||null, week_key:_sentWeekKey
+  });
+  if(r.error){ msgEl.textContent='Error: '+r.error.message; msgEl.className='msg-box msg-error'; msgEl.classList.remove('hidden'); return; }
+  await creditBushels(5, 'Price call submission');
+  msgEl.textContent='Call submitted! +5 bu credited.'; msgEl.className='msg-box msg-ok'; msgEl.classList.remove('hidden');
+  document.getElementById('pc-target').value='';
+  document.getElementById('pc-note').value='';
+  _selectedDirection=null;
+  ['bull','neutral','bear'].forEach(function(d){ var b=document.getElementById('dir-'+d); if(b) b.classList.remove('active'); });
+  setTimeout(function(){ msgEl.classList.add('hidden'); }, 3000);
+  await loadPriceCalls();
+}
+
+async function loadPriceCalls(){
+  var wrap = document.getElementById('price-calls-feed');
+  if(!wrap) return;
+  var r = await sb.from('price_calls').select('*').order('created_at',{ascending:false}).limit(30);
+  var calls = r.data||[];
+  if(!calls.length){ wrap.innerHTML='<div style="font-size:13px;color:var(--muted2);padding:12px 0;">No price calls submitted yet. Be the first.</div>'; return; }
+  wrap.innerHTML = '<div class="call-feed">'+calls.map(function(c){
+    var icons = {bull:'&#9650;',neutral:'&#9644;',bear:'&#9660;'};
+    var target = c.target_price ? '<span class="call-target">'+c.target_price+'</span>' : '';
+    return '<div class="call-card">'
+      +'<div class="call-dir-badge '+c.direction+'">'+icons[c.direction]+' '+(c.direction||'').toUpperCase()+'</div>'
+      +'<div class="call-meta">'
+      +'<div class="call-commodity">'+esc(c.commodity)+' <span>'+esc(c.timeframe||'')+'</span>'+target+'</div>'
+      +(c.note?'<div class="call-note">'+esc(c.note)+'</div>':'')
+      +'<div class="call-foot">'+fmtDate(c.created_at)+'</div>'
+      +'</div></div>';
+  }).join('')+'</div>';
+}
+
+/* Helper -- credit bushels (creates or updates user_bushels row) */
+async function creditBushels(amount, reason){
+  if(!sb||!currentUser||!amount) return;
+  try {
+    var r = await sb.from('user_bushels').select('balance').eq('user_id',currentUser.id).maybeSingle();
+    var cur = (r.data&&r.data.balance)||0;
+    await sb.from('user_bushels').upsert({user_id:currentUser.id, balance:cur+amount},{onConflict:'user_id'});
+    window._bushelBalance = cur+amount;
+    updateBushelChip();
+  } catch(e){ console.warn('creditBushels error',e); }
 }
 
 boot();
