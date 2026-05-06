@@ -760,7 +760,7 @@ padding:2px 8px;border-radius:3px;margin-bottom:6px;letter-spacing:0.06em;text-t
   <div class="auth-left">
     <div class="auth-left-tagline">Agricultural Research and Hedging Services &nbsp;<span style="background:rgba(255,179,71,0.15);border:1px solid rgba(255,179,71,0.35);color:var(--gold);font-size:8px;padding:2px 8px;border-radius:3px;letter-spacing:0.12em;vertical-align:middle;">BETA</span></div>
     <div class="auth-left-headline">Harvesting the power of <em>people</em></div>
-    <div class="auth-left-desc">We are currently in beta &mdash; features are being added regularly and your feedback helps shape the platform. Professional agricultural market intelligence, built on the collective knowledge of the trading community. Contribute, engage and unlock premium research &mdash; <em>you reap what you sow.</em></div>
+    <div class="auth-left-desc">Professional agricultural market intelligence, built on the collective knowledge of the trading community. Contribute, engage and unlock premium research &mdash; <em style="color:var(--gold2);">you reap what you sow.</em></div>
     <div class="avp-list">
 
       <div class="avp-item">
@@ -779,7 +779,7 @@ padding:2px 8px;border-radius:3px;margin-bottom:6px;letter-spacing:0.06em;text-t
         </div>
         <div class="avp-text-wrap">
           <div class="avp-title">Unlock Premium Research</div>
-          <div class="avp-body">Spend your Bushels to access <strong>in-depth market commentary</strong>, options flow analysis, FOB pricing data, freight indices and proprietary WASDE breakdowns. Premium posts are authored by experienced commodity traders and updated weekly. The more you contribute, the more you unlock &mdash; <strong style="color:var(--gold);">For Free</strong>.</div>
+          <div class="avp-body">Spend your Bushels to access <strong>in-depth research and market commentary</strong>, options flow analysis, FOB pricing data, freight indices and proprietary WASDE breakdowns. The more you contribute, the more you unlock &mdash; <strong style="color:var(--gold);">For Free</strong>.</div>
         </div>
       </div>
 
@@ -789,7 +789,7 @@ padding:2px 8px;border-radius:3px;margin-bottom:6px;letter-spacing:0.06em;text-t
         </div>
         <div class="avp-text-wrap">
           <div class="avp-title">Rise Through the Ranks</div>
-          <div class="avp-body">Progress from <strong>Merchandiser</strong> through <strong>Trader</strong>, <strong>Broker</strong> and <strong>Analyst</strong> to <strong>Market Maker</strong> as your Bushel balance grows. Higher levels unlock discounts on premium content, early access to new research and recognition across the platform community.</div>
+          <div class="avp-body">Progress from <strong>Merchandiser</strong> through <strong>Originator</strong>, <strong>Risk Manager</strong> and <strong>Head of Desk</strong> to <strong>Market Maker</strong> as your Bushel balance grows. Higher levels unlock discounts on premium content, early access to new research and recognition across the platform community.</div>
         </div>
       </div>
 
@@ -799,7 +799,7 @@ padding:2px 8px;border-radius:3px;margin-bottom:6px;letter-spacing:0.06em;text-t
         </div>
         <div class="avp-text-wrap">
           <div class="avp-title">Community Sentiment Metrics</div>
-          <div class="avp-body">Tap into the <strong>collective intelligence</strong> of a network of grain traders, merchandisers and analysts. Price calls, crop condition votes and directional sentiment surveys aggregate across the community in real time &mdash; giving you a live read on how the market is positioned beyond the CFTC data.</div>
+          <div class="avp-body">Tap into the <strong>collective intelligence</strong> of a network of grain traders, merchandisers and analysts. Price calls, crop condition votes and directional sentiment surveys aggregate across the community in real time.</div>
         </div>
       </div>
 
@@ -903,6 +903,7 @@ padding:2px 8px;border-radius:3px;margin-bottom:6px;letter-spacing:0.06em;text-t
       <button class="snav-btn" data-tab="fob"               onclick="showTab('fob')">FOB Data</button>
       <button class="snav-btn" data-tab="freight"           onclick="showTab('freight')">Freight</button>
       <button class="snav-btn" data-tab="technicals"        onclick="showTab('technicals')">Technicals</button>
+      <button class="snav-btn" data-tab="grainstore"        onclick="openGrainStore()" style="color:var(--gold2);">&#127807; Grain Store</button>
     </div>
   </nav>
 
@@ -1571,7 +1572,20 @@ padding:2px 8px;border-radius:3px;margin-bottom:6px;letter-spacing:0.06em;text-t
         <div class="premium-check-row" style="width:100%;">
           <input type="checkbox" id="p-is-premium" style="width:16px;height:16px;cursor:pointer;accent-color:var(--gold);">
           <label for="p-is-premium">&#128274; Premium Post -- requires Bushels to unlock</label>
-          <span class="pc-hint">100 bu to read</span>
+          <div style="display:flex;align-items:center;gap:6px;flex-shrink:0;">
+            <select id="p-bushel-cost" style="background:var(--card2);border:1px solid var(--border2);color:var(--gold);font-family:'DM Mono',monospace;font-size:11px;padding:4px 8px;border-radius:4px;cursor:pointer;">
+              <option value="20">20 bu</option>
+              <option value="30">30 bu</option>
+              <option value="50">50 bu</option>
+              <option value="75">75 bu</option>
+              <option value="100" selected>100 bu</option>
+              <option value="125">125 bu</option>
+              <option value="150">150 bu</option>
+              <option value="200">200 bu</option>
+              <option value="250">250 bu</option>
+            </select>
+            <span class="pc-hint">to read</span>
+          </div>
         </div>
       </div>
       <div class="publish-row">
@@ -2094,8 +2108,8 @@ async function loadPosts(category){
   grid.className = 'posts-grid';
   result.data.forEach(function(p){
     var n = counts[p.id]||0;
-    var isPrem = p.summary && p.summary.indexOf('[PREMIUM]') === 0;
-    var displaySum = isPrem ? p.summary.replace('[PREMIUM] ','').replace('[PREMIUM]','') : (p.summary||'');
+    var isPrem = p.summary && /^\[PREMIUM(:\d+)?\]/.test(p.summary);
+    var displaySum = isPrem ? p.summary.replace(/^\[PREMIUM(:\d+)?\]\s*/,'') : (p.summary||'');
     var card = document.createElement('div');
     card.className = 'post-card' + (p.is_pinned?' pinned':'') + (isPrem?' premium':'');
     card.innerHTML = (p.is_pinned?'<div class="pin-badge">&#128204; Pinned</div>':'')
@@ -2127,11 +2141,16 @@ async function loadDetail(postId, category){
   var post = r.data;
 
   // Premium gate check
-  var isPremium = post.summary && post.summary.indexOf('[PREMIUM]') === 0;
+  var isPremium = post.summary && /^\[PREMIUM(:\d+)?\]/.test(post.summary);
+  var bushelCost = 100;
+  if(isPremium){
+    var costMatch = post.summary.match(/^\[PREMIUM:(\d+)\]/);
+    if(costMatch) bushelCost = parseInt(costMatch[1],10);
+  }
   if(isPremium && !isAdmin){
     var bal = window._bushelBalance || 0;
-    if(bal < 100){
-      wrap.innerHTML = '<div class="premium-gate"><div class="pg-icon">&#128274;</div><h3>Premium Content</h3><p>This post requires a Bushels balance of at least 100 to read. Earn Bushels by commenting, logging in daily, and engaging with the community -- or buy a top-up instantly.</p><div class="pg-cost">100 bu required &mdash; you have ' + bal + ' bu</div><div style="display:flex;gap:10px;justify-content:center;flex-wrap:wrap;"><button class="btn btn-gold" onclick="openGrainStore()" style="padding:10px 22px;">&#127807; Buy Bushels</button><button class="btn btn-ghost" onclick="openBushelPanel()" style="padding:10px 22px;">How to Earn Free &#8250;</button></div></div>';
+    if(bal < bushelCost){
+      wrap.innerHTML = '<div class="premium-gate"><div class="pg-icon">&#128274;</div><h3>Premium Content</h3><p>This post requires <strong style="color:var(--gold);">' + bushelCost + ' Bushels</strong> to read. Earn Bushels by commenting, logging in daily, and engaging with the community -- or buy a top-up instantly.</p><div class="pg-cost">' + bushelCost + ' bu required &mdash; you have ' + bal + ' bu</div><div style="display:flex;gap:10px;justify-content:center;flex-wrap:wrap;"><button class="btn btn-gold" onclick="openGrainStore()" style="padding:10px 22px;">&#127807; Buy Bushels</button><button class="btn btn-ghost" onclick="openBushelPanel()" style="padding:10px 22px;">How to Earn Free &#8250;</button></div></div>';
       return;
     }
   }
@@ -2152,7 +2171,7 @@ async function loadDetail(postId, category){
     var encoded = post.content.replace(/"/g,'&quot;');
     contentHtml = '<iframe class="post-iframe" srcdoc="'+encoded+'" onload="resizeIframe(this)" scrolling="no"></iframe>';
   } else {
-    var displaySummary = isPremium ? post.summary.replace('[PREMIUM] ','').replace('[PREMIUM]','') : (post.summary||'');
+    var displaySummary = isPremium ? post.summary.replace(/^\[PREMIUM(:\d+)?\]\s*/,'') : (post.summary||'');
     var standfirst = displaySummary ? '<div class="post-standfirst">'+esc(displaySummary)+'</div>' : '';
     contentHtml = '<div class="post-kicker">'+fmtDate(post.created_at)+'</div><h1>'+esc(post.title)+'</h1>'+standfirst+'<div class="post-body">'+post.content+'</div>';
   }
@@ -2254,7 +2273,8 @@ async function publishPost(){
   var btn = document.getElementById('pub-btn');
   var premCb = document.getElementById('p-is-premium');
   var isPremium = premCb && premCb.checked;
-  if(isPremium && summary.indexOf('[PREMIUM]') !== 0) summary = '[PREMIUM] ' + summary;
+  var bushelCost = isPremium ? (parseInt(document.getElementById('p-bushel-cost').value,10)||100) : 0;
+  if(isPremium && summary.indexOf('[PREMIUM') !== 0) summary = '[PREMIUM:' + bushelCost + '] ' + summary;
   if(!title){ pubMsg('Please add a title.',false); return; }
   if(!content||content==='<p><br></p>'){ pubMsg('Please add content.',false); return; }
   btn.disabled=true; btn.textContent= window._editingPostId ? 'Saving...' : 'Publishing...';
@@ -2342,12 +2362,15 @@ async function startEditPost(id){
   if(r.error||!r.data){ alert('Could not load post.'); return; }
   var post=r.data;
   switchAdminTab('write');
-  var isPrem = post.summary && post.summary.indexOf('[PREMIUM]') === 0;
-  var displaySummary = isPrem ? post.summary.replace('[PREMIUM] ','').replace('[PREMIUM]','') : (post.summary||'');
+  var isPrem = post.summary && /^\[PREMIUM(:\d+)?\]/.test(post.summary);
+  var displaySummary = isPrem ? post.summary.replace(/^\[PREMIUM(:\d+)?\]\s*/,'') : (post.summary||'');
+  var costMatch = isPrem ? post.summary.match(/^\[PREMIUM:(\d+)\]/) : null;
+  var savedCost = costMatch ? costMatch[1] : '100';
   document.getElementById('p-title').value=post.title||'';
   document.getElementById('p-summary').value=displaySummary;
   document.getElementById('p-category').value=post.category||'commentary';
   var premCb=document.getElementById('p-is-premium'); if(premCb) premCb.checked=isPrem;
+  var costSel=document.getElementById('p-bushel-cost'); if(costSel) costSel.value=savedCost;
   window._editingPostId=id;
   document.getElementById('pub-btn').textContent='Save Changes';
   if(isFullHtmlDocument(post.content)){ setEditorMode('html'); document.getElementById('html-source-input').value=post.content; }
