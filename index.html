@@ -102,13 +102,10 @@
       position:sticky; top:0; max-height:100vh; overflow-y:auto;
     }
 
-    /* Centred logo on the dividing line */
+    /* Centred logo on the dividing line — no box */
     .auth-center-logo {
       position:absolute; left:50%; top:36px; transform:translateX(-50%);
       z-index:20; display:flex; flex-direction:column; align-items:center; gap:10px;
-      background:var(--card); border:1px solid var(--border2);
-      border-radius:14px; padding:18px 28px 16px;
-      box-shadow:0 8px 40px rgba(0,0,0,0.6);
       white-space:nowrap;
     }
     .auth-center-logo img { width:56px; height:56px; object-fit:contain; border-radius:8px; }
@@ -151,11 +148,11 @@
     .avp-body strong { color:var(--gold2); font-weight:600; }
     .auth-left-footer { margin-top:auto; padding-top:36px; font-family:'DM Mono',monospace; font-size:9px; color:var(--muted2); letter-spacing:0.06em; }
 
-    /* RIGHT — form panel — matches left padding-top exactly */
+    /* RIGHT — form panel — vertically centred */
     .auth-right {
       width:50%; flex-shrink:0; min-height:100vh; background:var(--bg);
-      display:flex; flex-direction:column; align-items:flex-start;
-      justify-content:flex-start; padding:200px 64px 52px;
+      display:flex; flex-direction:column; align-items:center;
+      justify-content:center; padding:52px 64px;
     }
     .auth-card { width:100%; max-width:400px; }
     .auth-card-eyebrow { font-family:'DM Mono',monospace; font-size:10px; color:var(--blue); text-transform:uppercase; letter-spacing:0.18em; margin-bottom:12px; }
@@ -768,7 +765,7 @@ padding:2px 8px;border-radius:3px;margin-bottom:6px;letter-spacing:0.06em;text-t
 
       <div class="avp-item">
         <div class="avp-icon-wrap blue">
-          <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="#4a9eff" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M12 2L2 7l10 5 10-5-10-5z"/><path d="M2 17l10 5 10-5"/><path d="M2 12l10 5 10-5"/></svg>
+          <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="#4a9eff" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M12 22V12"/><path d="M12 12C12 12 8 10 8 6a4 4 0 0 1 8 0c0 4-4 6-4 6z"/><path d="M12 12c0 0-3-2.5-3-5.5"/><path d="M12 12c0 0 3-2.5 3-5.5"/><path d="M9 18c-1.5-.5-3-1.5-3-4"/><path d="M15 18c1.5-.5 3-1.5 3-4"/></svg>
         </div>
         <div class="avp-text-wrap">
           <div class="avp-title">Earn Bushels</div>
