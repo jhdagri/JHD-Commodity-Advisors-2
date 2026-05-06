@@ -95,26 +95,39 @@
 
     /* ===== AUTH ===== */
     /* ===== AUTH PAGE — SPLIT LAYOUT ===== */
-    #page-auth { min-height:100vh; display:flex; flex-direction:row; }
+    #page-auth { min-height:100vh; display:flex; flex-direction:row; position:relative; }
     .auth-left {
       flex:1; min-height:100vh; background:linear-gradient(160deg,#080a0d 0%,#0d1420 60%,#0a1228 100%);
-      border-right:1px solid var(--border2); padding:52px 48px; display:flex; flex-direction:column;
+      border-right:1px solid var(--border2); padding:52px 48px 52px; display:flex; flex-direction:column;
       position:sticky; top:0; max-height:100vh; overflow-y:auto;
     }
-    .auth-left-logo { display:flex; align-items:center; gap:12px; margin-bottom:52px; }
-    .auth-left-logo img { width:40px; height:40px; object-fit:contain; border-radius:6px; }
-    .auth-left-logo-text { font-family:'DM Serif Display',serif; font-size:15px; color:var(--text); }
-    .auth-left-logo-text span { color:var(--gold); }
+
+    /* Centred logo on the dividing line */
+    .auth-center-logo {
+      position:absolute; left:50%; top:44px; transform:translateX(-50%);
+      z-index:20; display:flex; flex-direction:column; align-items:center; gap:10px;
+      background:var(--bg); border:1px solid var(--border2);
+      border-radius:14px; padding:16px 24px 14px;
+      box-shadow:0 8px 32px rgba(0,0,0,0.5);
+      white-space:nowrap;
+    }
+    .auth-center-logo img { width:52px; height:52px; object-fit:contain; border-radius:8px; }
+    .auth-center-logo-name {
+      font-family:'DM Serif Display',serif; font-size:17px; color:var(--text);
+      text-align:center; line-height:1.2;
+    }
+    .auth-center-logo-name span { color:var(--gold); }
+
     .auth-left-headline {
       font-family:'DM Serif Display',serif; font-size:32px; line-height:1.15;
-      color:var(--text); margin-bottom:14px; letter-spacing:-0.01em;
+      color:var(--text); margin-bottom:14px; letter-spacing:-0.01em; margin-top:116px;
     }
     .auth-left-headline em { color:var(--gold2); font-style:italic; }
     .auth-left-tagline {
       font-family:'DM Mono',monospace; font-size:11px; color:var(--blue);
-      text-transform:uppercase; letter-spacing:0.16em; margin-bottom:36px;
+      text-transform:uppercase; letter-spacing:0.16em; margin-bottom:12px;
     }
-    .auth-left-desc { font-size:15px; color:var(--muted); line-height:1.75; max-width:360px; margin-bottom:36px; }
+    .auth-left-desc { font-size:14.5px; color:var(--muted); line-height:1.75; margin-bottom:32px; }
     .avp-list { display:flex; flex-direction:column; gap:22px; }
     .avp-item { display:flex; align-items:flex-start; gap:18px; }
     .avp-icon-wrap {
@@ -133,11 +146,14 @@
     .avp-body strong { color:var(--gold2); font-weight:600; }
     .auth-left-footer { margin-top:auto; padding-top:36px; font-family:'DM Mono',monospace; font-size:9px; color:var(--muted2); letter-spacing:0.06em; }
 
+
+    .auth-left-footer { margin-top:auto; padding-top:36px; font-family:'DM Mono',monospace; font-size:9px; color:var(--muted2); letter-spacing:0.06em; }
+
     /* RIGHT — form panel */
     .auth-right {
       width:50%; flex-shrink:0; min-height:100vh; background:var(--bg);
       display:flex; flex-direction:column; align-items:center;
-      justify-content:center; padding:52px 56px;
+      justify-content:center; padding:160px 56px 52px;
     }
     .auth-card {
       width:100%; max-width:380px;
@@ -192,8 +208,11 @@
     /* Mobile: stack vertically */
     @media(max-width:900px){
       #page-auth { flex-direction:column; }
-      .auth-left { position:static; min-height:auto; max-height:none; padding:36px 28px 32px; border-right:none; border-bottom:1px solid var(--border2); }
-      .auth-left-headline { font-size:30px; }
+      .auth-center-logo { position:static; transform:none; border-radius:0; border:none; border-bottom:1px solid var(--border2); width:100%; background:#080a0d; flex-direction:row; justify-content:center; padding:16px 24px; box-shadow:none; }
+      .auth-center-logo img { width:36px; height:36px; }
+      .auth-center-logo-name { font-size:15px; }
+      .auth-left { position:static; min-height:auto; max-height:none; padding:28px 28px 28px; border-right:none; border-bottom:1px solid var(--border2); }
+      .auth-left-headline { font-size:26px; margin-top:0; }
       .auth-left-footer { display:none; }
       .avp-list { display:none; }
       .auth-right { width:100%; padding:36px 24px 52px; min-height:auto; }
@@ -739,12 +758,15 @@ padding:2px 8px;border-radius:3px;margin-bottom:6px;letter-spacing:0.06em;text-t
 
 <!-- ========================= AUTH ========================= -->
 <div id="page-auth">
+
+  <!-- CENTRED LOGO — sits on the dividing line -->
+  <div class="auth-center-logo">
+    <img src="https://i.ibb.co/PZPZGP71/IMG-2924.jpg" alt="JHD">
+    <div class="auth-center-logo-name">JHD <span>Commodity Advisors</span></div>
+  </div>
+
   <!-- LEFT — brand and pitch -->
   <div class="auth-left">
-    <div class="auth-left-logo">
-      <img src="https://i.ibb.co/PZPZGP71/IMG-2924.jpg" alt="JHD">
-      <div class="auth-left-logo-text">JHD <span>Commodity Advisors</span></div>
-    </div>
     <div class="auth-left-tagline">Agricultural Research and Hedging Services &nbsp;<span style="background:rgba(255,179,71,0.15);border:1px solid rgba(255,179,71,0.35);color:var(--gold);font-size:8px;padding:2px 8px;border-radius:3px;letter-spacing:0.12em;vertical-align:middle;">BETA</span></div>
     <div class="auth-left-headline">Harvesting the power of <em>people</em></div>
     <div class="auth-left-desc">We are currently in beta &mdash; features are being added regularly and your feedback helps shape the platform. Professional agricultural market intelligence, built on the collective knowledge of the trading community. Contribute, engage and unlock premium research &mdash; <em>you reap what you sow.</em></div>
@@ -766,7 +788,7 @@ padding:2px 8px;border-radius:3px;margin-bottom:6px;letter-spacing:0.06em;text-t
         </div>
         <div class="avp-text-wrap">
           <div class="avp-title">Unlock Premium Research</div>
-          <div class="avp-body">Spend your Bushels to access <strong>in-depth market commentary</strong>, options flow analysis, FOB pricing data, freight indices and proprietary WASDE breakdowns. Premium posts are authored by experienced commodity traders and updated weekly. The more you contribute, the more you unlock &mdash; for free.</div>
+          <div class="avp-body">Spend your Bushels to access <strong>in-depth market commentary</strong>, options flow analysis, FOB pricing data, freight indices and proprietary WASDE breakdowns. Premium posts are authored by experienced commodity traders and updated weekly. The more you contribute, the more you unlock &mdash; <strong style="color:var(--gold);">For Free</strong>.</div>
         </div>
       </div>
 
