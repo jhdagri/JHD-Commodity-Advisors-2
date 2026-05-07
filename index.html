@@ -823,6 +823,91 @@ padding:2px 8px;border-radius:3px;margin-bottom:6px;letter-spacing:0.06em;text-t
 
     @media(max-width:900px){ .sent-grid { grid-template-columns:1fr; } .crop-grid { grid-template-columns:1fr 1fr 1fr; } .sent-summary-strip { grid-template-columns:repeat(3,1fr); } }
 
+    /* ===== DASHBOARD ===== */
+    .dash-wrap { max-width:1200px; margin:0 auto; padding:28px 32px 60px; }
+    .dash-welcome { display:flex; align-items:flex-start; justify-content:space-between; gap:20px; margin-bottom:28px; padding-bottom:24px; border-bottom:1px solid var(--border); flex-wrap:wrap; }
+    .dash-welcome-left {}
+    .dash-greeting { font-family:'DM Serif Display',serif; font-size:26px; color:var(--text); margin-bottom:4px; }
+    .dash-greeting span { color:var(--gold2); }
+    .dash-sub { font-family:'DM Mono',monospace; font-size:10px; color:var(--muted2); text-transform:uppercase; letter-spacing:0.1em; }
+    .dash-level-card { background:var(--card); border:1px solid var(--border2); border-radius:10px; padding:14px 20px; display:flex; align-items:center; gap:16px; min-width:280px; }
+    .dash-level-icon { font-size:28px; flex-shrink:0; }
+    .dash-level-info { flex:1; }
+    .dash-level-name { font-family:'DM Mono',monospace; font-size:11px; font-weight:600; color:var(--text); text-transform:uppercase; letter-spacing:0.08em; margin-bottom:6px; }
+    .dash-level-bal { font-family:'DM Mono',monospace; font-size:10px; color:var(--gold2); margin-bottom:8px; }
+    .dash-progress-bar { height:5px; background:var(--card2); border-radius:3px; overflow:hidden; }
+    .dash-progress-fill { height:100%; background:linear-gradient(90deg, var(--gold2), var(--gold-lt)); border-radius:3px; transition:width 0.5s ease; }
+    .dash-progress-label { font-family:'DM Mono',monospace; font-size:8px; color:var(--muted2); margin-top:4px; display:flex; justify-content:space-between; }
+
+    /* Dashboard grid */
+    .dash-grid { display:grid; grid-template-columns:1fr 1fr 1fr; gap:16px; margin-bottom:20px; }
+    .dash-grid-wide { display:grid; grid-template-columns:2fr 1fr; gap:16px; margin-bottom:20px; }
+    .dash-card { background:var(--card); border:1px solid var(--border); border-radius:10px; overflow:hidden; }
+    .dash-card-header { padding:13px 18px; border-bottom:1px solid var(--border); display:flex; align-items:center; justify-content:space-between; }
+    .dash-card-title { font-family:'DM Mono',monospace; font-size:9px; font-weight:600; text-transform:uppercase; letter-spacing:0.14em; color:var(--muted2); }
+    .dash-card-action { font-family:'DM Mono',monospace; font-size:9px; color:var(--blue); cursor:pointer; }
+    .dash-card-action:hover { text-decoration:underline; }
+    .dash-card-body { padding:16px 18px; }
+
+    /* Metric tiles */
+    .dash-metrics { display:grid; grid-template-columns:repeat(4,1fr); gap:12px; margin-bottom:20px; }
+    .dash-metric { background:var(--card); border:1px solid var(--border); border-radius:8px; padding:16px 18px; }
+    .dash-metric-val { font-family:'DM Serif Display',serif; font-size:28px; color:var(--text); line-height:1; margin-bottom:4px; }
+    .dash-metric-val.gold { color:var(--gold2); }
+    .dash-metric-val.teal { color:var(--teal); }
+    .dash-metric-val.blue { color:var(--blue); }
+    .dash-metric-val.coral { color:var(--coral); }
+    .dash-metric-label { font-family:'DM Mono',monospace; font-size:9px; text-transform:uppercase; letter-spacing:0.1em; color:var(--muted2); }
+
+    /* Recent posts */
+    .dash-post-item { padding:12px 0; border-bottom:1px solid var(--border); display:flex; align-items:flex-start; gap:12px; cursor:pointer; }
+    .dash-post-item:last-child { border-bottom:none; padding-bottom:0; }
+    .dash-post-item:hover .dash-post-title { color:var(--gold2); }
+    .dash-post-cat { font-family:'DM Mono',monospace; font-size:8px; text-transform:uppercase; letter-spacing:0.08em; padding:3px 8px; border-radius:3px; flex-shrink:0; margin-top:2px; }
+    .cat-commentary { background:rgba(74,158,255,0.1); color:var(--blue); }
+    .cat-research    { background:rgba(46,207,170,0.1); color:var(--teal); }
+    .cat-cftc        { background:rgba(212,170,85,0.1); color:var(--gold2); }
+    .cat-wasde       { background:rgba(255,107,74,0.1); color:var(--coral); }
+    .cat-default     { background:rgba(136,144,164,0.1); color:var(--muted); }
+    .dash-post-title { font-size:13.5px; color:var(--text); line-height:1.4; margin-bottom:4px; font-weight:500; transition:color 0.15s; }
+    .dash-post-meta  { font-family:'DM Mono',monospace; font-size:9px; color:var(--muted2); }
+    .dash-post-prem  { font-family:'DM Mono',monospace; font-size:8px; color:var(--gold2); background:rgba(212,170,85,0.1); border:1px solid rgba(212,170,85,0.2); padding:1px 6px; border-radius:3px; margin-left:6px; }
+
+    /* Sentiment mini bars */
+    .dash-sent-row { padding:8px 0; border-bottom:1px solid var(--border); display:flex; align-items:center; gap:10px; }
+    .dash-sent-row:last-child { border-bottom:none; }
+    .dash-sent-name { font-family:'DM Mono',monospace; font-size:10px; color:var(--muted); width:80px; flex-shrink:0; }
+    .dash-sent-bar { flex:1; height:10px; border-radius:3px; overflow:hidden; display:flex; background:var(--card2); }
+    .dsb-bull { background:#22c55e; height:100%; }
+    .dsb-neutral { background:var(--muted2); height:100%; }
+    .dsb-bear { background:var(--coral); height:100%; }
+    .dash-sent-dir { font-family:'DM Mono',monospace; font-size:9px; font-weight:700; width:52px; text-align:right; flex-shrink:0; }
+
+    /* Activity feed */
+    .dash-activity-item { display:flex; align-items:flex-start; gap:10px; padding:10px 0; border-bottom:1px solid var(--border); }
+    .dash-activity-item:last-child { border-bottom:none; }
+    .dash-activity-dot { width:8px; height:8px; border-radius:50%; flex-shrink:0; margin-top:4px; }
+    .dash-activity-text { font-size:13px; color:var(--muted); line-height:1.5; flex:1; }
+    .dash-activity-text strong { color:var(--text); font-weight:500; }
+    .dash-activity-time { font-family:'DM Mono',monospace; font-size:9px; color:var(--muted2); flex-shrink:0; }
+
+    /* Quick access buttons */
+    .dash-quick { display:grid; grid-template-columns:repeat(3,1fr); gap:8px; }
+    .dash-quick-btn { background:var(--card2); border:1px solid var(--border); border-radius:7px; padding:12px 14px; cursor:pointer; text-align:left; transition:border-color 0.15s; }
+    .dash-quick-btn:hover { border-color:var(--blue); }
+    .dash-quick-label { font-family:'DM Mono',monospace; font-size:9px; text-transform:uppercase; letter-spacing:0.1em; color:var(--muted2); margin-bottom:4px; }
+    .dash-quick-name { font-size:13px; color:var(--text); font-weight:500; }
+
+    @media(max-width:900px){
+      .dash-wrap { padding:20px 16px 48px; }
+      .dash-metrics { grid-template-columns:1fr 1fr; }
+      .dash-grid { grid-template-columns:1fr; }
+      .dash-grid-wide { grid-template-columns:1fr; }
+      .dash-quick { grid-template-columns:1fr 1fr; }
+      .dash-level-card { min-width:unset; width:100%; }
+      .dash-welcome { flex-direction:column; }
+    }
+
   </style>
 </head>
 <body>
@@ -977,7 +1062,8 @@ padding:2px 8px;border-radius:3px;margin-bottom:6px;letter-spacing:0.06em;text-t
   </header>
   <nav class="section-nav">
     <div class="section-nav-inner">
-      <button class="snav-btn active" data-tab="commentary" onclick="showTab('commentary')">Commentary</button>
+      <button class="snav-btn active" data-tab="dashboard"    onclick="showTab('dashboard')">&#9632; Dashboard</button>
+      <button class="snav-btn" data-tab="commentary"          onclick="showTab('commentary')">Commentary</button>
       <button class="snav-btn" data-tab="research"          onclick="showTab('research')">Research</button>
       <button class="snav-btn" data-tab="cftc"              onclick="showTab('cftc')">CFTC</button>
       <button class="snav-btn" data-tab="futures"           onclick="showTab('futures')">Futures</button>
@@ -995,6 +1081,112 @@ padding:2px 8px;border-radius:3px;margin-bottom:6px;letter-spacing:0.06em;text-t
   </nav>
 
   <!-- Commentary -->
+  <!-- DASHBOARD -->
+  <div id="tab-dashboard" class="protected">
+    <div class="dash-wrap">
+
+      <!-- Welcome header -->
+      <div class="dash-welcome">
+        <div class="dash-welcome-left">
+          <div class="dash-greeting">Good <span id="dash-time-greeting">morning</span>, <span id="dash-username-greeting" style="color:var(--gold2);">Trader</span></div>
+          <div class="dash-sub" id="dash-date-label">Loading...</div>
+        </div>
+        <div class="dash-level-card">
+          <div class="dash-level-icon" id="dash-level-icon">&#127807;</div>
+          <div class="dash-level-info">
+            <div class="dash-level-name" id="dash-level-name">Merchandiser</div>
+            <div class="dash-level-bal"><span id="dash-bal-display">0</span> bu &mdash; <span id="dash-next-label">100 bu to Originator</span></div>
+            <div class="dash-progress-bar"><div class="dash-progress-fill" id="dash-progress-fill" style="width:0%"></div></div>
+            <div class="dash-progress-label"><span id="dash-prog-min">0</span><span id="dash-prog-max">100</span></div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Metric tiles -->
+      <div class="dash-metrics">
+        <div class="dash-metric">
+          <div class="dash-metric-val gold" id="dm-bushels">--</div>
+          <div class="dash-metric-label">Bushel Balance</div>
+        </div>
+        <div class="dash-metric">
+          <div class="dash-metric-val blue" id="dm-posts">--</div>
+          <div class="dash-metric-label">Posts This Week</div>
+        </div>
+        <div class="dash-metric">
+          <div class="dash-metric-val teal" id="dm-votes">--</div>
+          <div class="dash-metric-label">Community Votes This Week</div>
+        </div>
+        <div class="dash-metric">
+          <div class="dash-metric-val" id="dm-top-sent" style="font-size:15px;">--</div>
+          <div class="dash-metric-label">Top Sentiment This Week</div>
+        </div>
+      </div>
+
+      <!-- Main grid row 1 -->
+      <div class="dash-grid-wide">
+
+        <!-- Recent Posts -->
+        <div class="dash-card">
+          <div class="dash-card-header">
+            <div class="dash-card-title">Latest Research &amp; Commentary</div>
+            <span class="dash-card-action" onclick="showTab('commentary')">View all &rarr;</span>
+          </div>
+          <div class="dash-card-body" id="dash-recent-posts"><div class="spin">Loading...</div></div>
+        </div>
+
+        <!-- Community Sentiment -->
+        <div class="dash-card">
+          <div class="dash-card-header">
+            <div class="dash-card-title">Community Sentiment</div>
+            <span class="dash-card-action" onclick="showTab('sentiment')">Full view &rarr;</span>
+          </div>
+          <div class="dash-card-body" id="dash-sentiment-mini"><div class="spin">Loading...</div></div>
+        </div>
+
+      </div>
+
+      <!-- Main grid row 2 -->
+      <div class="dash-grid">
+
+        <!-- Recent Price Calls -->
+        <div class="dash-card">
+          <div class="dash-card-header">
+            <div class="dash-card-title">Latest Price Calls</div>
+            <span class="dash-card-action" onclick="showTab('sentiment')">Submit a call &rarr;</span>
+          </div>
+          <div class="dash-card-body" id="dash-price-calls"><div class="spin">Loading...</div></div>
+        </div>
+
+        <!-- CFTC Snapshot -->
+        <div class="dash-card">
+          <div class="dash-card-header">
+            <div class="dash-card-title">CFTC Snapshot</div>
+            <span class="dash-card-action" onclick="showTab('cftc')">Full data &rarr;</span>
+          </div>
+          <div class="dash-card-body" id="dash-cftc-snap"><div class="spin">Loading...</div></div>
+        </div>
+
+        <!-- Quick Access -->
+        <div class="dash-card">
+          <div class="dash-card-header">
+            <div class="dash-card-title">Quick Access</div>
+          </div>
+          <div class="dash-card-body">
+            <div class="dash-quick">
+              <div class="dash-quick-btn" onclick="showTab('exports')"><div class="dash-quick-label">Data</div><div class="dash-quick-name">Export Sales</div></div>
+              <div class="dash-quick-btn" onclick="showTab('wasde')"><div class="dash-quick-label">Report</div><div class="dash-quick-name">WASDE</div></div>
+              <div class="dash-quick-btn" onclick="showTab('freight')"><div class="dash-quick-label">Markets</div><div class="dash-quick-name">Freight</div></div>
+              <div class="dash-quick-btn" onclick="showTab('options')"><div class="dash-quick-label">Derivatives</div><div class="dash-quick-name">Options</div></div>
+              <div class="dash-quick-btn" onclick="showTab('technicals')"><div class="dash-quick-label">Charts</div><div class="dash-quick-name">Technicals</div></div>
+              <div class="dash-quick-btn" onclick="openGrainStore()"><div class="dash-quick-label" style="color:var(--gold2);">&#127807; Store</div><div class="dash-quick-name" style="color:var(--gold2);">Buy Bushels</div></div>
+            </div>
+          </div>
+        </div>
+
+      </div>
+    </div>
+  </div>
+
   <div id="tab-commentary" class="protected">
     <div class="page-wrap">
       <div class="page-heading"><h2>Market Commentary</h2><p>In-depth analysis of agricultural commodity markets</p></div>
@@ -2162,6 +2354,15 @@ async function boot(){
   var isPreview = new URLSearchParams(window.location.search).has('preview');
   if(isLocal || isPreview){ showAppPage(); installProtection(); return; }
 
+  // Listen for Supabase auth events -- catches PASSWORD_RECOVERY from email link
+  sb.auth.onAuthStateChange(function(event, session){
+    if(event === 'PASSWORD_RECOVERY'){
+      // User clicked the reset link in their email -- show the new password form
+      showAuthPage();
+      setTimeout(showNewPasswordForm, 300);
+    }
+  });
+
   try {
     var r = await sb.auth.getSession();
     var session = r.data && r.data.session;
@@ -2211,7 +2412,7 @@ function showAppPage(){
   if(signinNav) signinNav.style.display = currentUser ? 'none' : 'flex';
   var signoutBtn = document.querySelector('.btn-ghost[onclick="doSignOut()"]');
   if(signoutBtn) signoutBtn.style.display = currentUser ? '' : 'none';
-  showTab(window._activeTab || 'commentary');
+  showTab(currentUser ? 'dashboard' : (window._activeTab || 'commentary'));
   loadRecentStrip();
   if(currentUser){ checkDailyLogin(); loadBushelBalance(); wrapPostCommentWithBushels(); }
 
@@ -2229,12 +2430,6 @@ function showAppPage(){
   if(qs.get('gs_cancel') === '1'){
     window.history.replaceState({}, '', window.location.pathname);
   }
-  // Handle return from Supabase password reset email
-  if(qs.get('pwreset') === '1'){
-    window.history.replaceState({}, '', window.location.pathname);
-    showAuthPage();
-    setTimeout(showNewPasswordForm, 400);
-  }
 }
 
 function showAdminPage(){
@@ -2247,7 +2442,7 @@ function showAdminPage(){
 /* ===== TAB ROUTING ===== */
 function showTab(name){
   window._activeTab = name;
-  ['commentary','research','cftc','futures','services','contact','about','detail','exports','wasde','commoditymap','weather','options','fob','freight','technicals','profile','sentiment']
+  ['dashboard','commentary','research','cftc','futures','services','contact','about','detail','exports','wasde','commoditymap','weather','options','fob','freight','technicals','profile','sentiment']
     .forEach(function(t){ document.getElementById('tab-'+t).classList.add('hidden'); });
   document.getElementById('tab-'+name).classList.remove('hidden');
   document.querySelectorAll('.snav-btn').forEach(function(b){ b.classList.toggle('active', b.dataset.tab===name);
@@ -2256,6 +2451,7 @@ function showTab(name){
   if(POST_TABS.indexOf(name) > -1) loadPosts(name);
   if(name==='technicals') loadTACharts();
   if(name==='sentiment') loadSentimentTab();
+  if(name==='dashboard') loadDashboard();
 }
 
 /* ===== AUTH ===== */
@@ -2369,7 +2565,7 @@ async function loadPosts(category){
 async function loadDetail(postId, category){
   currentPostId = postId;
   currentPostTab = category || window._activeTab;
-  ['commentary','research','cftc','futures','services','contact','about','exports','wasde','commoditymap','weather','options','fob','freight','technicals','profile','sentiment'].forEach(function(t){
+  ['dashboard','commentary','research','cftc','futures','services','contact','about','exports','wasde','commoditymap','weather','options','fob','freight','technicals','profile','sentiment'].forEach(function(t){
     document.getElementById('tab-'+t).classList.add('hidden');
   });
   document.getElementById('tab-detail').classList.remove('hidden');
@@ -3022,9 +3218,7 @@ async function doForgotPassword(){
   if(!email){ authMsg('Please enter your email address.'); return; }
   var btn = document.querySelector('#form-reset button');
   if(btn){ btn.disabled = true; btn.textContent = 'Sending...'; }
-  var r = await sb.auth.resetPasswordForEmail(email, {
-    redirectTo: 'https://jhdcommodityadvisors.com/?pwreset=1'
-  });
+  var r = await sb.auth.resetPasswordForEmail(email);
   if(btn){ btn.disabled = false; btn.textContent = 'Send Reset Link \u2192'; }
   if(r.error){ authMsg('Error: ' + r.error.message); return; }
   document.getElementById('form-reset-input').classList.add('hidden');
@@ -3270,6 +3464,178 @@ async function creditBushels(amount, reason){
     window._bushelBalance = cur+amount;
     updateBushelChip();
   } catch(e){ console.warn('creditBushels error',e); }
+}
+
+/* ===== DASHBOARD ===== */
+async function loadDashboard(){
+  setDashWelcome();
+  await Promise.all([
+    loadDashRecentPosts(),
+    loadDashSentiment(),
+    loadDashPriceCalls(),
+    loadDashCftc(),
+    loadDashMetrics()
+  ]);
+}
+
+function setDashWelcome(){
+  var now = new Date();
+  var hr = now.getHours();
+  var greeting = hr < 12 ? 'morning' : hr < 17 ? 'afternoon' : 'evening';
+  var greetEl = document.getElementById('dash-time-greeting');
+  if(greetEl) greetEl.textContent = greeting;
+  var days = ['Sunday','Monday','Tuesday','Wednesday','Thursday','Friday','Saturday'];
+  var months = ['January','February','March','April','May','June','July','August','September','October','November','December'];
+  var dateEl = document.getElementById('dash-date-label');
+  if(dateEl) dateEl.textContent = days[now.getDay()] + ', ' + now.getDate() + ' ' + months[now.getMonth()] + ' ' + now.getFullYear();
+  // Username
+  if(currentUser && sb){
+    sb.from('profiles').select('username,display_name').eq('id',currentUser.id).maybeSingle().then(function(r){
+      var p = r.data || {};
+      var name = p.display_name || p.username || currentUser.email.split('@')[0];
+      var el = document.getElementById('dash-username-greeting');
+      if(el) el.textContent = name;
+    });
+  }
+  // Level progress
+  var bal = window._bushelBalance || 0;
+  var level = getLevelForBalance(bal);
+  var nextLevel = LEVELS.find(function(l){ return l.min > bal; });
+  var iconEl = document.getElementById('dash-level-icon');
+  var nameEl = document.getElementById('dash-level-name');
+  var balEl  = document.getElementById('dash-bal-display');
+  var nextEl = document.getElementById('dash-next-label');
+  var fillEl = document.getElementById('dash-progress-fill');
+  var minEl  = document.getElementById('dash-prog-min');
+  var maxEl  = document.getElementById('dash-prog-max');
+  var dmBal  = document.getElementById('dm-bushels');
+  if(iconEl) iconEl.textContent = level.icon;
+  if(nameEl) nameEl.textContent = level.name;
+  if(balEl)  balEl.textContent  = bal.toLocaleString();
+  if(dmBal)  dmBal.textContent  = bal.toLocaleString();
+  if(nextLevel){
+    var pct = Math.round(((bal - level.min) / (nextLevel.min - level.min)) * 100);
+    if(nextEl) nextEl.textContent = (nextLevel.min - bal) + ' bu to ' + nextLevel.name;
+    if(fillEl) fillEl.style.width = Math.min(pct, 100) + '%';
+    if(minEl)  minEl.textContent  = level.min;
+    if(maxEl)  maxEl.textContent  = nextLevel.min;
+  } else {
+    if(nextEl) nextEl.textContent = 'Maximum level reached';
+    if(fillEl) fillEl.style.width = '100%';
+  }
+}
+
+async function loadDashRecentPosts(){
+  var wrap = document.getElementById('dash-recent-posts');
+  if(!wrap) return;
+  var r = await sb.from('posts').select('id,title,summary,category,created_at').order('created_at',{ascending:false}).limit(6);
+  var posts = r.data || [];
+  var dmPosts = document.getElementById('dm-posts');
+  // Count posts this week
+  var weekAgo = new Date(Date.now() - 7*24*60*60*1000).toISOString();
+  var weekPosts = posts.filter(function(p){ return p.created_at >= weekAgo; });
+  if(dmPosts) dmPosts.textContent = weekPosts.length;
+  if(!posts.length){ wrap.innerHTML = '<div style="font-size:13px;color:var(--muted2);">No posts yet.</div>'; return; }
+  wrap.innerHTML = posts.map(function(p){
+    var isPrem = p.summary && /^\[PREMIUM(:\d+)?\]/.test(p.summary);
+    var dispSum = isPrem ? p.summary.replace(/^\[PREMIUM(:\d+)?\]\s*/,'') : (p.summary||'');
+    var catClass = 'cat-' + (p.category||'default');
+    return '<div class="dash-post-item" onclick="loadDetail(\''+p.id+'\',\''+p.category+'\');">'
+      +'<span class="dash-post-cat '+catClass+'">'+(p.category||'post').toUpperCase()+'</span>'
+      +'<div style="flex:1;min-width:0;">'
+      +'<div class="dash-post-title">'+esc(p.title)+(isPrem?'<span class="dash-post-prem">&#128274; Premium</span>':'')+'</div>'
+      +'<div class="dash-post-meta">'+fmtDate(p.created_at)+(dispSum?'&nbsp;&middot;&nbsp;'+esc(dispSum.slice(0,60))+(dispSum.length>60?'...':''):'')+'</div>'
+      +'</div></div>';
+  }).join('');
+}
+
+async function loadDashSentiment(){
+  var wrap = document.getElementById('dash-sentiment-mini');
+  if(!wrap) return;
+  var weekKey = getSentWeekKey();
+  var r = await sb.from('sentiment_votes').select('commodity,direction').eq('week_key',weekKey);
+  var votes = r.data || [];
+  var dmVotes = document.getElementById('dm-votes');
+  if(dmVotes) dmVotes.textContent = votes.length;
+  var tally = {};
+  ['Wheat','Corn','Soybeans','Canola','Palm Oil'].forEach(function(c){ tally[c]={bull:0,neutral:0,bear:0,total:0}; });
+  votes.forEach(function(v){ if(tally[v.commodity]){ tally[v.commodity][v.direction]++; tally[v.commodity].total++; } });
+  // Top sentiment for metric tile
+  var topComm = 'No data'; var topDir = '--'; var topPct = 0;
+  ['Wheat','Corn','Soybeans','Canola','Palm Oil'].forEach(function(c){
+    var t = tally[c];
+    if(t.total > 0){
+      var dom = t.bull>=t.bear&&t.bull>=t.neutral?'bull':t.bear>=t.bull&&t.bear>=t.neutral?'bear':'neutral';
+      var pct = Math.round(t[dom]/t.total*100);
+      if(pct > topPct){ topPct=pct; topComm=c; topDir=dom; }
+    }
+  });
+  var dmTop = document.getElementById('dm-top-sent');
+  if(dmTop){
+    var col = topDir==='bull'?'#22c55e':topDir==='bear'?'var(--coral)':'var(--muted)';
+    dmTop.innerHTML = '<span style="color:'+col+';">'+(topDir==='bull'?'&#9650;':topDir==='bear'?'&#9660;':'&#9644;')+' '+topComm+'</span>';
+  }
+  if(!votes.length){
+    wrap.innerHTML = '<div style="font-size:13px;color:var(--muted2);padding:8px 0;">No votes this week yet. <span style="color:var(--blue);cursor:pointer;" onclick="showTab(\'sentiment\')">Cast yours &rarr;</span></div>';
+    return;
+  }
+  wrap.innerHTML = ['Wheat','Corn','Soybeans','Canola','Palm Oil'].map(function(c){
+    var t = tally[c];
+    var bPct = t.total ? Math.round(t.bull/t.total*100) : 0;
+    var nPct = t.total ? Math.round(t.neutral/t.total*100) : 0;
+    var rPct = t.total ? 100-bPct-nPct : 0;
+    var dom = t.bull>=t.bear&&t.bull>=t.neutral?'bull':t.bear>=t.bull&&t.bear>=t.neutral?'bear':'neutral';
+    var domCol = dom==='bull'?'#22c55e':dom==='bear'?'var(--coral)':'var(--muted)';
+    var domPct = dom==='bull'?bPct:dom==='bear'?rPct:nPct;
+    return '<div class="dash-sent-row">'
+      +'<span class="dash-sent-name">'+c+'</span>'
+      +'<div class="dash-sent-bar">'
+      +(bPct?'<div class="dsb-bull" style="width:'+bPct+'%"></div>':'')
+      +(nPct?'<div class="dsb-neutral" style="width:'+nPct+'%"></div>':'')
+      +(rPct?'<div class="dsb-bear" style="width:'+rPct+'%"></div>':'')
+      +'</div>'
+      +'<span class="dash-sent-dir" style="color:'+domCol+';">'+domPct+'%</span>'
+      +'</div>';
+  }).join('');
+}
+
+async function loadDashPriceCalls(){
+  var wrap = document.getElementById('dash-price-calls');
+  if(!wrap) return;
+  var r = await sb.from('price_calls').select('commodity,direction,target_price,timeframe,created_at').order('created_at',{ascending:false}).limit(5);
+  var calls = r.data || [];
+  if(!calls.length){ wrap.innerHTML = '<div style="font-size:13px;color:var(--muted2);">No price calls yet. <span style="color:var(--blue);cursor:pointer;" onclick="showTab(\'sentiment\')">Submit the first &rarr;</span></div>'; return; }
+  var icons = {bull:'&#9650;',neutral:'&#9644;',bear:'&#9660;'};
+  var cols  = {bull:'#22c55e',neutral:'var(--muted)',bear:'var(--coral)'};
+  wrap.innerHTML = calls.map(function(c){
+    return '<div class="dash-activity-item">'
+      +'<div class="dash-activity-dot" style="background:'+cols[c.direction||'neutral']+';"></div>'
+      +'<div class="dash-activity-text">'
+      +'<strong>'+esc(c.commodity)+'</strong> &mdash; '
+      +'<span style="color:'+cols[c.direction||'neutral']+';">'+icons[c.direction||'neutral']+' '+(c.direction||'').toUpperCase()+'</span>'
+      +(c.target_price?'&nbsp;&nbsp;<span style="font-family:\'DM Mono\',monospace;font-size:10px;color:var(--gold2);">'+c.target_price+'</span>':'')
+      +(c.timeframe?'&nbsp;&middot;&nbsp;<span style="font-size:11px;color:var(--muted2);">'+esc(c.timeframe)+'</span>':'')
+      +'</div>'
+      +'<span class="dash-activity-time">'+fmtDate(c.created_at)+'</span>'
+      +'</div>';
+  }).join('');
+}
+
+async function loadDashCftc(){
+  var wrap = document.getElementById('dash-cftc-snap');
+  if(!wrap) return;
+  var r = await sb.from('posts').select('id,title,summary,created_at').eq('category','cftc').order('created_at',{ascending:false}).limit(1);
+  var latest = r.data && r.data[0];
+  if(!latest){ wrap.innerHTML = '<div style="font-size:13px;color:var(--muted2);">No CFTC data posted yet.</div>'; return; }
+  var disp = (latest.summary||'').replace(/^\[PREMIUM(:\d+)?\]\s*/,'');
+  wrap.innerHTML = '<div style="font-size:12px;color:var(--muted2);font-family:\'DM Mono\',monospace;margin-bottom:10px;">Latest CFTC post &mdash; '+fmtDate(latest.created_at)+'</div>'
+    +'<div style="font-size:14px;color:var(--text);font-weight:500;margin-bottom:8px;line-height:1.4;">'+esc(latest.title)+'</div>'
+    +(disp?'<div style="font-size:13px;color:var(--muted);line-height:1.6;margin-bottom:14px;">'+esc(disp.slice(0,140))+(disp.length>140?'...':'')+'</div>':'')
+    +'<span style="font-family:\'DM Mono\',monospace;font-size:10px;color:var(--blue);cursor:pointer;" onclick="loadDetail(\''+latest.id+'\',\'cftc\')">Read full report &rarr;</span>';
+}
+
+async function loadDashMetrics(){
+  // already populated inline in other functions -- just placeholder for future expansion
 }
 
 boot();
