@@ -104,11 +104,11 @@
 
     /* Centred logo on the dividing line — no box */
     .auth-center-logo {
-      position:absolute; left:50%; top:36px; transform:translateX(-50%);
-      z-index:20; display:flex; flex-direction:column; align-items:center; gap:10px;
+      position:absolute; left:50%; top:28px; transform:translateX(-50%);
+      z-index:20; display:flex; flex-direction:row; align-items:center; gap:16px;
       white-space:nowrap;
     }
-    .auth-center-logo img { width:56px; height:56px; object-fit:contain; border-radius:8px; }
+    .auth-center-logo img { width:72px; height:72px; object-fit:contain; border-radius:10px; }
     .auth-center-logo-name {
       font-family:'DM Serif Display',serif; font-size:18px; color:var(--text);
       text-align:center; line-height:1.2; letter-spacing:0.01em;
@@ -924,7 +924,10 @@ padding:2px 8px;border-radius:3px;margin-bottom:6px;letter-spacing:0.06em;text-t
   <!-- CENTRED LOGO — sits on the dividing line -->
   <div class="auth-center-logo">
     <img src="https://i.ibb.co/PZPZGP71/IMG-2924.jpg" alt="JHD">
-    <div class="auth-center-logo-name">JHD <span>Commodity Advisors</span></div>
+    <div>
+      <div style="font-family:'DM Serif Display',serif;font-size:32px;color:var(--text);letter-spacing:-0.01em;line-height:1.1;">The <span style="color:var(--gold);">Bushel</span></div>
+      <div style="font-family:'DM Mono',monospace;font-size:10px;color:var(--muted2);text-transform:uppercase;letter-spacing:0.14em;margin-top:5px;">by JHD Commodity Advisors</div>
+    </div>
   </div>
 
   <!-- LEFT — brand and pitch -->
@@ -1066,7 +1069,7 @@ padding:2px 8px;border-radius:3px;margin-bottom:6px;letter-spacing:0.06em;text-t
       <button class="snav-btn" data-tab="commentary"          onclick="showTab('commentary')">Commentary</button>
       <button class="snav-btn" data-tab="research"          onclick="showTab('research')">Research</button>
       <button class="snav-btn" data-tab="cftc"              onclick="showTab('cftc')">CFTC</button>
-      <button class="snav-btn" data-tab="futures"           onclick="showTab('futures')">Futures</button>
+      <button class="snav-btn" data-tab="futures"           onclick="showTab('futures')">Global Markets</button>
       <button class="snav-btn" data-tab="exports"           onclick="showTab('exports')">Exports</button>
       <button class="snav-btn" data-tab="wasde"             onclick="showTab('wasde')">WASDE</button>
       <button class="snav-btn" data-tab="commoditymap"      onclick="showTab('commoditymap')">Commodity Map</button>
@@ -1213,20 +1216,77 @@ padding:2px 8px;border-radius:3px;margin-bottom:6px;letter-spacing:0.06em;text-t
 
   <!-- Futures -->
   <div id="tab-futures" class="hidden">
-    <div class="futures-wrap">
-      <div class="futures-heading">
-        <h2>Futures Price Quotes</h2>
-        <p>Agricultural commodities, energy, metals &amp; key commodity currencies — prices delayed 10–15 min</p>
+    <div class="page-wrap">
+      <div class="page-heading">
+        <h2>Global Markets</h2>
+        <p>Major equity indices, FX, energy and metals — live prices via TradingView</p>
       </div>
-      <div class="tv-widget-wrap">
+
+      <!-- Ticker tape -->
+      <div style="margin-bottom:24px;border-radius:8px;overflow:hidden;border:1px solid var(--border);">
         <div class="tradingview-widget-container">
           <div class="tradingview-widget-container__widget"></div>
-          <script type="text/javascript" src="https://s3.tradingview.com/external-embedding/embed-widget-market-overview.js">
-          {"colorTheme":"dark","dateRange":"1D","showChart":true,"locale":"en","largeChartUrl":"","isTransparent":true,"showSymbolLogo":false,"showFloatingTooltip":false,"width":"100%","height":660,"plotLineColorGrowing":"rgba(74,158,255,1)","plotLineColorFalling":"rgba(255,107,74,1)","gridLineColor":"rgba(255,255,255,0.06)","scaleFontColor":"rgba(232,234,240,0.9)","belowLineFillColorGrowing":"rgba(74,158,255,0.1)","belowLineFillColorFalling":"rgba(255,107,74,0.1)","belowLineFillColorGrowingBottom":"rgba(74,158,255,0)","belowLineFillColorFallingBottom":"rgba(255,107,74,0)","symbolActiveColor":"rgba(74,158,255,0.1)","tabs":[{"title":"Grains","symbols":[{"s":"CBOT:ZC1!","d":"Corn"},{"s":"CBOT:ZW1!","d":"SRW Wheat (Chicago)"},{"s":"CBOT:KE1!","d":"HRW Wheat (KC)"},{"s":"EURONEXT:EBM1!","d":"Milling Wheat (Euronext)"},{"s":"CBOT:ZO1!","d":"Oats"},{"s":"CBOT:ZR1!","d":"Rough Rice"}],"originalTitle":"Grains"},{"title":"Oilseeds","symbols":[{"s":"CBOT:ZS1!","d":"Soybeans"},{"s":"CBOT:ZM1!","d":"Soybean Meal"},{"s":"CBOT:ZL1!","d":"Soybean Oil"},{"s":"ICEEUR:ICA1!","d":"Canola (ICE)"},{"s":"BMD:FCPO1!","d":"Palm Oil (Bursa)"}],"originalTitle":"Oilseeds"},{"title":"Softs","symbols":[{"s":"ICE:SB1!","d":"Sugar #11"},{"s":"ICE:KC1!","d":"Coffee C"},{"s":"ICE:CT1!","d":"Cotton #2"},{"s":"ICE:CC1!","d":"Cocoa"}],"originalTitle":"Softs"},{"title":"Energy & Metals","symbols":[{"s":"NYMEX:CL1!","d":"WTI Crude Oil"},{"s":"ICEEUR:B1!","d":"Brent Crude"},{"s":"COMEX:GC1!","d":"Gold"},{"s":"COMEX:SI1!","d":"Silver"}],"originalTitle":"Energy & Metals"},{"title":"Currencies","symbols":[{"s":"FX:EURUSD","d":"EUR/USD"},{"s":"FX:AUDUSD","d":"AUD/USD"},{"s":"FX:USDCAD","d":"USD/CAD"},{"s":"FX:USDBRL","d":"USD/BRL"},{"s":"FX:USDRUB","d":"USD/RUB"},{"s":"TVC:DXY","d":"DXY (USD Index)"}],"originalTitle":"Currencies"}]}
+          <script type="text/javascript" src="https://s3.tradingview.com/external-embedding/embed-widget-ticker-tape.js">
+          {"symbols":[
+            {"proName":"FOREXCOM:SPXUSD","title":"S&P 500"},
+            {"proName":"FOREXCOM:NSXUSD","title":"Nasdaq 100"},
+            {"proName":"FOREXCOM:DJI","title":"Dow Jones"},
+            {"description":"FTSE 100","proName":"FOREXCOM:UKXGBP"},
+            {"description":"DAX","proName":"XETR:DAX"},
+            {"description":"DXY","proName":"TVC:DXY"},
+            {"description":"EUR/USD","proName":"FX:EURUSD"},
+            {"description":"GBP/USD","proName":"FX:GBPUSD"},
+            {"description":"USD/BRL","proName":"FX:USDBRL"},
+            {"description":"WTI Crude","proName":"NYMEX:CL1!"},
+            {"description":"Brent Crude","proName":"ICEEUR:B1!"},
+            {"description":"Gold","proName":"COMEX:GC1!"},
+            {"description":"Natural Gas","proName":"NYMEX:NG1!"}
+          ],"showSymbolLogo":true,"isTransparent":true,"displayMode":"adaptive","colorTheme":"dark","locale":"en"}
           </script>
         </div>
       </div>
-      <p style="font-size:12px;color:var(--muted);text-align:center;padding-top:8px;">Data provided by TradingView · Prices delayed 10–15 minutes</p>
+
+      <!-- Equity Indices -->
+      <div style="font-family:'DM Mono',monospace;font-size:9px;text-transform:uppercase;letter-spacing:0.16em;color:var(--muted2);margin-bottom:12px;padding-bottom:8px;border-bottom:1px solid var(--border);">Equity Indices</div>
+      <div style="display:grid;grid-template-columns:repeat(4,1fr);gap:12px;margin-bottom:28px;">
+        <div class="tradingview-widget-container"><div class="tradingview-widget-container__widget"></div><script type="text/javascript" src="https://s3.tradingview.com/external-embedding/embed-widget-mini-symbol-overview.js">{"symbol":"FOREXCOM:SPXUSD","width":"100%","height":160,"locale":"en","dateRange":"1D","colorTheme":"dark","isTransparent":true,"autosize":true,"largeChartUrl":""}</script></div>
+        <div class="tradingview-widget-container"><div class="tradingview-widget-container__widget"></div><script type="text/javascript" src="https://s3.tradingview.com/external-embedding/embed-widget-mini-symbol-overview.js">{"symbol":"FOREXCOM:NSXUSD","width":"100%","height":160,"locale":"en","dateRange":"1D","colorTheme":"dark","isTransparent":true,"autosize":true}</script></div>
+        <div class="tradingview-widget-container"><div class="tradingview-widget-container__widget"></div><script type="text/javascript" src="https://s3.tradingview.com/external-embedding/embed-widget-mini-symbol-overview.js">{"symbol":"FOREXCOM:UKXGBP","width":"100%","height":160,"locale":"en","dateRange":"1D","colorTheme":"dark","isTransparent":true,"autosize":true}</script></div>
+        <div class="tradingview-widget-container"><div class="tradingview-widget-container__widget"></div><script type="text/javascript" src="https://s3.tradingview.com/external-embedding/embed-widget-mini-symbol-overview.js">{"symbol":"XETR:DAX","width":"100%","height":160,"locale":"en","dateRange":"1D","colorTheme":"dark","isTransparent":true,"autosize":true}</script></div>
+      </div>
+
+      <!-- FX -->
+      <div style="font-family:'DM Mono',monospace;font-size:9px;text-transform:uppercase;letter-spacing:0.16em;color:var(--muted2);margin-bottom:12px;padding-bottom:8px;border-bottom:1px solid var(--border);">FX &amp; Dollar Index</div>
+      <div style="display:grid;grid-template-columns:repeat(4,1fr);gap:12px;margin-bottom:28px;">
+        <div class="tradingview-widget-container"><div class="tradingview-widget-container__widget"></div><script type="text/javascript" src="https://s3.tradingview.com/external-embedding/embed-widget-mini-symbol-overview.js">{"symbol":"TVC:DXY","width":"100%","height":160,"locale":"en","dateRange":"1D","colorTheme":"dark","isTransparent":true,"autosize":true}</script></div>
+        <div class="tradingview-widget-container"><div class="tradingview-widget-container__widget"></div><script type="text/javascript" src="https://s3.tradingview.com/external-embedding/embed-widget-mini-symbol-overview.js">{"symbol":"FX:EURUSD","width":"100%","height":160,"locale":"en","dateRange":"1D","colorTheme":"dark","isTransparent":true,"autosize":true}</script></div>
+        <div class="tradingview-widget-container"><div class="tradingview-widget-container__widget"></div><script type="text/javascript" src="https://s3.tradingview.com/external-embedding/embed-widget-mini-symbol-overview.js">{"symbol":"FX:GBPUSD","width":"100%","height":160,"locale":"en","dateRange":"1D","colorTheme":"dark","isTransparent":true,"autosize":true}</script></div>
+        <div class="tradingview-widget-container"><div class="tradingview-widget-container__widget"></div><script type="text/javascript" src="https://s3.tradingview.com/external-embedding/embed-widget-mini-symbol-overview.js">{"symbol":"FX:USDBRL","width":"100%","height":160,"locale":"en","dateRange":"1D","colorTheme":"dark","isTransparent":true,"autosize":true}</script></div>
+        <div class="tradingview-widget-container"><div class="tradingview-widget-container__widget"></div><script type="text/javascript" src="https://s3.tradingview.com/external-embedding/embed-widget-mini-symbol-overview.js">{"symbol":"FX:USDCAD","width":"100%","height":160,"locale":"en","dateRange":"1D","colorTheme":"dark","isTransparent":true,"autosize":true}</script></div>
+        <div class="tradingview-widget-container"><div class="tradingview-widget-container__widget"></div><script type="text/javascript" src="https://s3.tradingview.com/external-embedding/embed-widget-mini-symbol-overview.js">{"symbol":"FX:AUDUSD","width":"100%","height":160,"locale":"en","dateRange":"1D","colorTheme":"dark","isTransparent":true,"autosize":true}</script></div>
+        <div class="tradingview-widget-container"><div class="tradingview-widget-container__widget"></div><script type="text/javascript" src="https://s3.tradingview.com/external-embedding/embed-widget-mini-symbol-overview.js">{"symbol":"FX:USDRUB","width":"100%","height":160,"locale":"en","dateRange":"1D","colorTheme":"dark","isTransparent":true,"autosize":true}</script></div>
+        <div class="tradingview-widget-container"><div class="tradingview-widget-container__widget"></div><script type="text/javascript" src="https://s3.tradingview.com/external-embedding/embed-widget-mini-symbol-overview.js">{"symbol":"FX:USDCNH","width":"100%","height":160,"locale":"en","dateRange":"1D","colorTheme":"dark","isTransparent":true,"autosize":true}</script></div>
+      </div>
+
+      <!-- Energy -->
+      <div style="font-family:'DM Mono',monospace;font-size:9px;text-transform:uppercase;letter-spacing:0.16em;color:var(--muted2);margin-bottom:12px;padding-bottom:8px;border-bottom:1px solid var(--border);">Energy</div>
+      <div style="display:grid;grid-template-columns:repeat(4,1fr);gap:12px;margin-bottom:28px;">
+        <div class="tradingview-widget-container"><div class="tradingview-widget-container__widget"></div><script type="text/javascript" src="https://s3.tradingview.com/external-embedding/embed-widget-mini-symbol-overview.js">{"symbol":"NYMEX:CL1!","width":"100%","height":160,"locale":"en","dateRange":"1D","colorTheme":"dark","isTransparent":true,"autosize":true}</script></div>
+        <div class="tradingview-widget-container"><div class="tradingview-widget-container__widget"></div><script type="text/javascript" src="https://s3.tradingview.com/external-embedding/embed-widget-mini-symbol-overview.js">{"symbol":"ICEEUR:B1!","width":"100%","height":160,"locale":"en","dateRange":"1D","colorTheme":"dark","isTransparent":true,"autosize":true}</script></div>
+        <div class="tradingview-widget-container"><div class="tradingview-widget-container__widget"></div><script type="text/javascript" src="https://s3.tradingview.com/external-embedding/embed-widget-mini-symbol-overview.js">{"symbol":"NYMEX:NG1!","width":"100%","height":160,"locale":"en","dateRange":"1D","colorTheme":"dark","isTransparent":true,"autosize":true}</script></div>
+        <div class="tradingview-widget-container"><div class="tradingview-widget-container__widget"></div><script type="text/javascript" src="https://s3.tradingview.com/external-embedding/embed-widget-mini-symbol-overview.js">{"symbol":"NYMEX:RB1!","width":"100%","height":160,"locale":"en","dateRange":"1D","colorTheme":"dark","isTransparent":true,"autosize":true}</script></div>
+      </div>
+
+      <!-- Metals -->
+      <div style="font-family:'DM Mono',monospace;font-size:9px;text-transform:uppercase;letter-spacing:0.16em;color:var(--muted2);margin-bottom:12px;padding-bottom:8px;border-bottom:1px solid var(--border);">Metals</div>
+      <div style="display:grid;grid-template-columns:repeat(4,1fr);gap:12px;margin-bottom:20px;">
+        <div class="tradingview-widget-container"><div class="tradingview-widget-container__widget"></div><script type="text/javascript" src="https://s3.tradingview.com/external-embedding/embed-widget-mini-symbol-overview.js">{"symbol":"COMEX:GC1!","width":"100%","height":160,"locale":"en","dateRange":"1D","colorTheme":"dark","isTransparent":true,"autosize":true}</script></div>
+        <div class="tradingview-widget-container"><div class="tradingview-widget-container__widget"></div><script type="text/javascript" src="https://s3.tradingview.com/external-embedding/embed-widget-mini-symbol-overview.js">{"symbol":"COMEX:SI1!","width":"100%","height":160,"locale":"en","dateRange":"1D","colorTheme":"dark","isTransparent":true,"autosize":true}</script></div>
+        <div class="tradingview-widget-container"><div class="tradingview-widget-container__widget"></div><script type="text/javascript" src="https://s3.tradingview.com/external-embedding/embed-widget-mini-symbol-overview.js">{"symbol":"COMEX:HG1!","width":"100%","height":160,"locale":"en","dateRange":"1D","colorTheme":"dark","isTransparent":true,"autosize":true}</script></div>
+        <div class="tradingview-widget-container"><div class="tradingview-widget-container__widget"></div><script type="text/javascript" src="https://s3.tradingview.com/external-embedding/embed-widget-mini-symbol-overview.js">{"symbol":"NYMEX:PL1!","width":"100%","height":160,"locale":"en","dateRange":"1D","colorTheme":"dark","isTransparent":true,"autosize":true}</script></div>
+      </div>
+
+      <p style="font-size:11px;color:var(--muted2);font-family:'DM Mono',monospace;text-align:center;padding-top:8px;">Data provided by TradingView &middot; Prices delayed 10&ndash;15 minutes &middot; Not investment advice</p>
     </div>
   </div>
 
@@ -1960,10 +2020,11 @@ padding:2px 8px;border-radius:3px;margin-bottom:6px;letter-spacing:0.06em;text-t
   </header>
   <div class="admin-wrap">
     <div class="admin-tab-row">
-      <button class="tab-btn active" id="wtab"  onclick="switchAdminTab('write')">✏ New Post</button>
-      <button class="tab-btn"        id="ptab"  onclick="switchAdminTab('posts')">📋 Manage Posts</button>
-      <button class="tab-btn"        id="mtab"  onclick="switchAdminTab('mod')">💬 Moderate Comments</button>
-      <button class="tab-btn"        id="stab"  onclick="switchAdminTab('subs')">👥 Subscribers</button>
+      <button class="tab-btn active" id="wtab"  onclick="switchAdminTab('write')">&#9998; New Post</button>
+      <button class="tab-btn"        id="ptab"  onclick="switchAdminTab('posts')">&#128203; Manage Posts</button>
+      <button class="tab-btn"        id="mtab"  onclick="switchAdminTab('mod')">&#128172; Moderate Comments</button>
+      <button class="tab-btn"        id="stab"  onclick="switchAdminTab('subs')">&#128101; Subscribers</button>
+      <button class="tab-btn"        id="itab"  onclick="switchAdminTab('import')">&#128196; PDF Import</button>
     </div>
 
     <!-- New Post -->
@@ -2057,6 +2118,39 @@ padding:2px 8px;border-radius:3px;margin-bottom:6px;letter-spacing:0.06em;text-t
         </table>
       </div>
     </div>
+
+    <!-- PDF IMPORT PANEL -->
+    <div id="admin-import" class="hidden">
+      <div class="section-h2">PDF Archive Import</div>
+      <p style="font-size:14px;color:var(--muted);line-height:1.7;margin-bottom:24px;max-width:640px;">Drop your archive PDFs below. Each file will be read and converted to a styled HTML market comment using AI — matching the JHD comment format. Review each result, adjust the date and category, then publish directly. Up to 5 files at a time.</p>
+
+      <div id="pdf-dropzone" style="border:2px dashed var(--border2);border-radius:10px;padding:40px;text-align:center;cursor:pointer;margin-bottom:24px;transition:border-color 0.2s;"
+        ondragover="event.preventDefault();this.style.borderColor='var(--blue)';"
+        ondragleave="this.style.borderColor='var(--border2)';"
+        ondrop="handlePdfDrop(event)"
+        onclick="document.getElementById('pdf-file-input').click()">
+        <div style="font-size:32px;margin-bottom:10px;">&#128196;</div>
+        <div style="font-family:'DM Mono',monospace;font-size:11px;color:var(--muted);text-transform:uppercase;letter-spacing:0.1em;margin-bottom:6px;">Drop PDF files here or click to browse</div>
+        <div style="font-family:'DM Mono',monospace;font-size:9px;color:var(--muted2);">PDF format only &middot; Up to 5 files at once &middot; Max 10MB each</div>
+        <input type="file" id="pdf-file-input" accept=".pdf" multiple style="display:none;" onchange="handlePdfSelect(this.files)">
+      </div>
+
+      <div id="pdf-queue" style="display:none;margin-bottom:24px;">
+        <div style="font-family:'DM Mono',monospace;font-size:9px;text-transform:uppercase;letter-spacing:0.12em;color:var(--muted2);margin-bottom:12px;padding-bottom:6px;border-bottom:1px solid var(--border);">Import Queue</div>
+        <div id="pdf-queue-list" style="display:flex;flex-direction:column;gap:10px;"></div>
+        <div style="margin-top:16px;display:flex;gap:10px;align-items:center;flex-wrap:wrap;">
+          <button class="btn btn-navy" id="pdf-process-btn" onclick="processPdfQueue()" style="padding:10px 24px;">&#9654; Convert All with AI</button>
+          <button class="btn btn-ghost" onclick="clearPdfQueue()" style="padding:10px 18px;">Clear Queue</button>
+          <div id="pdf-queue-msg" class="hidden msg-box" style="flex:1;margin:0;font-size:11px;"></div>
+        </div>
+      </div>
+
+      <div id="pdf-results" style="display:none;">
+        <div style="font-family:'DM Mono',monospace;font-size:9px;text-transform:uppercase;letter-spacing:0.12em;color:var(--muted2);margin-bottom:16px;padding-bottom:6px;border-bottom:1px solid var(--border);">Converted Posts &mdash; Review &amp; Publish</div>
+        <div id="pdf-results-list" style="display:flex;flex-direction:column;gap:24px;"></div>
+      </div>
+    </div>
+
   </div>
 </div>
 
@@ -2068,7 +2162,7 @@ padding:2px 8px;border-radius:3px;margin-bottom:6px;letter-spacing:0.06em;text-t
 var sb, currentUser, isAdmin=false, currentPostId=null, currentPostTab=null, quill=null, editorMode='visual';
 var allSubs=[];
 
-var POST_TABS=['commentary','research','cftc','exports','wasde','commoditymap','weather','options','fob','freight'];
+var POST_TABS=['commentary','research','cftc','wasde','commoditymap','weather','options','fob','freight'];
 var ADMIN_EMAIL_LC = ADMIN_EMAIL.toLowerCase();
 
 
@@ -2445,13 +2539,13 @@ function showTab(name){
   ['dashboard','commentary','research','cftc','futures','services','contact','about','detail','exports','wasde','commoditymap','weather','options','fob','freight','technicals','profile','sentiment']
     .forEach(function(t){ document.getElementById('tab-'+t).classList.add('hidden'); });
   document.getElementById('tab-'+name).classList.remove('hidden');
-  document.querySelectorAll('.snav-btn').forEach(function(b){ b.classList.toggle('active', b.dataset.tab===name);
-  if(name === 'exports') loadExportSales(false);
-  if(name === 'freight') loadFreightDashboard(false); });
+  document.querySelectorAll('.snav-btn').forEach(function(b){ b.classList.toggle('active', b.dataset.tab===name); });
+  if(name === 'exports')    loadExportSales(false);
+  if(name === 'freight')    loadFreightDashboard(false);
   if(POST_TABS.indexOf(name) > -1) loadPosts(name);
-  if(name==='technicals') loadTACharts();
-  if(name==='sentiment') loadSentimentTab();
-  if(name==='dashboard') loadDashboard();
+  if(name==='technicals')   loadTACharts();
+  if(name==='sentiment')    loadSentimentTab();
+  if(name==='dashboard')    loadDashboard();
 }
 
 /* ===== AUTH ===== */
@@ -2693,14 +2787,14 @@ function initQuill(){
   quill=new Quill('#quill-editor',{theme:'snow',modules:{toolbar:[[{header:[1,2,3,false]}],['bold','italic','underline'],[{list:'ordered'},{list:'bullet'}],['link','blockquote'],[{color:[]}],['clean']]},placeholder:'Write your post here...'});
 }
 function switchAdminTab(t){
-  ['write','posts','mod','subs'].forEach(function(x){
+  ['write','posts','mod','subs','import'].forEach(function(x){
     document.getElementById('admin-'+x).classList.toggle('hidden',x!==t);
-    var btnId = x==='write'?'wtab':x==='posts'?'ptab':x==='mod'?'mtab':'stab';
+    var btnId = x==='write'?'wtab':x==='posts'?'ptab':x==='mod'?'mtab':x==='subs'?'stab':'itab';
     document.getElementById(btnId).classList.toggle('active',x===t);
   });
-  if(t==='mod') loadAllComments();
-  if(t==='subs') loadSubscribers();
-  if(t==='posts') loadManagePosts();
+  if(t==='mod')    loadAllComments();
+  if(t==='subs')   loadSubscribers();
+  if(t==='posts')  loadManagePosts();
 }
 async function publishPost(){
   var title = document.getElementById('p-title').value.trim();
@@ -3264,13 +3358,6 @@ var _selectedCropCond = null;
 var _selectedDirection = null;
 var _sentWeekKey = null;
 
-function getSentWeekKey(){
-  var now = new Date();
-  var startOfYear = new Date(now.getFullYear(), 0, 1);
-  var week = Math.ceil(((now - startOfYear) / 86400000 + startOfYear.getDay() + 1) / 7);
-  return now.getFullYear() + '-W' + String(week).padStart(2,'0');
-}
-
 async function loadSentimentTab(){
   _sentWeekKey = getSentWeekKey();
   document.getElementById('sent-week-label').textContent = 'Week ' + _sentWeekKey;
@@ -3467,6 +3554,13 @@ async function creditBushels(amount, reason){
 }
 
 /* ===== DASHBOARD ===== */
+function getSentWeekKey(){
+  var now = new Date();
+  var startOfYear = new Date(now.getFullYear(), 0, 1);
+  var week = Math.ceil(((now - startOfYear) / 86400000 + startOfYear.getDay() + 1) / 7);
+  return now.getFullYear() + '-W' + String(week).padStart(2,'0');
+}
+
 async function loadDashboard(){
   setDashWelcome();
   await Promise.all([
@@ -3636,6 +3730,235 @@ async function loadDashCftc(){
 
 async function loadDashMetrics(){
   // already populated inline in other functions -- just placeholder for future expansion
+}
+
+/* ===== PDF ARCHIVE IMPORT ===== */
+var _pdfQueue = [];
+
+function handlePdfDrop(e){
+  e.preventDefault();
+  document.getElementById('pdf-dropzone').style.borderColor = 'var(--border2)';
+  var files = e.dataTransfer.files;
+  addFilesToQueue(files);
+}
+function handlePdfSelect(files){ addFilesToQueue(files); }
+
+function addFilesToQueue(files){
+  var added = 0;
+  for(var i=0;i<files.length;i++){
+    if(_pdfQueue.length >= 5){ alert('Maximum 5 files at a time. Process the current batch first.'); break; }
+    var f = files[i];
+    if(f.type !== 'application/pdf'){ alert(f.name + ' is not a PDF -- skipping.'); continue; }
+    if(f.size > 10 * 1024 * 1024){ alert(f.name + ' is over 10MB -- skipping.'); continue; }
+    _pdfQueue.push({file:f, id:'pdf-'+Date.now()+'-'+i, status:'queued', result:null});
+    added++;
+  }
+  if(added > 0) renderPdfQueue();
+}
+
+function renderPdfQueue(){
+  var wrap = document.getElementById('pdf-queue');
+  var list = document.getElementById('pdf-queue-list');
+  if(!_pdfQueue.length){ wrap.style.display='none'; return; }
+  wrap.style.display='block';
+  list.innerHTML = _pdfQueue.map(function(item){
+    var statusColor = item.status==='done'?'var(--teal)':item.status==='error'?'var(--coral)':item.status==='processing'?'var(--blue)':'var(--muted2)';
+    var statusIcon  = item.status==='done'?'&#10003;':item.status==='error'?'&#10007;':item.status==='processing'?'&#8987;':'&#9679;';
+    return '<div style="display:flex;align-items:center;gap:14px;background:var(--card2);border:1px solid var(--border);border-radius:7px;padding:12px 16px;">'
+      +'<span style="font-size:18px;">&#128196;</span>'
+      +'<div style="flex:1;min-width:0;">'
+      +'<div style="font-family:\'DM Mono\',monospace;font-size:11px;color:var(--text);white-space:nowrap;overflow:hidden;text-overflow:ellipsis;">'+esc(item.file.name)+'</div>'
+      +'<div style="font-family:\'DM Mono\',monospace;font-size:9px;color:var(--muted2);margin-top:2px;">'+(item.file.size/1024).toFixed(0)+' KB</div>'
+      +'</div>'
+      +'<span style="font-family:\'DM Mono\',monospace;font-size:10px;color:'+statusColor+';flex-shrink:0;">'+statusIcon+' '+item.status.toUpperCase()+'</span>'
+      +'<button onclick="removePdfItem(\''+item.id+'\')" style="background:none;border:none;color:var(--muted);font-size:16px;cursor:pointer;padding:0 4px;">&times;</button>'
+      +'</div>';
+  }).join('');
+}
+
+function removePdfItem(id){
+  _pdfQueue = _pdfQueue.filter(function(x){ return x.id !== id; });
+  renderPdfQueue();
+}
+function clearPdfQueue(){
+  _pdfQueue = [];
+  renderPdfQueue();
+  document.getElementById('pdf-results').style.display='none';
+  document.getElementById('pdf-results-list').innerHTML='';
+}
+
+async function processPdfQueue(){
+  if(!_pdfQueue.length) return;
+  var btn = document.getElementById('pdf-process-btn');
+  var msgEl = document.getElementById('pdf-queue-msg');
+  btn.disabled = true;
+  btn.textContent = 'Converting...';
+  msgEl.textContent = 'Reading PDFs and converting with AI -- this may take 30-60 seconds per file...';
+  msgEl.className = 'msg-box'; msgEl.classList.remove('hidden');
+
+  var resultsEl = document.getElementById('pdf-results');
+  var resultsList = document.getElementById('pdf-results-list');
+  resultsEl.style.display = 'block';
+
+  for(var i=0;i<_pdfQueue.length;i++){
+    var item = _pdfQueue[i];
+    if(item.status === 'done') continue;
+    item.status = 'processing';
+    renderPdfQueue();
+    try {
+      var text = await extractPdfText(item.file);
+      var html = await convertPdfToHtml(text, item.file.name);
+      item.status = 'done';
+      item.result = html;
+      renderPdfQueue();
+      appendPdfResult(item, resultsList);
+    } catch(e){
+      item.status = 'error';
+      item.error = e.message;
+      renderPdfQueue();
+      resultsList.insertAdjacentHTML('beforeend',
+        '<div style="background:rgba(255,107,74,0.08);border:1px solid rgba(255,107,74,0.2);border-radius:8px;padding:14px 18px;font-family:\'DM Mono\',monospace;font-size:11px;color:var(--coral);">'
+        +'&#10007; Failed: '+esc(item.file.name)+' &mdash; '+esc(e.message)+'</div>');
+    }
+  }
+
+  btn.disabled = false;
+  btn.textContent = '&#9654; Convert All with AI';
+  msgEl.textContent = 'All files processed. Review results below and publish.';
+  msgEl.className = 'msg-box msg-ok'; msgEl.classList.remove('hidden');
+}
+
+async function extractPdfText(file){
+  return new Promise(function(resolve, reject){
+    var reader = new FileReader();
+    reader.onload = function(e){
+      var base64 = e.target.result.split(',')[1];
+      resolve(base64);
+    };
+    reader.onerror = function(){ reject(new Error('Could not read file')); };
+    reader.readAsDataURL(file);
+  });
+}
+
+async function convertPdfToHtml(base64, filename){
+  var systemPrompt = 'You are a financial document formatter for JHD Commodity Advisors. Convert the provided agricultural market commentary PDF into clean HTML. '
+    + 'Output ONLY a complete HTML document with no markdown, no explanation, no code fences. '
+    + 'Use this exact color scheme as CSS variables: --bg:#0d0f12; --card:#141720; --card2:#1c2030; --gold:#ffb347; --gold2:#d4aa55; --blue:#4a9eff; --teal:#2ecfaa; --coral:#ff6b4a; --text:#e8eaf0; --muted:#8890a4; --muted2:#555f78; --border:rgba(255,255,255,0.08). '
+    + 'Fonts: DM Serif Display (headings), DM Mono (labels/data), DM Sans (body). Import from Google Fonts. '
+    + 'Structure: masthead with JHD logo (https://i.ibb.co/PZPZGP71/IMG-2924.jpg) and date, then body with sections for each commodity covered. '
+    + 'Use bullet points for market observations. Highlight key prices and percentage moves in gold (#d4aa55). '
+    + 'Include any futures prices or positioning data in a styled data table. '
+    + 'Dark background throughout. Professional, clean, readable. '
+    + 'Extract the date from the document and use it in the masthead. '
+    + 'Return ONLY the HTML document, nothing else.';
+
+  var resp = await fetch('https://api.anthropic.com/v1/messages', {
+    method: 'POST',
+    headers: {'Content-Type':'application/json'},
+    body: JSON.stringify({
+      model: 'claude-sonnet-4-20250514',
+      max_tokens: 4000,
+      system: systemPrompt,
+      messages: [{
+        role: 'user',
+        content: [{
+          type: 'document',
+          source: { type: 'base64', media_type: 'application/pdf', data: base64 }
+        },{
+          type: 'text',
+          text: 'Convert this market commentary PDF to styled HTML. File: ' + filename
+        }]
+      }]
+    })
+  });
+  if(!resp.ok){
+    var err = await resp.json().catch(function(){ return {}; });
+    throw new Error((err.error && err.error.message) || 'API error ' + resp.status);
+  }
+  var data = await resp.json();
+  var html = data.content && data.content[0] && data.content[0].text;
+  if(!html) throw new Error('No HTML returned from AI');
+  return html.replace(/^```html?\n?/,'').replace(/\n?```$/,'').trim();
+}
+
+function appendPdfResult(item, container){
+  var uid = 'result-' + item.id;
+  var guessedDate = guessDateFromFilename(item.file.name);
+  var div = document.createElement('div');
+  div.id = uid;
+  div.style.cssText = 'background:var(--card);border:1px solid var(--border2);border-radius:10px;overflow:hidden;';
+  div.innerHTML = '<div style="padding:16px 20px;border-bottom:1px solid var(--border);display:flex;align-items:center;justify-content:space-between;gap:12px;flex-wrap:wrap;">'
+    +'<div style="display:flex;align-items:center;gap:10px;">'
+    +'<span style="font-size:16px;">&#10003;</span>'
+    +'<div>'
+    +'<div style="font-family:\'DM Mono\',monospace;font-size:11px;color:var(--text);">'+esc(item.file.name)+'</div>'
+    +'<div style="font-family:\'DM Mono\',monospace;font-size:9px;color:var(--teal);margin-top:2px;">Converted successfully</div>'
+    +'</div></div>'
+    +'<div style="display:flex;gap:8px;align-items:center;flex-wrap:wrap;">'
+    +'<select id="cat-'+uid+'" style="background:var(--card2);border:1px solid var(--border2);color:var(--text);font-family:\'DM Mono\',monospace;font-size:11px;padding:6px 10px;border-radius:5px;">'
+    +'<option value="commentary">Commentary</option>'
+    +'<option value="research">Research</option>'
+    +'<option value="cftc">CFTC</option>'
+    +'<option value="wasde">WASDE</option>'
+    +'<option value="futures">Futures</option>'
+    +'</select>'
+    +'<input type="datetime-local" id="date-'+uid+'" value="'+guessedDate+'" style="background:var(--card2);border:1px solid var(--border2);color:var(--text);font-family:\'DM Mono\',monospace;font-size:11px;padding:6px 10px;border-radius:5px;">'
+    +'<button class="btn btn-ghost" style="padding:6px 14px;font-size:11px;" onclick="togglePdfPreview(\''+uid+'\')">Preview</button>'
+    +'<button class="btn btn-navy" style="padding:6px 14px;font-size:11px;" onclick="publishPdfResult(\''+uid+'\')">Publish</button>'
+    +'</div></div>'
+    +'<div id="preview-'+uid+'" style="display:none;border-top:1px solid var(--border);">'
+    +'<iframe style="width:100%;height:500px;border:none;" srcdoc="'+item.result.replace(/"/g,'&quot;')+'"></iframe>'
+    +'</div>'
+    +'<div id="pub-msg-'+uid+'" class="hidden msg-box" style="margin:10px 20px;font-size:11px;"></div>';
+  container.appendChild(div);
+  // Store html for publish
+  div._importHtml = item.result;
+  div._filename = item.file.name;
+}
+
+function togglePdfPreview(uid){
+  var el = document.getElementById('preview-'+uid);
+  if(el) el.style.display = el.style.display==='none' ? 'block' : 'none';
+}
+
+function guessDateFromFilename(name){
+  // Try to extract date from filename patterns like 18_02_2025, 18-02-2025, 2025-02-18
+  var m = name.match(/(\d{4})[_\-](\d{2})[_\-](\d{2})/) || name.match(/(\d{2})[_\-](\d{2})[_\-](\d{4})/);
+  if(m){
+    try {
+      var d = m[1].length===4 ? new Date(m[1]+'-'+m[2]+'-'+m[3]) : new Date(m[3]+'-'+m[2]+'-'+m[1]);
+      if(!isNaN(d)) return d.toISOString().slice(0,16);
+    } catch(e){}
+  }
+  return '';
+}
+
+async function publishPdfResult(uid){
+  var div = document.getElementById(uid);
+  if(!div) return;
+  var html = div._importHtml;
+  var filename = div._filename || 'Imported Commentary';
+  var cat = document.getElementById('cat-'+uid).value;
+  var dateVal = document.getElementById('date-'+uid).value;
+  var msgEl = document.getElementById('pub-msg-'+uid);
+  var title = filename.replace(/\.pdf$/i,'').replace(/[_\-]/g,' ').replace(/\b\w/g,function(c){ return c.toUpperCase(); });
+
+  msgEl.textContent = 'Publishing...';
+  msgEl.className = 'msg-box'; msgEl.classList.remove('hidden');
+
+  var insertData = {title:title, summary:'Imported from PDF archive', content:html, category:cat};
+  if(dateVal) insertData.created_at = new Date(dateVal).toISOString();
+  var r = await sb.from('posts').insert(insertData);
+  if(r.error){
+    msgEl.textContent = 'Error: ' + r.error.message;
+    msgEl.className = 'msg-box msg-error'; msgEl.classList.remove('hidden');
+    return;
+  }
+  msgEl.textContent = '&#10003; Published to ' + cat + '!';
+  msgEl.className = 'msg-box msg-ok'; msgEl.classList.remove('hidden');
+  // Disable publish button to prevent double-publish
+  var pubBtn = div.querySelector('button.btn-navy');
+  if(pubBtn){ pubBtn.disabled=true; pubBtn.textContent='Published'; }
 }
 
 boot();
