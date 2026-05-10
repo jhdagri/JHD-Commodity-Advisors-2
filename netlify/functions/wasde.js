@@ -1,30 +1,73 @@
+// netlify/functions/wasde.js
+// Proxy for USDA FAS PSD Online API
+// Uses https module (all Node versions), reflects null origin from srcdoc iframes
+
+const https = require('https');
+const url   = require('url');
+
 exports.handler = async (event) => {
-  const params = { ...event.queryStringParameters } || {};
-  const endpoint = params.endpoint || '';
-  delete params.endpoint;
 
-  // Pass API key as query parameter — USDA FAS requires this format
-  params.api_key = 'P89EyAIRlHSpwoTlvk5no6SjWqlsVQhgbZIf27sX';
-  const qs = new URLSearchParams(params).toString();
+  // Reflect origin back -- critical for srcdoc iframes which have null origin
+  var requestOrigin = (event.headers && (event.headers['origin'] || event.headers['Origin'])) || '*';
+  var corsHeaders = {
+    'Content-Type': 'application/json',
+    'Access-Control-Allow-Origin': requestOrigin,
+    'Access-Control-Allow-Methods': 'GET, OPTIONS',
+    'Access-Control-Allow-Headers': 'Content-Type',
+    'Vary': 'Origin',
+    'Cache-Control': 'public, max-age=3600'
+  };
 
-  const url = `https://api.fas.usda.gov/api/psd/${endpoint}?${qs}`;
+  if (event.httpMethod === 'OPTIONS') {
+    return { statusCode: 204, headers: corsHeaders, body: '' };
+  }
 
-  try {
-    const res = await fetch(url, {
-      headers: { 'Accept': 'application/json', 'User-Agent': 'JHD-Commodity-Advisors/1.0' }
-    });
-    if (!res.ok) throw new Error(`USDA PSD returned ${res.status}`);
-    const data = await res.json();
+  // endpoint param e.g. "commodity/0440000/country/all/year/2025"
+  var params   = event.queryStringParameters || {};
+  var endpoint = params.endpoint || '';
+
+  if (!endpoint) {
     return {
-      statusCode: 200,
-      headers: { 'Content-Type': 'application/json', 'Access-Control-Allow-Origin': '*', 'Cache-Control': 'public, max-age=86400' },
-      body: JSON.stringify(data)
-    };
-  } catch(e) {
-    return {
-      statusCode: 500,
-      headers: { 'Content-Type': 'application/json', 'Access-Control-Allow-Origin': '*' },
-      body: JSON.stringify({ error: e.message, url })
+      statusCode: 400,
+      headers: corsHeaders,
+      body: JSON.stringify({ error: 'Missing endpoint parameter' })
     };
   }
+
+  var apiUrl = 'https://apps.fas.usda.gov/psdonline/api/psd/' + endpoint;
+
+  try {
+    var data = await httpsGet(apiUrl, {
+      'Accept': 'application/json',
+      'User-Agent': 'Mozilla/5.0 (compatible; JHD-Commodity-Advisors/1.0)'
+    });
+    return { statusCode: 200, headers: corsHeaders, body: JSON.stringify(data) };
+  } catch (e) {
+    return { statusCode: 500, headers: corsHeaders, body: JSON.stringify({ error: e.message }) };
+  }
 };
+
+function httpsGet(apiUrl, headers) {
+  return new Promise(function(resolve, reject) {
+    var parsed = url.parse(apiUrl);
+    var options = {
+      hostname: parsed.hostname,
+      path: parsed.path,
+      method: 'GET',
+      headers: headers
+    };
+    var req = https.request(options, function(res) {
+      var body = '';
+      res.on('data', function(chunk) { body += chunk; });
+      res.on('end', function() {
+        if (res.statusCode >= 400) {
+          return reject(new Error('USDA returned ' + res.statusCode + ': ' + body.slice(0, 200)));
+        }
+        try { resolve(JSON.parse(body)); }
+        catch (e) { reject(new Error('Invalid JSON from USDA: ' + body.slice(0, 100))); }
+      });
+    });
+    req.on('error', reject);
+    req.end();
+  });
+}
