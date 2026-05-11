@@ -674,6 +674,23 @@ padding:2px 8px;border-radius:3px;margin-bottom:6px;letter-spacing:0.06em;text-t
     .oc-check.todo{background:rgba(74,158,255,0.12);border:1px solid rgba(74,158,255,0.3);color:var(--blue);}
 
     /* ===== PREMIUM GATING ===== */
+
+    /* Premium commentary nav button */
+    .snav-btn.snav-premium { color:var(--gold); }
+    .snav-btn.snav-premium.active { color:var(--gold); border-bottom-color:var(--gold); }
+    .snav-btn.snav-premium .lock-icon { font-size:10px; margin-right:3px; opacity:0.8; }
+
+    /* Commentary sub-tabs */
+    .comm-subtabs { display:flex; gap:6px; margin-bottom:20px; flex-wrap:wrap; }
+    .comm-subtab {
+      padding:7px 18px; border-radius:20px; font-size:13px; font-weight:600;
+      cursor:pointer; border:1px solid var(--border2);
+      background:var(--card); color:var(--muted); transition:all .15s;
+      font-family:'DM Sans',sans-serif;
+    }
+    .comm-subtab:hover { color:var(--text); border-color:var(--gold); }
+    .comm-subtab.active { background:var(--gold); color:#0d0f12; border-color:var(--gold); }
+
     .premium-badge{display:inline-block;font-family:'DM Mono',monospace;font-size:8px;color:var(--gold);background:rgba(255,179,71,0.12);border:1px solid rgba(255,179,71,0.3);padding:2px 8px;border-radius:3px;margin-left:6px;vertical-align:middle;letter-spacing:0.06em;text-transform:uppercase;}
     .post-card.premium{border-color:rgba(255,179,71,0.25);}
     .premium-gate{text-align:center;padding:60px 32px;background:var(--card);border:1px solid rgba(255,179,71,0.25);border-radius:12px;margin:32px 0;}
@@ -1066,7 +1083,7 @@ padding:2px 8px;border-radius:3px;margin-bottom:6px;letter-spacing:0.06em;text-t
   <nav class="section-nav">
     <div class="section-nav-inner">
       <button class="snav-btn active" data-tab="dashboard"    onclick="showTab('dashboard')">&#9632; Dashboard</button>
-      <button class="snav-btn" data-tab="commentary"          onclick="showTab('commentary')">Commentary</button>
+      <button class="snav-btn snav-premium" data-tab="commentary" onclick="showTab('commentary')"><span class="lock-icon">&#128274;</span>Commentary</button>
       <button class="snav-btn" data-tab="research"          onclick="showTab('research')">Research</button>
       <button class="snav-btn" data-tab="cftc"              onclick="showTab('cftc')">CFTC</button>
       <button class="snav-btn" data-tab="futures"           onclick="showTab('futures')">Global Markets</button>
@@ -1192,8 +1209,18 @@ padding:2px 8px;border-radius:3px;margin-bottom:6px;letter-spacing:0.06em;text-t
 
   <div id="tab-commentary" class="protected">
     <div class="page-wrap">
-      <div class="page-heading"><h2>Market Commentary</h2><p>In-depth analysis of agricultural commodity markets</p></div>
-      <div id="posts-commentary"><div class="spin">Loading…</div></div>
+      <div class="page-heading">
+        <h2>Market Commentary <span class="premium-badge">&#128274; PREMIUM</span></h2>
+        <p>In-depth analysis of agricultural commodity markets &mdash; Wheat, Corn &amp; Soy Complex</p>
+      </div>
+      <div class="comm-subtabs">
+        <button class="comm-subtab active" onclick="showCommentaryTab('wheat',this)">&#127807; Wheat</button>
+        <button class="comm-subtab" onclick="showCommentaryTab('corn',this)">&#127805; Corn</button>
+        <button class="comm-subtab" onclick="showCommentaryTab('soy',this)">Soy Complex</button>
+      </div>
+      <div id="comm-panel-wheat"><div id="posts-commentary-wheat"><div class="spin">Loading…</div></div></div>
+      <div id="comm-panel-corn" class="hidden"><div id="posts-commentary-corn"></div></div>
+      <div id="comm-panel-soy" class="hidden"><div id="posts-commentary-soy"></div></div>
     </div>
   </div>
 
@@ -2033,7 +2060,11 @@ padding:2px 8px;border-radius:3px;margin-bottom:6px;letter-spacing:0.06em;text-t
       <div class="admin-field">
         <label class="cat-label">Publish to section</label>
         <select id="p-category">
-          <option value="commentary">Market Commentary</option>
+          <optgroup label="Market Commentary (Premium)">
+            <option value="commentary-wheat">Market Commentary -- Wheat</option>
+            <option value="commentary-corn">Market Commentary -- Corn</option>
+            <option value="commentary-soy">Market Commentary -- Soy Complex</option>
+          </optgroup>
           <option value="research">Research</option>
           <option value="cftc">CFTC</option>
           <option value="exports">Export Data</option>
@@ -2162,7 +2193,7 @@ padding:2px 8px;border-radius:3px;margin-bottom:6px;letter-spacing:0.06em;text-t
 var sb, currentUser, isAdmin=false, currentPostId=null, currentPostTab=null, quill=null, editorMode='visual';
 var allSubs=[];
 
-var POST_TABS=['commentary','research','cftc','wasde','commoditymap','weather','options','fob','freight'];
+var POST_TABS=['commentary-wheat','commentary-corn','commentary-soy','research','cftc','wasde','commoditymap','weather','options','fob','freight'];
 var ADMIN_EMAIL_LC = ADMIN_EMAIL.toLowerCase();
 
 
@@ -2543,6 +2574,10 @@ function showTab(name){
   if(name === 'exports')    loadExportSales(false);
   if(name === 'freight')    loadFreightDashboard(false);
   if(POST_TABS.indexOf(name) > -1) loadPosts(name);
+  if(name === 'commentary') {
+    var wheatEl = document.getElementById('posts-commentary-wheat');
+    if (wheatEl && wheatEl.innerHTML.indexOf('spin') > -1) loadPosts('commentary-wheat');
+  }
   if(name==='technicals')   loadTACharts();
   if(name==='sentiment')    loadSentimentTab();
   if(name==='dashboard')    loadDashboard();
@@ -3852,13 +3887,23 @@ async function convertPdfToHtml(base64, filename){
     + 'Extract the date from the document and use it in the masthead. '
     + 'Return ONLY the HTML document, nothing else.';
 
-  var resp = await fetch('/.netlify/functions/pdf-convert', {
+  var resp = await fetch('https://api.anthropic.com/v1/messages', {
     method: 'POST',
     headers: {'Content-Type':'application/json'},
     body: JSON.stringify({
+      model: 'claude-sonnet-4-20250514',
+      max_tokens: 4000,
       system: systemPrompt,
-      base64: base64,
-      filename: filename
+      messages: [{
+        role: 'user',
+        content: [{
+          type: 'document',
+          source: { type: 'base64', media_type: 'application/pdf', data: base64 }
+        },{
+          type: 'text',
+          text: 'Convert this market commentary PDF to styled HTML. File: ' + filename
+        }]
+      }]
     })
   });
   if(!resp.ok){
