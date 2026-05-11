@@ -2713,8 +2713,17 @@ function showAdminPage(){
 function showTab(name){
   window._activeTab = name;
   ['dashboard','commentary','research','cftc','futures','services','contact','about','detail','exports','wasde','commoditymap','weather','options','fob','freight','technicals','profile','sentiment']
-    .forEach(function(t){ document.getElementById('tab-'+t).classList.add('hidden'); });
-  document.getElementById('tab-'+name).classList.remove('hidden');
+    .forEach(function(t){
+      var el = document.getElementById('tab-'+t);
+      if (!el) return;
+      el.classList.add('hidden');
+      if (t === 'commoditymap') el.style.display = 'none';
+    });
+  var showEl = document.getElementById('tab-'+name);
+  if (showEl) {
+    showEl.classList.remove('hidden');
+    if (name === 'commoditymap') showEl.style.display = 'block';
+  }
   document.querySelectorAll('.snav-btn').forEach(function(b){ b.classList.toggle('active', b.dataset.tab===name); });
   var _cmTip = document.getElementById('cm-tip'); if(_cmTip) _cmTip.style.opacity='0';
   if(name === 'exports')    loadExportSales(false);
@@ -2877,9 +2886,13 @@ async function loadPosts(category){
 async function loadDetail(postId, category){
   currentPostId = postId;
   currentPostTab = category || window._activeTab;
-  ['dashboard','commentary','research','cftc','futures','services','contact','about','exports','wasde','commoditymap','weather','options','fob','freight','technicals','profile','sentiment'].forEach(function(t){
-    document.getElementById('tab-'+t).classList.add('hidden');
-  });
+  ['dashboard','commentary','research','cftc','futures','services','contact','about','exports','wasde','commoditymap','weather','options','fob','freight','technicals','profile','sentiment']
+    .forEach(function(t){
+      var el = document.getElementById('tab-'+t);
+      if (!el) return;
+      el.classList.add('hidden');
+      if (t === 'commoditymap') el.style.display = 'none';
+    });
   document.getElementById('tab-detail').classList.remove('hidden');
   var bc = document.getElementById('detail-breadcrumb');
   if(bc) bc.textContent = currentPostTab||'';
