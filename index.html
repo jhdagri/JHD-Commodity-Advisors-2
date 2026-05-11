@@ -2652,6 +2652,20 @@ async function doSignOut(){
 }
 
 /* ===== POSTS ===== */
+function showCommentaryTab(sub, el) {
+  var panels = ['wheat','corn','soy'];
+  for (var i = 0; i < panels.length; i++) {
+    var p = document.getElementById('comm-panel-' + panels[i]);
+    if (p) { p.className = (panels[i] === sub) ? '' : 'hidden'; }
+  }
+  var btns = document.querySelectorAll('.comm-subtab');
+  for (var j = 0; j < btns.length; j++) { btns[j].classList.remove('active'); }
+  if (el) { el.classList.add('active'); }
+  var cat = 'commentary-' + sub;
+  var postsEl = document.getElementById('posts-' + cat);
+  if (postsEl && postsEl.querySelector('.post-card') === null) { loadPosts(cat); }
+}
+
 async function loadPosts(category){
   var el = document.getElementById('posts-'+category);
   if(!el) return;
