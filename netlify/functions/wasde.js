@@ -17,7 +17,6 @@ exports.handler = async (event) => {
   var endpoint = params.endpoint || '';
   var apiKey   = process.env.USDA_API_KEY || '';
   if (!endpoint) return { statusCode: 400, headers: cors, body: JSON.stringify({ error: 'Missing endpoint' }) };
-  // API key must be a query parameter, not a header
   var urls = [
     'https://apps.fas.usda.gov/psdonline/api/' + endpoint + '?API_KEY=' + apiKey,
     'https://apps.fas.usda.gov/OpenData/api/psd/' + endpoint + '?API_KEY=' + apiKey
