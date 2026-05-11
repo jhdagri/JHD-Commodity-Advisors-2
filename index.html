@@ -2712,10 +2712,11 @@ function showAdminPage(){
 /* ===== TAB ROUTING ===== */
 function showTab(name){
   window._activeTab = name;
-  ['dashboard','commentary','research','cftc','futures','services','contact','about','detail','exports','wasde','weather','options','fob','freight','technicals','profile','sentiment']
+  ['dashboard','commentary','research','cftc','futures','services','contact','about','detail','exports','wasde','commoditymap','weather','options','fob','freight','technicals','profile','sentiment']
     .forEach(function(t){ document.getElementById('tab-'+t).classList.add('hidden'); });
   document.getElementById('tab-'+name).classList.remove('hidden');
   document.querySelectorAll('.snav-btn').forEach(function(b){ b.classList.toggle('active', b.dataset.tab===name); });
+  var _cmTip = document.getElementById('cm-tip'); if(_cmTip) _cmTip.style.opacity='0';
   if(name === 'exports')    loadExportSales(false);
   if(name === 'freight')    loadFreightDashboard(false);
   if(POST_TABS.indexOf(name) > -1) loadPosts(name);
@@ -2803,6 +2804,20 @@ async function doSignOut(){
 }
 
 /* ===== POSTS ===== */
+function showResearchTab(sub, el) {
+  var panels = ['technicals','options','spreads','supply-demand','cftc','macro'];
+  for (var i = 0; i < panels.length; i++) {
+    var p = document.getElementById('res-panel-' + panels[i]);
+    if (p) { p.className = (panels[i] === sub) ? '' : 'hidden'; }
+  }
+  var btns = document.querySelectorAll('#tab-research .comm-subtab');
+  for (var j = 0; j < btns.length; j++) { btns[j].classList.remove('active'); }
+  if (el) { el.classList.add('active'); }
+  var cat = 'research-' + sub;
+  var postsEl = document.getElementById('posts-' + cat);
+  if (postsEl && postsEl.querySelector('.post-card') === null) { loadPosts(cat); }
+}
+
 function showCommentaryTab(sub, el) {
   var panels = ['wheat','corn','soy'];
   for (var i = 0; i < panels.length; i++) {
@@ -2842,9 +2857,12 @@ async function loadPosts(category){
     var isPrem = p.summary && /^\[PREMIUM(:\d+)?\]/.test(p.summary);
     var displaySum = isPrem ? p.summary.replace(/^\[PREMIUM(:\d+)?\]\s*/,'') : (p.summary||'');
     var card = document.createElement('div');
-    card.className = 'post-card' + (p.is_pinned?' pinned':'') + (isPrem?' premium':'');
+    var postCardAgeMs = Date.now() - new Date(p.created_at).getTime();
+    var postCardAgeDays = postCardAgeMs / (1000 * 60 * 60 * 24);
+    var cardFreeByAge = postCardAgeDays >= 5;
+    card.className = 'post-card' + (p.is_pinned?' pinned':'') + (isPrem && !cardFreeByAge?' premium':'');
     card.innerHTML = (p.is_pinned?'<div class="pin-badge">&#128204; Pinned</div>':'')
-      +'<div class="card-date">'+fmtDate(p.created_at)+(isPrem?'<span class="premium-badge">&#128274; Premium</span>':'')+'</div>'
+      +'<div class="card-date">'+fmtDate(p.created_at)+(isPrem && !cardFreeByAge?'<span class="premium-badge">&#128274; Premium</span>':(isPrem && cardFreeByAge?'<span class="premium-badge" style="background:rgba(46,207,170,0.15);color:var(--teal);border-color:var(--teal);">Free</span>':''))+'</div>'
       +'<h3>'+esc(p.title)+'</h3>'
       +'<p class="card-summary">'+esc(displaySum)+'</p>'
       +'<div class="card-foot"><span class="ccount">&#128172; '+n+' comment'+(n!==1?'s':'')+'</span><span class="readmore">Read -></span></div>';
@@ -2859,7 +2877,7 @@ async function loadPosts(category){
 async function loadDetail(postId, category){
   currentPostId = postId;
   currentPostTab = category || window._activeTab;
-  ['dashboard','commentary','research','cftc','futures','services','contact','about','exports','wasde','weather','options','fob','freight','technicals','profile','sentiment'].forEach(function(t){
+  ['dashboard','commentary','research','cftc','futures','services','contact','about','exports','wasde','commoditymap','weather','options','fob','freight','technicals','profile','sentiment'].forEach(function(t){
     document.getElementById('tab-'+t).classList.add('hidden');
   });
   document.getElementById('tab-detail').classList.remove('hidden');
@@ -2878,10 +2896,19 @@ async function loadDetail(postId, category){
     var costMatch = post.summary.match(/^\[PREMIUM:(\d+)\]/);
     if(costMatch) bushelCost = parseInt(costMatch[1],10);
   }
-  if(isPremium && !isAdmin){
+    // Commentary posts older than 5 days become free to read
+  // Research posts remain premium regardless of age
+  var timeSensitiveCategories = ['commentary-wheat','commentary-corn','commentary-soy','research-cftc'];
+  var isTimeSensitive = timeSensitiveCategories.indexOf(post.category) > -1;
+  var postAgeMs = Date.now() - new Date(post.created_at).getTime();
+  var postAgeDays = postAgeMs / (1000 * 60 * 60 * 24);
+  var isFreeByAge = isTimeSensitive && postAgeDays >= 5;
+
+  if(isPremium && !isAdmin && !isFreeByAge){
     var bal = window._bushelBalance || 0;
     if(bal < bushelCost){
-      wrap.innerHTML = '<div class="premium-gate"><div class="pg-icon">&#128274;</div><h3>Premium Content</h3><p>This post requires <strong style="color:var(--gold);">' + bushelCost + ' Bushels</strong> to read. Earn Bushels by commenting, logging in daily, and engaging with the community -- or buy a top-up instantly.</p><div class="pg-cost">' + bushelCost + ' bu required &mdash; you have ' + bal + ' bu</div><div style="display:flex;gap:10px;justify-content:center;flex-wrap:wrap;"><button class="btn btn-gold" onclick="openGrainStore()" style="padding:10px 22px;">&#127807; Buy Bushels</button><button class="btn btn-ghost" onclick="openBushelPanel()" style="padding:10px 22px;">How to Earn Free &#8250;</button></div></div>';
+      var daysLeft = Math.ceil(5 - postAgeDays);
+      wrap.innerHTML = '<div class="premium-gate"><div class="pg-icon">&#128274;</div><h3>Premium Content</h3><p>This post requires <strong style="color:var(--gold);">' + bushelCost + ' Bushels</strong> to read. It will become <strong style="color:var(--teal);">free in ' + daysLeft + ' day' + (daysLeft===1?'':'s') + '</strong>, or unlock it now.</p><div class="pg-cost">' + bushelCost + ' bu required &mdash; you have ' + bal + ' bu</div><div style="display:flex;gap:10px;justify-content:center;flex-wrap:wrap;"><button class="btn btn-gold" onclick="openGrainStore()" style="padding:10px 22px;">&#127807; Buy Bushels</button><button class="btn btn-ghost" onclick="openBushelPanel()" style="padding:10px 22px;">How to Earn Free &#8250;</button></div></div>';
       return;
     }
   }
@@ -3395,7 +3422,7 @@ function closeOnboardingModal(){
 /* ===== PUBLIC PROFILE ===== */
 async function loadPublicProfile(userId){
   window._prevProfileTab = window._activeTab || 'commentary';
-  ['commentary','research','cftc','futures','services','contact','about','exports','wasde','weather','options','fob','freight','technicals','detail'].forEach(function(t){
+  ['commentary','research','cftc','futures','services','contact','about','exports','wasde','commoditymap','weather','options','fob','freight','technicals','detail'].forEach(function(t){
     var el = document.getElementById('tab-'+t);
     if(el) el.classList.add('hidden');
   });
