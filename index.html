@@ -1090,8 +1090,8 @@ padding:2px 8px;border-radius:3px;margin-bottom:6px;letter-spacing:0.06em;text-t
       <button class="snav-btn snav-premium" data-tab="research"            onclick="showTab('research')"><span class="lock-icon">&#128274;</span>Research</button>
       <button class="snav-btn snav-premium" data-tab="fob"                 onclick="showTab('fob')"><span class="lock-icon">&#128274;</span>FOB Data</button>
       <button class="snav-btn snav-premium" data-tab="freight"             onclick="showTab('freight')"><span class="lock-icon">&#128274;</span>Freight</button>
-      <button class="snav-btn snav-premium" data-tab="sentiment"           onclick="showTab('sentiment')"><span class="lock-icon">&#128274;</span>Sentiment</button>
-      <button class="snav-btn snav-premium" data-tab="grainstore" onclick="openGrainStore()"><span class="lock-icon">&#128274;</span>Grain Store</button>
+      <button class="snav-btn snav-premium" data-tab="sentiment"           onclick="showTab('sentiment')">Sentiment</button>
+      <button class="snav-btn snav-premium" data-tab="grainstore" onclick="openGrainStore()">Grain Store</button>
       <div class="snav-divider"></div>
       <button class="snav-btn snav-free" data-tab="cftc"                   onclick="showTab('cftc')">CFTC</button>
       <button class="snav-btn snav-free" data-tab="exports"                onclick="showTab('exports')">Exports</button>
@@ -2872,7 +2872,7 @@ async function doSignOut(){
 
 /* ===== POSTS ===== */
 function showResearchTab(sub, el) {
-  var panels = ['technicals','options','spreads','supply-demand','macro'];
+  var panels = ['technicals','options','spreads','supply-demand','cftc','macro'];
   for (var i = 0; i < panels.length; i++) {
     var p = document.getElementById('res-panel-' + panels[i]);
     if (p) { p.className = (panels[i] === sub) ? '' : 'hidden'; }
