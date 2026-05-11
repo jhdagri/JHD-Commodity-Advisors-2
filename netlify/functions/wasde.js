@@ -1,8 +1,8 @@
 // netlify/functions/wasde.js
 // USDA PSD proxy - tries psdonline then OpenData endpoints
+// FIX: removed erroneous /psd/ path segment from psdonline URL (introduced during site split)
 const https = require('https');
 const urlMod = require('url');
-
 exports.handler = async (event) => {
   var origin = (event.headers && (event.headers['origin'] || event.headers['Origin'])) || '*';
   var cors = {
@@ -13,21 +13,15 @@ exports.handler = async (event) => {
     'Vary': 'Origin',
     'Cache-Control': 'public, max-age=3600'
   };
-
   if (event.httpMethod === 'OPTIONS') return { statusCode: 204, headers: cors, body: '' };
-
   var params   = event.queryStringParameters || {};
   var endpoint = params.endpoint || '';
   var apiKey   = process.env.USDA_API_KEY || '';
-
   if (!endpoint) return { statusCode: 400, headers: cors, body: JSON.stringify({ error: 'Missing endpoint' }) };
-
-  // Try both base URLs
   var urls = [
-    'https://apps.fas.usda.gov/psdonline/api/psd/' + endpoint,
+    'https://apps.fas.usda.gov/psdonline/api/' + endpoint,
     'https://apps.fas.usda.gov/OpenData/api/psd/' + endpoint
   ];
-
   var lastErr = '';
   for (var i = 0; i < urls.length; i++) {
     try {
@@ -42,7 +36,6 @@ exports.handler = async (event) => {
   }
   return { statusCode: 500, headers: cors, body: JSON.stringify({ error: lastErr }) };
 };
-
 function get(apiUrl, headers) {
   return new Promise(function(resolve, reject) {
     var p = urlMod.parse(apiUrl);
