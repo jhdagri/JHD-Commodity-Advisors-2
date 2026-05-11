@@ -2824,7 +2824,7 @@ function showResearchTab(sub, el) {
   if (el) { el.classList.add('active'); }
   var cat = 'research-' + sub;
   var postsEl = document.getElementById('posts-' + cat);
-  if (postsEl && postsEl.querySelector('.post-card') === null) { loadPosts(cat); }
+  if (postsEl) { loadPosts(cat); }
 }
 
 function showCommentaryTab(sub, el) {
@@ -2838,7 +2838,7 @@ function showCommentaryTab(sub, el) {
   if (el) { el.classList.add('active'); }
   var cat = 'commentary-' + sub;
   var postsEl = document.getElementById('posts-' + cat);
-  if (postsEl && postsEl.querySelector('.post-card') === null) { loadPosts(cat); }
+  if (postsEl) { loadPosts(cat); }
 }
 
 async function loadPosts(category){
