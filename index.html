@@ -1238,7 +1238,7 @@ padding:2px 8px;border-radius:3px;margin-bottom:6px;letter-spacing:0.06em;text-t
         <button class="comm-subtab"         onclick="showResearchTab('options',this)">Options Analytics</button>
         <button class="comm-subtab"         onclick="showResearchTab('spreads',this)">Spread Analysis</button>
         <button class="comm-subtab"         onclick="showResearchTab('supply-demand',this)">Supply &amp; Demand</button>
-        <button class="comm-subtab"         onclick="showResearchTab('cftc',this)">CFTC Analysis</button>
+        <button class="comm-subtab"         onclick="showResearchTab(this)">CFTC Analysis</button>
         <button class="comm-subtab"         onclick="showResearchTab('macro',this)">Macro</button>
       </div>
       <div id="res-panel-technicals"><div id="posts-research-technicals"><div class="spin">Loading…</div></div></div>
@@ -1253,8 +1253,64 @@ padding:2px 8px;border-radius:3px;margin-bottom:6px;letter-spacing:0.06em;text-t
   <!-- CFTC -->
   <div id="tab-cftc" class="hidden">
     <div class="page-wrap">
-      <div class="page-heading"><h2>CFTC</h2><p>Commitment of Traders analysis and positioning data</p></div>
-      <div id="posts-cftc"><div class="spin">Loading…</div></div>
+
+      <div class="hdr" style="display:flex;align-items:flex-start;justify-content:space-between;gap:16px;margin-bottom:16px;flex-wrap:wrap;">
+        <div>
+          <div style="font-family:'DM Mono',monospace;font-size:9px;letter-spacing:0.16em;color:var(--blue);text-transform:uppercase;margin-bottom:4px;">JHD Commodity Advisors · CFTC COT</div>
+          <h2 style="font-family:'DM Serif Display',serif;font-size:22px;font-weight:900;color:var(--text);line-height:1.1;">Managed Money <span style="color:var(--blue);">Positioning</span></h2>
+          <div style="font-family:'DM Mono',monospace;font-size:10px;color:var(--muted2);margin-top:3px;" id="cftc-last-updated">Loading CFTC Disaggregated COT data…</div>
+        </div>
+        <div style="display:flex;align-items:center;gap:8px;">
+          <div id="cftc-live-dot" style="width:8px;height:8px;border-radius:50%;background:var(--gold);animation:pulse 2s infinite;flex-shrink:0;"></div>
+          <span style="font-family:'DM Mono',monospace;font-size:9px;color:var(--muted);" id="cftc-status-txt">Loading…</span>
+        </div>
+      </div>
+
+      <div id="cftc-ctabs" style="display:flex;gap:6px;margin-bottom:14px;flex-wrap:wrap;"></div>
+
+      <div style="display:grid;grid-template-columns:repeat(auto-fill,minmax(150px,1fr));gap:8px;margin-bottom:14px;">
+        <div style="background:var(--card);border:1px solid var(--border);border-radius:6px;padding:10px 13px;"><div style="font-family:'DM Mono',monospace;font-size:8px;color:var(--muted2);text-transform:uppercase;letter-spacing:0.06em;margin-bottom:4px;">Report Date</div><div id="cftc-k-date" style="font-family:'DM Mono',monospace;font-size:12px;margin-top:2px;">--</div></div>
+        <div style="background:var(--card);border:1px solid var(--border);border-radius:6px;padding:10px 13px;"><div style="font-family:'DM Mono',monospace;font-size:8px;color:var(--muted2);text-transform:uppercase;letter-spacing:0.06em;margin-bottom:4px;">MM Net</div><div id="cftc-k-net" style="font-family:'DM Mono',monospace;font-size:17px;font-weight:500;">--</div></div>
+        <div style="background:var(--card);border:1px solid var(--border);border-radius:6px;padding:10px 13px;"><div style="font-family:'DM Mono',monospace;font-size:8px;color:var(--muted2);text-transform:uppercase;letter-spacing:0.06em;margin-bottom:4px;">Week Change</div><div id="cftc-k-chg" style="font-family:'DM Mono',monospace;font-size:17px;font-weight:500;">--</div></div>
+        <div style="background:var(--card);border:1px solid var(--border);border-radius:6px;padding:10px 13px;"><div style="font-family:'DM Mono',monospace;font-size:8px;color:var(--muted2);text-transform:uppercase;letter-spacing:0.06em;margin-bottom:4px;">MM Long</div><div id="cftc-k-long" style="font-family:'DM Mono',monospace;font-size:17px;font-weight:500;">--</div></div>
+        <div style="background:var(--card);border:1px solid var(--border);border-radius:6px;padding:10px 13px;"><div style="font-family:'DM Mono',monospace;font-size:8px;color:var(--muted2);text-transform:uppercase;letter-spacing:0.06em;margin-bottom:4px;">MM Short</div><div id="cftc-k-short" style="font-family:'DM Mono',monospace;font-size:17px;font-weight:500;">--</div></div>
+        <div style="background:var(--card);border:1px solid var(--border);border-radius:6px;padding:10px 13px;"><div style="font-family:'DM Mono',monospace;font-size:8px;color:var(--muted2);text-transform:uppercase;letter-spacing:0.06em;margin-bottom:4px;">Open Interest</div><div id="cftc-k-oi" style="font-family:'DM Mono',monospace;font-size:17px;font-weight:500;">--</div></div>
+        <div style="background:var(--card);border:1px solid var(--border);border-radius:6px;padding:10px 13px;"><div style="font-family:'DM Mono',monospace;font-size:8px;color:var(--muted2);text-transform:uppercase;letter-spacing:0.06em;margin-bottom:4px;">Prod/Merch Net</div><div id="cftc-k-comm" style="font-family:'DM Mono',monospace;font-size:17px;font-weight:500;">--</div></div>
+      </div>
+
+      <div style="font-family:'DM Mono',monospace;font-size:8.5px;letter-spacing:0.14em;text-transform:uppercase;color:var(--muted2);margin-bottom:10px;display:flex;align-items:center;gap:10px;">Managed Money -- Net Position History (52 Weeks)<span style="flex:1;height:1px;background:var(--border);display:block;"></span></div>
+      <div style="display:grid;grid-template-columns:1fr 1fr;gap:12px;margin-bottom:14px;" id="cftc-charts-row">
+        <div style="background:var(--card);border:1px solid var(--border);border-radius:8px;padding:14px;">
+          <div style="font-family:'DM Mono',monospace;font-size:8.5px;letter-spacing:0.1em;text-transform:uppercase;color:var(--muted2);margin-bottom:10px;">Managed Money Net Position</div>
+          <div style="position:relative;height:200px;"><canvas id="cftc-ch-net"></canvas></div>
+        </div>
+        <div style="background:var(--card);border:1px solid var(--border);border-radius:8px;padding:14px;">
+          <div style="font-family:'DM Mono',monospace;font-size:8.5px;letter-spacing:0.1em;text-transform:uppercase;color:var(--muted2);margin-bottom:10px;">Managed Money Long vs Short</div>
+          <div style="position:relative;height:200px;"><canvas id="cftc-ch-ls"></canvas></div>
+        </div>
+      </div>
+
+      <div style="font-family:'DM Mono',monospace;font-size:8.5px;letter-spacing:0.14em;text-transform:uppercase;color:var(--muted2);margin-bottom:10px;display:flex;align-items:center;gap:10px;">Weekly Data -- Last 20 Reports<span style="flex:1;height:1px;background:var(--border);display:block;"></span></div>
+      <div style="background:var(--card);border:1px solid var(--border);border-radius:8px;overflow:hidden;margin-bottom:14px;">
+        <table style="width:100%;border-collapse:collapse;">
+          <thead>
+            <tr>
+              <th style="background:var(--card2);font-family:'DM Mono',monospace;font-size:8px;color:var(--muted2);letter-spacing:0.06em;text-transform:uppercase;padding:8px 10px;text-align:left;border-bottom:1px solid var(--border2);white-space:nowrap;">Date</th>
+              <th style="background:var(--card2);font-family:'DM Mono',monospace;font-size:8px;color:var(--muted2);letter-spacing:0.06em;text-transform:uppercase;padding:8px 10px;text-align:right;border-bottom:1px solid var(--border2);white-space:nowrap;">MM Net</th>
+              <th style="background:var(--card2);font-family:'DM Mono',monospace;font-size:8px;color:var(--muted2);letter-spacing:0.06em;text-transform:uppercase;padding:8px 10px;text-align:right;border-bottom:1px solid var(--border2);white-space:nowrap;">Wk Chg</th>
+              <th style="background:var(--card2);font-family:'DM Mono',monospace;font-size:8px;color:var(--muted2);letter-spacing:0.06em;text-transform:uppercase;padding:8px 10px;text-align:right;border-bottom:1px solid var(--border2);white-space:nowrap;">MM Long</th>
+              <th style="background:var(--card2);font-family:'DM Mono',monospace;font-size:8px;color:var(--muted2);letter-spacing:0.06em;text-transform:uppercase;padding:8px 10px;text-align:right;border-bottom:1px solid var(--border2);white-space:nowrap;">MM Short</th>
+              <th style="background:var(--card2);font-family:'DM Mono',monospace;font-size:8px;color:var(--muted2);letter-spacing:0.06em;text-transform:uppercase;padding:8px 10px;text-align:right;border-bottom:1px solid var(--border2);white-space:nowrap;">Spread</th>
+              <th style="background:var(--card2);font-family:'DM Mono',monospace;font-size:8px;color:var(--muted2);letter-spacing:0.06em;text-transform:uppercase;padding:8px 10px;text-align:right;border-bottom:1px solid var(--border2);white-space:nowrap;">P/M Long</th>
+              <th style="background:var(--card2);font-family:'DM Mono',monospace;font-size:8px;color:var(--muted2);letter-spacing:0.06em;text-transform:uppercase;padding:8px 10px;text-align:right;border-bottom:1px solid var(--border2);white-space:nowrap;">P/M Short</th>
+              <th style="background:var(--card2);font-family:'DM Mono',monospace;font-size:8px;color:var(--muted2);letter-spacing:0.06em;text-transform:uppercase;padding:8px 10px;text-align:right;border-bottom:1px solid var(--border2);white-space:nowrap;">Open Int</th>
+            </tr>
+          </thead>
+          <tbody id="cftc-tbody"><tr><td colspan="9" style="padding:24px;text-align:center;font-family:'DM Mono',monospace;font-size:11px;color:var(--muted);">Loading…</td></tr></tbody>
+        </table>
+      </div>
+
+      <div style="font-family:'DM Mono',monospace;font-size:9px;color:var(--muted2);text-align:center;padding-top:10px;border-top:1px solid var(--border);">CFTC Disaggregated COT · Options and Futures Combined · Released Fridays 3:30pm ET · Data as of prior Tuesday · JHD Commodity Advisors</div>
     </div>
   </div>
 
@@ -2338,7 +2394,7 @@ padding:2px 8px;border-radius:3px;margin-bottom:6px;letter-spacing:0.06em;text-t
 var sb, currentUser, isAdmin=false, currentPostId=null, currentPostTab=null, quill=null, editorMode='visual';
 var allSubs=[];
 
-var POST_TABS=['commentary-wheat','commentary-corn','commentary-soy','research-technicals','research-options','research-spreads','research-supply-demand','research-cftc','research-macro','cftc','weather','fob','freight'];
+var POST_TABS=['commentary-wheat','commentary-corn','commentary-soy','research-technicals','research-options','research-spreads','research-supply-demand','research-cftc','research-macro','weather','fob','freight'];
 var ADMIN_EMAIL_LC = ADMIN_EMAIL.toLowerCase();
 
 
@@ -2712,7 +2768,7 @@ function showAdminPage(){
 /* ===== TAB ROUTING ===== */
 function showTab(name){
   window._activeTab = name;
-  ['dashboard','commentary','research','cftc','futures','services','contact','about','detail','exports','wasde','commoditymap','weather','options','fob','freight','technicals','profile','sentiment']
+  ['dashboard','commentary','research','futures','services','contact','about','detail','exports','wasde','commoditymap','weather','options','fob','freight','technicals','profile','sentiment']
     .forEach(function(t){
       var el = document.getElementById('tab-'+t);
       if (!el) return;
@@ -2738,6 +2794,7 @@ function showTab(name){
     if (wheatEl && wheatEl.innerHTML.indexOf('spin') > -1) loadPosts('commentary-wheat');
   }
   if(name==='technicals')   loadTACharts();
+  if(name==='cftc')         { initCftcDashboard(); }
   if(name==='wasde')        { if(!_wasdeLoaded) initWasde(); }
   if(name==='commoditymap') { if(!_cmInited) initCommodityMap(); }
   if(name==='sentiment')    loadSentimentTab();
@@ -2814,7 +2871,7 @@ async function doSignOut(){
 
 /* ===== POSTS ===== */
 function showResearchTab(sub, el) {
-  var panels = ['technicals','options','spreads','supply-demand','cftc','macro'];
+  var panels = ['technicals','options','spreads','supply-demand','macro'];
   for (var i = 0; i < panels.length; i++) {
     var p = document.getElementById('res-panel-' + panels[i]);
     if (p) { p.className = (panels[i] === sub) ? '' : 'hidden'; }
@@ -2886,7 +2943,7 @@ async function loadPosts(category){
 async function loadDetail(postId, category){
   currentPostId = postId;
   currentPostTab = category || window._activeTab;
-  ['dashboard','commentary','research','cftc','futures','services','contact','about','exports','wasde','commoditymap','weather','options','fob','freight','technicals','profile','sentiment']
+  ['dashboard','commentary','research','futures','services','contact','about','exports','wasde','commoditymap','weather','options','fob','freight','technicals','profile','sentiment']
     .forEach(function(t){
       var el = document.getElementById('tab-'+t);
       if (!el) return;
@@ -3435,7 +3492,7 @@ function closeOnboardingModal(){
 /* ===== PUBLIC PROFILE ===== */
 async function loadPublicProfile(userId){
   window._prevProfileTab = window._activeTab || 'commentary';
-  ['commentary','research','cftc','futures','services','contact','about','exports','wasde','commoditymap','weather','options','fob','freight','technicals','detail'].forEach(function(t){
+  ['commentary','research','futures','services','contact','about','exports','wasde','commoditymap','weather','options','fob','freight','technicals','detail'].forEach(function(t){
     var el = document.getElementById('tab-'+t);
     if(el) el.classList.add('hidden');
   });
@@ -4633,6 +4690,194 @@ function initCommodityMap() {
   cmLoadScripts(function() { cmInitMap(); });
 }
 // End Commodity Map
+
+
+// ============================================================
+// CFTC COT INLINE DASHBOARD
+// ============================================================
+var CFTC_COMMODITIES = [
+  {id:'corn',     label:'Corn',      mkt:'CORN - CHICAGO BOARD OF TRADE',         color:'#c8853a'},
+  {id:'srw',      label:'SRW Wheat', mkt:'WHEAT-SRW - CHICAGO BOARD OF TRADE',    color:'#d4aa55'},
+  {id:'hrw',      label:'HRW Wheat', mkt:'WHEAT-HRW - CHICAGO BOARD OF TRADE',    color:'#ffb347'},
+  {id:'soybeans', label:'Soybeans',  mkt:'SOYBEANS - CHICAGO BOARD OF TRADE',     color:'#2ecfaa'},
+  {id:'soymeal',  label:'Soy Meal',  mkt:'SOYBEAN MEAL - CHICAGO BOARD OF TRADE', color:'#4a9eff'},
+  {id:'soyoil',   label:'Soy Oil',   mkt:'SOYBEAN OIL - CHICAGO BOARD OF TRADE',  color:'#a78bfa'},
+  {id:'cotton',   label:'Cotton',    mkt:'COTTON NO. 2 - ICE FUTURES U.S.',       color:'#e879f9'},
+  {id:'sugar',    label:'Sugar #11', mkt:'SUGAR NO. 11 - ICE FUTURES U.S.',       color:'#f472b6'},
+  {id:'coffee',   label:'Coffee C',  mkt:'COFFEE C - ICE FUTURES U.S.',           color:'#fb923c'},
+];
+
+var _cftcCurrent = CFTC_COMMODITIES[0];
+var _cftcData    = {};
+var _cftcNetChart = null;
+var _cftcLsChart  = null;
+var _cftcInited   = false;
+
+function cftcN(v)  { return parseInt(v) || 0; }
+function cftcFmtN(v){ var x=cftcN(v); return x===0?'--':(x>0?'+':'')+x.toLocaleString(); }
+function cftcFmtA(v){ var x=cftcN(v); return x===0?'--':x.toLocaleString(); }
+function cftcFmtDate(s){
+  if(!s) return '--';
+  var d=new Date(s);
+  return d.toLocaleDateString('en-GB',{day:'numeric',month:'short',year:'2-digit'});
+}
+
+function cftcSetStatus(txt, state) {
+  var el = document.getElementById('cftc-status-txt');
+  var dot = document.getElementById('cftc-live-dot');
+  if (el) el.textContent = txt;
+  if (dot) dot.style.background = state==='live'?'var(--teal)':state==='err'?'var(--coral)':'var(--gold)';
+}
+
+function cftcBuildTabs() {
+  var el = document.getElementById('cftc-ctabs');
+  if (!el) return;
+  el.innerHTML = CFTC_COMMODITIES.map(function(c) {
+    var isAct = c.id === _cftcCurrent.id;
+    return '<button style="padding:6px 14px;border-radius:4px;border:1px solid ' + (isAct?'var(--blue)':'var(--border2)') + ';background:' + (isAct?'rgba(74,158,255,0.15)':'var(--card)') + ';color:' + (isAct?'var(--blue)':'var(--muted)') + ';font-family:DM Mono,monospace;font-size:9px;font-weight:500;letter-spacing:0.06em;text-transform:uppercase;cursor:pointer;" onclick="cftcSelectTab(\\x27' + c.id + '\\x27,this)">' + c.label + '</button>';
+  }).join('');
+}
+
+function cftcSelectTab(id, el) {
+  _cftcCurrent = CFTC_COMMODITIES.filter(function(c){ return c.id===id; })[0];
+  var btns = document.querySelectorAll('#cftc-ctabs button');
+  btns.forEach(function(b,i){
+    var isAct = CFTC_COMMODITIES[i].id===id;
+    b.style.borderColor = isAct?'var(--blue)':'var(--border2)';
+    b.style.background  = isAct?'rgba(74,158,255,0.15)':'var(--card)';
+    b.style.color       = isAct?'var(--blue)':'var(--muted)';
+  });
+  if (_cftcData[id]) { cftcRender(_cftcData[id]); }
+  else { cftcShowLoading(); cftcFetchOne(_cftcCurrent); }
+}
+
+function cftcShowLoading() {
+  var el = document.getElementById('cftc-tbody');
+  if (el) el.innerHTML = '<tr><td colspan="9" style="padding:24px;text-align:center;font-family:DM Mono,monospace;font-size:11px;color:var(--muted);">Loading…</td></tr>';
+}
+
+function cftcFetchOne(com) {
+  var mkt = encodeURIComponent(com.mkt);
+  var url = 'https://publicreporting.cftc.gov/resource/kh3c-gbw2.json?market_and_exchange_names=' + mkt + '&$order=report_date_as_yyyy_mm_dd+DESC&$limit=52';
+  return fetch(url, {mode:'cors'})
+    .then(function(r){ if(!r.ok) throw new Error('HTTP '+r.status); return r.json(); })
+    .then(function(data){
+      if(!data||data.length===0) throw new Error('No data');
+      _cftcData[com.id] = data;
+      if(com.id===_cftcCurrent.id) cftcRender(data);
+      return true;
+    })
+    .catch(function(e){
+      console.error('CFTC',com.label,e.message);
+      if(com.id===_cftcCurrent.id){
+        var el=document.getElementById('cftc-tbody');
+        if(el) el.innerHTML='<tr><td colspan="9" style="color:var(--coral);padding:20px;text-align:center;">Error: '+e.message+'</td></tr>';
+        cftcSetStatus('Error loading '+com.label,'err');
+      }
+      return false;
+    });
+}
+
+function cftcRender(data) {
+  var sorted = data.slice().sort(function(a,b){ return new Date(b.report_date_as_yyyy_mm_dd)-new Date(a.report_date_as_yyyy_mm_dd); });
+  var r0=sorted[0], r1=sorted[1]||{};
+  var mmL=cftcN(r0.m_money_positions_long_all), mmS=cftcN(r0.m_money_positions_short_all);
+  var mmNet=mmL-mmS, prevNet=cftcN(r1.m_money_positions_long_all)-cftcN(r1.m_money_positions_short_all);
+  var chg=mmNet-prevNet, oi=cftcN(r0.open_interest_all);
+  var pmNet=cftcN(r0.prod_merc_positions_long_all)-cftcN(r0.prod_merc_positions_short_all);
+
+  var set = function(id,val,cls){
+    var el=document.getElementById(id);
+    if(!el) return;
+    el.textContent=val;
+    if(cls) el.style.color=cls==='up'?'var(--teal)':cls==='dn'?'var(--coral)':'var(--muted)';
+  };
+  set('cftc-k-date', cftcFmtDate(r0.report_date_as_yyyy_mm_dd));
+  set('cftc-k-net',  cftcFmtN(mmNet),  mmNet>=0?'up':'dn');
+  set('cftc-k-chg',  cftcFmtN(chg),    chg>=0?'up':'dn');
+  set('cftc-k-long', cftcFmtA(mmL));
+  set('cftc-k-short',cftcFmtA(mmS));
+  set('cftc-k-oi',   oi>999999?(oi/1000000).toFixed(2)+'M':oi>999?(oi/1000).toFixed(1)+'K':cftcFmtA(oi));
+  set('cftc-k-comm', cftcFmtN(pmNet), pmNet>=0?'up':'dn');
+
+  var lu = document.getElementById('cftc-last-updated');
+  if(lu) lu.textContent = _cftcCurrent.label+' -- Report: '+cftcFmtDate(r0.report_date_as_yyyy_mm_dd)+' -- CFTC Disaggregated COT';
+
+  var rows = sorted.slice(0,20).map(function(row,i){
+    var l=cftcN(row.m_money_positions_long_all), s=cftcN(row.m_money_positions_short_all);
+    var sp=cftcN(row.m_money_positions_spread_all), net=l-s;
+    var prev=sorted[i+1]||{}, pn=cftcN(prev.m_money_positions_long_all)-cftcN(prev.m_money_positions_short_all);
+    var wc=net-pn;
+    var tdS='padding:7px 10px;font-family:DM Mono,monospace;font-size:10.5px;text-align:right;color:var(--muted);border-bottom:1px solid var(--border);';
+    var tdL='padding:7px 10px;font-family:DM Mono,monospace;font-size:10.5px;text-align:left;color:var(--text);border-bottom:1px solid var(--border);';
+    var nc=net>0?'var(--teal)':net<0?'var(--coral)':'var(--muted2)';
+    var wc2=wc>0?'var(--teal)':wc<0?'var(--coral)':'var(--muted2)';
+    return '<tr><td style="'+tdL+'">'+cftcFmtDate(row.report_date_as_yyyy_mm_dd)+'</td>'
+      +'<td style="'+tdS+'color:'+nc+'">'+cftcFmtN(net)+'</td>'
+      +'<td style="'+tdS+'color:'+wc2+'">'+cftcFmtN(wc)+'</td>'
+      +'<td style="'+tdS+'">'+cftcFmtA(l)+'</td>'
+      +'<td style="'+tdS+'">'+cftcFmtA(s)+'</td>'
+      +'<td style="'+tdS+'">'+cftcFmtA(sp)+'</td>'
+      +'<td style="'+tdS+'">'+cftcFmtA(cftcN(row.prod_merc_positions_long_all))+'</td>'
+      +'<td style="'+tdS+'">'+cftcFmtA(cftcN(row.prod_merc_positions_short_all))+'</td>'
+      +'<td style="'+tdS+'">'+cftcFmtA(cftcN(row.open_interest_all))+'</td></tr>';
+  }).join('');
+  var tbody = document.getElementById('cftc-tbody');
+  if(tbody) tbody.innerHTML = rows;
+
+  cftcRenderCharts(sorted);
+}
+
+function cftcRenderCharts(sorted) {
+  if(!window.Chart) return;
+  var rev = sorted.slice().reverse();
+  var labels = rev.map(function(r){ var d=new Date(r.report_date_as_yyyy_mm_dd); return d.getDate()+'/'+(d.getMonth()+1); });
+  var nets   = rev.map(function(r){ return cftcN(r.m_money_positions_long_all)-cftcN(r.m_money_positions_short_all); });
+  var longs  = rev.map(function(r){ return cftcN(r.m_money_positions_long_all); });
+  var shorts = rev.map(function(r){ return cftcN(r.m_money_positions_short_all); });
+  var col=_cftcCurrent.color, gc='rgba(255,255,255,0.05)', tc='rgba(136,144,164,0.8)';
+  var base={responsive:true,maintainAspectRatio:false,animation:false,
+    plugins:{legend:{display:false},tooltip:{mode:'index',intersect:false,backgroundColor:'rgba(28,32,48,0.97)',titleColor:'#e8eaf0',bodyColor:'#8890a4',borderColor:'rgba(255,255,255,0.14)',borderWidth:1}},
+    scales:{x:{ticks:{color:tc,font:{size:8},maxTicksLimit:10,maxRotation:0},grid:{color:gc},border:{display:false}},
+            y:{ticks:{color:tc,font:{size:8}},grid:{color:gc},border:{display:false}}}};
+  if(_cftcNetChart) _cftcNetChart.destroy();
+  var netCanvas = document.getElementById('cftc-ch-net');
+  if(netCanvas) _cftcNetChart=new window.Chart(netCanvas,{type:'bar',data:{labels:labels,datasets:[{data:nets,backgroundColor:nets.map(function(v){return v>=0?'rgba(46,207,170,0.65)':'rgba(255,107,74,0.65)';}),borderRadius:2}]},options:base});
+  if(_cftcLsChart) _cftcLsChart.destroy();
+  var lsCanvas = document.getElementById('cftc-ch-ls');
+  if(lsCanvas) _cftcLsChart=new window.Chart(lsCanvas,{type:'line',data:{labels:labels,datasets:[
+    {label:'Long', data:longs, borderColor:col,backgroundColor:'transparent',borderWidth:1.5,pointRadius:0,tension:0.3},
+    {label:'Short',data:shorts,borderColor:'rgba(255,107,74,0.8)',backgroundColor:'transparent',borderWidth:1.5,pointRadius:0,tension:0.3,borderDash:[4,3]}
+  ]},options:Object.assign({},base,{plugins:Object.assign({},base.plugins,{legend:{display:true,labels:{color:tc,font:{size:9},boxWidth:10}}})})});
+}
+
+function cftcLoadChartJs(cb) {
+  if(window.Chart) { cb(); return; }
+  var s=document.createElement('script');
+  s.src='https://cdnjs.cloudflare.com/ajax/libs/Chart.js/4.4.1/chart.umd.js';
+  s.onload=function(){ cb(); };
+  document.head.appendChild(s);
+}
+
+function initCftcDashboard() {
+  if(_cftcInited) {
+    // Already loaded - just re-render current
+    if(_cftcData[_cftcCurrent.id]) cftcRender(_cftcData[_cftcCurrent.id]);
+    return;
+  }
+  _cftcInited = true;
+  cftcBuildTabs();
+  cftcShowLoading();
+  cftcLoadChartJs(function(){
+    cftcFetchOne(_cftcCurrent).then(function(ok){
+      if(ok) cftcSetStatus('Live -- CFTC COT','live');
+      CFTC_COMMODITIES.slice(1).forEach(function(com,i){
+        setTimeout(function(){ cftcFetchOne(com); }, (i+1)*700);
+      });
+    });
+  });
+}
+// End CFTC
 
 </script>
 
