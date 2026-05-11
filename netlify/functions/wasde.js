@@ -1,6 +1,5 @@
 // netlify/functions/wasde.js
 // USDA PSD proxy - tries psdonline then OpenData endpoints
-// FIX: removed erroneous /psd/ path segment from psdonline URL (introduced during site split)
 const https = require('https');
 const urlMod = require('url');
 exports.handler = async (event) => {
@@ -18,15 +17,16 @@ exports.handler = async (event) => {
   var endpoint = params.endpoint || '';
   var apiKey   = process.env.USDA_API_KEY || '';
   if (!endpoint) return { statusCode: 400, headers: cors, body: JSON.stringify({ error: 'Missing endpoint' }) };
+  // API key must be a query parameter, not a header
   var urls = [
-    'https://apps.fas.usda.gov/psdonline/api/' + endpoint,
-    'https://apps.fas.usda.gov/OpenData/api/psd/' + endpoint
+    'https://apps.fas.usda.gov/psdonline/api/' + endpoint + '?API_KEY=' + apiKey,
+    'https://apps.fas.usda.gov/OpenData/api/psd/' + endpoint + '?API_KEY=' + apiKey
   ];
   var lastErr = '';
   for (var i = 0; i < urls.length; i++) {
     try {
       console.log('Trying URL ' + (i+1) + ': ' + urls[i]);
-      var data = await get(urls[i], { 'Accept':'application/json', 'API_KEY': apiKey, 'User-Agent':'Mozilla/5.0' });
+      var data = await get(urls[i], { 'Accept':'application/json', 'User-Agent':'Mozilla/5.0' });
       console.log('Success from URL ' + (i+1) + ', records: ' + (Array.isArray(data) ? data.length : typeof data));
       return { statusCode: 200, headers: cors, body: JSON.stringify(data) };
     } catch(e) {
@@ -43,8 +43,8 @@ function get(apiUrl, headers) {
       var body = '';
       res.on('data', function(c){ body += c; });
       res.on('end', function() {
-        console.log('HTTP status: ' + res.statusCode + ' body[:80]: ' + body.slice(0,80));
-        if (res.statusCode >= 400) return reject(new Error('HTTP ' + res.statusCode + ': ' + body.slice(0,150)));
+        console.log('HTTP status: ' + res.statusCode + ' body[:200]: ' + body.slice(0,200));
+        if (res.statusCode >= 400) return reject(new Error('HTTP ' + res.statusCode + ': ' + body.slice(0,200)));
         try { resolve(JSON.parse(body)); } catch(e) { reject(new Error('Bad JSON: ' + body.slice(0,80))); }
       });
     });
