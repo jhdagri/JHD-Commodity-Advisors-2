@@ -8,32 +8,25 @@ exports.handler = async (event) => {
 
   var params   = event.queryStringParameters || {};
   var endpoint = params.endpoint || '';
-  var apiKey   = process.env.USDA_API_KEY || 'bEC1iNBuZZssM4hSrY4X8bFZSJWqEPvcyCo1iV6t';
+  var apiKey   = process.env.USDA_API_KEY || 'g9sNI6gS6smHPA7IfnrK5zqw45f4xlFf0p1XxeNL';
 
   console.log('endpoint: ' + endpoint + ' apiKey length: ' + apiKey.length);
 
   if (!endpoint) return { statusCode: 400, headers: ct, body: JSON.stringify({ error: 'Missing endpoint' }) };
 
-  var urls = [
-    'https://apps.fas.usda.gov/psdonline/api/' + endpoint + '?API_KEY=' + apiKey,
-    'https://apps.fas.usda.gov/OpenData/api/psd/' + endpoint + '?API_KEY=' + apiKey
-  ];
+  var url = 'https://apps.fas.usda.gov/OpenData/api/psd/' + endpoint + '?API_KEY=' + apiKey;
 
-  var lastErr = '';
-  for (var i = 0; i < urls.length; i++) {
-    try {
-      console.log('Trying: ' + urls[i]);
-      var resp = await fetch(urls[i], { headers: { 'Accept': 'application/json', 'User-Agent': 'Mozilla/5.0' } });
-      var text = await resp.text();
-      console.log('Status: ' + resp.status + ' body[:200]: ' + text.slice(0, 200));
-      if (resp.ok) {
-        return { statusCode: 200, headers: ct, body: text };
-      }
-      lastErr = 'HTTP ' + resp.status + ': ' + text.slice(0, 200);
-    } catch(e) {
-      console.error('Fetch error: ' + e.message);
-      lastErr = e.message;
+  try {
+    console.log('Trying: ' + url);
+    var resp = await fetch(url, { headers: { 'Accept': 'application/json', 'User-Agent': 'Mozilla/5.0' } });
+    var text = await resp.text();
+    console.log('Status: ' + resp.status + ' body[:200]: ' + text.slice(0, 200));
+    if (resp.ok) {
+      return { statusCode: 200, headers: ct, body: text };
     }
+    return { statusCode: 500, headers: ct, body: JSON.stringify({ error: 'HTTP ' + resp.status + ': ' + text.slice(0, 200) }) };
+  } catch(e) {
+    console.error('Fetch error: ' + e.message);
+    return { statusCode: 500, headers: ct, body: JSON.stringify({ error: e.message }) };
   }
-  return { statusCode: 500, headers: ct, body: JSON.stringify({ error: lastErr }) };
 };
