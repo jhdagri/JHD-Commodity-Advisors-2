@@ -2768,17 +2768,18 @@ function showAdminPage(){
 /* ===== TAB ROUTING ===== */
 function showTab(name){
   window._activeTab = name;
-  ['dashboard','commentary','research','futures','services','contact','about','detail','exports','wasde','commoditymap','weather','options','fob','freight','technicals','profile','sentiment']
+  ['dashboard','commentary','research','futures','services','contact','about','detail','exports','wasde','cftc','commoditymap','weather','options','fob','freight','technicals','profile','sentiment']
     .forEach(function(t){
       var el = document.getElementById('tab-'+t);
       if (!el) return;
       el.classList.add('hidden');
-      if (t === 'commoditymap') el.style.display = 'none';
+      if (t === 'commoditymap' || t === 'cftc') el.style.display = 'none';
     });
   var showEl = document.getElementById('tab-'+name);
   if (showEl) {
     showEl.classList.remove('hidden');
     if (name === 'commoditymap') showEl.style.display = 'block';
+    if (name === 'cftc') showEl.style.display = 'block';
   }
   document.querySelectorAll('.snav-btn').forEach(function(b){ b.classList.toggle('active', b.dataset.tab===name); });
   var _cmTip = document.getElementById('cm-tip'); if(_cmTip) _cmTip.style.opacity='0';
@@ -2943,12 +2944,12 @@ async function loadPosts(category){
 async function loadDetail(postId, category){
   currentPostId = postId;
   currentPostTab = category || window._activeTab;
-  ['dashboard','commentary','research','futures','services','contact','about','exports','wasde','commoditymap','weather','options','fob','freight','technicals','profile','sentiment']
+  ['dashboard','commentary','research','futures','services','contact','about','exports','wasde','cftc','commoditymap','weather','options','fob','freight','technicals','profile','sentiment']
     .forEach(function(t){
       var el = document.getElementById('tab-'+t);
       if (!el) return;
       el.classList.add('hidden');
-      if (t === 'commoditymap') el.style.display = 'none';
+      if (t === 'commoditymap' || t === 'cftc') el.style.display = 'none';
     });
   document.getElementById('tab-detail').classList.remove('hidden');
   var bc = document.getElementById('detail-breadcrumb');
@@ -3492,7 +3493,7 @@ function closeOnboardingModal(){
 /* ===== PUBLIC PROFILE ===== */
 async function loadPublicProfile(userId){
   window._prevProfileTab = window._activeTab || 'commentary';
-  ['commentary','research','futures','services','contact','about','exports','wasde','commoditymap','weather','options','fob','freight','technicals','detail'].forEach(function(t){
+  ['commentary','research','futures','services','contact','about','exports','wasde','cftc','commoditymap','weather','options','fob','freight','technicals','detail'].forEach(function(t){
     var el = document.getElementById('tab-'+t);
     if(el) el.classList.add('hidden');
   });
@@ -4732,10 +4733,16 @@ function cftcSetStatus(txt, state) {
 function cftcBuildTabs() {
   var el = document.getElementById('cftc-ctabs');
   if (!el) return;
-  el.innerHTML = CFTC_COMMODITIES.map(function(c) {
-    var isAct = c.id === _cftcCurrent.id;
-    return '<button style="padding:6px 14px;border-radius:4px;border:1px solid ' + (isAct?'var(--blue)':'var(--border2)') + ';background:' + (isAct?'rgba(74,158,255,0.15)':'var(--card)') + ';color:' + (isAct?'var(--blue)':'var(--muted)') + ';font-family:DM Mono,monospace;font-size:9px;font-weight:500;letter-spacing:0.06em;text-transform:uppercase;cursor:pointer;" onclick="cftcSelectTab(\\x27' + c.id + '\\x27,this)">' + c.label + '</button>';
-  }).join('');
+  el.innerHTML = '';
+  CFTC_COMMODITIES.forEach(function(com) {
+    var isAct = com.id === _cftcCurrent.id;
+    var btn = document.createElement('button');
+    btn.setAttribute('data-cftcid', com.id);
+    btn.textContent = com.label;
+    btn.style.cssText = 'padding:6px 14px;border-radius:4px;border:1px solid ' + (isAct?'var(--blue)':'var(--border2)') + ';background:' + (isAct?'rgba(74,158,255,0.15)':'var(--card)') + ';color:' + (isAct?'var(--blue)':'var(--muted)') + ';font-family:DM Mono,monospace;font-size:9px;font-weight:500;letter-spacing:0.06em;text-transform:uppercase;cursor:pointer;';
+    btn.addEventListener('click', function(){ cftcSelectTab(com.id, btn); });
+    el.appendChild(btn);
+  });
 }
 
 function cftcSelectTab(id, el) {
