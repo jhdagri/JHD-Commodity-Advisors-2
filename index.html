@@ -1091,6 +1091,7 @@ padding:2px 8px;border-radius:3px;margin-bottom:6px;letter-spacing:0.06em;text-t
       <button class="snav-btn snav-premium" data-tab="fob"                 onclick="showTab('fob')"><span class="lock-icon">&#128274;</span>FOB Data</button>
       <button class="snav-btn snav-premium" data-tab="freight"             onclick="showTab('freight')"><span class="lock-icon">&#128274;</span>Freight</button>
       <button class="snav-btn snav-premium" data-tab="sentiment"           onclick="showTab('sentiment')"><span class="lock-icon">&#128274;</span>Sentiment</button>
+      <button class="snav-btn snav-premium" data-tab="grainstore" onclick="openGrainStore()"><span class="lock-icon">&#128274;</span>Grain Store</button>
       <div class="snav-divider"></div>
       <button class="snav-btn snav-free" data-tab="cftc"                   onclick="showTab('cftc')">CFTC</button>
       <button class="snav-btn snav-free" data-tab="exports"                onclick="showTab('exports')">Exports</button>
@@ -1100,7 +1101,6 @@ padding:2px 8px;border-radius:3px;margin-bottom:6px;letter-spacing:0.06em;text-t
       <button class="snav-btn snav-free" data-tab="technicals"             onclick="showTab('technicals')">Technicals</button>
       <button class="snav-btn snav-free" data-tab="commoditymap"           onclick="showTab('commoditymap')">Commodity Map</button>
       <button class="snav-btn snav-free" data-tab="weather"                onclick="showTab('weather')">Weather</button>
-      <button class="snav-btn" data-tab="grainstore"        onclick="openGrainStore()" style="color:var(--gold2);">&#127807; Grain Store</button>
     </div>
   </nav>
 
@@ -1231,9 +1231,24 @@ padding:2px 8px;border-radius:3px;margin-bottom:6px;letter-spacing:0.06em;text-t
   <!-- Research -->
   <div id="tab-research" class="hidden protected">
     <div class="page-wrap">
-      <div class="page-heading"><h2>Research</h2><p>Fundamental and technical research reports</p></div>
-      <!-- Database posts -->
-      <div id="posts-research"><div class="spin">Loading…</div></div>
+      <div class="page-heading">
+        <h2>Research <span class="premium-badge">&#128274; PREMIUM</span></h2>
+        <p>In-depth analytical research &mdash; Technicals, Options, Spreads, Supply &amp; Demand, CFTC &amp; Macro</p>
+      </div>
+      <div class="comm-subtabs">
+        <button class="comm-subtab active"  onclick="showResearchTab('technicals',this)">Technicals</button>
+        <button class="comm-subtab"         onclick="showResearchTab('options',this)">Options Analytics</button>
+        <button class="comm-subtab"         onclick="showResearchTab('spreads',this)">Spread Analysis</button>
+        <button class="comm-subtab"         onclick="showResearchTab('supply-demand',this)">Supply &amp; Demand</button>
+        <button class="comm-subtab"         onclick="showResearchTab('cftc',this)">CFTC Analysis</button>
+        <button class="comm-subtab"         onclick="showResearchTab('macro',this)">Macro</button>
+      </div>
+      <div id="res-panel-technicals"><div id="posts-research-technicals"><div class="spin">Loading…</div></div></div>
+      <div id="res-panel-options"       class="hidden"><div id="posts-research-options"></div></div>
+      <div id="res-panel-spreads"       class="hidden"><div id="posts-research-spreads"></div></div>
+      <div id="res-panel-supply-demand" class="hidden"><div id="posts-research-supply-demand"></div></div>
+      <div id="res-panel-cftc"          class="hidden"><div id="posts-research-cftc"></div></div>
+      <div id="res-panel-macro"         class="hidden"><div id="posts-research-macro"></div></div>
     </div>
   </div>
 
@@ -1264,14 +1279,14 @@ padding:2px 8px;border-radius:3px;margin-bottom:6px;letter-spacing:0.06em;text-t
             {"proName":"FOREXCOM:DJI","title":"Dow Jones"},
             {"description":"FTSE 100","proName":"FOREXCOM:UKXGBP"},
             {"description":"DAX","proName":"XETR:DAX"},
-            {"description":"DXY","proName":"TVC:DXY"},
+            {"description":"DXY","proName":"CAPITALCOM:DXY"},
             {"description":"EUR/USD","proName":"FX:EURUSD"},
             {"description":"GBP/USD","proName":"FX:GBPUSD"},
             {"description":"USD/BRL","proName":"FX_IDC:USDBRL"},
             {"description":"WTI Crude","proName":"TVC:USOIL"},
             {"description":"Brent Crude","proName":"TVC:UKOIL"},
             {"description":"Gold","proName":"TVC:GOLD"},
-            {"description":"Natural Gas","proName":"TVC:NATGAS"}
+            {"description":"Natural Gas","proName":"OANDA:NATGASUSD"}
           ],"showSymbolLogo":true,"isTransparent":true,"displayMode":"adaptive","colorTheme":"dark","locale":"en"}
           </script>
         </div>
@@ -1289,7 +1304,7 @@ padding:2px 8px;border-radius:3px;margin-bottom:6px;letter-spacing:0.06em;text-t
       <!-- FX -->
       <div style="font-family:'DM Mono',monospace;font-size:9px;text-transform:uppercase;letter-spacing:0.16em;color:var(--muted2);margin-bottom:12px;padding-bottom:8px;border-bottom:1px solid var(--border);">FX &amp; Dollar Index</div>
       <div style="display:grid;grid-template-columns:repeat(4,1fr);gap:12px;margin-bottom:28px;">
-        <div class="tradingview-widget-container"><div class="tradingview-widget-container__widget"></div><script type="text/javascript" src="https://s3.tradingview.com/external-embedding/embed-widget-mini-symbol-overview.js">{"symbol":"TVC:DXY","width":"100%","height":160,"locale":"en","dateRange":"1D","colorTheme":"dark","isTransparent":true,"autosize":true}</script></div>
+        <div class="tradingview-widget-container"><div class="tradingview-widget-container__widget"></div><script type="text/javascript" src="https://s3.tradingview.com/external-embedding/embed-widget-mini-symbol-overview.js">{"symbol":"CAPITALCOM:DXY","width":"100%","height":160,"locale":"en","dateRange":"1D","colorTheme":"dark","isTransparent":true,"autosize":true}</script></div>
         <div class="tradingview-widget-container"><div class="tradingview-widget-container__widget"></div><script type="text/javascript" src="https://s3.tradingview.com/external-embedding/embed-widget-mini-symbol-overview.js">{"symbol":"FX:EURUSD","width":"100%","height":160,"locale":"en","dateRange":"1D","colorTheme":"dark","isTransparent":true,"autosize":true}</script></div>
         <div class="tradingview-widget-container"><div class="tradingview-widget-container__widget"></div><script type="text/javascript" src="https://s3.tradingview.com/external-embedding/embed-widget-mini-symbol-overview.js">{"symbol":"FX:GBPUSD","width":"100%","height":160,"locale":"en","dateRange":"1D","colorTheme":"dark","isTransparent":true,"autosize":true}</script></div>
         <div class="tradingview-widget-container"><div class="tradingview-widget-container__widget"></div><script type="text/javascript" src="https://s3.tradingview.com/external-embedding/embed-widget-mini-symbol-overview.js">{"symbol":"FX_IDC:USDBRL","width":"100%","height":160,"locale":"en","dateRange":"1D","colorTheme":"dark","isTransparent":true,"autosize":true}</script></div>
@@ -1304,8 +1319,8 @@ padding:2px 8px;border-radius:3px;margin-bottom:6px;letter-spacing:0.06em;text-t
       <div style="display:grid;grid-template-columns:repeat(4,1fr);gap:12px;margin-bottom:28px;">
         <div class="tradingview-widget-container"><div class="tradingview-widget-container__widget"></div><script type="text/javascript" src="https://s3.tradingview.com/external-embedding/embed-widget-mini-symbol-overview.js">{"symbol":"TVC:USOIL","width":"100%","height":160,"locale":"en","dateRange":"1D","colorTheme":"dark","isTransparent":true,"autosize":true}</script></div>
         <div class="tradingview-widget-container"><div class="tradingview-widget-container__widget"></div><script type="text/javascript" src="https://s3.tradingview.com/external-embedding/embed-widget-mini-symbol-overview.js">{"symbol":"TVC:UKOIL","width":"100%","height":160,"locale":"en","dateRange":"1D","colorTheme":"dark","isTransparent":true,"autosize":true}</script></div>
-        <div class="tradingview-widget-container"><div class="tradingview-widget-container__widget"></div><script type="text/javascript" src="https://s3.tradingview.com/external-embedding/embed-widget-mini-symbol-overview.js">{"symbol":"TVC:NATGAS","width":"100%","height":160,"locale":"en","dateRange":"1D","colorTheme":"dark","isTransparent":true,"autosize":true}</script></div>
-        <div class="tradingview-widget-container"><div class="tradingview-widget-container__widget"></div><script type="text/javascript" src="https://s3.tradingview.com/external-embedding/embed-widget-mini-symbol-overview.js">{"symbol":"NYMEX:HO1!","width":"100%","height":160,"locale":"en","dateRange":"1D","colorTheme":"dark","isTransparent":true,"autosize":true}</script></div>
+        <div class="tradingview-widget-container"><div class="tradingview-widget-container__widget"></div><script type="text/javascript" src="https://s3.tradingview.com/external-embedding/embed-widget-mini-symbol-overview.js">{"symbol":"OANDA:NATGASUSD","width":"100%","height":160,"locale":"en","dateRange":"1D","colorTheme":"dark","isTransparent":true,"autosize":true}</script></div>
+        <div class="tradingview-widget-container"><div class="tradingview-widget-container__widget"></div><script type="text/javascript" src="https://s3.tradingview.com/external-embedding/embed-widget-mini-symbol-overview.js">{"symbol":"TVC:UKOIL","width":"100%","height":160,"locale":"en","dateRange":"1D","colorTheme":"dark","isTransparent":true,"autosize":true}</script></div>
       </div>
 
       <!-- Metals -->
@@ -1313,7 +1328,7 @@ padding:2px 8px;border-radius:3px;margin-bottom:6px;letter-spacing:0.06em;text-t
       <div style="display:grid;grid-template-columns:repeat(4,1fr);gap:12px;margin-bottom:20px;">
         <div class="tradingview-widget-container"><div class="tradingview-widget-container__widget"></div><script type="text/javascript" src="https://s3.tradingview.com/external-embedding/embed-widget-mini-symbol-overview.js">{"symbol":"TVC:GOLD","width":"100%","height":160,"locale":"en","dateRange":"1D","colorTheme":"dark","isTransparent":true,"autosize":true}</script></div>
         <div class="tradingview-widget-container"><div class="tradingview-widget-container__widget"></div><script type="text/javascript" src="https://s3.tradingview.com/external-embedding/embed-widget-mini-symbol-overview.js">{"symbol":"TVC:SILVER","width":"100%","height":160,"locale":"en","dateRange":"1D","colorTheme":"dark","isTransparent":true,"autosize":true}</script></div>
-        <div class="tradingview-widget-container"><div class="tradingview-widget-container__widget"></div><script type="text/javascript" src="https://s3.tradingview.com/external-embedding/embed-widget-mini-symbol-overview.js">{"symbol":"TVC:COPPER","width":"100%","height":160,"locale":"en","dateRange":"1D","colorTheme":"dark","isTransparent":true,"autosize":true}</script></div>
+        <div class="tradingview-widget-container"><div class="tradingview-widget-container__widget"></div><script type="text/javascript" src="https://s3.tradingview.com/external-embedding/embed-widget-mini-symbol-overview.js">{"symbol":"OANDA:XCUUSD","width":"100%","height":160,"locale":"en","dateRange":"1D","colorTheme":"dark","isTransparent":true,"autosize":true}</script></div>
         <div class="tradingview-widget-container"><div class="tradingview-widget-container__widget"></div><script type="text/javascript" src="https://s3.tradingview.com/external-embedding/embed-widget-mini-symbol-overview.js">{"symbol":"TVC:PLATINUM","width":"100%","height":160,"locale":"en","dateRange":"1D","colorTheme":"dark","isTransparent":true,"autosize":true}</script></div>
       </div>
 
@@ -2145,7 +2160,14 @@ padding:2px 8px;border-radius:3px;margin-bottom:6px;letter-spacing:0.06em;text-t
             <option value="commentary-corn">Market Commentary -- Corn</option>
             <option value="commentary-soy">Market Commentary -- Soy Complex</option>
           </optgroup>
-          <option value="research">Research</option>
+          <optgroup label="Research (Premium)">
+            <option value="research-technicals">Research -- Technicals</option>
+            <option value="research-options">Research -- Options Analytics</option>
+            <option value="research-spreads">Research -- Spread Analysis</option>
+            <option value="research-supply-demand">Research -- Supply &amp; Demand</option>
+            <option value="research-cftc">Research -- CFTC Analysis</option>
+            <option value="research-macro">Research -- Macro</option>
+          </optgroup>
           <option value="cftc">CFTC</option>
           <option value="exports">Export Data</option>
           <option value="wasde">WASDE</option>
@@ -2273,7 +2295,7 @@ padding:2px 8px;border-radius:3px;margin-bottom:6px;letter-spacing:0.06em;text-t
 var sb, currentUser, isAdmin=false, currentPostId=null, currentPostTab=null, quill=null, editorMode='visual';
 var allSubs=[];
 
-var POST_TABS=['commentary-wheat','commentary-corn','commentary-soy','research','cftc','commoditymap','weather','options','fob','freight'];
+var POST_TABS=['commentary-wheat','commentary-corn','commentary-soy','research-technicals','research-options','research-spreads','research-supply-demand','research-cftc','research-macro','cftc','commoditymap','weather','fob','freight'];
 var ADMIN_EMAIL_LC = ADMIN_EMAIL.toLowerCase();
 
 
@@ -2654,6 +2676,10 @@ function showTab(name){
   if(name === 'exports')    loadExportSales(false);
   if(name === 'freight')    loadFreightDashboard(false);
   if(POST_TABS.indexOf(name) > -1) loadPosts(name);
+  if(name === 'research') {
+    var resEl = document.getElementById('posts-research-technicals');
+    if (resEl && resEl.querySelector('.post-card') === null) { loadPosts('research-technicals'); }
+  }
   if(name === 'commentary') {
     var wheatEl = document.getElementById('posts-commentary-wheat');
     if (wheatEl && wheatEl.innerHTML.indexOf('spin') > -1) loadPosts('commentary-wheat');
