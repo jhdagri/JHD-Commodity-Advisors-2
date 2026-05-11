@@ -1,5 +1,6 @@
-// netlify/functions/wasde.js
-// X-Api-Key header -- USDA FAS OpenData via api.data.gov
+// netlify/functions/wasde.js — server-side proxy, X-Api-Key header
+const https = require('https');
+const urlMod = require('url');
 
 exports.handler = async (event) => {
   var ct = { 'Content-Type': 'application/json', 'Cache-Control': 'public, max-age=3600' };
@@ -13,16 +14,31 @@ exports.handler = async (event) => {
   if (!endpoint) return { statusCode: 400, headers: ct, body: JSON.stringify({ error: 'Missing endpoint' }) };
 
   var url = 'https://apps.fas.usda.gov/OpenData/api/psd/' + endpoint;
+  console.log('Trying: ' + url);
 
   try {
-    console.log('Trying: ' + url);
-    var resp = await fetch(url, { headers: { 'X-Api-Key': apiKey, 'Accept': 'application/json' } });
-    var text = await resp.text();
-    console.log('Status: ' + resp.status + ' body[:200]: ' + text.slice(0, 200));
-    if (resp.ok) return { statusCode: 200, headers: ct, body: text };
-    return { statusCode: 500, headers: ct, body: JSON.stringify({ error: 'HTTP ' + resp.status + ': ' + text.slice(0, 200) }) };
+    var data = await get(url, { 'X-Api-Key': apiKey, 'Accept': 'application/json' });
+    console.log('Success, records: ' + (Array.isArray(data) ? data.length : typeof data));
+    return { statusCode: 200, headers: ct, body: JSON.stringify(data) };
   } catch(e) {
-    console.error('Fetch error: ' + e.message);
+    console.error('Failed: ' + e.message);
     return { statusCode: 500, headers: ct, body: JSON.stringify({ error: e.message }) };
   }
 };
+
+function get(apiUrl, headers) {
+  return new Promise(function(resolve, reject) {
+    var p = urlMod.parse(apiUrl);
+    var req = https.request({ hostname: p.hostname, path: p.path, method: 'GET', headers: headers }, function(res) {
+      var body = '';
+      res.on('data', function(c){ body += c; });
+      res.on('end', function() {
+        console.log('HTTP ' + res.statusCode + ' body[:200]: ' + body.slice(0, 200));
+        if (res.statusCode >= 400) return reject(new Error('HTTP ' + res.statusCode + ': ' + body.slice(0, 200)));
+        try { resolve(JSON.parse(body)); } catch(e) { reject(new Error('Bad JSON: ' + body.slice(0, 80))); }
+      });
+    });
+    req.on('error', reject);
+    req.end();
+  });
+}
