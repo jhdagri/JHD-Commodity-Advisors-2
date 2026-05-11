@@ -3852,23 +3852,13 @@ async function convertPdfToHtml(base64, filename){
     + 'Extract the date from the document and use it in the masthead. '
     + 'Return ONLY the HTML document, nothing else.';
 
-  var resp = await fetch('https://api.anthropic.com/v1/messages', {
+  var resp = await fetch('/.netlify/functions/pdf-convert', {
     method: 'POST',
     headers: {'Content-Type':'application/json'},
     body: JSON.stringify({
-      model: 'claude-sonnet-4-20250514',
-      max_tokens: 4000,
       system: systemPrompt,
-      messages: [{
-        role: 'user',
-        content: [{
-          type: 'document',
-          source: { type: 'base64', media_type: 'application/pdf', data: base64 }
-        },{
-          type: 'text',
-          text: 'Convert this market commentary PDF to styled HTML. File: ' + filename
-        }]
-      }]
+      base64: base64,
+      filename: filename
     })
   });
   if(!resp.ok){
