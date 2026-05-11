@@ -1,27 +1,20 @@
 // netlify/functions/wasde.js
+// CORS is handled by netlify.toml [[headers]] -- do NOT set CORS headers here
 const https = require('https');
 const urlMod = require('url');
 
 exports.handler = async (event) => {
-  var origin = (event.headers && (event.headers['origin'] || event.headers['Origin'])) || '*';
-  var cors = {
-    'Content-Type': 'application/json',
-    'Access-Control-Allow-Origin': origin,
-    'Access-Control-Allow-Methods': 'GET, OPTIONS',
-    'Access-Control-Allow-Headers': 'Content-Type, API_KEY',
-    'Vary': 'Origin',
-    'Cache-Control': 'public, max-age=3600'
-  };
-  if (event.httpMethod === 'OPTIONS') return { statusCode: 204, headers: cors, body: '' };
+  var ct = { 'Content-Type': 'application/json', 'Cache-Control': 'public, max-age=3600' };
+
+  if (event.httpMethod === 'OPTIONS') return { statusCode: 204, headers: ct, body: '' };
 
   var params   = event.queryStringParameters || {};
   var endpoint = params.endpoint || '';
-  // Use env var, fall back to registered key
   var apiKey   = process.env.USDA_API_KEY || 'bEC1iNBuZZssM4hSrY4X8bFZSJWqEPvcyCo1iV6t';
 
-  console.log('apiKey present: ' + (apiKey.length > 0) + ' length: ' + apiKey.length);
+  console.log('apiKey length: ' + apiKey.length + ' endpoint: ' + endpoint);
 
-  if (!endpoint) return { statusCode: 400, headers: cors, body: JSON.stringify({ error: 'Missing endpoint' }) };
+  if (!endpoint) return { statusCode: 400, headers: ct, body: JSON.stringify({ error: 'Missing endpoint' }) };
 
   var urls = [
     'https://apps.fas.usda.gov/psdonline/api/' + endpoint + '?API_KEY=' + apiKey,
@@ -34,13 +27,13 @@ exports.handler = async (event) => {
       console.log('Trying URL ' + (i+1) + ': ' + urls[i]);
       var data = await get(urls[i], { 'Accept': 'application/json', 'User-Agent': 'Mozilla/5.0' });
       console.log('Success from URL ' + (i+1) + ', records: ' + (Array.isArray(data) ? data.length : typeof data));
-      return { statusCode: 200, headers: cors, body: JSON.stringify(data) };
+      return { statusCode: 200, headers: ct, body: JSON.stringify(data) };
     } catch(e) {
       console.error('URL ' + (i+1) + ' failed: ' + e.message);
       lastErr = e.message;
     }
   }
-  return { statusCode: 500, headers: cors, body: JSON.stringify({ error: lastErr }) };
+  return { statusCode: 500, headers: ct, body: JSON.stringify({ error: lastErr }) };
 };
 
 function get(apiUrl, headers) {
