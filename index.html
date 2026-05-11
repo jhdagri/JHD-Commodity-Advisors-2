@@ -1097,8 +1097,6 @@ padding:2px 8px;border-radius:3px;margin-bottom:6px;letter-spacing:0.06em;text-t
       <button class="snav-btn snav-free" data-tab="exports"                onclick="showTab('exports')">Exports</button>
       <button class="snav-btn snav-free" data-tab="wasde"                  onclick="showTab('wasde')">WASDE</button>
       <button class="snav-btn snav-free" data-tab="futures"                onclick="showTab('futures')">Global Markets</button>
-      <button class="snav-btn snav-free" data-tab="options"                onclick="showTab('options')">Options</button>
-      <button class="snav-btn snav-free" data-tab="technicals"             onclick="showTab('technicals')">Technicals</button>
       <button class="snav-btn snav-free" data-tab="commoditymap"           onclick="showTab('commoditymap')">Commodity Map</button>
       <button class="snav-btn snav-free" data-tab="weather"                onclick="showTab('weather')">Weather</button>
     </div>
@@ -1583,8 +1581,53 @@ padding:2px 8px;border-radius:3px;margin-bottom:6px;letter-spacing:0.06em;text-t
   <!-- Commodity Map -->
   <div id="tab-commoditymap" class="hidden">
     <div class="page-wrap">
-      <div class="page-heading"><h2>Commodity Map</h2><p>Production regions, trade flows and origin analysis</p></div>
-      <div id="posts-commoditymap"><div class="spin">Loading…</div></div>
+
+      <!-- MAP TOP ROW -->
+      <div style="display:flex;align-items:flex-start;justify-content:space-between;gap:16px;margin-bottom:12px;flex-wrap:wrap;">
+        <div>
+          <div style="font-family:'DM Mono',monospace;font-size:9px;letter-spacing:0.16em;color:var(--blue);text-transform:uppercase;margin-bottom:4px;">JHD Commodity Advisors · Production Cycle</div>
+          <h2 style="font-family:'DM Serif Display',serif;font-size:22px;font-weight:900;color:var(--text);letter-spacing:-0.01em;line-height:1.1;">Global Grain &amp; Oilseed <span style="color:var(--blue);">Map</span></h2>
+          <div style="font-family:'DM Mono',monospace;font-size:10px;color:var(--muted2);margin-top:3px;" id="cm-sub">Hover a country to see its production stage detail</div>
+        </div>
+        <div style="display:flex;align-items:center;gap:8px;flex-wrap:wrap;">
+          <!-- zoom buttons -->
+          <div style="display:flex;gap:4px;">
+            <button onclick="cmZoom(1.35)" style="width:30px;height:30px;background:var(--card);border:1px solid var(--border2);border-radius:4px;color:var(--text);font-size:16px;cursor:pointer;display:flex;align-items:center;justify-content:center;">+</button>
+            <button onclick="cmZoom(1/1.35)" style="width:30px;height:30px;background:var(--card);border:1px solid var(--border2);border-radius:4px;color:var(--text);font-size:16px;cursor:pointer;display:flex;align-items:center;justify-content:center;">−</button>
+            <button onclick="cmReset()" style="height:30px;padding:0 10px;background:var(--card);border:1px solid var(--border2);border-radius:4px;color:var(--muted);font-family:'DM Mono',monospace;font-size:9px;cursor:pointer;">Reset</button>
+          </div>
+          <!-- commodity tabs -->
+          <div style="display:flex;gap:6px;">
+            <button id="cmtab-wheat"     class="cmtab" onclick="cmSetC('wheat')"    style="padding:6px 14px;border-radius:4px;border:1px solid var(--gold2);background:rgba(212,170,85,0.15);color:var(--gold2);font-family:'DM Mono',monospace;font-size:9px;font-weight:500;letter-spacing:0.06em;text-transform:uppercase;cursor:pointer;">Wheat</button>
+            <button id="cmtab-corn"      class="cmtab" onclick="cmSetC('corn')"     style="padding:6px 14px;border-radius:4px;border:1px solid var(--border2);background:var(--card);color:var(--muted);font-family:'DM Mono',monospace;font-size:9px;font-weight:500;letter-spacing:0.06em;text-transform:uppercase;cursor:pointer;">Corn</button>
+            <button id="cmtab-soybeans"  class="cmtab" onclick="cmSetC('soybeans')" style="padding:6px 14px;border-radius:4px;border:1px solid var(--border2);background:var(--card);color:var(--muted);font-family:'DM Mono',monospace;font-size:9px;font-weight:500;letter-spacing:0.06em;text-transform:uppercase;cursor:pointer;">Soybeans</button>
+          </div>
+        </div>
+      </div>
+
+      <!-- MONTH BAR -->
+      <div id="cm-mbar" style="display:flex;background:var(--card);border:1px solid var(--border);border-radius:6px;overflow:hidden;margin-bottom:12px;"></div>
+
+      <!-- MAP + SIDEBAR -->
+      <div style="display:grid;grid-template-columns:1fr 220px;gap:12px;" id="cm-body">
+        <div style="position:relative;background:var(--card);border:1px solid var(--border);border-radius:8px;overflow:hidden;aspect-ratio:16/7;width:100%;" id="cm-map-box">
+          <div id="cm-load" style="position:absolute;inset:0;display:flex;align-items:center;justify-content:center;background:var(--card);z-index:10;">
+            <p style="font-family:'DM Mono',monospace;color:var(--muted);font-size:11px;display:flex;align-items:center;gap:8px;"><span style="width:16px;height:16px;border:2px solid var(--border2);border-top-color:var(--blue);border-radius:50%;animation:spin 0.8s linear infinite;display:inline-block;"></span>Loading map…</p>
+          </div>
+          <svg id="cm-svg" style="width:100%;height:100%;display:block;" preserveAspectRatio="xMidYMid meet"></svg>
+        </div>
+        <div style="display:flex;flex-direction:column;gap:10px;">
+          <div style="background:var(--card);border:1px solid var(--border);border-radius:8px;padding:14px;">
+            <div style="font-family:'DM Mono',monospace;font-size:9px;letter-spacing:0.1em;text-transform:uppercase;color:var(--muted2);margin-bottom:8px;">Stage Legend</div>
+            <div id="cm-legend"></div>
+          </div>
+          <div style="background:var(--card);border:1px solid var(--border);border-radius:8px;padding:14px;">
+            <div style="font-family:'DM Mono',monospace;font-size:9px;letter-spacing:0.1em;text-transform:uppercase;color:var(--muted2);margin-bottom:8px;">Key Context</div>
+            <div id="cm-notes"></div>
+          </div>
+        </div>
+      </div>
+
     </div>
   </div>
 
@@ -2295,7 +2338,7 @@ padding:2px 8px;border-radius:3px;margin-bottom:6px;letter-spacing:0.06em;text-t
 var sb, currentUser, isAdmin=false, currentPostId=null, currentPostTab=null, quill=null, editorMode='visual';
 var allSubs=[];
 
-var POST_TABS=['commentary-wheat','commentary-corn','commentary-soy','research-technicals','research-options','research-spreads','research-supply-demand','research-cftc','research-macro','cftc','commoditymap','weather','fob','freight'];
+var POST_TABS=['commentary-wheat','commentary-corn','commentary-soy','research-technicals','research-options','research-spreads','research-supply-demand','research-cftc','research-macro','cftc','weather','fob','freight'];
 var ADMIN_EMAIL_LC = ADMIN_EMAIL.toLowerCase();
 
 
@@ -2669,7 +2712,7 @@ function showAdminPage(){
 /* ===== TAB ROUTING ===== */
 function showTab(name){
   window._activeTab = name;
-  ['dashboard','commentary','research','cftc','futures','services','contact','about','detail','exports','wasde','commoditymap','weather','options','fob','freight','technicals','profile','sentiment']
+  ['dashboard','commentary','research','cftc','futures','services','contact','about','detail','exports','wasde','weather','options','fob','freight','technicals','profile','sentiment']
     .forEach(function(t){ document.getElementById('tab-'+t).classList.add('hidden'); });
   document.getElementById('tab-'+name).classList.remove('hidden');
   document.querySelectorAll('.snav-btn').forEach(function(b){ b.classList.toggle('active', b.dataset.tab===name); });
@@ -2686,6 +2729,7 @@ function showTab(name){
   }
   if(name==='technicals')   loadTACharts();
   if(name==='wasde')        { if(!_wasdeLoaded) initWasde(); }
+  if(name==='commoditymap') { if(!_cmInited) initCommodityMap(); }
   if(name==='sentiment')    loadSentimentTab();
   if(name==='dashboard')    loadDashboard();
 }
@@ -2815,7 +2859,7 @@ async function loadPosts(category){
 async function loadDetail(postId, category){
   currentPostId = postId;
   currentPostTab = category || window._activeTab;
-  ['dashboard','commentary','research','cftc','futures','services','contact','about','exports','wasde','commoditymap','weather','options','fob','freight','technicals','profile','sentiment'].forEach(function(t){
+  ['dashboard','commentary','research','cftc','futures','services','contact','about','exports','wasde','weather','options','fob','freight','technicals','profile','sentiment'].forEach(function(t){
     document.getElementById('tab-'+t).classList.add('hidden');
   });
   document.getElementById('tab-detail').classList.remove('hidden');
@@ -3351,7 +3395,7 @@ function closeOnboardingModal(){
 /* ===== PUBLIC PROFILE ===== */
 async function loadPublicProfile(userId){
   window._prevProfileTab = window._activeTab || 'commentary';
-  ['commentary','research','cftc','futures','services','contact','about','exports','wasde','commoditymap','weather','options','fob','freight','technicals','detail'].forEach(function(t){
+  ['commentary','research','cftc','futures','services','contact','about','exports','wasde','weather','options','fob','freight','technicals','detail'].forEach(function(t){
     var el = document.getElementById('tab-'+t);
     if(el) el.classList.add('hidden');
   });
@@ -4270,8 +4314,289 @@ function initWasde() {
 }
 // End WASDE
 
+
+// ============================================================
+// COMMODITY MAP — inline, D3 loaded on demand
+// ============================================================
+var _cmLoaded = false;
+var _cmInited = false;
+var _cmZoomObj = null;
+
+var CM_ST = [
+  {id:0,l:'Non-producer',c:'#141720'},
+  {id:1,l:'Off-season',c:'#1e2540'},
+  {id:2,l:'Soil Prep',c:'#6b3d12'},
+  {id:3,l:'Planting',c:'#c8853a'},
+  {id:4,l:'Vegetative Growth',c:'#2ecfaa'},
+  {id:5,l:'Heading/Flowering',c:'#4a9eff'},
+  {id:6,l:'Maturation',c:'#d4aa55'},
+  {id:7,l:'Harvest',c:'#ff6b4a'},
+  {id:8,l:'Post-harvest',c:'#374060'},
+];
+var CM_SC = {};
+CM_ST.forEach(function(s){ CM_SC[s.id] = s.c; });
+var CM_MN = ['Jan','Feb','Mar','Apr','May','Jun','Jul','Aug','Sep','Oct','Nov','Dec'];
+
+var CM_D = {
+  wheat:{
+    840:{n:'United States',d:[4,4,4,5,5,7,8,8,8,3,4,4],t:'Winter wheat (Southern Plains) planted Oct, harvested Jun-Jul.'},
+    124:{n:'Canada',d:[1,1,1,1,3,4,4,5,7,8,1,1],t:'Spring wheat. Prairie provinces. Planted Apr-May, harvested Aug-Sep.'},
+    643:{n:'Russia',d:[4,4,4,4,5,7,7,8,3,4,4,4],t:'Winter wheat dominant. Harvested Jul-Aug. North Caucasus & Volga.'},
+    804:{n:'Ukraine',d:[4,4,4,4,5,7,7,8,3,4,4,4],t:'Winter wheat. Major Black Sea export origin.'},
+    398:{n:'Kazakhstan',d:[1,1,1,1,3,4,4,7,8,1,1,1],t:'Spring wheat. Northern Kazakhstan. Harvested Aug.'},
+    250:{n:'France',d:[4,4,4,4,5,5,7,8,3,4,4,4],t:'Winter wheat. Beauce region. Harvested Jul-Aug.'},
+    276:{n:'Germany',d:[4,4,4,4,5,5,7,8,3,4,4,4],t:'Winter wheat. Harvested Jul-Aug.'},
+    826:{n:'United Kingdom',d:[4,4,4,4,5,5,7,8,3,4,4,4],t:'Winter wheat. East Anglia. Harvested Jul-Aug.'},
+    616:{n:'Poland',d:[4,4,4,4,5,5,7,8,3,4,4,4],t:'Winter wheat. Harvested Jul-Aug.'},
+    642:{n:'Romania',d:[4,4,4,5,5,7,7,8,3,4,4,4],t:'Winter wheat. Wallachian Plain. Harvested Jun-Jul.'},
+    348:{n:'Hungary',d:[4,4,4,5,5,7,7,8,3,4,4,4],t:'Winter wheat. Harvested Jun-Jul.'},
+    100:{n:'Bulgaria',d:[4,4,4,5,5,7,7,8,3,4,4,4],t:'Winter wheat. Harvested Jun-Jul.'},
+    36: {n:'Australia',d:[8,8,1,3,3,4,4,4,5,6,7,7],t:'Winter wheat (S.Hemisphere). Planted Apr-Jun, harvested Nov-Dec.'},
+    32: {n:'Argentina',d:[8,8,1,1,3,4,4,4,5,6,7,8],t:'Winter wheat (S.Hemisphere). Planted May-Jun, harvested Nov-Dec.'},
+    356:{n:'India',d:[4,5,7,8,8,1,1,1,1,1,3,4],t:'Rabi wheat. Planted Nov, harvested Mar-Apr. Punjab & Haryana.'},
+    156:{n:'China',d:[4,4,4,5,7,7,8,8,3,4,4,4],t:'Winter wheat. North China Plain. Harvested May-Jun.'},
+    586:{n:'Pakistan',d:[4,5,7,8,8,1,1,1,1,3,3,4],t:'Winter wheat. Harvested Mar-Apr. Punjab dominant.'},
+    792:{n:'Turkey',d:[4,4,4,5,5,7,8,8,3,4,4,4],t:'Winter wheat. Central Anatolia. Harvested Jun-Jul.'},
+    364:{n:'Iran',d:[4,4,4,5,7,8,8,1,3,4,4,4],t:'Winter wheat. Harvested May-Jun in southern regions.'},
+    504:{n:'Morocco',d:[4,4,5,5,7,8,1,1,3,4,4,4],t:'Winter wheat. Harvested May-Jun.'},
+    818:{n:'Egypt',d:[4,5,7,8,8,1,1,1,1,1,3,4],t:'Nile Delta winter wheat. Harvested Mar-Apr.'},
+    12: {n:'Algeria',d:[4,4,5,5,7,8,1,1,3,4,4,4],t:'Winter wheat. High Plateaux. Harvested May-Jun.'},
+    484:{n:'Mexico',d:[8,7,8,1,1,3,4,5,6,7,8,1],t:'Sonora state winter wheat. Planted Nov, harvested Mar-Apr.'},
+    710:{n:'South Africa',d:[8,8,8,3,3,4,4,4,5,6,7,8],t:'Winter wheat (S.Hemisphere). Western Cape. Harvested Nov-Dec.'},
+  },
+  corn:{
+    840:{n:'United States',d:[1,1,1,3,4,4,4,5,7,7,8,1],t:'Corn Belt. Planted Apr-May, harvest Sep-Oct. World largest producer.'},
+    76: {n:'Brazil',d:[5,7,7,8,4,5,7,8,1,3,4,5],t:'Two crops: summer (harvest Feb-Apr) and safrinha (harvest Jun-Aug). Mato Grosso.'},
+    32: {n:'Argentina',d:[4,5,7,7,8,1,1,1,3,4,4,4],t:'Pampa region. Planted Sep-Nov, harvested Mar-May.'},
+    804:{n:'Ukraine',d:[1,1,1,3,4,4,4,5,7,8,8,1],t:'Planted Apr-May. Black Sea export. Harvest Sep-Oct.'},
+    156:{n:'China',d:[1,1,1,3,4,4,4,5,6,7,8,1],t:'Northeast China. Planted Apr-May, harvested Sep-Oct.'},
+    484:{n:'Mexico',d:[1,1,3,4,4,4,5,6,7,7,8,1],t:'Temporal rainfed. Planted Mar-Apr. Harvested Sep-Oct.'},
+    710:{n:'South Africa',d:[4,5,7,7,8,8,1,1,1,3,4,4],t:'Summer crop. Planted Nov-Dec. Harvested Mar-May.'},
+    642:{n:'Romania',d:[1,1,1,3,4,4,4,5,7,8,8,1],t:'Summer corn. Planted Apr-May. Harvested Sep-Oct.'},
+    250:{n:'France',d:[1,1,1,3,4,4,4,5,6,7,8,1],t:'SW France, irrigated. Planted Apr-May, harvested Sep-Oct.'},
+    348:{n:'Hungary',d:[1,1,1,3,4,4,4,5,7,8,8,1],t:'Great Plain. Planted Apr-May, harvested Sep-Oct.'},
+    643:{n:'Russia',d:[1,1,1,3,4,4,4,5,7,8,8,1],t:'Southern Russia (Krasnodar). Spring corn. Harvested Sep-Oct.'},
+    356:{n:'India',d:[8,1,1,1,1,3,4,4,5,7,8,8],t:'Kharif season. Planted Jun-Jul with monsoon. Harvested Sep-Oct.'},
+  },
+  soybeans:{
+    76: {n:'Brazil',d:[5,7,7,8,1,1,1,1,1,3,4,5],t:'World largest producer. Mato Grosso & Parana. Planted Oct-Jan, harvested Feb-Apr.'},
+    840:{n:'United States',d:[1,1,1,1,3,4,4,5,7,7,8,1],t:'Corn Belt. Planted May-Jun. Harvested Sep-Oct.'},
+    32: {n:'Argentina',d:[4,5,7,7,8,1,1,1,1,3,4,4],t:'Pampa humeda. Planted Oct-Dec, harvested Mar-May. Key meal/oil origin.'},
+    600:{n:'Paraguay',d:[4,5,7,8,8,1,1,1,1,3,4,4],t:'Planted Oct-Nov, harvested Mar-Apr.'},
+    858:{n:'Uruguay',d:[4,5,7,7,8,1,1,1,1,3,4,4],t:'Planted Oct-Nov, harvested Mar-Apr.'},
+    156:{n:'China',d:[1,1,1,1,3,4,4,5,6,7,8,1],t:'Heilongjiang. Planted May-Jun. World largest importer.'},
+    356:{n:'India',d:[8,1,1,1,1,3,4,4,5,7,8,8],t:'Kharif. Planted Jun-Jul. Madhya Pradesh. Harvested Oct.'},
+    710:{n:'South Africa',d:[4,5,7,8,8,1,1,1,1,3,4,4],t:'Planted Nov-Dec, harvested Mar-May.'},
+    804:{n:'Ukraine',d:[1,1,1,3,4,4,4,5,7,8,8,1],t:'Rapid area expansion. Planted Apr-May, harvested Sep-Oct.'},
+    643:{n:'Russia',d:[1,1,1,3,4,4,4,5,7,8,8,1],t:'Far East Russia. Planted May, harvested Sep-Oct.'},
+  }
+};
+
+var CM_PN = {
+  wheat:[
+    {r:'N.Hemisphere',t:'Winter wheat (Russia, Ukraine, EU, USA, China) harvests Jun-Aug. Spring wheat (Canada, Kazakhstan) harvests Aug-Sep.'},
+    {r:'S.Hemisphere',t:'Australia and Argentina harvest Nov-Dec. India harvests Mar-Apr as a rabi winter crop.'},
+    {r:'Watch Points',t:'Black Sea corridor, US HRW Apr-May crop conditions, Australian crop Oct signals.'},
+  ],
+  corn:[
+    {r:'USA Corn Belt',t:'Planting Apr-May and Jul pollination stress are the highest-impact market periods.'},
+    {r:'South America',t:'Brazil safrinha planting Jan-Mar and harvest Jun-Aug are closely monitored.'},
+    {r:'Watch Points',t:'Argentina export policy, US Jul-Aug weather, Ukraine corridor risk.'},
+  ],
+  soybeans:[
+    {r:'South America',t:'Brazil & Argentina represent ~55% of world supply. Brazil harvest Feb-Apr; Argentina Mar-May.'},
+    {r:'USA',t:'Planted May-Jun, harvested Sep-Oct. Planted area survey in Mar is the key directional signal.'},
+    {r:'Watch Points',t:'Argentine export tax policy, Brazil forward sales rate Oct-Feb, Chinese import demand.'},
+  ],
+};
+
+var _cmCrop = 'wheat';
+var _cmMonth = new Date().getMonth();
+var _cmSvg = null;
+var _cmProj = null;
+var _cmPath = null;
+var _cmCountries = null;
+var _cmCurrentScale = 1;
+var _cmTranslate = [0, 0];
+
+function cmGetColor(id) {
+  var d = CM_D[_cmCrop][id];
+  if (!d) return CM_SC[0];
+  return CM_SC[d.d[_cmMonth]] || CM_SC[0];
+}
+
+function cmBuildBar() {
+  var td = new Date().getMonth();
+  var html = '';
+  for (var i = 0; i < 12; i++) {
+    var cls = 'padding:7px 2px;text-align:center;font-family:DM Mono,monospace;font-size:10px;cursor:pointer;border-right:1px solid var(--border);transition:all 0.12s;user-select:none;flex:1;';
+    if (i === _cmMonth) cls += 'background:var(--blue);color:#fff;font-weight:500;';
+    else if (i === td) cls += 'color:var(--muted2);box-shadow:inset 0 -2px 0 var(--gold);';
+    else cls += 'color:var(--muted2);';
+    if (i === 11) cls += 'border-right:none;';
+    html += '<div style="' + cls + '" onclick="cmSetM(' + i + ')">' + CM_MN[i] + '</div>';
+  }
+  var bar = document.getElementById('cm-mbar');
+  if (bar) bar.innerHTML = html;
+}
+
+function cmSetM(m) {
+  _cmMonth = m;
+  cmBuildBar();
+  cmUpdateMap();
+  cmUpdateSub();
+}
+
+function cmSetC(crop) {
+  _cmCrop = crop;
+  var colors = { wheat: { bg:'rgba(212,170,85,0.15)', col:'var(--gold2)', border:'var(--gold2)' }, corn: { bg:'rgba(200,133,58,0.15)', col:'#c8853a', border:'#c8853a' }, soybeans: { bg:'rgba(46,207,170,0.15)', col:'var(--teal)', border:'var(--teal)' } };
+  ['wheat','corn','soybeans'].forEach(function(cr) {
+    var btn = document.getElementById('cmtab-' + cr);
+    if (!btn) return;
+    if (cr === crop) {
+      btn.style.background = colors[cr].bg;
+      btn.style.color = colors[cr].col;
+      btn.style.borderColor = colors[cr].border;
+    } else {
+      btn.style.background = 'var(--card)';
+      btn.style.color = 'var(--muted)';
+      btn.style.borderColor = 'var(--border2)';
+    }
+  });
+  cmUpdateMap();
+  cmUpdateSub();
+  cmBuildNotes();
+}
+
+function cmUpdateSub() {
+  var el = document.getElementById('cm-sub');
+  if (el) el.textContent = {wheat:'Wheat',corn:'Corn',soybeans:'Soybeans'}[_cmCrop] + ' \xb7 ' + CM_MN[_cmMonth] + ' \u2014 hover a country for detail';
+}
+
+function cmBuildLegend() {
+  var el = document.getElementById('cm-legend');
+  if (!el) return;
+  el.innerHTML = CM_ST.filter(function(s){ return s.id > 0; }).map(function(s) {
+    return '<div style="display:flex;align-items:center;gap:7px;margin-bottom:5px;font-family:DM Mono,monospace;font-size:10px;color:var(--muted);">' +
+           '<div style="width:12px;height:12px;border-radius:2px;flex-shrink:0;background:' + s.c + ';"></div>' + s.l + '</div>';
+  }).join('');
+}
+
+function cmBuildNotes() {
+  var el = document.getElementById('cm-notes');
+  if (!el) return;
+  el.innerHTML = CM_PN[_cmCrop].map(function(n) {
+    return '<div style="margin-bottom:8px;padding-bottom:8px;border-bottom:1px solid var(--border);">' +
+           '<div style="font-family:DM Mono,monospace;font-size:9px;color:var(--blue);text-transform:uppercase;letter-spacing:0.08em;margin-bottom:2px;">' + n.r + '</div>' +
+           '<div style="font-size:11px;color:var(--muted);line-height:1.5;">' + n.t + '</div></div>';
+  }).join('');
+}
+
+function cmUpdateMap() {
+  if (!_cmCountries) return;
+  _cmCountries.transition().duration(300)
+    .attr('fill', function(d) { return cmGetColor(+d.id); });
+}
+
+function cmZoom(factor) {
+  if (!_cmSvg || !_cmProj) return;
+  var box = document.getElementById('cm-map-box');
+  var W = box.clientWidth || 800, H = box.clientHeight || 350;
+  _cmCurrentScale = _cmCurrentScale * factor;
+  _cmCurrentScale = Math.max(0.5, Math.min(_cmCurrentScale, 8));
+  _cmProj.scale((W / 6.2) * _cmCurrentScale).translate([W / 2 + _cmTranslate[0], H / 2 + _cmTranslate[1]]);
+  _cmPath = window._d3.geoPath().projection(_cmProj);
+  _cmSvg.selectAll('.cm-country').attr('d', _cmPath);
+  _cmSvg.selectAll('.cm-sphere').attr('d', _cmPath);
+  _cmSvg.selectAll('.cm-grat').attr('d', _cmPath);
+}
+
+function cmReset() {
+  _cmCurrentScale = 1;
+  _cmTranslate = [0, 0];
+  cmZoom(1);
+}
+
+function cmOnHover(ev, d) {
+  var id = +d.id, cd = CM_D[_cmCrop][id];
+  var tip = document.getElementById('cm-tip');
+  if (!tip) return;
+  if (!cd) { tip.style.opacity = '0'; return; }
+  var s = cd.d[_cmMonth], si = CM_ST[s];
+  var lbl = {wheat:'Wheat',corn:'Corn',soybeans:'Soybeans'}[_cmCrop];
+  var mini = cd.d.map(function(st, i) {
+    return '<div style="flex:1;height:11px;border-radius:2px;background:' + CM_SC[st] + ';' + (i === _cmMonth ? 'outline:1px solid rgba(255,255,255,0.5);outline-offset:1px;' : '') + '"></div>';
+  }).join('');
+  var ml = CM_MN.map(function(m, i) {
+    return '<span style="flex:1;text-align:center;font-family:DM Mono,monospace;font-size:6px;' + (i === _cmMonth ? 'color:#fff' : 'color:var(--muted2)') + ';">' + m[0] + '</span>';
+  }).join('');
+  tip.innerHTML = '<div style="font-family:DM Serif Display,serif;font-size:13px;font-weight:700;color:var(--text);margin-bottom:2px;">' + cd.n + '</div>' +
+    '<div style="font-family:DM Mono,monospace;font-size:9px;color:var(--blue);text-transform:uppercase;letter-spacing:0.08em;margin-bottom:6px;">' + lbl + '</div>' +
+    '<div style="display:inline-block;padding:2px 8px;border-radius:3px;font-family:DM Mono,monospace;font-size:9px;font-weight:500;margin-bottom:6px;background:' + si.c + '22;color:' + si.c + ';border:1px solid ' + si.c + '55">' + si.l + '</div>' +
+    '<div style="font-size:11px;color:var(--muted);line-height:1.5;margin-bottom:7px;">' + cd.t + '</div>' +
+    '<div style="display:flex;gap:2px;">' + mini + '</div>' +
+    '<div style="display:flex;gap:2px;margin-top:3px;">' + ml + '</div>';
+  tip.style.left = Math.min(ev.clientX + 14, window.innerWidth - 260) + 'px';
+  tip.style.top  = Math.min(ev.clientY + 10, window.innerHeight - 220) + 'px';
+  tip.style.opacity = '1';
+}
+
+function cmLoadScripts(cb) {
+  if (window._d3 && window._topojson) { cb(); return; }
+  var s1 = document.createElement('script');
+  s1.src = 'https://cdnjs.cloudflare.com/ajax/libs/d3/7.8.5/d3.min.js';
+  s1.onload = function() {
+    window._d3 = d3;
+    var s2 = document.createElement('script');
+    s2.src = 'https://cdnjs.cloudflare.com/ajax/libs/topojson/3.0.2/topojson.min.js';
+    s2.onload = function() { window._topojson = topojson; cb(); };
+    document.head.appendChild(s2);
+  };
+  document.head.appendChild(s1);
+}
+
+async function cmInitMap() {
+  try {
+    var w = await window._d3.json('https://cdn.jsdelivr.net/npm/world-atlas@2/countries-110m.json');
+    var load = document.getElementById('cm-load');
+    if (load) load.style.display = 'none';
+    var box = document.getElementById('cm-map-box');
+    var W = box.clientWidth || 800, H = box.clientHeight || 350;
+    _cmSvg = window._d3.select('#cm-svg').attr('viewBox', '0 0 ' + W + ' ' + H);
+    _cmProj = window._d3.geoNaturalEarth1().scale(W / 6.2).translate([W / 2, H / 2]);
+    _cmPath = window._d3.geoPath().projection(_cmProj);
+    _cmSvg.append('path').datum({type:'Sphere'}).attr('class','cm-sphere').attr('d', _cmPath).attr('fill','#080c12');
+    _cmSvg.append('path').datum(window._d3.geoGraticule()()).attr('class','cm-grat').attr('d', _cmPath).attr('fill','none').attr('stroke','rgba(255,255,255,0.04)').attr('stroke-width','0.4px');
+    _cmCountries = _cmSvg.append('g').selectAll('path')
+      .data(window._topojson.feature(w, w.objects.countries).features).join('path')
+      .attr('class','cm-country')
+      .attr('d', _cmPath)
+      .attr('fill', function(d) { return cmGetColor(+d.id); })
+      .attr('stroke','#0d0f12').attr('stroke-width','0.35px')
+      .style('cursor','pointer').style('transition','fill 0.3s')
+      .on('mousemove', cmOnHover)
+      .on('mouseleave', function() { var t = document.getElementById('cm-tip'); if(t) t.style.opacity='0'; });
+    cmUpdateMap();
+    _cmInited = true;
+  } catch(e) {
+    var load = document.getElementById('cm-load');
+    if (load) load.innerHTML = '<p style="color:#f87171;font-family:DM Mono,monospace;font-size:11px;">Map failed to load</p>';
+  }
+}
+
+function initCommodityMap() {
+  if (_cmInited) return;
+  cmBuildBar();
+  cmBuildLegend();
+  cmBuildNotes();
+  cmUpdateSub();
+  cmLoadScripts(function() { cmInitMap(); });
+}
+// End Commodity Map
+
 </script>
 
 
+<div id="cm-tip" style="position:fixed;background:var(--card2);border:1px solid var(--border2);border-radius:6px;padding:12px 14px;pointer-events:none;opacity:0;transition:opacity 0.12s;z-index:9999;min-width:200px;max-width:250px;box-shadow:0 8px 32px rgba(0,0,0,0.6);"></div>
 </body>
 </html>
