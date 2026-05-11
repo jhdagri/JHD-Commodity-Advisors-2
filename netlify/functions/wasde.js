@@ -1,4 +1,4 @@
-// netlify/functions/wasde.js — server-side proxy, X-Api-Key header
+// netlify/functions/wasde.js — USDA FAS OpenData v2 API
 const https = require('https');
 const urlMod = require('url');
 
@@ -15,7 +15,8 @@ exports.handler = async (event) => {
   console.log('START endpoint: ' + endpoint + ' apiKey length: ' + apiKey.length);
   if (!endpoint) return { statusCode: 400, headers: noCache, body: JSON.stringify({ error: 'Missing endpoint' }) };
 
-  var url = 'https://apps.fas.usda.gov/OpenData/api/psd/' + endpoint;
+  // v2 API — no /OpenData/ prefix
+  var url = 'https://apps.fas.usda.gov/api/psd/' + endpoint;
   console.log('Trying: ' + url);
 
   try {
