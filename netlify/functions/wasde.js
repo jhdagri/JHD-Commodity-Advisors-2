@@ -1,7 +1,7 @@
 // netlify/functions/wasde.js
-// USDA PSD proxy - tries psdonline then OpenData endpoints
 const https = require('https');
 const urlMod = require('url');
+
 exports.handler = async (event) => {
   var origin = (event.headers && (event.headers['origin'] || event.headers['Origin'])) || '*';
   var cors = {
@@ -13,19 +13,26 @@ exports.handler = async (event) => {
     'Cache-Control': 'public, max-age=3600'
   };
   if (event.httpMethod === 'OPTIONS') return { statusCode: 204, headers: cors, body: '' };
+
   var params   = event.queryStringParameters || {};
   var endpoint = params.endpoint || '';
-  var apiKey   = process.env.USDA_API_KEY || '';
+  // Use env var, fall back to registered key
+  var apiKey   = process.env.USDA_API_KEY || 'bEC1iNBuZZssM4hSrY4X8bFZSJWqEPvcyCo1iV6t';
+
+  console.log('apiKey present: ' + (apiKey.length > 0) + ' length: ' + apiKey.length);
+
   if (!endpoint) return { statusCode: 400, headers: cors, body: JSON.stringify({ error: 'Missing endpoint' }) };
+
   var urls = [
     'https://apps.fas.usda.gov/psdonline/api/' + endpoint + '?API_KEY=' + apiKey,
     'https://apps.fas.usda.gov/OpenData/api/psd/' + endpoint + '?API_KEY=' + apiKey
   ];
+
   var lastErr = '';
   for (var i = 0; i < urls.length; i++) {
     try {
       console.log('Trying URL ' + (i+1) + ': ' + urls[i]);
-      var data = await get(urls[i], { 'Accept':'application/json', 'User-Agent':'Mozilla/5.0' });
+      var data = await get(urls[i], { 'Accept': 'application/json', 'User-Agent': 'Mozilla/5.0' });
       console.log('Success from URL ' + (i+1) + ', records: ' + (Array.isArray(data) ? data.length : typeof data));
       return { statusCode: 200, headers: cors, body: JSON.stringify(data) };
     } catch(e) {
@@ -35,6 +42,7 @@ exports.handler = async (event) => {
   }
   return { statusCode: 500, headers: cors, body: JSON.stringify({ error: lastErr }) };
 };
+
 function get(apiUrl, headers) {
   return new Promise(function(resolve, reject) {
     var p = urlMod.parse(apiUrl);
