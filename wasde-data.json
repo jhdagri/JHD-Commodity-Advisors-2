@@ -1,0 +1,781 @@
+{
+  "reportDate": "April 2026",
+  "generatedFrom": "oce-wasde-report-data-2026-04.csv",
+  "corn_us": {
+    "unit": "Million Acres",
+    "2023/24": {
+      "Beginning Stocks": "1360.00",
+      "Production": "15341.00",
+      "Imports": "28.00",
+      "Supply, Total": "16729.00",
+      "Domestic, Total": "12711.00",
+      "Exports": "2255.00",
+      "Ending Stocks": "1763.00",
+      "Avg. Farm Price": "4.55"
+    },
+    "2024/25": {
+      "Beginning Stocks": "1763.00",
+      "Production": "14892.00",
+      "Imports": "22.00",
+      "Supply, Total": "16677.00",
+      "Domestic, Total": "12267.00",
+      "Exports": "2858.00",
+      "Ending Stocks": "1551.00",
+      "Avg. Farm Price": "4.24"
+    },
+    "2025/26": {
+      "Beginning Stocks": "1551.00",
+      "Production": "17021.00",
+      "Imports": "25.00",
+      "Supply, Total": "18597.00",
+      "Domestic, Total": "13170.00",
+      "Exports": "3300.00",
+      "Ending Stocks": "2127.00",
+      "Avg. Farm Price": "4.15"
+    }
+  },
+  "corn_world": {
+    "World": {
+      "unit": "Million Metric Tons",
+      "2023/24": {
+        "Beginning Stocks": "305.36",
+        "Production": "1231.13",
+        "Imports": "197.60",
+        "Domestic Total": "1221.24",
+        "Exports": "192.65",
+        "Ending Stocks": "315.25"
+      },
+      "2024/25": {
+        "Beginning Stocks": "315.25",
+        "Production": "1231.38",
+        "Imports": "186.20",
+        "Domestic Total": "1250.35",
+        "Exports": "187.15",
+        "Ending Stocks": "296.28"
+      },
+      "2025/26": {
+        "Beginning Stocks": "296.28",
+        "Production": "1301.07",
+        "Imports": "193.10",
+        "Domestic Total": "1302.55",
+        "Exports": "207.29",
+        "Ending Stocks": "294.81"
+      }
+    },
+    "United States": {
+      "unit": "Million Metric Tons",
+      "2023/24": {
+        "Beginning Stocks": "34.55",
+        "Production": "389.67",
+        "Imports": ".72",
+        "Domestic Total": "322.87",
+        "Exports": "57.28",
+        "Ending Stocks": "44.79"
+      },
+      "2024/25": {
+        "Beginning Stocks": "44.79",
+        "Production": "378.27",
+        "Imports": ".55",
+        "Domestic Total": "311.60",
+        "Exports": "72.60",
+        "Ending Stocks": "39.40"
+      },
+      "2025/26": {
+        "Beginning Stocks": "39.40",
+        "Production": "432.34",
+        "Imports": ".64",
+        "Domestic Total": "334.53",
+        "Exports": "83.82",
+        "Ending Stocks": "54.02"
+      }
+    },
+    "Brazil": {
+      "unit": "Million Metric Tons",
+      "2023/24": {
+        "Beginning Stocks": "9.88",
+        "Production": "119.00",
+        "Imports": "1.72",
+        "Domestic Total": "84.00",
+        "Exports": "38.26",
+        "Ending Stocks": "8.33"
+      },
+      "2024/25": {
+        "Beginning Stocks": "8.33",
+        "Production": "136.00",
+        "Imports": "1.76",
+        "Domestic Total": "92.50",
+        "Exports": "42.08",
+        "Ending Stocks": "11.52"
+      },
+      "2025/26": {
+        "Beginning Stocks": "11.52",
+        "Production": "132.00",
+        "Imports": "1.70",
+        "Domestic Total": "96.00",
+        "Exports": "43.00",
+        "Ending Stocks": "6.22"
+      }
+    },
+    "Argentina": {
+      "unit": "Million Metric Tons",
+      "2023/24": {
+        "Beginning Stocks": "2.32",
+        "Production": "51.60",
+        "Imports": ".01",
+        "Domestic Total": "15.20",
+        "Exports": "36.26",
+        "Ending Stocks": "2.48"
+      },
+      "2024/25": {
+        "Beginning Stocks": "2.48",
+        "Production": "50.00",
+        "Imports": ".01",
+        "Domestic Total": "16.70",
+        "Exports": "29.07",
+        "Ending Stocks": "6.72"
+      },
+      "2025/26": {
+        "Beginning Stocks": "6.72",
+        "Production": "52.00",
+        "Imports": ".01",
+        "Domestic Total": "16.70",
+        "Exports": "37.00",
+        "Ending Stocks": "5.02"
+      }
+    },
+    "China": {
+      "unit": "Million Metric Tons",
+      "2023/24": {
+        "Beginning Stocks": "206.02",
+        "Production": "288.84",
+        "Imports": "23.33",
+        "Domestic Total": "307.00",
+        "Exports": ".00",
+        "Ending Stocks": "211.19"
+      },
+      "2024/25": {
+        "Beginning Stocks": "211.19",
+        "Production": "294.92",
+        "Imports": "1.82",
+        "Domestic Total": "316.00",
+        "Exports": ".00",
+        "Ending Stocks": "191.93"
+      },
+      "2025/26": {
+        "Beginning Stocks": "191.93",
+        "Production": "301.24",
+        "Imports": "8.00",
+        "Domestic Total": "321.00",
+        "Exports": ".02",
+        "Ending Stocks": "180.15"
+      }
+    },
+    "European Union": {
+      "unit": "Million Metric Tons",
+      "2023/24": {
+        "Beginning Stocks": "8.02",
+        "Production": "61.95",
+        "Imports": "19.81",
+        "Domestic Total": "78.10",
+        "Exports": "4.39",
+        "Ending Stocks": "7.29"
+      },
+      "2024/25": {
+        "Beginning Stocks": "7.29",
+        "Production": "59.59",
+        "Imports": "18.76",
+        "Domestic Total": "76.70",
+        "Exports": "2.76",
+        "Ending Stocks": "6.18"
+      },
+      "2025/26": {
+        "Beginning Stocks": "6.18",
+        "Production": "56.80",
+        "Imports": "19.50",
+        "Domestic Total": "74.80",
+        "Exports": "1.80",
+        "Ending Stocks": "5.88"
+      }
+    },
+    "Ukraine": {
+      "unit": "Million Metric Tons",
+      "2023/24": {
+        "Beginning Stocks": "3.00",
+        "Production": "32.50",
+        "Imports": ".01",
+        "Domestic Total": "5.48",
+        "Exports": "29.49",
+        "Ending Stocks": ".54"
+      },
+      "2024/25": {
+        "Beginning Stocks": ".54",
+        "Production": "26.80",
+        "Imports": ".02",
+        "Domestic Total": "6.40",
+        "Exports": "20.02",
+        "Ending Stocks": ".94"
+      },
+      "2025/26": {
+        "Beginning Stocks": ".94",
+        "Production": "30.70",
+        "Imports": ".01",
+        "Domestic Total": "6.70",
+        "Exports": "22.00",
+        "Ending Stocks": "2.95"
+      }
+    },
+    "Russia": {
+      "unit": "Million Metric Tons",
+      "2023/24": {
+        "Beginning Stocks": ".91",
+        "Production": "16.60",
+        "Imports": ".05",
+        "Domestic Total": "10.20",
+        "Exports": "6.60",
+        "Ending Stocks": ".76"
+      },
+      "2024/25": {
+        "Beginning Stocks": ".76",
+        "Production": "14.00",
+        "Imports": ".05",
+        "Domestic Total": "10.90",
+        "Exports": "3.00",
+        "Ending Stocks": ".91"
+      },
+      "2025/26": {
+        "Beginning Stocks": ".91",
+        "Production": "14.80",
+        "Imports": ".05",
+        "Domestic Total": "11.40",
+        "Exports": "3.30",
+        "Ending Stocks": "1.06"
+      }
+    },
+    "Canada": {
+      "unit": "Million Metric Tons",
+      "2023/24": {
+        "Beginning Stocks": "1.63",
+        "Production": "15.42",
+        "Imports": "2.81",
+        "Domestic Total": "15.72",
+        "Exports": "2.15",
+        "Ending Stocks": "2.00"
+      },
+      "2024/25": {
+        "Beginning Stocks": "2.00",
+        "Production": "15.35",
+        "Imports": "1.69",
+        "Domestic Total": "14.44",
+        "Exports": "3.00",
+        "Ending Stocks": "1.58"
+      },
+      "2025/26": {
+        "Beginning Stocks": "1.58",
+        "Production": "14.87",
+        "Imports": "1.90",
+        "Domestic Total": "14.50",
+        "Exports": "2.20",
+        "Ending Stocks": "1.65"
+      }
+    }
+  },
+  "wheat_us": {
+    "unit": "Million Acres",
+    "2023/24": {
+      "Beginning Stocks": "570.00",
+      "Production": "1804.00",
+      "Imports": "138.00",
+      "Supply, Total": "2511.00",
+      "Domestic, Total": "1109.00",
+      "Exports": "706.00",
+      "Ending Stocks": "696.00",
+      "Avg. Farm Price": "6.96"
+    },
+    "2024/25": {
+      "Beginning Stocks": "696.00",
+      "Production": "1979.00",
+      "Imports": "149.00",
+      "Supply, Total": "2824.00",
+      "Domestic, Total": "1143.00",
+      "Exports": "826.00",
+      "Ending Stocks": "855.00",
+      "Avg. Farm Price": "5.52"
+    },
+    "2025/26": {
+      "Beginning Stocks": "855.00",
+      "Production": "1985.00",
+      "Imports": "125.00",
+      "Supply, Total": "2964.00",
+      "Domestic, Total": "1127.00",
+      "Exports": "900.00",
+      "Ending Stocks": "938.00",
+      "Avg. Farm Price": "5.00"
+    }
+  },
+  "wheat_world": {
+    "World": {
+      "unit": "Million Metric Tons",
+      "2023/24": {
+        "Beginning Stocks": "274.69",
+        "Production": "791.53",
+        "Imports": "223.23",
+        "Domestic Total": "796.58",
+        "Exports": "222.23",
+        "Ending Stocks": "269.65"
+      },
+      "2024/25": {
+        "Beginning Stocks": "269.65",
+        "Production": "799.33",
+        "Imports": "201.05",
+        "Domestic Total": "809.88",
+        "Exports": "210.46",
+        "Ending Stocks": "259.09"
+      },
+      "2025/26": {
+        "Beginning Stocks": "259.09",
+        "Production": "844.15",
+        "Imports": "217.62",
+        "Domestic Total": "820.12",
+        "Exports": "221.88",
+        "Ending Stocks": "283.12"
+      }
+    },
+    "United States": {
+      "unit": "Million Metric Tons",
+      "2023/24": {
+        "Beginning Stocks": "15.50",
+        "Production": "49.10",
+        "Imports": "3.75",
+        "Domestic Total": "30.18",
+        "Exports": "19.21",
+        "Ending Stocks": "18.95"
+      },
+      "2024/25": {
+        "Beginning Stocks": "18.95",
+        "Production": "53.85",
+        "Imports": "4.05",
+        "Domestic Total": "31.12",
+        "Exports": "22.48",
+        "Ending Stocks": "23.26"
+      },
+      "2025/26": {
+        "Beginning Stocks": "23.26",
+        "Production": "54.01",
+        "Imports": "3.40",
+        "Domestic Total": "30.66",
+        "Exports": "24.49",
+        "Ending Stocks": "25.52"
+      }
+    },
+    "Brazil": {
+      "unit": "Million Metric Tons",
+      "2023/24": {
+        "Beginning Stocks": "1.80",
+        "Production": "8.10",
+        "Imports": "6.61",
+        "Domestic Total": "12.00",
+        "Exports": "2.81",
+        "Ending Stocks": "1.69"
+      },
+      "2024/25": {
+        "Beginning Stocks": "1.69",
+        "Production": "7.89",
+        "Imports": "7.20",
+        "Domestic Total": "12.20",
+        "Exports": "1.89",
+        "Ending Stocks": "2.69"
+      },
+      "2025/26": {
+        "Beginning Stocks": "2.69",
+        "Production": "7.87",
+        "Imports": "6.80",
+        "Domestic Total": "12.35",
+        "Exports": "2.10",
+        "Ending Stocks": "2.91"
+      }
+    },
+    "Argentina": {
+      "unit": "Million Metric Tons",
+      "2023/24": {
+        "Beginning Stocks": "3.97",
+        "Production": "15.85",
+        "Imports": ".00",
+        "Domestic Total": "7.05",
+        "Exports": "8.23",
+        "Ending Stocks": "4.54"
+      },
+      "2024/25": {
+        "Beginning Stocks": "4.54",
+        "Production": "18.51",
+        "Imports": ".01",
+        "Domestic Total": "7.15",
+        "Exports": "13.31",
+        "Ending Stocks": "2.60"
+      },
+      "2025/26": {
+        "Beginning Stocks": "2.60",
+        "Production": "27.92",
+        "Imports": ".01",
+        "Domestic Total": "7.60",
+        "Exports": "19.50",
+        "Ending Stocks": "3.43"
+      }
+    },
+    "China": {
+      "unit": "Million Metric Tons",
+      "2023/24": {
+        "Beginning Stocks": "138.82",
+        "Production": "136.59",
+        "Imports": "13.63",
+        "Domestic Total": "153.50",
+        "Exports": "1.01",
+        "Ending Stocks": "134.52"
+      },
+      "2024/25": {
+        "Beginning Stocks": "134.52",
+        "Production": "140.10",
+        "Imports": "4.17",
+        "Domestic Total": "150.00",
+        "Exports": "1.02",
+        "Ending Stocks": "127.78"
+      },
+      "2025/26": {
+        "Beginning Stocks": "127.78",
+        "Production": "140.07",
+        "Imports": "6.00",
+        "Domestic Total": "148.00",
+        "Exports": "1.00",
+        "Ending Stocks": "124.85"
+      }
+    },
+    "European Union": {
+      "unit": "Million Metric Tons",
+      "2023/24": {
+        "Beginning Stocks": "16.27",
+        "Production": "135.38",
+        "Imports": "12.65",
+        "Domestic Total": "110.50",
+        "Exports": "38.00",
+        "Ending Stocks": "15.79"
+      },
+      "2024/25": {
+        "Beginning Stocks": "15.79",
+        "Production": "121.06",
+        "Imports": "10.64",
+        "Domestic Total": "108.50",
+        "Exports": "27.92",
+        "Ending Stocks": "11.08"
+      },
+      "2025/26": {
+        "Beginning Stocks": "11.08",
+        "Production": "145.11",
+        "Imports": "6.00",
+        "Domestic Total": "115.50",
+        "Exports": "30.50",
+        "Ending Stocks": "16.18"
+      }
+    },
+    "Ukraine": {
+      "unit": "Million Metric Tons",
+      "2023/24": {
+        "Beginning Stocks": "2.93",
+        "Production": "23.00",
+        "Imports": ".06",
+        "Domestic Total": "5.90",
+        "Exports": "18.58",
+        "Ending Stocks": "1.51"
+      },
+      "2024/25": {
+        "Beginning Stocks": "1.51",
+        "Production": "23.40",
+        "Imports": ".07",
+        "Domestic Total": "8.30",
+        "Exports": "15.75",
+        "Ending Stocks": ".93"
+      },
+      "2025/26": {
+        "Beginning Stocks": ".93",
+        "Production": "24.00",
+        "Imports": ".10",
+        "Domestic Total": "8.60",
+        "Exports": "12.50",
+        "Ending Stocks": "3.93"
+      }
+    },
+    "Russia": {
+      "unit": "Million Metric Tons",
+      "2023/24": {
+        "Beginning Stocks": "14.39",
+        "Production": "91.50",
+        "Imports": ".30",
+        "Domestic Total": "39.00",
+        "Exports": "55.50",
+        "Ending Stocks": "11.69"
+      },
+      "2024/25": {
+        "Beginning Stocks": "11.69",
+        "Production": "81.60",
+        "Imports": ".30",
+        "Domestic Total": "40.00",
+        "Exports": "43.00",
+        "Ending Stocks": "10.59"
+      },
+      "2025/26": {
+        "Beginning Stocks": "10.59",
+        "Production": "90.30",
+        "Imports": ".30",
+        "Domestic Total": "41.70",
+        "Exports": "44.50",
+        "Ending Stocks": "14.99"
+      }
+    },
+    "Australia": {
+      "unit": "Million Metric Tons",
+      "2023/24": {
+        "Beginning Stocks": "4.37",
+        "Production": "25.96",
+        "Imports": ".22",
+        "Domestic Total": "8.30",
+        "Exports": "19.84",
+        "Ending Stocks": "2.41"
+      },
+      "2024/25": {
+        "Beginning Stocks": "2.41",
+        "Production": "34.11",
+        "Imports": ".22",
+        "Domestic Total": "9.10",
+        "Exports": "23.65",
+        "Ending Stocks": "3.99"
+      },
+      "2025/26": {
+        "Beginning Stocks": "3.99",
+        "Production": "36.00",
+        "Imports": ".23",
+        "Domestic Total": "9.10",
+        "Exports": "26.50",
+        "Ending Stocks": "4.62"
+      }
+    },
+    "Canada": {
+      "unit": "Million Metric Tons",
+      "2023/24": {
+        "Beginning Stocks": "5.71",
+        "Production": "33.41",
+        "Imports": ".56",
+        "Domestic Total": "8.94",
+        "Exports": "25.44",
+        "Ending Stocks": "5.29"
+      },
+      "2024/25": {
+        "Beginning Stocks": "5.29",
+        "Production": "35.94",
+        "Imports": ".61",
+        "Domestic Total": "8.32",
+        "Exports": "29.34",
+        "Ending Stocks": "4.18"
+      },
+      "2025/26": {
+        "Beginning Stocks": "4.18",
+        "Production": "39.96",
+        "Imports": ".60",
+        "Domestic Total": "9.85",
+        "Exports": "29.00",
+        "Ending Stocks": "5.89"
+      }
+    }
+  },
+  "soy_us": {
+    "unit": "$/s.t.",
+    "2023/24": {
+      "Beginning Stocks": "371.00",
+      "Production": "54106.00",
+      "Imports": "687.00",
+      "Supply, Total": "55164.00",
+      "Exports": "16054.00",
+      "Ending Stocks": "453.00",
+      "Avg. Farm Price": "384.11"
+    },
+    "2024/25": {
+      "Beginning Stocks": "453.00",
+      "Production": "58443.00",
+      "Imports": "807.00",
+      "Supply, Total": "59704.00",
+      "Exports": "18265.00",
+      "Ending Stocks": "398.00",
+      "Avg. Farm Price": "299.77"
+    },
+    "2025/26": {
+      "Beginning Stocks": "398.00",
+      "Production": "61877.00",
+      "Imports": "800.00",
+      "Supply, Total": "63075.00",
+      "Exports": "19400.00",
+      "Ending Stocks": "450.00",
+      "Avg. Farm Price": "310.00"
+    }
+  },
+  "soy_world": {
+    "World": {
+      "unit": "Million Metric Tons",
+      "2023/24": {
+        "Beginning Stocks": "101.82",
+        "Production": "396.40",
+        "Imports": "178.54",
+        "Domestic Total": "383.87",
+        "Exports": "177.76",
+        "Ending Stocks": "115.13"
+      },
+      "2024/25": {
+        "Beginning Stocks": "115.13",
+        "Production": "428.15",
+        "Imports": "179.19",
+        "Domestic Total": "413.46",
+        "Exports": "184.21",
+        "Ending Stocks": "124.81"
+      },
+      "2025/26": {
+        "Beginning Stocks": "124.81",
+        "Production": "427.41",
+        "Imports": "185.63",
+        "Domestic Total": "425.88",
+        "Exports": "187.17",
+        "Ending Stocks": "124.79"
+      }
+    },
+    "United States": {
+      "unit": "Million Metric Tons",
+      "2023/24": {
+        "Beginning Stocks": "7.19",
+        "Production": "113.27",
+        "Imports": ".57",
+        "Domestic Total": "65.44",
+        "Exports": "46.27",
+        "Ending Stocks": "9.32"
+      },
+      "2024/25": {
+        "Beginning Stocks": "9.32",
+        "Production": "119.05",
+        "Imports": ".79",
+        "Domestic Total": "69.09",
+        "Exports": "51.23",
+        "Ending Stocks": "8.84"
+      },
+      "2025/26": {
+        "Beginning Stocks": "8.84",
+        "Production": "115.99",
+        "Imports": ".68",
+        "Domestic Total": "74.07",
+        "Exports": "41.91",
+        "Ending Stocks": "9.52"
+      }
+    },
+    "Brazil": {
+      "unit": "Million Metric Tons",
+      "2023/24": {
+        "Beginning Stocks": "36.82",
+        "Production": "154.50",
+        "Imports": ".87",
+        "Domestic Total": "58.26",
+        "Exports": "104.17",
+        "Ending Stocks": "29.76"
+      },
+      "2024/25": {
+        "Beginning Stocks": "29.76",
+        "Production": "172.50",
+        "Imports": ".73",
+        "Domestic Total": "62.16",
+        "Exports": "103.14",
+        "Ending Stocks": "37.69"
+      },
+      "2025/26": {
+        "Beginning Stocks": "37.69",
+        "Production": "180.00",
+        "Imports": ".90",
+        "Domestic Total": "65.90",
+        "Exports": "115.00",
+        "Ending Stocks": "37.69"
+      }
+    },
+    "Argentina": {
+      "unit": "Million Metric Tons",
+      "2023/24": {
+        "Beginning Stocks": "17.00",
+        "Production": "48.21",
+        "Imports": "7.79",
+        "Domestic Total": "43.83",
+        "Exports": "5.11",
+        "Ending Stocks": "24.05"
+      },
+      "2024/25": {
+        "Beginning Stocks": "24.05",
+        "Production": "51.11",
+        "Imports": "6.32",
+        "Domestic Total": "50.04",
+        "Exports": "7.87",
+        "Ending Stocks": "23.57"
+      },
+      "2025/26": {
+        "Beginning Stocks": "23.57",
+        "Production": "48.00",
+        "Imports": "7.30",
+        "Domestic Total": "47.90",
+        "Exports": "8.25",
+        "Ending Stocks": "22.72"
+      }
+    },
+    "China": {
+      "unit": "Million Metric Tons",
+      "2023/24": {
+        "Beginning Stocks": "32.34",
+        "Production": "20.84",
+        "Imports": "112.00",
+        "Domestic Total": "121.80",
+        "Exports": ".07",
+        "Ending Stocks": "43.31"
+      },
+      "2024/25": {
+        "Beginning Stocks": "43.31",
+        "Production": "20.65",
+        "Imports": "108.00",
+        "Domestic Total": "127.40",
+        "Exports": ".07",
+        "Ending Stocks": "44.49"
+      },
+      "2025/26": {
+        "Beginning Stocks": "44.49",
+        "Production": "20.90",
+        "Imports": "112.00",
+        "Domestic Total": "132.90",
+        "Exports": ".10",
+        "Ending Stocks": "44.39"
+      }
+    },
+    "European Union": {
+      "unit": "Million Metric Tons",
+      "2023/24": {
+        "Beginning Stocks": "1.26",
+        "Production": "2.81",
+        "Imports": "13.55",
+        "Domestic Total": "16.07",
+        "Exports": ".25",
+        "Ending Stocks": "1.30"
+      },
+      "2024/25": {
+        "Beginning Stocks": "1.30",
+        "Production": "2.91",
+        "Imports": "14.71",
+        "Domestic Total": "17.02",
+        "Exports": ".33",
+        "Ending Stocks": "1.57"
+      },
+      "2025/26": {
+        "Beginning Stocks": "1.57",
+        "Production": "2.85",
+        "Imports": "14.00",
+        "Domestic Total": "16.57",
+        "Exports": ".30",
+        "Ending Stocks": "1.55"
+      }
+    }
+  }
+}
