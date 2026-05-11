@@ -1,5 +1,5 @@
 // netlify/functions/wasde.js
-// api.data.gov key -- pass as X-Api-Key header and api_key query param
+// X-Api-Key header -- USDA FAS OpenData via api.data.gov
 
 exports.handler = async (event) => {
   var ct = { 'Content-Type': 'application/json', 'Cache-Control': 'public, max-age=3600' };
@@ -12,7 +12,7 @@ exports.handler = async (event) => {
   console.log('endpoint: ' + endpoint + ' apiKey length: ' + apiKey.length);
   if (!endpoint) return { statusCode: 400, headers: ct, body: JSON.stringify({ error: 'Missing endpoint' }) };
 
-  var url = 'https://apps.fas.usda.gov/OpenData/api/psd/' + endpoint + '?api_key=' + apiKey;
+  var url = 'https://apps.fas.usda.gov/OpenData/api/psd/' + endpoint;
 
   try {
     console.log('Trying: ' + url);
