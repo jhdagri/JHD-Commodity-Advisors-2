@@ -3153,6 +3153,7 @@ async function publishPost(){
   document.getElementById('html-source-input').value='';
   if(quill) quill.setText('');
   if(premCb) premCb.checked=false;
+  var costCb=document.getElementById('p-bushel-cost'); if(costCb) costCb.value=100;
   pubMsg('Published to '+category+'!',true);
 }
 function pubMsg(text,ok){
@@ -3222,7 +3223,19 @@ async function startEditPost(id){
   document.getElementById('p-summary').value=displaySummary;
   document.getElementById('p-category').value=post.category||'commentary';
   var premCb=document.getElementById('p-is-premium'); if(premCb) premCb.checked=isPrem;
-  var costSel=document.getElementById('p-bushel-cost'); if(costSel) costSel.value=savedCost;
+  var costSel=document.getElementById('p-bushel-cost');
+  if(costSel) {
+    var found = false;
+    for(var oi=0; oi<costSel.options.length; oi++){
+      if(costSel.options[oi].value === savedCost){ found = true; break; }
+    }
+    if(!found){
+      var opt = document.createElement('option');
+      opt.value = savedCost; opt.textContent = savedCost;
+      costSel.appendChild(opt);
+    }
+    costSel.value = savedCost;
+  }
   window._editingPostId=id;
   document.getElementById('pub-btn').textContent='Save Changes';
   if(isFullHtmlDocument(post.content)){ setEditorMode('html'); document.getElementById('html-source-input').value=post.content; }
@@ -3246,6 +3259,7 @@ function cancelEdit(){
   document.getElementById('html-source-input').value='';
   if(quill) quill.setText('');
   var premCb=document.getElementById('p-is-premium'); if(premCb) premCb.checked=false;
+  var costCb=document.getElementById('p-bushel-cost'); if(costCb) costCb.value=100;
   var cb=document.getElementById('cancel-edit-btn');
   if(cb) cb.remove();
 }
