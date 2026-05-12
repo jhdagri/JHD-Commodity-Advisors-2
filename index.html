@@ -1553,108 +1553,107 @@ padding:2px 8px;border-radius:3px;margin-bottom:6px;letter-spacing:0.06em;text-t
   <!-- WASDE -->
   <div id="tab-wasde" class="hidden">
     <div class="page-wrap">
-      <div class="page-heading">
-        <h2>WASDE <span style="font-family:'DM Mono',monospace;font-size:12px;color:var(--muted);font-weight:400;">Supply &amp; Demand Estimates</span></h2>
-        <p>USDA World Agricultural Supply and Demand Estimates &mdash; updated monthly from official USDA data</p>
+
+      <!-- WASDE MASTHEAD -->
+      <div style="display:flex;align-items:flex-end;justify-content:space-between;gap:16px;margin-bottom:20px;padding-bottom:16px;border-bottom:1px solid var(--border2);flex-wrap:wrap;">
+        <div>
+          <div style="font-family:'DM Mono',monospace;font-size:9px;letter-spacing:0.18em;color:var(--blue);text-transform:uppercase;margin-bottom:4px;">JHD Commodity Advisors &middot; USDA Official Release</div>
+          <h2 style="font-family:'DM Serif Display',serif;font-size:24px;font-weight:900;color:var(--text);line-height:1.1;">World Agricultural Supply &amp; <span style="color:var(--gold);">Demand Estimates</span></h2>
+          <div style="font-family:'DM Mono',monospace;font-size:10px;color:var(--muted2);margin-top:4px;" id="wasde-report-tag">Loading WASDE data&hellip;</div>
+        </div>
+        <div style="text-align:right;">
+          <div style="font-family:'DM Mono',monospace;font-size:9px;color:var(--muted2);letter-spacing:0.1em;">WASDE-671</div>
+          <div style="font-family:'DM Serif Display',serif;font-size:18px;color:var(--gold);font-weight:700;margin-top:2px;">May 2026</div>
+          <div style="font-family:'DM Mono',monospace;font-size:8.5px;color:var(--muted2);margin-top:2px;">Released 12 May 2026 &middot; 12:00pm ET</div>
+        </div>
       </div>
 
-      <div id="wasde-loading" style="text-align:center;padding:60px;font-family:'DM Mono',monospace;font-size:11px;color:var(--muted);display:flex;align-items:center;justify-content:center;gap:10px;">
-        <div style="width:14px;height:14px;border:2px solid var(--border2);border-top-color:var(--blue);border-radius:50%;animation:spin 0.8s linear infinite;flex-shrink:0;"></div>
-        Fetching USDA WASDE data...
+      <!-- COMMODITY TABS -->
+      <div style="display:flex;gap:6px;margin-bottom:20px;flex-wrap:wrap;" id="wasde-comm-tabs">
+        <button onclick="wdSwitchComm('wheat',this)" style="padding:7px 16px;border-radius:4px;border:1px solid #c8853a;background:rgba(200,133,58,0.15);color:#c8853a;font-family:'DM Mono',monospace;font-size:9px;font-weight:500;letter-spacing:0.06em;text-transform:uppercase;cursor:pointer;" data-wdcomm="wheat">Wheat</button>
+        <button onclick="wdSwitchComm('corn',this)" style="padding:7px 16px;border-radius:4px;border:1px solid var(--border2);background:var(--card);color:var(--muted);font-family:'DM Mono',monospace;font-size:9px;font-weight:500;letter-spacing:0.06em;text-transform:uppercase;cursor:pointer;" data-wdcomm="corn">Corn</button>
+        <button onclick="wdSwitchComm('soybeans',this)" style="padding:7px 16px;border-radius:4px;border:1px solid var(--border2);background:var(--card);color:var(--muted);font-family:'DM Mono',monospace;font-size:9px;font-weight:500;letter-spacing:0.06em;text-transform:uppercase;cursor:pointer;" data-wdcomm="soybeans">Soybeans</button>
+        <button onclick="wdSwitchComm('soymeal',this)" style="padding:7px 16px;border-radius:4px;border:1px solid var(--border2);background:var(--card);color:var(--muted);font-family:'DM Mono',monospace;font-size:9px;font-weight:500;letter-spacing:0.06em;text-transform:uppercase;cursor:pointer;" data-wdcomm="soymeal">Soy Meal</button>
+        <button onclick="wdSwitchComm('soyoil',this)" style="padding:7px 16px;border-radius:4px;border:1px solid var(--border2);background:var(--card);color:var(--muted);font-family:'DM Mono',monospace;font-size:9px;font-weight:500;letter-spacing:0.06em;text-transform:uppercase;cursor:pointer;" data-wdcomm="soyoil">Soy Oil</button>
       </div>
 
-      <div id="wasde-main" style="display:none;">
-        <!-- crop tabs -->
-        <div style="display:flex;gap:8px;margin-bottom:18px;flex-wrap:wrap;">
-          <button id="wctab-corn"  onclick="wSwitchCrop('corn',this)"  style="padding:7px 18px;border-radius:20px;font-size:13px;font-weight:600;cursor:pointer;border:1px solid var(--gold);background:var(--gold);color:#0d0f12;font-family:'DM Sans',sans-serif;">Corn</button>
-          <button id="wctab-wheat" onclick="wSwitchCrop('wheat',this)" style="padding:7px 18px;border-radius:20px;font-size:13px;font-weight:600;cursor:pointer;border:1px solid var(--border2);background:var(--card);color:var(--muted);font-family:'DM Sans',sans-serif;">Wheat</button>
-          <button id="wctab-soy"   onclick="wSwitchCrop('soy',this)"   style="padding:7px 18px;border-radius:20px;font-size:13px;font-weight:600;cursor:pointer;border:1px solid var(--border2);background:var(--card);color:var(--muted);font-family:'DM Sans',sans-serif;">Soybeans</button>
-          <button id="wctab-soymeal" onclick="wSwitchCrop('soymeal',this)" style="padding:7px 18px;border-radius:20px;font-size:13px;font-weight:600;cursor:pointer;border:1px solid var(--border2);background:var(--card);color:var(--muted);font-family:'DM Sans',sans-serif;">Soy Meal</button>
-          <button id="wctab-soyoil"  onclick="wSwitchCrop('soyoil',this)"  style="padding:7px 18px;border-radius:20px;font-size:13px;font-weight:600;cursor:pointer;border:1px solid var(--border2);background:var(--card);color:var(--muted);font-family:'DM Sans',sans-serif;">Soy Oil</button>
-          <span id="wasde-report-date" style="margin-left:auto;align-self:center;font-family:'DM Mono',monospace;font-size:10px;color:var(--muted2);"></span>
+      <!-- COMMODITY PANELS -->
+      <div id="wd-panel-wheat" style="display:block;">
+        <div id="wd-wheat-summary" style="margin-bottom:20px;"></div>
+        <div id="wd-wheat-kpis" style="margin-bottom:20px;"></div>
+        <div id="wd-wheat-section-us" style="font-family:'DM Mono',monospace;font-size:8.5px;letter-spacing:0.14em;text-transform:uppercase;color:var(--muted2);margin-bottom:10px;display:flex;align-items:center;gap:10px;">U.S. Balance Sheet<span style="flex:1;height:1px;background:var(--border);display:block;"></span></div>
+        <div style="overflow-x:auto;margin-bottom:20px;" id="wd-wheat-us-tbl"></div>
+        <div style="display:grid;grid-template-columns:1fr 1fr;gap:14px;margin-bottom:20px;" id="wd-wheat-charts">
+          <div style="background:var(--card);border:1px solid var(--border);border-radius:8px;padding:14px;"><div style="font-family:'DM Mono',monospace;font-size:8.5px;letter-spacing:0.1em;text-transform:uppercase;color:var(--muted2);margin-bottom:10px;">U.S. Ending Stocks (Mbu)</div><div style="position:relative;height:180px;"><canvas id="wd-wh-stocks"></canvas></div></div>
+          <div style="background:var(--card);border:1px solid var(--border);border-radius:8px;padding:14px;"><div style="font-family:'DM Mono',monospace;font-size:8.5px;letter-spacing:0.1em;text-transform:uppercase;color:var(--muted2);margin-bottom:10px;">World Production vs Consumption (MMT)</div><div style="position:relative;height:180px;"><canvas id="wd-wh-world"></canvas></div></div>
         </div>
+        <div style="font-family:'DM Mono',monospace;font-size:8.5px;letter-spacing:0.14em;text-transform:uppercase;color:var(--muted2);margin-bottom:10px;display:flex;align-items:center;gap:10px;">World Balance Sheet<span style="flex:1;height:1px;background:var(--border);display:block;"></span></div>
+        <div style="display:flex;gap:5px;flex-wrap:wrap;margin-bottom:10px;" id="wd-wheat-rtabs"></div>
+        <div style="overflow-x:auto;" id="wd-wheat-world-tbl"></div>
+      </div>
 
-        <!-- corn panel -->
-        <div id="wpanel-corn" style="display:grid;grid-template-columns:1fr 1fr;gap:14px;">
-          <div style="background:var(--card);border:1px solid var(--border);border-radius:10px;overflow:hidden;">
-            <div style="padding:10px 16px;background:var(--card2);border-bottom:1px solid var(--border);display:flex;justify-content:space-between;align-items:center;">
-              <span style="font-family:'DM Mono',monospace;font-size:10px;font-weight:700;text-transform:uppercase;letter-spacing:0.08em;color:var(--gold2);">United States</span>
-              <span id="corn-us-unit" style="font-family:'DM Mono',monospace;font-size:9px;color:var(--muted2);"></span>
-            </div>
-            <div id="corn-us-tbl"></div>
-          </div>
-          <div style="background:var(--card);border:1px solid var(--border);border-radius:10px;overflow:hidden;">
-            <div style="padding:10px 16px;background:var(--card2);border-bottom:1px solid var(--border);">
-              <span style="font-family:'DM Mono',monospace;font-size:10px;font-weight:700;text-transform:uppercase;letter-spacing:0.08em;color:var(--gold2);">World</span>
-              <div id="corn-world-rtabs" style="display:flex;gap:5px;margin-top:8px;flex-wrap:wrap;"></div>
-            </div>
-            <div id="corn-world-tbl"></div>
-          </div>
+      <div id="wd-panel-corn" style="display:none;">
+        <div id="wd-corn-summary" style="margin-bottom:20px;"></div>
+        <div id="wd-corn-kpis" style="margin-bottom:20px;"></div>
+        <div style="font-family:'DM Mono',monospace;font-size:8.5px;letter-spacing:0.14em;text-transform:uppercase;color:var(--muted2);margin-bottom:10px;display:flex;align-items:center;gap:10px;">U.S. Balance Sheet<span style="flex:1;height:1px;background:var(--border);display:block;"></span></div>
+        <div style="overflow-x:auto;margin-bottom:20px;" id="wd-corn-us-tbl"></div>
+        <div style="display:grid;grid-template-columns:1fr 1fr;gap:14px;margin-bottom:20px;">
+          <div style="background:var(--card);border:1px solid var(--border);border-radius:8px;padding:14px;"><div style="font-family:'DM Mono',monospace;font-size:8.5px;letter-spacing:0.1em;text-transform:uppercase;color:var(--muted2);margin-bottom:10px;">U.S. Ending Stocks (Mbu)</div><div style="position:relative;height:180px;"><canvas id="wd-co-stocks"></canvas></div></div>
+          <div style="background:var(--card);border:1px solid var(--border);border-radius:8px;padding:14px;"><div style="font-family:'DM Mono',monospace;font-size:8.5px;letter-spacing:0.1em;text-transform:uppercase;color:var(--muted2);margin-bottom:10px;">World Production vs Consumption (MMT)</div><div style="position:relative;height:180px;"><canvas id="wd-co-world"></canvas></div></div>
         </div>
+        <div style="font-family:'DM Mono',monospace;font-size:8.5px;letter-spacing:0.14em;text-transform:uppercase;color:var(--muted2);margin-bottom:10px;display:flex;align-items:center;gap:10px;">World Balance Sheet<span style="flex:1;height:1px;background:var(--border);display:block;"></span></div>
+        <div style="display:flex;gap:5px;flex-wrap:wrap;margin-bottom:10px;" id="wd-corn-rtabs"></div>
+        <div style="overflow-x:auto;" id="wd-corn-world-tbl"></div>
+      </div>
 
-        <!-- wheat panel -->
-        <div id="wpanel-wheat" style="display:none;grid-template-columns:1fr 1fr;gap:14px;">
-          <div style="background:var(--card);border:1px solid var(--border);border-radius:10px;overflow:hidden;">
-            <div style="padding:10px 16px;background:var(--card2);border-bottom:1px solid var(--border);display:flex;justify-content:space-between;align-items:center;">
-              <span style="font-family:'DM Mono',monospace;font-size:10px;font-weight:700;text-transform:uppercase;letter-spacing:0.08em;color:var(--gold2);">United States</span>
-              <span id="wheat-us-unit" style="font-family:'DM Mono',monospace;font-size:9px;color:var(--muted2);"></span>
-            </div>
-            <div id="wheat-us-tbl"></div>
-          </div>
-          <div style="background:var(--card);border:1px solid var(--border);border-radius:10px;overflow:hidden;">
-            <div style="padding:10px 16px;background:var(--card2);border-bottom:1px solid var(--border);">
-              <span style="font-family:'DM Mono',monospace;font-size:10px;font-weight:700;text-transform:uppercase;letter-spacing:0.08em;color:var(--gold2);">World</span>
-              <div id="wheat-world-rtabs" style="display:flex;gap:5px;margin-top:8px;flex-wrap:wrap;"></div>
-            </div>
-            <div id="wheat-world-tbl"></div>
-          </div>
+      <div id="wd-panel-soybeans" style="display:none;">
+        <div id="wd-soybeans-summary" style="margin-bottom:20px;"></div>
+        <div id="wd-soybeans-kpis" style="margin-bottom:20px;"></div>
+        <div style="font-family:'DM Mono',monospace;font-size:8.5px;letter-spacing:0.14em;text-transform:uppercase;color:var(--muted2);margin-bottom:10px;display:flex;align-items:center;gap:10px;">U.S. Balance Sheet<span style="flex:1;height:1px;background:var(--border);display:block;"></span></div>
+        <div style="overflow-x:auto;margin-bottom:20px;" id="wd-soybeans-us-tbl"></div>
+        <div style="display:grid;grid-template-columns:1fr 1fr;gap:14px;margin-bottom:20px;">
+          <div style="background:var(--card);border:1px solid var(--border);border-radius:8px;padding:14px;"><div style="font-family:'DM Mono',monospace;font-size:8.5px;letter-spacing:0.1em;text-transform:uppercase;color:var(--muted2);margin-bottom:10px;">U.S. Ending Stocks (Mbu)</div><div style="position:relative;height:180px;"><canvas id="wd-so-stocks"></canvas></div></div>
+          <div style="background:var(--card);border:1px solid var(--border);border-radius:8px;padding:14px;"><div style="font-family:'DM Mono',monospace;font-size:8.5px;letter-spacing:0.1em;text-transform:uppercase;color:var(--muted2);margin-bottom:10px;">World Ending Stocks (MMT)</div><div style="position:relative;height:180px;"><canvas id="wd-so-world"></canvas></div></div>
         </div>
+        <div style="font-family:'DM Mono',monospace;font-size:8.5px;letter-spacing:0.14em;text-transform:uppercase;color:var(--muted2);margin-bottom:10px;display:flex;align-items:center;gap:10px;">World Balance Sheet<span style="flex:1;height:1px;background:var(--border);display:block;"></span></div>
+        <div style="display:flex;gap:5px;flex-wrap:wrap;margin-bottom:10px;" id="wd-soybeans-rtabs"></div>
+        <div style="overflow-x:auto;" id="wd-soybeans-world-tbl"></div>
+      </div>
 
-        <!-- soymeal panel -->
-        <div id="wpanel-soymeal" style="display:none;grid-template-columns:1fr;gap:14px;">
-          <div style="background:var(--card);border:1px solid var(--border);border-radius:10px;overflow:hidden;">
-            <div style="padding:10px 16px;background:var(--card2);border-bottom:1px solid var(--border);">
-              <span style="font-family:'DM Mono',monospace;font-size:10px;font-weight:700;text-transform:uppercase;letter-spacing:0.08em;color:var(--gold2);">World Soybean Meal</span>
-              <div id="soymeal-world-rtabs" style="display:flex;gap:5px;margin-top:8px;flex-wrap:wrap;"></div>
-            </div>
-            <div id="soymeal-world-tbl"></div>
-          </div>
+      <div id="wd-panel-soymeal" style="display:none;">
+        <div id="wd-soymeal-summary" style="margin-bottom:20px;"></div>
+        <div id="wd-soymeal-kpis" style="margin-bottom:20px;"></div>
+        <div style="font-family:'DM Mono',monospace;font-size:8.5px;letter-spacing:0.14em;text-transform:uppercase;color:var(--muted2);margin-bottom:10px;display:flex;align-items:center;gap:10px;">U.S. Balance Sheet<span style="flex:1;height:1px;background:var(--border);display:block;"></span></div>
+        <div style="overflow-x:auto;margin-bottom:20px;" id="wd-soymeal-us-tbl"></div>
+        <div style="display:grid;grid-template-columns:1fr 1fr;gap:14px;margin-bottom:20px;">
+          <div style="background:var(--card);border:1px solid var(--border);border-radius:8px;padding:14px;"><div style="font-family:'DM Mono',monospace;font-size:8.5px;letter-spacing:0.1em;text-transform:uppercase;color:var(--muted2);margin-bottom:10px;">World Production (MMT)</div><div style="position:relative;height:180px;"><canvas id="wd-me-prod"></canvas></div></div>
+          <div style="background:var(--card);border:1px solid var(--border);border-radius:8px;padding:14px;"><div style="font-family:'DM Mono',monospace;font-size:8.5px;letter-spacing:0.1em;text-transform:uppercase;color:var(--muted2);margin-bottom:10px;">World Exports (MMT)</div><div style="position:relative;height:180px;"><canvas id="wd-me-trade"></canvas></div></div>
         </div>
+        <div style="font-family:'DM Mono',monospace;font-size:8.5px;letter-spacing:0.14em;text-transform:uppercase;color:var(--muted2);margin-bottom:10px;display:flex;align-items:center;gap:10px;">World Balance Sheet<span style="flex:1;height:1px;background:var(--border);display:block;"></span></div>
+        <div style="display:flex;gap:5px;flex-wrap:wrap;margin-bottom:10px;" id="wd-soymeal-rtabs"></div>
+        <div style="overflow-x:auto;" id="wd-soymeal-world-tbl"></div>
+      </div>
 
-        <!-- soyoil panel -->
-        <div id="wpanel-soyoil" style="display:none;grid-template-columns:1fr;gap:14px;">
-          <div style="background:var(--card);border:1px solid var(--border);border-radius:10px;overflow:hidden;">
-            <div style="padding:10px 16px;background:var(--card2);border-bottom:1px solid var(--border);">
-              <span style="font-family:'DM Mono',monospace;font-size:10px;font-weight:700;text-transform:uppercase;letter-spacing:0.08em;color:var(--gold2);">World Soybean Oil</span>
-              <div id="soyoil-world-rtabs" style="display:flex;gap:5px;margin-top:8px;flex-wrap:wrap;"></div>
-            </div>
-            <div id="soyoil-world-tbl"></div>
-          </div>
+      <div id="wd-panel-soyoil" style="display:none;">
+        <div id="wd-soyoil-summary" style="margin-bottom:20px;"></div>
+        <div id="wd-soyoil-kpis" style="margin-bottom:20px;"></div>
+        <div style="font-family:'DM Mono',monospace;font-size:8.5px;letter-spacing:0.14em;text-transform:uppercase;color:var(--muted2);margin-bottom:10px;display:flex;align-items:center;gap:10px;">U.S. Balance Sheet<span style="flex:1;height:1px;background:var(--border);display:block;"></span></div>
+        <div style="overflow-x:auto;margin-bottom:20px;" id="wd-soyoil-us-tbl"></div>
+        <div style="display:grid;grid-template-columns:1fr 1fr;gap:14px;margin-bottom:20px;">
+          <div style="background:var(--card);border:1px solid var(--border);border-radius:8px;padding:14px;"><div style="font-family:'DM Mono',monospace;font-size:8.5px;letter-spacing:0.1em;text-transform:uppercase;color:var(--muted2);margin-bottom:10px;">U.S. Biofuel Use (Billion Lbs)</div><div style="position:relative;height:180px;"><canvas id="wd-oi-bio"></canvas></div></div>
+          <div style="background:var(--card);border:1px solid var(--border);border-radius:8px;padding:14px;"><div style="font-family:'DM Mono',monospace;font-size:8.5px;letter-spacing:0.1em;text-transform:uppercase;color:var(--muted2);margin-bottom:10px;">World Ending Stocks (MMT)</div><div style="position:relative;height:180px;"><canvas id="wd-oi-world"></canvas></div></div>
         </div>
+        <div style="font-family:'DM Mono',monospace;font-size:8.5px;letter-spacing:0.14em;text-transform:uppercase;color:var(--muted2);margin-bottom:10px;display:flex;align-items:center;gap:10px;">World Balance Sheet<span style="flex:1;height:1px;background:var(--border);display:block;"></span></div>
+        <div style="display:flex;gap:5px;flex-wrap:wrap;margin-bottom:10px;" id="wd-soyoil-rtabs"></div>
+        <div style="overflow-x:auto;" id="wd-soyoil-world-tbl"></div>
+      </div>
 
-        <!-- soy panel -->
-        <div id="wpanel-soy" style="display:none;grid-template-columns:1fr 1fr;gap:14px;">
-          <div style="background:var(--card);border:1px solid var(--border);border-radius:10px;overflow:hidden;">
-            <div style="padding:10px 16px;background:var(--card2);border-bottom:1px solid var(--border);display:flex;justify-content:space-between;align-items:center;">
-              <span style="font-family:'DM Mono',monospace;font-size:10px;font-weight:700;text-transform:uppercase;letter-spacing:0.08em;color:var(--gold2);">United States</span>
-              <span id="soy-us-unit" style="font-family:'DM Mono',monospace;font-size:9px;color:var(--muted2);"></span>
-            </div>
-            <div id="soy-us-tbl"></div>
-          </div>
-          <div style="background:var(--card);border:1px solid var(--border);border-radius:10px;overflow:hidden;">
-            <div style="padding:10px 16px;background:var(--card2);border-bottom:1px solid var(--border);">
-              <span style="font-family:'DM Mono',monospace;font-size:10px;font-weight:700;text-transform:uppercase;letter-spacing:0.08em;color:var(--gold2);">World</span>
-              <div id="soy-world-rtabs" style="display:flex;gap:5px;margin-top:8px;flex-wrap:wrap;"></div>
-            </div>
-            <div id="soy-world-tbl"></div>
-          </div>
-        </div>
+      <div style="font-family:'DM Mono',monospace;font-size:9px;color:var(--muted2);padding-top:14px;border-top:1px solid var(--border);margin-top:4px;">
+        Source: USDA World Agricultural Supply and Demand Estimates (WASDE-671) &mdash; May 2026 &mdash; 
+        Apr = April 2026 WASDE estimate &mdash; May = May 2026 WASDE estimate &mdash; 26/27 Proj = First 2026/27 projection &mdash;
+        <a href="https://www.usda.gov/oce/commodity/wasde" target="_blank" style="color:var(--blue);text-decoration:none;">Official Report</a>
+      </div>
 
-        <div style="display:flex;justify-content:space-between;align-items:center;padding-top:14px;border-top:1px solid var(--border);margin-top:14px;flex-wrap:wrap;gap:8px;">
-          <span style="font-family:'DM Mono',monospace;font-size:9px;color:var(--muted2);">Source: USDA World Agricultural Supply and Demand Estimates (WASDE) &mdash; Published monthly</span>
-          <a href="https://www.usda.gov/oce/commodity/wasde" target="_blank" style="font-family:'DM Mono',monospace;font-size:9px;color:var(--blue);text-decoration:none;border:1px solid rgba(74,158,255,0.25);border-radius:4px;padding:4px 10px;">Official WASDE Report</a>
-        </div>
-      </div><!-- /wasde-main -->
     </div>
   </div>
 
@@ -4286,212 +4285,6 @@ async function publishPdfResult(uid){
 boot();
 
 // ============================================================
-// WASDE INLINE DASHBOARD
-// ============================================================
-var _wasdeData = null;
-var _wasdeLoaded = false;
-var _wasdeRegion = { corn:'World', wheat:'World', soy:'World' };
-var _W_YEARS = ['2023/24','2024/25','2025/26'];
-var _W_US_ATTRS = ['Beginning Stocks','Production','Imports','Supply, Total','Domestic, Total','Exports','Ending Stocks','Avg. Farm Price'];
-var _W_WORLD_ATTRS = ['Beginning Stocks','Production','Imports','Domestic Total','Exports','Ending Stocks'];
-var _W_REGIONS = ['World','United States','Brazil','Argentina','China','European Union','Ukraine','Russia','Australia','Canada'];
-var _W_TOTAL = {'Supply, Total':1,'Ending Stocks':1};
-
-function wFmt(v) {
-  if (v === undefined || v === null || v === '') return '--';
-  var n = parseFloat(v); if (isNaN(n)) return v;
-  return n.toLocaleString(undefined, { maximumFractionDigits:2 });
-}
-function wChg(a, b) {
-  if (!a || !b) return '<span style="color:var(--muted2)">--</span>';
-  var d = parseFloat(a) - parseFloat(b); if (isNaN(d)) return '--';
-  var col = d > 0 ? 'var(--teal)' : d < 0 ? 'var(--coral)' : 'var(--muted2)';
-  return '<span style="color:' + col + '">' + (d > 0 ? '+' : '') + d.toFixed(2) + '</span>';
-}
-function wTblStyle() {
-  return 'width:100%;border-collapse:collapse;';
-}
-function wThStyle() {
-  return 'font-family:DM Mono,monospace;font-size:9px;color:var(--muted);font-weight:600;text-transform:uppercase;letter-spacing:0.06em;padding:7px 14px;border-bottom:1px solid var(--border);background:rgba(255,255,255,0.02);text-align:right;';
-}
-function wTdStyle(first, total) {
-  var base = 'padding:7px 14px;font-family:DM Mono,monospace;font-size:11.5px;border-bottom:1px solid var(--border);text-align:right;';
-  if (first) base += 'text-align:left;color:' + (total ? 'var(--gold2)' : 'var(--text)') + ';font-weight:' + (total ? '600' : '400') + ';';
-  else base += 'color:' + (total ? 'var(--gold2)' : 'var(--muted)') + ';font-weight:' + (total ? '600' : '400') + ';';
-  return base;
-}
-function wCurStyle(total) {
-  return 'padding:7px 14px;font-family:DM Mono,monospace;font-size:11.5px;border-bottom:1px solid var(--border);text-align:right;color:var(--blue);font-weight:600;';
-}
-
-function wBuildUSTable(crop) {
-  var d = _wasdeData[crop + '_us'];
-  if (!d) return '';
-  var el = document.getElementById(crop + '-us-unit');
-  if (el) el.textContent = d.unit || '';
-  var h = '<table style="' + wTblStyle() + '"><thead><tr>';
-  h += '<th style="' + wThStyle() + 'text-align:left;">Item</th>';
-  h += '<th style="' + wThStyle() + '">23/24</th><th style="' + wThStyle() + '">24/25</th>';
-  h += '<th style="' + wThStyle() + 'color:var(--blue);">25/26</th><th style="' + wThStyle() + '">Chg</th>';
-  h += '</tr></thead><tbody>';
-  for (var i = 0; i < _W_US_ATTRS.length; i++) {
-    var a = _W_US_ATTRS[i];
-    var v3 = (d['2023/24']||{})[a], v4 = (d['2024/25']||{})[a], v5 = (d['2025/26']||{})[a];
-    if (!v3 && !v4 && !v5) continue;
-    var tot = _W_TOTAL[a] ? 1 : 0;
-    h += '<tr><td style="' + wTdStyle(1,tot) + '">' + a + '</td>';
-    h += '<td style="' + wTdStyle(0,tot) + '">' + wFmt(v3) + '</td>';
-    h += '<td style="' + wTdStyle(0,tot) + '">' + wFmt(v4) + '</td>';
-    h += '<td style="' + wCurStyle(tot) + '">' + wFmt(v5) + '</td>';
-    h += '<td style="' + wTdStyle(0,0) + '">' + wChg(v5,v4) + '</td></tr>';
-  }
-  h += '</tbody></table>';
-  return h;
-}
-
-function wBuildWorldTable(crop) {
-  var d = _wasdeData[crop + '_world'];
-  var region = _wasdeRegion[crop];
-  if (!d || !d[region]) return '<div style="padding:20px;font-family:DM Mono,monospace;font-size:10px;color:var(--muted2);">No data</div>';
-  var rd = d[region];
-  var h = '<table style="' + wTblStyle() + '"><thead><tr>';
-  h += '<th style="' + wThStyle() + 'text-align:left;">Item</th>';
-  h += '<th style="' + wThStyle() + '">23/24</th><th style="' + wThStyle() + '">24/25</th>';
-  h += '<th style="' + wThStyle() + 'color:var(--blue);">25/26</th><th style="' + wThStyle() + '">Chg</th>';
-  h += '</tr></thead><tbody>';
-  for (var i = 0; i < _W_WORLD_ATTRS.length; i++) {
-    var a = _W_WORLD_ATTRS[i];
-    var v3 = (rd['2023/24']||{})[a], v4 = (rd['2024/25']||{})[a], v5 = (rd['2025/26']||{})[a];
-    if (!v3 && !v4 && !v5) continue;
-    var tot = a === 'Ending Stocks' ? 1 : 0;
-    h += '<tr><td style="' + wTdStyle(1,tot) + '">' + a + '</td>';
-    h += '<td style="' + wTdStyle(0,tot) + '">' + wFmt(v3) + '</td>';
-    h += '<td style="' + wTdStyle(0,tot) + '">' + wFmt(v4) + '</td>';
-    h += '<td style="' + wCurStyle(tot) + '">' + wFmt(v5) + '</td>';
-    h += '<td style="' + wTdStyle(0,0) + '">' + wChg(v5,v4) + '</td></tr>';
-  }
-  h += '</tbody></table>';
-  return h;
-}
-
-function wBuildRegionTabs(crop) {
-  var d = _wasdeData[crop + '_world'];
-  if (!d) return;
-  var el = document.getElementById(crop + '-world-rtabs');
-  if (!el) return;
-  var regions = _W_REGIONS.filter(function(r){ return d[r]; });
-  el.innerHTML = regions.map(function(r) {
-    var isAct = r === _wasdeRegion[crop];
-    var s = 'padding:4px 12px;border-radius:4px;border:1px solid ' + (isAct ? 'var(--blue)' : 'var(--border2)') + ';background:' + (isAct ? 'rgba(74,158,255,0.15)' : 'var(--card)') + ';color:' + (isAct ? 'var(--blue)' : 'var(--muted)') + ';font-family:DM Mono,monospace;font-size:9px;font-weight:500;letter-spacing:0.06em;text-transform:uppercase;cursor:pointer;';
-    return '<button style="' + s + '" onclick="wSwitchRegion(\'' + crop + '\',\'' + r + '\',this)">' + r + '</button>';
-  }).join('');
-}
-
-function wRenderProductTable(crop) {
-  var key = crop + '_world';
-  var d = DATA[key];
-  if (!d) return;
-  var regions = Object.keys(d);
-  var activeR = regions[0] || 'World';
-
-  // Build region tabs
-  var tabsEl = document.getElementById(crop + '-world-rtabs');
-  if (tabsEl) {
-    tabsEl.innerHTML = '';
-    regions.forEach(function(r) {
-      var isAct = r === activeR;
-      var btn = document.createElement('button');
-      btn.textContent = r;
-      btn.style.cssText = 'padding:4px 12px;border-radius:4px;border:1px solid ' + (isAct?'var(--blue)':'var(--border2)') + ';background:' + (isAct?'rgba(74,158,255,0.15)':'var(--card)') + ';color:' + (isAct?'var(--blue)':'var(--muted)') + ';font-family:DM Mono,monospace;font-size:9px;font-weight:500;letter-spacing:0.06em;text-transform:uppercase;cursor:pointer;margin-right:4px;';
-      btn.addEventListener('click', function() {
-        wRenderProductRegion(crop, r);
-        tabsEl.querySelectorAll('button').forEach(function(b){ b.style.borderColor='var(--border2)'; b.style.background='var(--card)'; b.style.color='var(--muted)'; });
-        btn.style.borderColor='var(--blue)'; btn.style.background='rgba(74,158,255,0.15)'; btn.style.color='var(--blue)';
-      });
-      tabsEl.appendChild(btn);
-    });
-  }
-  wRenderProductRegion(crop, activeR);
-}
-
-function wRenderProductRegion(crop, region) {
-  var d = DATA[crop + '_world'];
-  if (!d || !d[region]) return;
-  var rd = d[region];
-  var tblEl = document.getElementById(crop + '-world-tbl');
-  if (!tblEl) return;
-  var ATTRS = ['Beginning Stocks','Production','Imports','Domestic Total','Exports','Ending Stocks'];
-  var h = '<table style="width:100%;border-collapse:collapse;"><thead><tr>';
-  h += '<th style="font-family:DM Mono,monospace;font-size:9px;color:var(--muted);font-weight:600;text-transform:uppercase;letter-spacing:0.06em;padding:7px 14px;border-bottom:1px solid var(--border);background:rgba(255,255,255,0.02);text-align:left;">Item</th>';
-  h += '<th style="font-family:DM Mono,monospace;font-size:9px;color:var(--muted);font-weight:600;text-transform:uppercase;letter-spacing:0.06em;padding:7px 14px;border-bottom:1px solid var(--border);background:rgba(255,255,255,0.02);text-align:right;">24/25</th>';
-  h += '<th style="font-family:DM Mono,monospace;font-size:9px;color:var(--muted);font-weight:600;text-transform:uppercase;letter-spacing:0.06em;padding:7px 14px;border-bottom:1px solid var(--border);background:rgba(255,255,255,0.02);text-align:right;">25/26</th>';
-  h += '<th style="font-family:DM Mono,monospace;font-size:9px;color:var(--blue);font-weight:600;text-transform:uppercase;letter-spacing:0.06em;padding:7px 14px;border-bottom:1px solid var(--border);background:rgba(255,255,255,0.02);text-align:right;">26/27</th>';
-  h += '<th style="font-family:DM Mono,monospace;font-size:9px;color:var(--muted);font-weight:600;text-transform:uppercase;letter-spacing:0.06em;padding:7px 14px;border-bottom:1px solid var(--border);background:rgba(255,255,255,0.02);text-align:right;">Chg</th>';
-  h += '</tr></thead><tbody>';
-  ATTRS.forEach(function(attr) {
-    var v3 = (rd['2024/25']||{})[attr], v4 = (rd['2025/26']||{})[attr], v5 = (rd['2026/27']||{})[attr];
-    if (!v3 && !v4 && !v5) return;
-    var tot = attr === 'Ending Stocks' ? 1 : 0;
-    var tdS = 'padding:7px 14px;font-family:DM Mono,monospace;font-size:11.5px;border-bottom:1px solid var(--border);text-align:right;color:' + (tot?'var(--gold2)':'var(--muted)') + ';font-weight:' + (tot?'600':'400') + ';';
-    var tdL = 'padding:7px 14px;font-family:DM Mono,monospace;font-size:11.5px;border-bottom:1px solid var(--border);text-align:left;color:' + (tot?'var(--gold2)':'var(--text)') + ';font-weight:' + (tot?'600':'400') + ';';
-    h += '<tr><td style="' + tdL + '">' + attr + '</td><td style="' + tdS + '">' + wFmt(v3) + '</td><td style="' + tdS + '">' + wFmt(v4) + '</td><td style="' + tdS + 'color:var(--blue);font-weight:600;">' + wFmt(v5) + '</td><td style="' + tdS + '">' + wChg(v5,v4) + '</td></tr>';
-  });
-  h += '</tbody></table>';
-  tblEl.innerHTML = h;
-}
-
-function wRender(crop) {
-  var usEl = document.getElementById(crop + '-us-tbl');
-  var wEl  = document.getElementById(crop + '-world-tbl');
-  if (usEl) usEl.innerHTML = wBuildUSTable(crop);
-  if (wEl)  wEl.innerHTML  = wBuildWorldTable(crop);
-  wBuildRegionTabs(crop);
-}
-
-function wSwitchRegion(crop, region, el) {
-  _wasdeRegion[crop] = region;
-  wBuildRegionTabs(crop);
-  var wEl = document.getElementById(crop + '-world-tbl');
-  if (wEl) wEl.innerHTML = wBuildWorldTable(crop);
-}
-
-function wSwitchCrop(crop, el) {
-  ['corn','wheat','soy','soymeal','soyoil'].forEach(function(c) {
-    var p = document.getElementById('wpanel-' + c);
-    var b = document.getElementById('wctab-' + c);
-    if (p) p.style.display = c === crop ? 'grid' : 'none';
-    if (b) {
-      b.style.background    = c === crop ? 'var(--gold)' : 'var(--card)';
-      b.style.color         = c === crop ? '#0d0f12'     : 'var(--muted)';
-      b.style.borderColor   = c === crop ? 'var(--gold)' : 'var(--border2)';
-    }
-  });
-  wRender(crop);
-}
-
-function initWasde() {
-  if (_wasdeLoaded) return;
-  fetch('/wasde-data.json')
-    .then(function(r){ return r.json(); })
-    .then(function(d) {
-      _wasdeData = d;
-      _wasdeLoaded = true;
-      document.getElementById('wasde-loading').style.display = 'none';
-      document.getElementById('wasde-main').style.display = 'block';
-      var dateEl = document.getElementById('wasde-report-date');
-      if (dateEl) dateEl.textContent = 'USDA WASDE -- ' + (d.reportDate || 'Latest');
-      ['corn','wheat','soy'].forEach(function(crop){ wRender(crop); });
-    ['soymeal','soyoil'].forEach(function(crop){ wRenderProductTable(crop); });
-    })
-    .catch(function(e) {
-      var el = document.getElementById('wasde-loading');
-      if (el) el.innerHTML = '<span style="color:var(--coral)">Failed to load WASDE data: ' + e.message + '</span>';
-    });
-}
-// End WASDE
-
-
-// ============================================================
 // COMMODITY MAP — inline, D3 loaded on demand
 // ============================================================
 var _cmLoaded = false;
@@ -4963,6 +4756,285 @@ function initCftcDashboard() {
   });
 }
 // End CFTC
+
+
+// ============================================================
+// WASDE COMPREHENSIVE INLINE DASHBOARD
+// ============================================================
+var _wdData = null;
+var _wdLoaded = false;
+var _wdRendered = {};
+var _wdCharts = {};
+var WD_COMM_COLORS = {wheat:'#c8853a',corn:'#d4aa55',soybeans:'#2ecfaa',soymeal:'#4a9eff',soyoil:'#a78bfa'};
+var WD_TOTAL_ATTRS = {'Supply, Total':1,'Use, Total':1,'Domestic, Total':1,'Ending Stocks':1};
+var WD_PRICE_ATTRS = {'Avg. Farm Price ($/bu)':1,'Avg. Price ($/ST)':1,'Avg. Price (c/lb)':1,'Avg. Price (cents/lb)':1};
+
+var WD_SUMMARIES = {
+  wheat:[
+    'The 2026/27 U.S. wheat outlook is for reduced supplies and exports, lower domestic use, and smaller ending stocks vs 2025/26. U.S. production projected at 1.561 billion bushels, down 424 million from the prior year on sharply lower harvested area of 32.9 million acres.',
+    'Global 2026/27 world production projected at 819.1 MMT, down from the 2025/26 record of 843.8 MMT. World ending stocks fall to 275.0 MMT from 279.2 MMT. Russia at 86.0 MMT, EU at 136.0 MMT, Australia at 30.0 MMT — major exporters see collective supply contraction.',
+    'Higher farm price forecast of $6.50/bu in 2026/27 vs $5.00 in 2025/26, reflecting tighter U.S. supply and reduced global export competition.'
+  ],
+  corn:[
+    'The 2026/27 U.S. corn outlook is for reductions to supply, total use, and ending stocks with higher expected farm price. Production projected at 15.995 billion bushels — down 1.026 billion from prior year record on lower harvested area (87.4m acres) and yield (183.0 bu/acre).',
+    'U.S. corn exports forecast to decline 5 percent to 3.2 billion bushels. Ending stocks down 185 million bushels to 1.957 billion. Stocks-to-use falls to 12.1 percent. Farm price forecast at $4.40/bu, up from $4.15.',
+    'World corn production for 2026/27 forecast to decline from the prior year record to 1.295 billion MMT. Global ending stocks down 19.4 MMT to 277.5 MMT — lowest since 2012/13. China stocks decline to 166.1 MMT from 178.2 MMT.'
+  ],
+  soybeans:[
+    'The 2026/27 U.S. soybean outlook shows higher supplies, crush, and exports with lower ending stocks. Crush projected at 2.750 billion bushels, up 120 million on favourable crush margins. Production at 4.435 billion bushels on higher planted area of 84.7m acres.',
+    'U.S. exports projected at 1.630 billion bushels, recovering from 2025/26 when tariff measures curtailed Chinese purchases. Ending stocks down 30 million to 310 million bushels. Farm price projected at $11.40/bu.',
+    'Global 2026/27 oilseed outlook shows higher production, crush, and ending stocks. World soybean production at 441.5 MMT. Brazil 185.0 MMT, Argentina 55.0 MMT. China import demand held at 112.0 MMT for the third consecutive year.'
+  ],
+  soymeal:[
+    'World soybean meal production for 2026/27 projected at 300.4 MMT, up from 290.3 MMT in 2025/26, driven by higher crush across all major origins. Global ending stocks rise to 19.93 MMT.',
+    'Global soybean meal exports for 2026/27 projected at 88.2 MMT, reflecting strong demand growth in Asia and continued expansion of livestock sectors in key importing regions.',
+    'U.S. soybean meal exports projected at a record 21.7 thousand short tons for 2026/27. Average price projected at $310/ST, modestly lower than 2025/26 on improved supply availability.'
+  ],
+  soyoil:[
+    'Total U.S. soybean oil demand for 2026/27 forecast to increase 7 percent. Biofuel use projected at 17.8 billion pounds, up sharply from 14.2 billion in 2025/26, driven by expanded RVO mandates and HVO/SAF feedstock demand.',
+    'U.S. soybean oil exports projected to fall sharply to 0.40 billion pounds in 2026/27 as biofuel demand absorbs available supply. Average price at 70 cents/lb, up from 63 cents in 2025/26.',
+    'World soybean oil production for 2026/27 projected at 74.7 MMT. Global ending stocks recovering to 6.32 MMT from the 5.93 MMT trough. Argentina remains dominant exporter at 6.55 MMT.'
+  ]
+};
+
+function wdFv(v){
+  if(v===undefined||v===null||v==='') return '\u2014';
+  var n=parseFloat(v); if(isNaN(n)) return v;
+  return n.toLocaleString(undefined,{maximumFractionDigits:2,minimumFractionDigits:0});
+}
+function wdChgHtml(a,b){
+  if(!a||!b) return '<span style="color:var(--muted2)">\u2014</span>';
+  var d=parseFloat(a)-parseFloat(b); if(isNaN(d)) return '\u2014';
+  var col=d>0.005?'var(--teal)':d<-0.005?'var(--coral)':'var(--muted2)';
+  var s=d>0.005?'+':''; var str=Math.abs(d)<10?d.toFixed(2):Math.round(d).toString();
+  return '<span style="color:' + col + '">' + s + str + '</span>';
+}
+
+function wdBuildSummary(elId, comm){
+  var el=document.getElementById(elId); if(!el) return;
+  var items=WD_SUMMARIES[comm]||[]; var col=WD_COMM_COLORS[comm]||'var(--gold)';
+  var h='<div style="background:var(--card);border:1px solid var(--border);border-left:3px solid ' + col + ';border-radius:8px;padding:16px 18px;">';
+  h+=items.map(function(t){ return '<div style="font-size:12.5px;color:var(--muted);line-height:1.7;padding:5px 0 5px 14px;position:relative;"><span style="position:absolute;left:0;color:' + col + ';">&mdash;</span>' + t + '</div>'; }).join('');
+  h+='</div>'; el.innerHTML=h;
+}
+
+function wdBuildKpis(elId, usData, comm){
+  var el=document.getElementById(elId); if(!el||!usData) return;
+  var col=WD_COMM_COLORS[comm]||'var(--gold)';
+  var may=usData['2025/26 May']||{}, proj=usData['2026/27 Proj']||{};
+  var items=[
+    {l:'25/26 Est. Stocks',v:wdFv(may['Ending Stocks']),s:usData.unit},
+    {l:'26/27 Proj. Stocks',v:wdFv(proj['Ending Stocks']),s:usData.unit,chg:wdChgHtml(proj['Ending Stocks'],may['Ending Stocks'])},
+    {l:'26/27 Production',v:wdFv(proj['Production']||proj['Production 4/']),s:usData.unit,chg:wdChgHtml(proj['Production']||proj['Production 4/'],may['Production']||may['Production 4/'])},
+    {l:'26/27 Exports',v:wdFv(proj['Exports']),s:usData.unit,chg:wdChgHtml(proj['Exports'],may['Exports'])},
+  ];
+  var h='<div style="display:grid;grid-template-columns:repeat(auto-fit,minmax(130px,1fr));gap:1px;background:var(--border);border:1px solid var(--border);border-radius:8px;overflow:hidden;">';
+  items.forEach(function(item){
+    h+='<div style="background:var(--card);padding:14px 16px;">';
+    h+='<div style="font-family:DM Mono,monospace;font-size:8px;color:var(--muted2);text-transform:uppercase;letter-spacing:0.1em;margin-bottom:5px;">' + item.l + '</div>';
+    h+='<div style="font-family:DM Serif Display,serif;font-size:22px;font-weight:700;color:' + col + ';line-height:1;">' + item.v + '</div>';
+    h+='<div style="font-family:DM Mono,monospace;font-size:9px;color:var(--muted2);margin-top:3px;">' + item.s + '</div>';
+    if(item.chg) h+='<div style="font-family:DM Mono,monospace;font-size:10px;margin-top:3px;">' + item.chg + ' vs 25/26</div>';
+    h+='</div>';
+  });
+  h+='</div>'; el.innerHTML=h;
+}
+
+function wdBuildUSTable(elId, usData){
+  var el=document.getElementById(elId); if(!el||!usData) return;
+  var attrs=usData.attrs||[];
+  var thS='background:var(--card2);font-family:DM Mono,monospace;font-size:8px;color:var(--muted2);letter-spacing:0.06em;text-transform:uppercase;padding:8px 12px;border-bottom:1px solid var(--border2);white-space:nowrap;text-align:right;';
+  var h='<table style="width:100%;border-collapse:collapse;">';
+  h+='<thead><tr>';
+  h+='<th style="' + thS + 'text-align:left;">Item</th>';
+  h+='<th style="' + thS + '">24/25 A</th>';
+  h+='<th style="' + thS + 'color:var(--muted);">25/26 Apr</th>';
+  h+='<th style="' + thS + 'color:var(--text);font-weight:700;">25/26 May</th>';
+  h+='<th style="' + thS + 'color:var(--blue);">26/27 Proj</th>';
+  h+='<th style="' + thS + 'color:var(--muted2);font-size:7px;">May vs Apr</th>';
+  h+='<th style="' + thS + 'color:var(--blue);font-size:7px;">26/27 vs 25/26</th>';
+  h+='</tr></thead><tbody>';
+  attrs.forEach(function(attr){
+    var v24=(usData['2024/25A']||{})[attr];
+    var vApr=(usData['2025/26 Apr']||{})[attr];
+    var vMay=(usData['2025/26 May']||{})[attr];
+    var vProj=(usData['2026/27 Proj']||{})[attr];
+    var isTotal=WD_TOTAL_ATTRS[attr];
+    var isPrice=WD_PRICE_ATTRS[attr];
+    var tdS='padding:7px 12px;font-family:DM Mono,monospace;font-size:11px;border-bottom:1px solid var(--border);text-align:right;';
+    var tc=isTotal?'color:var(--text);font-weight:600;':isPrice?'color:var(--gold);font-style:italic;':'color:var(--muted);';
+    var bg=isTotal?'background:rgba(255,255,255,0.02);':'';
+    h+='<tr>';
+    h+='<td style="' + tdS + 'text-align:left;' + tc + bg + '">' + attr + '</td>';
+    h+='<td style="' + tdS + tc + bg + '">' + wdFv(v24) + '</td>';
+    h+='<td style="' + tdS + 'color:var(--muted);' + bg + '">' + wdFv(vApr) + '</td>';
+    h+='<td style="' + tdS + (isTotal?'color:var(--text);font-weight:600;':'color:var(--muted);') + bg + '">' + wdFv(vMay) + '</td>';
+    h+='<td style="' + tdS + 'color:var(--blue);font-weight:600;' + bg + '">' + wdFv(vProj) + '</td>';
+    h+='<td style="' + tdS + bg + '">' + wdChgHtml(vMay,vApr) + '</td>';
+    h+='<td style="' + tdS + bg + '">' + wdChgHtml(vProj,vMay) + '</td>';
+    h+='</tr>';
+    if(isPrice) h+='<tr><td colspan="7" style="height:1px;background:var(--border2);padding:0;"></td></tr>';
+  });
+  h+='</tbody></table>'; el.innerHTML=h;
+}
+
+function wdBuildWorldTable(elId, worldData, region){
+  var el=document.getElementById(elId); if(!el||!worldData) return;
+  var regions=Object.keys(worldData.regions||{}); region=region||regions[0]||'World';
+  var rd=worldData.regions[region]; if(!rd) return;
+  var attrs=worldData.attrs||['Beginning Stocks','Production','Imports','Domestic Total','Exports','Ending Stocks'];
+  var thS='background:var(--card2);font-family:DM Mono,monospace;font-size:8px;color:var(--muted2);letter-spacing:0.06em;text-transform:uppercase;padding:8px 12px;border-bottom:1px solid var(--border2);text-align:right;white-space:nowrap;';
+  var h='<table style="width:100%;border-collapse:collapse;">';
+  h+='<thead><tr><th style="' + thS + 'text-align:left;">' + region + ' (' + (worldData.unit||'MMT') + ')</th>';
+  h+='<th style="' + thS + '">24/25 A</th>';
+  h+='<th style="' + thS + 'color:var(--muted);">25/26 Apr</th>';
+  h+='<th style="' + thS + 'color:var(--text);font-weight:700;">25/26 May</th>';
+  h+='<th style="' + thS + 'color:var(--blue);">26/27 Proj</th>';
+  h+='<th style="' + thS + 'color:var(--muted2);font-size:7px;">May vs Apr</th>';
+  h+='<th style="' + thS + 'color:var(--blue);font-size:7px;">26/27 vs 25/26</th>';
+  h+='</tr></thead><tbody>';
+  attrs.forEach(function(attr){
+    var v24=(rd['2024/25A']||{})[attr];
+    var vApr=(rd['2025/26 Apr']||{})[attr];
+    var vMay=(rd['2025/26 May']||{})[attr];
+    var vProj=(rd['2026/27 Proj']||{})[attr];
+    var isTotal=attr==='Ending Stocks'||attr==='Domestic Total';
+    var tdS='padding:7px 12px;font-family:DM Mono,monospace;font-size:11px;border-bottom:1px solid var(--border);text-align:right;';
+    var tc=isTotal?'color:var(--text);font-weight:600;':'color:var(--muted);';
+    var bg=isTotal?'background:rgba(255,255,255,0.02);':'';
+    h+='<tr><td style="' + tdS + 'text-align:left;' + tc + bg + '">' + attr + '</td>';
+    h+='<td style="' + tdS + tc + bg + '">' + wdFv(v24) + '</td>';
+    h+='<td style="' + tdS + 'color:var(--muted);' + bg + '">' + wdFv(vApr) + '</td>';
+    h+='<td style="' + tdS + (isTotal?'color:var(--text);font-weight:600;':'color:var(--muted);') + bg + '">' + wdFv(vMay) + '</td>';
+    h+='<td style="' + tdS + 'color:var(--blue);font-weight:600;' + bg + '">' + wdFv(vProj) + '</td>';
+    h+='<td style="' + tdS + bg + '">' + wdChgHtml(vMay,vApr) + '</td>';
+    h+='<td style="' + tdS + bg + '">' + wdChgHtml(vProj,vMay) + '</td>';
+    h+='</tr>';
+  });
+  h+='</tbody></table>'; el.innerHTML=h;
+}
+
+function wdBuildRegionTabs(tabsId, tblId, worldData){
+  var el=document.getElementById(tabsId); if(!el||!worldData) return;
+  var regions=Object.keys(worldData.regions||{}); el.innerHTML='';
+  regions.forEach(function(r,i){
+    var btn=document.createElement('button');
+    btn.textContent=r;
+    btn.style.cssText='padding:4px 12px;border-radius:4px;border:1px solid ' + (i===0?'var(--blue)':'var(--border2)') + ';background:' + (i===0?'rgba(74,158,255,0.15)':'var(--card)') + ';color:' + (i===0?'var(--blue)':'var(--muted)') + ';font-family:DM Mono,monospace;font-size:9px;font-weight:500;letter-spacing:0.06em;text-transform:uppercase;cursor:pointer;';
+    btn.addEventListener('click',function(){
+      el.querySelectorAll('button').forEach(function(b){ b.style.borderColor='var(--border2)'; b.style.background='var(--card)'; b.style.color='var(--muted)'; });
+      btn.style.borderColor='var(--blue)'; btn.style.background='rgba(74,158,255,0.15)'; btn.style.color='var(--blue)';
+      wdBuildWorldTable(tblId,worldData,r);
+    });
+    el.appendChild(btn);
+  });
+  wdBuildWorldTable(tblId,worldData,regions[0]);
+}
+
+function wdMkChart(id,type,labels,datasets,extra){
+  var el=document.getElementById(id); if(!el||!window.Chart) return;
+  if(_wdCharts[id]){try{_wdCharts[id].destroy();}catch(e){}}
+  var gc='rgba(255,255,255,0.05)', tc='rgba(136,144,164,0.8)';
+  var opts={responsive:true,maintainAspectRatio:false,animation:false,
+    plugins:{legend:{display:datasets.length>1,labels:{color:tc,font:{size:8},boxWidth:10}},
+             tooltip:{backgroundColor:'rgba(28,32,48,0.97)',titleColor:'#e8eaf0',bodyColor:'#8890a4',borderColor:'rgba(255,255,255,0.14)',borderWidth:1}},
+    scales:{x:{ticks:{color:tc,font:{size:8}},grid:{color:gc},border:{display:false}},
+            y:{ticks:{color:tc,font:{size:8}},grid:{color:gc},border:{display:false}}}};
+  Object.assign(opts,extra||{});
+  _wdCharts[id]=new Chart(el,{type:type,data:{labels:labels,datasets:datasets},options:opts});
+}
+
+function wdLoadChartJs(cb){
+  if(window.Chart){cb();return;}
+  var s=document.createElement('script');
+  s.src='https://cdnjs.cloudflare.com/ajax/libs/Chart.js/4.4.1/chart.umd.js';
+  s.onload=function(){cb();};
+  document.head.appendChild(s);
+}
+
+function wdRenderComm(comm){
+  if(!_wdData||_wdRendered[comm]) return;
+  _wdRendered[comm]=true;
+  var d=_wdData;
+  var commData={'wheat':{us:d.wheat.us,world:d.wheat.world},'corn':{us:d.corn.us,world:d.corn.world},'soybeans':{us:d.soybeans.us,world:d.soybeans.world},'soymeal':{us:d.soymeal.us,world:d.soymeal.world},'soyoil':{us:d.soyoil.us,world:d.soyoil.world}}[comm];
+  if(!commData) return;
+  wdBuildSummary('wd-' + comm + '-summary', comm);
+  wdBuildKpis('wd-' + comm + '-kpis', commData.us, comm);
+  wdBuildUSTable('wd-' + comm + '-us-tbl', commData.us);
+  wdBuildRegionTabs('wd-' + comm + '-rtabs','wd-' + comm + '-world-tbl', commData.world);
+  var col=WD_COMM_COLORS[comm];
+  var labels=['24/25 A','25/26 Est','26/27 Proj'];
+  wdLoadChartJs(function(){
+    var us=commData.us, wd=commData.world;
+    var stocks=[parseFloat((us['2024/25A']||{})['Ending Stocks']||0),parseFloat((us['2025/26 May']||{})['Ending Stocks']||0),parseFloat((us['2026/27 Proj']||{})['Ending Stocks']||0)];
+    var ww=wd.regions&&wd.regions['World']||{};
+    var ca=function(yr,k){return parseFloat(((ww[yr]||{})[k])||0);};
+
+    if(comm==='wheat'){
+      wdMkChart('wd-wh-stocks','bar',labels,[{data:stocks,backgroundColor:[col+'80',col+'a0',col],borderRadius:2,label:'Ending Stocks'}]);
+      wdMkChart('wd-wh-world','line',labels,[
+        {label:'Production',data:[ca('2024/25A','Production'),ca('2025/26 May','Production'),ca('2026/27 Proj','Production')],borderColor:col,backgroundColor:'transparent',borderWidth:2,pointRadius:4,tension:0.2},
+        {label:'Consumption',data:[ca('2024/25A','Domestic Total'),ca('2025/26 May','Domestic Total'),ca('2026/27 Proj','Domestic Total')],borderColor:'var(--teal)',backgroundColor:'transparent',borderWidth:2,pointRadius:4,tension:0.2,borderDash:[4,3]}
+      ]);
+    }
+    if(comm==='corn'){
+      wdMkChart('wd-co-stocks','bar',labels,[{data:stocks,backgroundColor:[col+'80',col+'a0',col],borderRadius:2,label:'Ending Stocks'}]);
+      wdMkChart('wd-co-world','line',labels,[
+        {label:'Production',data:[ca('2024/25A','Production'),ca('2025/26 May','Production'),ca('2026/27 Proj','Production')],borderColor:col,backgroundColor:'transparent',borderWidth:2,pointRadius:4,tension:0.2},
+        {label:'Consumption',data:[ca('2024/25A','Domestic Total'),ca('2025/26 May','Domestic Total'),ca('2026/27 Proj','Domestic Total')],borderColor:'var(--teal)',backgroundColor:'transparent',borderWidth:2,pointRadius:4,tension:0.2,borderDash:[4,3]}
+      ]);
+    }
+    if(comm==='soybeans'){
+      wdMkChart('wd-so-stocks','bar',labels,[{data:stocks,backgroundColor:[col+'80',col+'a0',col],borderRadius:2,label:'U.S. Ending Stocks (Mbu)'}]);
+      wdMkChart('wd-so-world','bar',labels,[{data:[ca('2024/25A','Ending Stocks'),ca('2025/26 May','Ending Stocks'),ca('2026/27 Proj','Ending Stocks')],backgroundColor:[col+'80',col+'a0',col],borderRadius:2,label:'World Ending Stocks (MMT)'}]);
+    }
+    if(comm==='soymeal'){
+      wdMkChart('wd-me-prod','bar',labels,[{data:[ca('2024/25A','Production'),ca('2025/26 May','Production'),ca('2026/27 Proj','Production')],backgroundColor:[col+'80',col+'a0',col],borderRadius:2,label:'World Production (MMT)'}]);
+      wdMkChart('wd-me-trade','bar',labels,[{data:[ca('2024/25A','Exports'),ca('2025/26 May','Exports'),ca('2026/27 Proj','Exports')],backgroundColor:[col+'80',col+'a0',col],borderRadius:2,label:'World Exports (MMT)'}]);
+    }
+    if(comm==='soyoil'){
+      var bio=[parseFloat((us['2024/25A']||{})['Biofuel']||0)/1000,parseFloat((us['2025/26 May']||{})['Biofuel']||0)/1000,parseFloat((us['2026/27 Proj']||{})['Biofuel']||0)/1000];
+      wdMkChart('wd-oi-bio','bar',labels,[{data:bio,backgroundColor:[col+'80',col+'a0',col],borderRadius:2,label:'Biofuel Use (Bln Lbs)'}]);
+      wdMkChart('wd-oi-world','line',labels,[{data:[ca('2024/25A','Ending Stocks'),ca('2025/26 May','Ending Stocks'),ca('2026/27 Proj','Ending Stocks')],borderColor:col,backgroundColor:col+'22',fill:true,borderWidth:2,pointRadius:4,tension:0.2,label:'World Ending Stocks (MMT)'}]);
+    }
+  });
+}
+
+function wdSwitchComm(comm, el){
+  var comms=['wheat','corn','soybeans','soymeal','soyoil'];
+  var colors=WD_COMM_COLORS;
+  document.querySelectorAll('#wasde-comm-tabs button').forEach(function(b){
+    var bc=b.getAttribute('data-wdcomm');
+    b.style.borderColor='var(--border2)'; b.style.background='var(--card)'; b.style.color='var(--muted)';
+  });
+  if(el){
+    var col=colors[comm]||'var(--gold)';
+    el.style.borderColor=col; el.style.background=col+'26'; el.style.color=col;
+  }
+  comms.forEach(function(c){
+    var p=document.getElementById('wd-panel-' + c);
+    if(p) p.style.display=c===comm?'block':'none';
+  });
+  if(_wdData) wdRenderComm(comm);
+}
+
+function initWasde(){
+  if(_wdLoaded) return;
+  _wdLoaded=true;
+  fetch('/wasde-data.json')
+    .then(function(r){ return r.json(); })
+    .then(function(d){
+      _wdData=d;
+      var tag=document.getElementById('wasde-report-tag');
+      if(tag) tag.textContent='USDA WASDE-671 \u00b7 May 2026 \u00b7 Apr vs May comparison \u00b7 2026/27 First Projection';
+      wdRenderComm('wheat');
+    })
+    .catch(function(e){
+      var tag=document.getElementById('wasde-report-tag');
+      if(tag) tag.textContent='Failed to load WASDE data: ' + e.message;
+    });
+}
+// End WASDE Comprehensive
 
 </script>
 
