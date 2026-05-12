@@ -1569,6 +1569,8 @@ padding:2px 8px;border-radius:3px;margin-bottom:6px;letter-spacing:0.06em;text-t
           <button id="wctab-corn"  onclick="wSwitchCrop('corn',this)"  style="padding:7px 18px;border-radius:20px;font-size:13px;font-weight:600;cursor:pointer;border:1px solid var(--gold);background:var(--gold);color:#0d0f12;font-family:'DM Sans',sans-serif;">Corn</button>
           <button id="wctab-wheat" onclick="wSwitchCrop('wheat',this)" style="padding:7px 18px;border-radius:20px;font-size:13px;font-weight:600;cursor:pointer;border:1px solid var(--border2);background:var(--card);color:var(--muted);font-family:'DM Sans',sans-serif;">Wheat</button>
           <button id="wctab-soy"   onclick="wSwitchCrop('soy',this)"   style="padding:7px 18px;border-radius:20px;font-size:13px;font-weight:600;cursor:pointer;border:1px solid var(--border2);background:var(--card);color:var(--muted);font-family:'DM Sans',sans-serif;">Soybeans</button>
+          <button id="wctab-soymeal" onclick="wSwitchCrop('soymeal',this)" style="padding:7px 18px;border-radius:20px;font-size:13px;font-weight:600;cursor:pointer;border:1px solid var(--border2);background:var(--card);color:var(--muted);font-family:'DM Sans',sans-serif;">Soy Meal</button>
+          <button id="wctab-soyoil"  onclick="wSwitchCrop('soyoil',this)"  style="padding:7px 18px;border-radius:20px;font-size:13px;font-weight:600;cursor:pointer;border:1px solid var(--border2);background:var(--card);color:var(--muted);font-family:'DM Sans',sans-serif;">Soy Oil</button>
           <span id="wasde-report-date" style="margin-left:auto;align-self:center;font-family:'DM Mono',monospace;font-size:10px;color:var(--muted2);"></span>
         </div>
 
@@ -1605,6 +1607,28 @@ padding:2px 8px;border-radius:3px;margin-bottom:6px;letter-spacing:0.06em;text-t
               <div id="wheat-world-rtabs" style="display:flex;gap:5px;margin-top:8px;flex-wrap:wrap;"></div>
             </div>
             <div id="wheat-world-tbl"></div>
+          </div>
+        </div>
+
+        <!-- soymeal panel -->
+        <div id="wpanel-soymeal" style="display:none;grid-template-columns:1fr;gap:14px;">
+          <div style="background:var(--card);border:1px solid var(--border);border-radius:10px;overflow:hidden;">
+            <div style="padding:10px 16px;background:var(--card2);border-bottom:1px solid var(--border);">
+              <span style="font-family:'DM Mono',monospace;font-size:10px;font-weight:700;text-transform:uppercase;letter-spacing:0.08em;color:var(--gold2);">World Soybean Meal</span>
+              <div id="soymeal-world-rtabs" style="display:flex;gap:5px;margin-top:8px;flex-wrap:wrap;"></div>
+            </div>
+            <div id="soymeal-world-tbl"></div>
+          </div>
+        </div>
+
+        <!-- soyoil panel -->
+        <div id="wpanel-soyoil" style="display:none;grid-template-columns:1fr;gap:14px;">
+          <div style="background:var(--card);border:1px solid var(--border);border-radius:10px;overflow:hidden;">
+            <div style="padding:10px 16px;background:var(--card2);border-bottom:1px solid var(--border);">
+              <span style="font-family:'DM Mono',monospace;font-size:10px;font-weight:700;text-transform:uppercase;letter-spacing:0.08em;color:var(--gold2);">World Soybean Oil</span>
+              <div id="soyoil-world-rtabs" style="display:flex;gap:5px;margin-top:8px;flex-wrap:wrap;"></div>
+            </div>
+            <div id="soyoil-world-tbl"></div>
           </div>
         </div>
 
@@ -4363,6 +4387,59 @@ function wBuildRegionTabs(crop) {
   }).join('');
 }
 
+function wRenderProductTable(crop) {
+  var key = crop + '_world';
+  var d = DATA[key];
+  if (!d) return;
+  var regions = Object.keys(d);
+  var activeR = regions[0] || 'World';
+
+  // Build region tabs
+  var tabsEl = document.getElementById(crop + '-world-rtabs');
+  if (tabsEl) {
+    tabsEl.innerHTML = '';
+    regions.forEach(function(r) {
+      var isAct = r === activeR;
+      var btn = document.createElement('button');
+      btn.textContent = r;
+      btn.style.cssText = 'padding:4px 12px;border-radius:4px;border:1px solid ' + (isAct?'var(--blue)':'var(--border2)') + ';background:' + (isAct?'rgba(74,158,255,0.15)':'var(--card)') + ';color:' + (isAct?'var(--blue)':'var(--muted)') + ';font-family:DM Mono,monospace;font-size:9px;font-weight:500;letter-spacing:0.06em;text-transform:uppercase;cursor:pointer;margin-right:4px;';
+      btn.addEventListener('click', function() {
+        wRenderProductRegion(crop, r);
+        tabsEl.querySelectorAll('button').forEach(function(b){ b.style.borderColor='var(--border2)'; b.style.background='var(--card)'; b.style.color='var(--muted)'; });
+        btn.style.borderColor='var(--blue)'; btn.style.background='rgba(74,158,255,0.15)'; btn.style.color='var(--blue)';
+      });
+      tabsEl.appendChild(btn);
+    });
+  }
+  wRenderProductRegion(crop, activeR);
+}
+
+function wRenderProductRegion(crop, region) {
+  var d = DATA[crop + '_world'];
+  if (!d || !d[region]) return;
+  var rd = d[region];
+  var tblEl = document.getElementById(crop + '-world-tbl');
+  if (!tblEl) return;
+  var ATTRS = ['Beginning Stocks','Production','Imports','Domestic Total','Exports','Ending Stocks'];
+  var h = '<table style="width:100%;border-collapse:collapse;"><thead><tr>';
+  h += '<th style="font-family:DM Mono,monospace;font-size:9px;color:var(--muted);font-weight:600;text-transform:uppercase;letter-spacing:0.06em;padding:7px 14px;border-bottom:1px solid var(--border);background:rgba(255,255,255,0.02);text-align:left;">Item</th>';
+  h += '<th style="font-family:DM Mono,monospace;font-size:9px;color:var(--muted);font-weight:600;text-transform:uppercase;letter-spacing:0.06em;padding:7px 14px;border-bottom:1px solid var(--border);background:rgba(255,255,255,0.02);text-align:right;">24/25</th>';
+  h += '<th style="font-family:DM Mono,monospace;font-size:9px;color:var(--muted);font-weight:600;text-transform:uppercase;letter-spacing:0.06em;padding:7px 14px;border-bottom:1px solid var(--border);background:rgba(255,255,255,0.02);text-align:right;">25/26</th>';
+  h += '<th style="font-family:DM Mono,monospace;font-size:9px;color:var(--blue);font-weight:600;text-transform:uppercase;letter-spacing:0.06em;padding:7px 14px;border-bottom:1px solid var(--border);background:rgba(255,255,255,0.02);text-align:right;">26/27</th>';
+  h += '<th style="font-family:DM Mono,monospace;font-size:9px;color:var(--muted);font-weight:600;text-transform:uppercase;letter-spacing:0.06em;padding:7px 14px;border-bottom:1px solid var(--border);background:rgba(255,255,255,0.02);text-align:right;">Chg</th>';
+  h += '</tr></thead><tbody>';
+  ATTRS.forEach(function(attr) {
+    var v3 = (rd['2024/25']||{})[attr], v4 = (rd['2025/26']||{})[attr], v5 = (rd['2026/27']||{})[attr];
+    if (!v3 && !v4 && !v5) return;
+    var tot = attr === 'Ending Stocks' ? 1 : 0;
+    var tdS = 'padding:7px 14px;font-family:DM Mono,monospace;font-size:11.5px;border-bottom:1px solid var(--border);text-align:right;color:' + (tot?'var(--gold2)':'var(--muted)') + ';font-weight:' + (tot?'600':'400') + ';';
+    var tdL = 'padding:7px 14px;font-family:DM Mono,monospace;font-size:11.5px;border-bottom:1px solid var(--border);text-align:left;color:' + (tot?'var(--gold2)':'var(--text)') + ';font-weight:' + (tot?'600':'400') + ';';
+    h += '<tr><td style="' + tdL + '">' + attr + '</td><td style="' + tdS + '">' + wFmt(v3) + '</td><td style="' + tdS + '">' + wFmt(v4) + '</td><td style="' + tdS + 'color:var(--blue);font-weight:600;">' + wFmt(v5) + '</td><td style="' + tdS + '">' + wChg(v5,v4) + '</td></tr>';
+  });
+  h += '</tbody></table>';
+  tblEl.innerHTML = h;
+}
+
 function wRender(crop) {
   var usEl = document.getElementById(crop + '-us-tbl');
   var wEl  = document.getElementById(crop + '-world-tbl');
@@ -4379,7 +4456,7 @@ function wSwitchRegion(crop, region, el) {
 }
 
 function wSwitchCrop(crop, el) {
-  ['corn','wheat','soy'].forEach(function(c) {
+  ['corn','wheat','soy','soymeal','soyoil'].forEach(function(c) {
     var p = document.getElementById('wpanel-' + c);
     var b = document.getElementById('wctab-' + c);
     if (p) p.style.display = c === crop ? 'grid' : 'none';
@@ -4404,6 +4481,7 @@ function initWasde() {
       var dateEl = document.getElementById('wasde-report-date');
       if (dateEl) dateEl.textContent = 'USDA WASDE -- ' + (d.reportDate || 'Latest');
       ['corn','wheat','soy'].forEach(function(crop){ wRender(crop); });
+    ['soymeal','soyoil'].forEach(function(crop){ wRenderProductTable(crop); });
     })
     .catch(function(e) {
       var el = document.getElementById('wasde-loading');
