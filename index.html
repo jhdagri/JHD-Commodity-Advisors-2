@@ -3126,7 +3126,9 @@ async function publishPost(){
   var premCb = document.getElementById('p-is-premium');
   var isPremium = premCb && premCb.checked;
   var bushelCost = isPremium ? (parseInt(document.getElementById('p-bushel-cost').value,10)||100) : 0;
-  if(isPremium && summary.indexOf('[PREMIUM') !== 0) summary = '[PREMIUM:' + bushelCost + '] ' + summary;
+  // Strip any existing [PREMIUM:X] prefix, then re-apply with current cost if premium
+  summary = summary.replace(/^\[PREMIUM(:\d+)?\]\s*/,'');
+  if(isPremium) summary = '[PREMIUM:' + bushelCost + '] ' + summary;
   if(!title){ pubMsg('Please add a title.',false); return; }
   if(!content||content==='<p><br></p>'){ pubMsg('Please add content.',false); return; }
   btn.disabled=true; btn.textContent= window._editingPostId ? 'Saving...' : 'Publishing...';
