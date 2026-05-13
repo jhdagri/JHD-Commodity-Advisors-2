@@ -19,7 +19,11 @@ const PRODUCTS = [
 function httpGet(url, headers = {}) {
   return new Promise((resolve, reject) => {
     const req = https.get(url, {
-      headers: Object.assign({ 'User-Agent': 'jhd-cme-updater/1.0' }, headers),
+      headers: Object.assign({
+        'User-Agent': 'Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/120.0.0.0 Safari/537.36',
+        'Accept': 'text/plain,text/html,*/*',
+        'Accept-Language': 'en-US,en;q=0.9'
+      }, headers),
       timeout: 25000
     }, (res) => {
       if (res.statusCode >= 300 && res.statusCode < 400 && res.headers.location) {
@@ -49,7 +53,8 @@ function httpPut(url, body, headers = {}) {
       headers: Object.assign({
         'User-Agent': 'jhd-cme-updater/1.0',
         'Content-Type': 'application/json',
-        'Content-Length': Buffer.byteLength(data)
+        'Content-Length': Buffer.byteLength(data),
+        'Accept': 'application/vnd.github.v3+json'
       }, headers),
       timeout: 25000
     }, (res) => {
