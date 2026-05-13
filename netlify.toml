@@ -13,7 +13,4 @@
     Access-Control-Allow-Methods = "GET, POST, OPTIONS"
     Access-Control-Allow-Headers = "Content-Type"
 
-[functions."update-cme-options"]
-  schedule = "45 19 * * 1-5"
-  # Runs at 19:45 UTC Mon-Fri = approx 14:45 CT (after 1:15pm CT settle)
-  # Adjust for daylight saving as needed
+
