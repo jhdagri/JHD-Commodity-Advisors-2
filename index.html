@@ -1242,7 +1242,7 @@ padding:2px 8px;border-radius:3px;margin-bottom:6px;letter-spacing:0.06em;text-t
         <button class="comm-subtab"         onclick="showResearchTab('macro',this)">Macro</button>
       </div>
       <div id="res-panel-technicals"><div id="posts-research-technicals"><div class="spin">Loading…</div></div></div>
-      <div id="res-panel-options"       class="hidden"><div id="posts-research-options"></div></div>
+      <div id="res-panel-options"       class="hidden"><div id="cme-options-dashboard"></div><div id="posts-research-options"></div></div>
       <div id="res-panel-spreads"       class="hidden"><div id="posts-research-spreads"></div></div>
       <div id="res-panel-supply-demand" class="hidden"><div id="posts-research-supply-demand"></div></div>
       <div id="res-panel-cftc"          class="hidden"><div id="posts-research-cftc"></div></div>
@@ -2895,6 +2895,7 @@ async function doSignOut(){
 
 /* ===== POSTS ===== */
 function showResearchTab(sub, el) {
+  if (sub === 'options') { initCmeOptions(); }
   var panels = ['technicals','options','spreads','supply-demand','cftc','macro'];
   for (var i = 0; i < panels.length; i++) {
     var p = document.getElementById('res-panel-' + panels[i]);
@@ -5051,6 +5052,453 @@ function initWasde(){
     });
 }
 // End WASDE Comprehensive
+
+
+// ============================================================
+// CME AGRICULTURAL OPTIONS DASHBOARD
+// Standalone, auto-renders in Research -> Options Analytics
+// Loads /cme-ags-options.json updated nightly by Netlify function
+// ============================================================
+var _cmeData = null;
+var _cmeInited = false;
+var _cmeCurrent = 'corn';
+var _cmeExpiry = null;
+var _cmeChart = null;
+
+var CME_COMM = [
+  {slug:'corn',         label:'Corn',         color:'#d4aa55', unit:'cents/bu',  tickSize:0.25},
+  {slug:'wheat',        label:'SRW Wheat',    color:'#c8853a', unit:'cents/bu',  tickSize:0.25},
+  {slug:'hrw_wheat',    label:'HRW Wheat',    color:'#ffb347', unit:'cents/bu',  tickSize:0.25},
+  {slug:'soybeans',     label:'Soybeans',     color:'#2ecfaa', unit:'cents/bu',  tickSize:0.25},
+  {slug:'soybean_meal', label:'Soy Meal',     color:'#4a9eff', unit:'$/ton',     tickSize:0.10},
+  {slug:'soybean_oil',  label:'Soy Oil',      color:'#a78bfa', unit:'cents/lb',  tickSize:0.005}
+];
+
+// Month code to month number
+var CME_MONTHS = {JAN:1,FEB:2,MAR:3,APR:4,MAY:5,JUN:6,JUL:7,AUG:8,SEP:9,OCT:10,NOV:11,DEC:12};
+
+function cmeExpToDate(expCode) {
+  // 'JUL26' -> Date approx mid-month-prior (option expiry typically last Friday of preceding month for grain options)
+  // For IV calc we use 25 days before contract month start as a reasonable approximation
+  var m = expCode.match(/^([A-Z]{3})(\d{2})$/);
+  if (!m) return null;
+  var mo = CME_MONTHS[m[1]];
+  var yr = 2000 + parseInt(m[2],10);
+  if (!mo) return null;
+  // Option expiry ~ last Friday of preceding month
+  var d = new Date(yr, mo-1, 1);
+  d.setDate(d.getDate() - 4);
+  while (d.getDay() !== 5) d.setDate(d.getDate() - 1);
+  return d;
+}
+
+// Black-76: option pricing under futures
+// d1 = (ln(F/K) + 0.5*sigma^2*T) / (sigma*sqrt(T))
+// d2 = d1 - sigma*sqrt(T)
+// Call = e^(-rT) * [F*N(d1) - K*N(d2)]
+// Put  = e^(-rT) * [K*N(-d2) - F*N(-d1)]
+
+function _normCDF(x) {
+  // Abramowitz & Stegun 26.2.17
+  var a1=0.254829592, a2=-0.284496736, a3=1.421413741, a4=-1.453152027, a5=1.061405429;
+  var p=0.3275911;
+  var sign = x < 0 ? -1 : 1;
+  x = Math.abs(x)/Math.sqrt(2);
+  var t = 1.0 / (1.0 + p*x);
+  var y = 1.0 - (((((a5*t + a4)*t) + a3)*t + a2)*t + a1)*t*Math.exp(-x*x);
+  return 0.5 * (1.0 + sign*y);
+}
+
+function _normPDF(x) { return Math.exp(-0.5*x*x) / Math.sqrt(2*Math.PI); }
+
+function black76Price(F, K, T, r, sigma, side) {
+  if (T <= 0 || sigma <= 0 || F <= 0 || K <= 0) return null;
+  var d1 = (Math.log(F/K) + 0.5*sigma*sigma*T) / (sigma*Math.sqrt(T));
+  var d2 = d1 - sigma*Math.sqrt(T);
+  var df = Math.exp(-r*T);
+  if (side === 'CALL') return df * (F*_normCDF(d1) - K*_normCDF(d2));
+  return df * (K*_normCDF(-d2) - F*_normCDF(-d1));
+}
+
+function black76IV(price, F, K, T, r, side) {
+  // Newton-Raphson with bisection fallback
+  if (T <= 0 || price <= 0 || F <= 0 || K <= 0) return null;
+  // Sanity bounds: intrinsic floor
+  var intrinsic = Math.max(0, side==='CALL' ? (F-K) : (K-F)) * Math.exp(-r*T);
+  if (price < intrinsic - 0.0001) return null;
+
+  var sigma = 0.30; // initial guess
+  for (var i = 0; i < 50; i++) {
+    var p = black76Price(F, K, T, r, sigma, side);
+    if (p === null) return null;
+    var diff = p - price;
+    if (Math.abs(diff) < 0.0001) return sigma;
+    var d1 = (Math.log(F/K) + 0.5*sigma*sigma*T) / (sigma*Math.sqrt(T));
+    var vega = Math.exp(-r*T) * F * _normPDF(d1) * Math.sqrt(T);
+    if (vega < 1e-8) break;
+    var step = diff/vega;
+    if (Math.abs(step) > 0.5) step = step > 0 ? 0.5 : -0.5;
+    sigma -= step;
+    if (sigma < 0.001) sigma = 0.001;
+    if (sigma > 5)     sigma = 5;
+  }
+  // Bisection fallback
+  var lo = 0.001, hi = 5;
+  for (var j = 0; j < 100; j++) {
+    var mid = 0.5*(lo+hi);
+    var pm = black76Price(F, K, T, r, mid, side);
+    if (pm === null) return null;
+    if (pm > price) hi = mid; else lo = mid;
+    if (hi - lo < 1e-5) return 0.5*(lo+hi);
+  }
+  return null;
+}
+
+function black76Greeks(F, K, T, r, sigma, side) {
+  if (T <= 0 || sigma <= 0) return {delta:null,gamma:null,vega:null,theta:null};
+  var d1 = (Math.log(F/K) + 0.5*sigma*sigma*T) / (sigma*Math.sqrt(T));
+  var d2 = d1 - sigma*Math.sqrt(T);
+  var df = Math.exp(-r*T);
+  var Nd1 = _normCDF(d1), nd1 = _normPDF(d1);
+  var delta = side==='CALL' ? df * Nd1 : df * (Nd1 - 1);
+  var gamma = df * nd1 / (F * sigma * Math.sqrt(T));
+  var vega  = F * df * nd1 * Math.sqrt(T) * 0.01; // per 1% vol
+  // Theta (per day) - simplified
+  var theta = (-F * df * nd1 * sigma / (2*Math.sqrt(T))
+              + r * (side==='CALL' ? F*df*Nd1 - K*df*_normCDF(d2) : K*df*_normCDF(-d2) - F*df*_normCDF(-d1))) / 365;
+  return {delta:delta, gamma:gamma, vega:vega, theta:theta};
+}
+
+// ============================================================
+// RENDER FUNCTIONS
+// ============================================================
+function cmeFmt(v, dec) {
+  if (v === null || v === undefined || isNaN(v)) return '\u2014';
+  dec = dec === undefined ? 2 : dec;
+  return Number(v).toLocaleString(undefined, {minimumFractionDigits:dec, maximumFractionDigits:dec});
+}
+
+function cmeFmtVol(v) {
+  if (v === null || v === undefined || isNaN(v) || v === 0) return '\u2014';
+  if (v > 999999) return (v/1000000).toFixed(2)+'M';
+  if (v > 9999) return (v/1000).toFixed(1)+'K';
+  return v.toLocaleString();
+}
+
+function cmeFmtPct(v) {
+  if (v === null || isNaN(v)) return '\u2014';
+  return (v*100).toFixed(1)+'%';
+}
+
+function cmeBuildHeader() {
+  var d = _cmeData;
+  return '<div style="display:flex;align-items:flex-end;justify-content:space-between;gap:16px;margin-bottom:18px;padding-bottom:14px;border-bottom:1px solid var(--border2);flex-wrap:wrap;">'
+    +'<div>'
+      +'<div style="font-family:DM Mono,monospace;font-size:9px;letter-spacing:0.18em;color:var(--blue);text-transform:uppercase;margin-bottom:4px;">JHD Commodity Advisors \xb7 CME Daily Settlements</div>'
+      +'<h2 style="font-family:DM Serif Display,serif;font-size:22px;font-weight:900;color:var(--text);line-height:1.1;">CBOT Grain Options <span style="color:var(--gold);">Chain</span></h2>'
+      +'<div style="font-family:DM Mono,monospace;font-size:10px;color:var(--muted2);margin-top:4px;">Trade Date: ' + (d.tradeDate||'\u2014') + ' \xb7 Risk-Free Rate (10Y): ' + cmeFmtPct(d.riskFreeRate) + ' \xb7 Source: CME stlags_v2</div>'
+    +'</div>'
+    +'<div style="text-align:right;">'
+      +'<div style="font-family:DM Mono,monospace;font-size:9px;color:var(--muted2);letter-spacing:0.12em;">UPDATED</div>'
+      +'<div style="font-family:DM Mono,monospace;font-size:10px;color:var(--gold);font-weight:500;margin-top:2px;">' + new Date(d.generatedAt).toLocaleString('en-GB',{timeZone:'Europe/London'}) + '</div>'
+    +'</div>'
+  +'</div>';
+}
+
+function cmeBuildCommTabs() {
+  var h = '<div style="display:flex;gap:6px;margin-bottom:14px;flex-wrap:wrap;">';
+  CME_COMM.forEach(function(c){
+    var isAct = c.slug === _cmeCurrent;
+    h += '<button data-cme-slug="' + c.slug + '" style="padding:6px 14px;border-radius:4px;border:1px solid ' + (isAct?c.color:'var(--border2)') + ';background:' + (isAct?c.color+'26':'var(--card)') + ';color:' + (isAct?c.color:'var(--muted)') + ';font-family:DM Mono,monospace;font-size:9px;font-weight:500;letter-spacing:0.06em;text-transform:uppercase;cursor:pointer;">' + c.label + '</button>';
+  });
+  h += '</div>';
+  return h;
+}
+
+function cmeBuildExpiryTabs(opts) {
+  // Get unique expiries with options data
+  var expiries = Array.from(new Set(opts.map(function(o){return o.expiry;})));
+  expiries.sort(function(a,b){
+    var da = cmeExpToDate(a), db = cmeExpToDate(b);
+    if (!da||!db) return 0;
+    return da - db;
+  });
+  if (!_cmeExpiry || expiries.indexOf(_cmeExpiry) === -1) _cmeExpiry = expiries[0];
+  var h = '<div style="display:flex;gap:5px;flex-wrap:wrap;margin-bottom:12px;">';
+  expiries.forEach(function(e){
+    var isAct = e === _cmeExpiry;
+    h += '<button data-cme-exp="' + e + '" style="padding:5px 11px;border-radius:3px;border:1px solid ' + (isAct?'var(--blue)':'var(--border2)') + ';background:' + (isAct?'rgba(74,158,255,0.15)':'var(--card)') + ';color:' + (isAct?'var(--blue)':'var(--muted)') + ';font-family:DM Mono,monospace;font-size:9px;font-weight:500;letter-spacing:0.06em;text-transform:uppercase;cursor:pointer;">' + e + '</button>';
+  });
+  h += '</div>';
+  return h;
+}
+
+function cmeBuildKpis(future, calls, puts) {
+  var c = CME_COMM.find(function(x){return x.slug===_cmeCurrent;});
+  var futPx = future ? (future.settle ?? future.last) : null;
+  var totalCallVol = calls.reduce(function(s,o){return s+(o.volume||0);},0);
+  var totalPutVol  = puts.reduce(function(s,o){return s+(o.volume||0);},0);
+  var totalCallOI  = calls.reduce(function(s,o){return s+(o.priorOI||0);},0);
+  var totalPutOI   = puts.reduce(function(s,o){return s+(o.priorOI||0);},0);
+  var pcr = totalCallOI > 0 ? (totalPutOI/totalCallOI) : null;
+
+  var kpiSt = 'background:var(--card);padding:12px 14px;';
+  var labSt = 'font-family:DM Mono,monospace;font-size:8px;color:var(--muted2);text-transform:uppercase;letter-spacing:0.1em;margin-bottom:4px;';
+  var valSt = 'font-family:DM Serif Display,serif;font-size:20px;font-weight:700;color:' + c.color + ';line-height:1;';
+  var subSt = 'font-family:DM Mono,monospace;font-size:9px;color:var(--muted2);margin-top:3px;';
+
+  return '<div style="display:grid;grid-template-columns:repeat(auto-fit,minmax(140px,1fr));gap:1px;background:var(--border);border:1px solid var(--border);border-radius:8px;overflow:hidden;margin-bottom:18px;">'
+    +'<div style="' + kpiSt + '"><div style="' + labSt + '">Underlying Future</div><div style="' + valSt + '">' + cmeFmt(futPx, _cmeCurrent==='soybean_oil'?2:_cmeCurrent==='soybean_meal'?1:2) + '</div><div style="' + subSt + '">' + (future?future.expiry:'\u2014') + ' \xb7 ' + c.unit + '</div></div>'
+    +'<div style="' + kpiSt + '"><div style="' + labSt + '">Call Volume</div><div style="' + valSt + '">' + cmeFmtVol(totalCallVol) + '</div><div style="' + subSt + '">contracts</div></div>'
+    +'<div style="' + kpiSt + '"><div style="' + labSt + '">Put Volume</div><div style="' + valSt + '">' + cmeFmtVol(totalPutVol) + '</div><div style="' + subSt + '">contracts</div></div>'
+    +'<div style="' + kpiSt + '"><div style="' + labSt + '">Total OI</div><div style="' + valSt + '">' + cmeFmtVol(totalCallOI + totalPutOI) + '</div><div style="' + subSt + '">prior day</div></div>'
+    +'<div style="' + kpiSt + '"><div style="' + labSt + '">Put/Call Ratio</div><div style="' + valSt + '">' + (pcr ? pcr.toFixed(2) : '\u2014') + '</div><div style="' + subSt + '">OI basis</div></div>'
+  +'</div>';
+}
+
+function cmeBuildChainTable(future, calls, puts) {
+  // Pair by strike
+  var c = CME_COMM.find(function(x){return x.slug===_cmeCurrent;});
+  var strikes = Array.from(new Set(calls.concat(puts).map(function(o){return o.strike;}))).sort(function(a,b){return a-b;});
+
+  // Filter to strikes within 20% of underlying for chain view
+  var futPx = future ? (future.settle ?? future.last) : null;
+  if (futPx) {
+    var lo = futPx * 0.80, hi = futPx * 1.20;
+    strikes = strikes.filter(function(k){return k >= lo && k <= hi;});
+  }
+
+  // For IV calc
+  var expDate = cmeExpToDate(_cmeExpiry);
+  var T = expDate ? Math.max(1, (expDate - new Date()) / (1000*60*60*24*365)) : null;
+  var r = _cmeData.riskFreeRate;
+
+  var thS = 'background:var(--card2);font-family:DM Mono,monospace;font-size:8px;color:var(--muted2);letter-spacing:0.06em;text-transform:uppercase;padding:7px 8px;border-bottom:1px solid var(--border2);text-align:right;white-space:nowrap;';
+  var tdS = 'padding:6px 8px;font-family:DM Mono,monospace;font-size:10px;text-align:right;border-bottom:1px solid var(--border);color:var(--muted);';
+  var atmS = 'background:rgba(255,179,71,0.08);';
+
+  var h = '<div style="overflow-x:auto;background:var(--card);border:1px solid var(--border);border-radius:8px;">'
+    +'<table style="width:100%;border-collapse:collapse;min-width:900px;">'
+    +'<thead>'
+    +'<tr>'
+    +'<th colspan="5" style="' + thS + 'text-align:center;color:var(--teal);border-right:1px solid var(--border2);">CALLS</th>'
+    +'<th style="' + thS + 'text-align:center;color:var(--gold);border-left:1px solid var(--border2);border-right:1px solid var(--border2);">STRIKE</th>'
+    +'<th colspan="5" style="' + thS + 'text-align:center;color:var(--coral);">PUTS</th>'
+    +'</tr>'
+    +'<tr>'
+    +'<th style="' + thS + '">OI</th><th style="' + thS + '">Vol</th><th style="' + thS + '">IV</th><th style="' + thS + '">\u0394</th><th style="' + thS + 'border-right:1px solid var(--border2);">Settle</th>'
+    +'<th style="' + thS + 'text-align:center;color:var(--gold);border-left:1px solid var(--border2);border-right:1px solid var(--border2);">K</th>'
+    +'<th style="' + thS + '">Settle</th><th style="' + thS + '">\u0394</th><th style="' + thS + '">IV</th><th style="' + thS + '">Vol</th><th style="' + thS + '">OI</th>'
+    +'</tr>'
+    +'</thead><tbody>';
+
+  strikes.forEach(function(K){
+    var call = calls.find(function(o){return o.strike===K;});
+    var put  = puts.find(function(o){return o.strike===K;});
+    var isATM = futPx && Math.abs(K - futPx) < (c.tickSize * 4);
+    var rowS = isATM ? atmS : '';
+
+    // Compute IV/delta
+    var callIV=null, callDelta=null, putIV=null, putDelta=null;
+    if (call && futPx && T && (call.settle ?? call.last)) {
+      callIV = black76IV(call.settle ?? call.last, futPx, K, T, r, 'CALL');
+      if (callIV) callDelta = black76Greeks(futPx, K, T, r, callIV, 'CALL').delta;
+    }
+    if (put && futPx && T && (put.settle ?? put.last)) {
+      putIV = black76IV(put.settle ?? put.last, futPx, K, T, r, 'PUT');
+      if (putIV) putDelta = black76Greeks(futPx, K, T, r, putIV, 'PUT').delta;
+    }
+
+    h += '<tr style="' + rowS + '">'
+      // CALL columns
+      +'<td style="' + tdS + '">' + (call ? cmeFmtVol(call.priorOI) : '\u2014') + '</td>'
+      +'<td style="' + tdS + '">' + (call ? cmeFmtVol(call.volume) : '\u2014') + '</td>'
+      +'<td style="' + tdS + '">' + (callIV ? cmeFmtPct(callIV) : '\u2014') + '</td>'
+      +'<td style="' + tdS + '">' + (callDelta!==null ? callDelta.toFixed(2) : '\u2014') + '</td>'
+      +'<td style="' + tdS + 'border-right:1px solid var(--border2);color:var(--text);font-weight:500;">' + (call ? cmeFmt(call.settle ?? call.last, 2) : '\u2014') + '</td>'
+      // STRIKE
+      +'<td style="' + tdS + 'text-align:center;color:var(--gold);font-weight:600;border-left:1px solid var(--border2);border-right:1px solid var(--border2);">' + cmeFmt(K, 2) + '</td>'
+      // PUT columns
+      +'<td style="' + tdS + 'color:var(--text);font-weight:500;">' + (put ? cmeFmt(put.settle ?? put.last, 2) : '\u2014') + '</td>'
+      +'<td style="' + tdS + '">' + (putDelta!==null ? putDelta.toFixed(2) : '\u2014') + '</td>'
+      +'<td style="' + tdS + '">' + (putIV ? cmeFmtPct(putIV) : '\u2014') + '</td>'
+      +'<td style="' + tdS + '">' + (put ? cmeFmtVol(put.volume) : '\u2014') + '</td>'
+      +'<td style="' + tdS + '">' + (put ? cmeFmtVol(put.priorOI) : '\u2014') + '</td>'
+    +'</tr>';
+  });
+
+  h += '</tbody></table></div>';
+  return h;
+}
+
+function cmeBuildVolSmile(future, calls, puts) {
+  // Build vol smile across strikes for current expiry
+  var futPx = future ? (future.settle ?? future.last) : null;
+  if (!futPx) return '';
+  var expDate = cmeExpToDate(_cmeExpiry);
+  var T = expDate ? Math.max(1, (expDate - new Date()) / (1000*60*60*24*365)) : null;
+  if (!T) return '';
+  var r = _cmeData.riskFreeRate;
+
+  return '<div style="background:var(--card);border:1px solid var(--border);border-radius:8px;padding:14px;margin-top:16px;">'
+    +'<div style="font-family:DM Mono,monospace;font-size:8.5px;letter-spacing:0.1em;text-transform:uppercase;color:var(--muted2);margin-bottom:10px;">Implied Volatility Smile \xb7 ' + _cmeExpiry + '</div>'
+    +'<div style="position:relative;height:220px;"><canvas id="cme-smile-chart"></canvas></div>'
+  +'</div>';
+}
+
+function cmeRenderSmileChart(future, calls, puts) {
+  if (!window.Chart) return;
+  var futPx = future ? (future.settle ?? future.last) : null;
+  if (!futPx) return;
+  var expDate = cmeExpToDate(_cmeExpiry);
+  var T = expDate ? Math.max(1, (expDate - new Date()) / (1000*60*60*24*365)) : null;
+  if (!T) return;
+  var r = _cmeData.riskFreeRate;
+
+  // Use OTM options for smile (puts below F, calls above F)
+  var smile = [];
+  var lo = futPx * 0.85, hi = futPx * 1.15;
+  // OTM puts
+  puts.filter(function(o){return o.strike < futPx && o.strike >= lo && (o.settle ?? o.last);}).forEach(function(o){
+    var iv = black76IV(o.settle ?? o.last, futPx, o.strike, T, r, 'PUT');
+    if (iv) smile.push({k:o.strike, iv:iv});
+  });
+  // OTM calls
+  calls.filter(function(o){return o.strike >= futPx && o.strike <= hi && (o.settle ?? o.last);}).forEach(function(o){
+    var iv = black76IV(o.settle ?? o.last, futPx, o.strike, T, r, 'CALL');
+    if (iv) smile.push({k:o.strike, iv:iv});
+  });
+  smile.sort(function(a,b){return a.k-b.k;});
+
+  if (_cmeChart) { try{_cmeChart.destroy();}catch(e){} }
+  var canvas = document.getElementById('cme-smile-chart');
+  if (!canvas) return;
+  var c = CME_COMM.find(function(x){return x.slug===_cmeCurrent;});
+  var tc = 'rgba(136,144,164,0.8)', gc = 'rgba(255,255,255,0.05)';
+
+  _cmeChart = new window.Chart(canvas, {
+    type:'line',
+    data:{
+      labels: smile.map(function(s){return cmeFmt(s.k,1);}),
+      datasets:[{
+        label:'Implied Vol',
+        data: smile.map(function(s){return (s.iv*100).toFixed(2);}),
+        borderColor: c.color,
+        backgroundColor: c.color + '20',
+        borderWidth: 2,
+        pointRadius: 3,
+        pointBackgroundColor: c.color,
+        tension: 0.3,
+        fill: true
+      }]
+    },
+    options:{
+      responsive:true, maintainAspectRatio:false, animation:false,
+      plugins:{
+        legend:{display:false},
+        tooltip:{
+          backgroundColor:'rgba(28,32,48,0.97)',
+          titleColor:'#e8eaf0', bodyColor:'#8890a4',
+          borderColor:'rgba(255,255,255,0.14)', borderWidth:1,
+          callbacks:{label:function(ctx){return 'IV: ' + ctx.raw + '%';}}
+        }
+      },
+      scales:{
+        x:{ticks:{color:tc,font:{size:9}},grid:{color:gc},border:{display:false},title:{display:true,text:'Strike',color:tc,font:{size:10}}},
+        y:{ticks:{color:tc,font:{size:9},callback:function(v){return v+'%';}},grid:{color:gc},border:{display:false},title:{display:true,text:'Implied Volatility',color:tc,font:{size:10}}}
+      }
+    }
+  });
+}
+
+function cmeLoadChartJs(cb) {
+  if (window.Chart) { cb(); return; }
+  var s = document.createElement('script');
+  s.src = 'https://cdnjs.cloudflare.com/ajax/libs/Chart.js/4.4.1/chart.umd.js';
+  s.onload = function(){ cb(); };
+  document.head.appendChild(s);
+}
+
+function cmeSelectComm(slug) {
+  _cmeCurrent = slug;
+  _cmeExpiry = null;
+  cmeRender();
+}
+
+function cmeSelectExpiry(exp) {
+  _cmeExpiry = exp;
+  cmeRender();
+}
+
+function cmeRender() {
+  var el = document.getElementById('cme-options-dashboard');
+  if (!el || !_cmeData) return;
+  var comm = _cmeData.commodities[_cmeCurrent];
+  if (!comm) { el.innerHTML = '<div style="padding:20px;color:var(--muted);">No data for ' + _cmeCurrent + '</div>'; return; }
+
+  var opts = comm.options;
+  if (!opts || opts.length === 0) {
+    el.innerHTML = cmeBuildHeader() + cmeBuildCommTabs() + '<div style="padding:30px;text-align:center;color:var(--muted);font-family:DM Mono,monospace;font-size:11px;">No options data available for ' + comm.label + ' on this trade date.</div>';
+    return;
+  }
+
+  // Get all expiries with valid data
+  var expiries = Array.from(new Set(opts.map(function(o){return o.expiry;})));
+  expiries.sort(function(a,b){
+    var da = cmeExpToDate(a), db = cmeExpToDate(b);
+    if (!da||!db) return 0;
+    return da - db;
+  });
+  if (!_cmeExpiry || expiries.indexOf(_cmeExpiry) === -1) _cmeExpiry = expiries[0];
+
+  var expOpts = opts.filter(function(o){return o.expiry === _cmeExpiry;});
+  var calls = expOpts.filter(function(o){return o.side === 'CALL';});
+  var puts  = expOpts.filter(function(o){return o.side === 'PUT';});
+
+  // Find matching underlying future (same expiry)
+  var future = comm.futures.find(function(f){return f.expiry === _cmeExpiry;});
+  // If no exact match (short-dated), use front future
+  if (!future && comm.futures.length > 0) future = comm.futures[0];
+
+  el.innerHTML = cmeBuildHeader()
+    + cmeBuildCommTabs()
+    + cmeBuildExpiryTabs(opts)
+    + cmeBuildKpis(future, calls, puts)
+    + cmeBuildChainTable(future, calls, puts)
+    + cmeBuildVolSmile(future, calls, puts);
+
+  // Wire up tab buttons via event delegation
+  el.querySelectorAll('button[data-cme-slug]').forEach(function(b){
+    b.addEventListener('click', function(){ cmeSelectComm(b.getAttribute('data-cme-slug')); });
+  });
+  el.querySelectorAll('button[data-cme-exp]').forEach(function(b){
+    b.addEventListener('click', function(){ cmeSelectExpiry(b.getAttribute('data-cme-exp')); });
+  });
+
+  cmeLoadChartJs(function(){ cmeRenderSmileChart(future, calls, puts); });
+}
+
+function initCmeOptions() {
+  if (_cmeInited) {
+    if (_cmeData) cmeRender();
+    return;
+  }
+  _cmeInited = true;
+  var el = document.getElementById('cme-options-dashboard');
+  if (!el) return;
+  el.innerHTML = '<div style="padding:40px;text-align:center;color:var(--muted);font-family:DM Mono,monospace;font-size:11px;"><span style="display:inline-block;width:14px;height:14px;border:2px solid var(--border2);border-top-color:var(--blue);border-radius:50%;animation:sp 0.8s linear infinite;margin-right:10px;vertical-align:-3px;"></span>Loading CME settlement data\u2026</div>';
+
+  fetch('/cme-ags-options.json?t=' + Date.now())
+    .then(function(r){
+      if (!r.ok) throw new Error('HTTP ' + r.status);
+      return r.json();
+    })
+    .then(function(d){ _cmeData = d; cmeRender(); })
+    .catch(function(e){
+      el.innerHTML = '<div style="padding:30px;text-align:center;color:var(--coral);font-family:DM Mono,monospace;font-size:11px;">Failed to load CME options data: ' + e.message + '<br><span style="color:var(--muted2);font-size:9px;margin-top:8px;display:inline-block;">First scheduled fetch will run after market close.</span></div>';
+    });
+}
+// End CME Options Dashboard
 
 </script>
 
