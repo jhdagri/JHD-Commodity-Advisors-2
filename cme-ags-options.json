@@ -1,0 +1,62 @@
+{
+  "generatedAt": "2026-05-13T09:16:33.519Z",
+  "tradeDate": "2026-05-13",
+  "riskFreeRate": 0.045,
+  "source": "CME Group CmeWS public quotes + FRED DGS10",
+  "commodities": {
+    "corn": {
+      "label": "Corn",
+      "futureId": 300,
+      "optionId": 301,
+      "unit": "cents/bu",
+      "tickSize": 0.25,
+      "futures": [],
+      "options": []
+    },
+    "wheat": {
+      "label": "SRW Wheat",
+      "futureId": 323,
+      "optionId": 324,
+      "unit": "cents/bu",
+      "tickSize": 0.25,
+      "futures": [],
+      "options": []
+    },
+    "hrw_wheat": {
+      "label": "HRW Wheat",
+      "futureId": 348,
+      "optionId": 349,
+      "unit": "cents/bu",
+      "tickSize": 0.25,
+      "futures": [],
+      "options": []
+    },
+    "soybeans": {
+      "label": "Soybeans",
+      "futureId": 320,
+      "optionId": 321,
+      "unit": "cents/bu",
+      "tickSize": 0.25,
+      "futures": [],
+      "options": []
+    },
+    "soybean_meal": {
+      "label": "Soybean Meal",
+      "futureId": 325,
+      "optionId": 326,
+      "unit": "$/ton",
+      "tickSize": 0.1,
+      "futures": [],
+      "options": []
+    },
+    "soybean_oil": {
+      "label": "Soybean Oil",
+      "futureId": 312,
+      "optionId": 313,
+      "unit": "cents/lb",
+      "tickSize": 0.005,
+      "futures": [],
+      "options": []
+    }
+  }
+}
