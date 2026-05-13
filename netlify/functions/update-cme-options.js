@@ -1,59 +1,111 @@
 // netlify/functions/update-cme-options.js
-// Scheduled function: fetches CME stlags_v2 + FRED DGS10 daily,
-// parses corn/wheat/soybeans/soymeal/soyoil/hrw_wheat options chains,
-// writes cme-ags-options.json to repo via GitHub API.
-//
-// Schedule: weekdays 19:45 London (after CME 1:15pm CT settle).
-// Requires Netlify env vars: GITHUB_TOKEN, GITHUB_REPO (e.g. user/repo), GITHUB_BRANCH (default 'main').
+// Daily fetch of CME ag settlements + FRED 10Y, commit JSON to repo.
+// Uses native https module (works on all Node versions).
+
+const https = require('https');
 
 const CME_URL  = 'https://www.cmegroup.com/ftp/pub/settle/stlags_v2';
 const FRED_URL = 'https://fred.stlouisfed.org/graph/fredgraph.csv?id=DGS10';
 
-// Product code mapping in stlags_v2 -> our slug
-// CME product codes per fact card: corn future = C / option = OC, etc.
-// stlags_v2 uses CME Globex symbols. We match by product name strings in the headers.
 const PRODUCTS = [
-  { slug:'corn',         label:'Corn',          futureCode:'ZC',  optionCode:'OZC',  match:'CORN' },
-  { slug:'wheat',        label:'SRW Wheat',     futureCode:'ZW',  optionCode:'OZW',  match:'WHEAT' },        // matches Chicago SRW first
-  { slug:'hrw_wheat',    label:'HRW Wheat',     futureCode:'KE',  optionCode:'OKE',  match:'HRW WHEAT' },
-  { slug:'soybeans',     label:'Soybeans',      futureCode:'ZS',  optionCode:'OZS',  match:'SOYBEAN' },
-  { slug:'soybean_meal', label:'Soybean Meal',  futureCode:'ZM',  optionCode:'OZM',  match:'SOYBEAN MEAL' },
-  { slug:'soybean_oil',  label:'Soybean Oil',   futureCode:'ZL',  optionCode:'OZL',  match:'SOYBEAN OIL' },
+  { slug:'corn',         label:'Corn',          futureCode:'ZC', optionCode:'OZC', match:'CORN' },
+  { slug:'wheat',        label:'SRW Wheat',     futureCode:'ZW', optionCode:'OZW', match:'WHEAT' },
+  { slug:'hrw_wheat',    label:'HRW Wheat',     futureCode:'KE', optionCode:'OKE', match:'HRW WHEAT' },
+  { slug:'soybeans',     label:'Soybeans',      futureCode:'ZS', optionCode:'OZS', match:'SOYBEAN' },
+  { slug:'soybean_meal', label:'Soybean Meal',  futureCode:'ZM', optionCode:'OZM', match:'SOYBEAN MEAL' },
+  { slug:'soybean_oil',  label:'Soybean Oil',   futureCode:'ZL', optionCode:'OZL', match:'SOYBEAN OIL' },
 ];
 
-const MONTH_CODES = {F:1,G:2,H:3,J:4,K:5,M:6,N:7,Q:8,U:9,V:10,X:11,Z:12};
+function httpGet(url, headers = {}) {
+  return new Promise((resolve, reject) => {
+    const req = https.get(url, {
+      headers: Object.assign({ 'User-Agent': 'jhd-cme-updater/1.0' }, headers),
+      timeout: 25000
+    }, (res) => {
+      if (res.statusCode >= 300 && res.statusCode < 400 && res.headers.location) {
+        return httpGet(res.headers.location, headers).then(resolve, reject);
+      }
+      if (res.statusCode >= 400) {
+        return reject(new Error('HTTP ' + res.statusCode + ' for ' + url));
+      }
+      const chunks = [];
+      res.on('data', (c) => chunks.push(c));
+      res.on('end', () => resolve(Buffer.concat(chunks).toString('utf8')));
+      res.on('error', reject);
+    });
+    req.on('error', reject);
+    req.on('timeout', () => { req.destroy(new Error('Timeout fetching ' + url)); });
+  });
+}
+
+function httpPut(url, body, headers = {}) {
+  return new Promise((resolve, reject) => {
+    const u = new URL(url);
+    const data = typeof body === 'string' ? body : JSON.stringify(body);
+    const req = https.request({
+      hostname: u.hostname,
+      path: u.pathname + u.search,
+      method: 'PUT',
+      headers: Object.assign({
+        'User-Agent': 'jhd-cme-updater/1.0',
+        'Content-Type': 'application/json',
+        'Content-Length': Buffer.byteLength(data)
+      }, headers),
+      timeout: 25000
+    }, (res) => {
+      const chunks = [];
+      res.on('data', (c) => chunks.push(c));
+      res.on('end', () => {
+        const text = Buffer.concat(chunks).toString('utf8');
+        if (res.statusCode >= 400) {
+          return reject(new Error('HTTP ' + res.statusCode + ': ' + text));
+        }
+        try { resolve(JSON.parse(text)); } catch (e) { resolve(text); }
+      });
+      res.on('error', reject);
+    });
+    req.on('error', reject);
+    req.on('timeout', () => { req.destroy(new Error('Timeout PUT ' + url)); });
+    req.write(data);
+    req.end();
+  });
+}
 
 exports.handler = async () => {
-  try {
-    // 1. Fetch CME settlement file
-    const cmeResp = await fetch(CME_URL);
-    if (!cmeResp.ok) throw new Error('CME fetch failed: ' + cmeResp.status);
-    const cmeText = await cmeResp.text();
+  console.log('=== update-cme-options START ===');
+  console.log('GITHUB_TOKEN: ' + (process.env.GITHUB_TOKEN ? 'SET (' + process.env.GITHUB_TOKEN.slice(0,10) + '...)' : 'MISSING'));
+  console.log('GITHUB_REPO: ' + (process.env.GITHUB_REPO || 'MISSING'));
+  console.log('GITHUB_BRANCH: ' + (process.env.GITHUB_BRANCH || 'main'));
 
-    // 2. Fetch 10Y Treasury from FRED CSV
-    let riskFreeRate = 0.045; // sensible fallback
+  try {
+    console.log('Fetching CME stlags_v2...');
+    const cmeText = await httpGet(CME_URL);
+    console.log('CME OK, ' + cmeText.length + ' bytes');
+
+    let riskFreeRate = 0.045;
     try {
-      const fredResp = await fetch(FRED_URL);
-      if (fredResp.ok) {
-        const csv = await fredResp.text();
-        const lines = csv.trim().split('\n').reverse();
-        for (const line of lines) {
-          const [date, val] = line.split(',');
-          if (val && val !== '.' && !isNaN(parseFloat(val))) {
-            riskFreeRate = parseFloat(val) / 100;
-            break;
-          }
+      console.log('Fetching FRED DGS10...');
+      const csv = await httpGet(FRED_URL);
+      const lines = csv.trim().split('\n').reverse();
+      for (const line of lines) {
+        const parts = line.split(',');
+        if (parts[1] && parts[1] !== '.' && !isNaN(parseFloat(parts[1]))) {
+          riskFreeRate = parseFloat(parts[1]) / 100;
+          break;
         }
       }
-    } catch (e) { console.error('FRED fail, using fallback', e.message); }
+      console.log('FRED OK, rate=' + (riskFreeRate*100).toFixed(2) + '%');
+    } catch (e) {
+      console.warn('FRED failed (using fallback): ' + e.message);
+    }
 
-    // 3. Parse CME file
+    console.log('Parsing...');
     const parsed = parseSettlementFile(cmeText);
+    console.log('Parsed: ' + parsed.futures.length + ' futures, ' + parsed.options.length + ' options, tradeDate=' + parsed.tradeDate);
 
-    // 4. Build final structure
     const out = {
       generatedAt: new Date().toISOString(),
-      tradeDate: parsed.tradeDate || extractDate(cmeText),
+      tradeDate: parsed.tradeDate || new Date().toISOString().slice(0,10),
       riskFreeRate,
       source: 'CME Group stlags_v2 + FRED DGS10',
       commodities: {}
@@ -62,68 +114,41 @@ exports.handler = async () => {
     for (const p of PRODUCTS) {
       const futures = parsed.futures.filter(f => f.product === p.slug);
       const options = parsed.options.filter(o => o.product === p.slug);
-      out.commodities[p.slug] = {
-        label: p.label,
-        futureCode: p.futureCode,
-        optionCode: p.optionCode,
-        futures,
-        options
-      };
+      out.commodities[p.slug] = { label: p.label, futureCode: p.futureCode, optionCode: p.optionCode, futures, options };
+      console.log('  ' + p.slug + ': ' + futures.length + ' fut, ' + options.length + ' opt');
     }
 
-    // 5. Push to GitHub
+    console.log('Pushing to GitHub...');
     const result = await pushToGithub('cme-ags-options.json', JSON.stringify(out, null, 2));
+    console.log('GitHub OK: ' + result.commit);
 
-    return {
-      statusCode: 200,
-      body: JSON.stringify({
-        ok: true,
-        tradeDate: out.tradeDate,
-        riskFreeRate,
-        contracts: Object.fromEntries(
-          Object.entries(out.commodities).map(([k,v]) => [k, {futures:v.futures.length, options:v.options.length}])
-        ),
-        github: result
-      })
-    };
+    return { statusCode: 200, body: JSON.stringify({ ok:true, tradeDate: out.tradeDate, riskFreeRate, commit: result.commit }) };
   } catch (e) {
+    console.error('FATAL: ' + e.message);
+    console.error(e.stack);
     return { statusCode: 500, body: JSON.stringify({ ok:false, error: e.message }) };
   }
 };
-
-// ============================================================
-// PARSER
-// ============================================================
-function extractDate(text) {
-  // Look for "BUSINESS DATE: MM/DD/YYYY" or similar
-  const m = text.match(/BUSINESS DATE\s*[:\s]+(\d{2}\/\d{2}\/\d{4})/i);
-  return m ? m[1] : new Date().toISOString().slice(0,10);
-}
 
 function parseSettlementFile(text) {
   const lines = text.split('\n');
   const futures = [];
   const options = [];
   let tradeDate = null;
-
-  let currentProduct = null;     // slug
-  let currentMode = null;        // 'FUT' or 'OPT'
-  let currentExpiry = null;      // for options: MMMYY of underlying
-  let currentSide = null;        // for options: 'CALL' or 'PUT'
+  let currentProduct = null;
+  let currentMode = null;
+  let currentExpiry = null;
+  let currentSide = null;
 
   for (let i = 0; i < lines.length; i++) {
-    const raw = lines[i];
-    const line = raw.trimEnd();
+    const line = lines[i].trimEnd();
     if (!line.trim()) continue;
 
-    // Detect business date
     if (!tradeDate) {
       const dm = line.match(/BUSINESS DATE\s*[:\s]+(\d{2}\/\d{2}\/\d{4})/i);
       if (dm) tradeDate = dm[1];
     }
 
-    // Detect product header — typically "CORN FUTURES" / "CORN OPTIONS"
-    // Strategy: match upper-case product name + "FUTURES" or "OPTIONS"
     const upper = line.toUpperCase();
     const prod = PRODUCTS.find(p => upper.startsWith(p.match) && (upper.includes('FUTURES') || upper.includes('OPTIONS')));
     if (prod) {
@@ -134,7 +159,6 @@ function parseSettlementFile(text) {
       continue;
     }
 
-    // Detect option expiry header like "JUL26 CALL" / "JUL26 PUT"
     if (currentMode === 'OPT') {
       const expM = line.match(/^\s*([A-Z]{3}\d{2})\s+(CALL|PUT|C|P)\s*$/i);
       if (expM) {
@@ -143,7 +167,6 @@ function parseSettlementFile(text) {
         currentSide = (s === 'C' || s === 'CALL') ? 'CALL' : 'PUT';
         continue;
       }
-      // Sometimes expiry block: "OPTIONS ON JUL26 FUTURES"
       const expM2 = line.match(/ON\s+([A-Z]{3}\d{2})\s+FUTURES/i);
       if (expM2) {
         currentExpiry = expM2[1].toUpperCase();
@@ -157,53 +180,32 @@ function parseSettlementFile(text) {
       }
     }
 
-    // Data row detection — must contain numerics
     if (!currentProduct) continue;
     const tokens = line.trim().split(/\s+/);
     if (tokens.length < 4) continue;
 
-    // For futures: first token is contract month e.g. MAY26, JUL26 (MMMYY)
     if (currentMode === 'FUT') {
       const moTok = tokens[0];
       if (!/^[A-Z]{3}\d{2}$/.test(moTok)) continue;
       const nums = parseNumericTokens(tokens.slice(1));
       if (nums.length < 4) continue;
       futures.push({
-        product: currentProduct,
-        expiry: moTok,
-        open: nums[0],
-        high: nums[1],
-        low: nums[2],
-        last: nums[3],
-        settle: nums[4] ?? null,
-        change: nums[5] ?? null,
-        volume: nums[6] ?? null,
-        priorSettle: nums[7] ?? null,
-        priorVol: nums[8] ?? null,
-        priorOI: nums[9] ?? null
+        product: currentProduct, expiry: moTok,
+        open:nums[0], high:nums[1], low:nums[2], last:nums[3],
+        settle:nums[4]||null, change:nums[5]||null, volume:nums[6]||null,
+        priorSettle:nums[7]||null, priorVol:nums[8]||null, priorOI:nums[9]||null
       });
     } else if (currentMode === 'OPT' && currentExpiry && currentSide) {
-      // First token is a strike (integer or decimal)
-      const strikeTok = tokens[0].replace(/[A-Z]+$/i,''); // strip optional cabinet flags
+      const strikeTok = tokens[0].replace(/[A-Z]+$/i,'');
       const strike = parseFloat(strikeTok);
       if (isNaN(strike) || strike <= 0) continue;
       const nums = parseNumericTokens(tokens.slice(1));
       if (nums.length < 3) continue;
       options.push({
-        product: currentProduct,
-        expiry: currentExpiry,
-        side: currentSide,
-        strike,
-        open: nums[0],
-        high: nums[1],
-        low: nums[2],
-        last: nums[3] ?? null,
-        settle: nums[4] ?? null,
-        change: nums[5] ?? null,
-        volume: nums[6] ?? null,
-        priorSettle: nums[7] ?? null,
-        priorVol: nums[8] ?? null,
-        priorOI: nums[9] ?? null
+        product: currentProduct, expiry: currentExpiry, side: currentSide, strike,
+        open:nums[0], high:nums[1], low:nums[2], last:nums[3]||null,
+        settle:nums[4]||null, change:nums[5]||null, volume:nums[6]||null,
+        priorSettle:nums[7]||null, priorVol:nums[8]||null, priorOI:nums[9]||null
       });
     }
   }
@@ -215,7 +217,6 @@ function parseNumericTokens(toks) {
   const out = [];
   for (const t of toks) {
     if (t === '-' || t === '' || t === 'UNCH') { out.push(null); continue; }
-    // Strip suffix letters like A/B/CAB
     const cleaned = t.replace(/[A-Za-z]+$/,'').replace(/,/g,'');
     if (cleaned === '' || cleaned === '-') { out.push(null); continue; }
     const n = parseFloat(cleaned);
@@ -224,28 +225,28 @@ function parseNumericTokens(toks) {
   return out;
 }
 
-// ============================================================
-// GITHUB PUSH
-// ============================================================
 async function pushToGithub(filename, content) {
   const token = process.env.GITHUB_TOKEN;
-  const repo  = process.env.GITHUB_REPO;        // 'user/repo'
+  const repo = process.env.GITHUB_REPO;
   const branch = process.env.GITHUB_BRANCH || 'main';
-  if (!token || !repo) throw new Error('Missing GITHUB_TOKEN or GITHUB_REPO env vars');
+  if (!token) throw new Error('Missing GITHUB_TOKEN env var');
+  if (!repo) throw new Error('Missing GITHUB_REPO env var');
 
   const apiUrl = `https://api.github.com/repos/${repo}/contents/${filename}`;
+  console.log('  GitHub URL: ' + apiUrl + ' on branch ' + branch);
 
-  // Get current SHA if file exists
   let sha;
   try {
-    const get = await fetch(apiUrl + `?ref=${branch}`, {
-      headers: { Authorization: `Bearer ${token}`, 'User-Agent': 'jhd-cme-updater' }
+    const getResp = await httpGet(apiUrl + `?ref=${branch}`, {
+      'Authorization': `Bearer ${token}`,
+      'Accept': 'application/vnd.github.v3+json'
     });
-    if (get.ok) {
-      const data = await get.json();
-      sha = data.sha;
-    }
-  } catch {}
+    const data = JSON.parse(getResp);
+    sha = data.sha;
+    console.log('  Existing SHA: ' + sha);
+  } catch (e) {
+    console.log('  No existing file (will create): ' + e.message);
+  }
 
   const body = {
     message: `Daily CME ag options update - ${new Date().toISOString().slice(0,10)}`,
@@ -254,16 +255,10 @@ async function pushToGithub(filename, content) {
   };
   if (sha) body.sha = sha;
 
-  const put = await fetch(apiUrl, {
-    method: 'PUT',
-    headers: { Authorization: `Bearer ${token}`, 'Content-Type':'application/json', 'User-Agent':'jhd-cme-updater' },
-    body: JSON.stringify(body)
+  const result = await httpPut(apiUrl, body, {
+    'Authorization': `Bearer ${token}`,
+    'Accept': 'application/vnd.github.v3+json'
   });
 
-  if (!put.ok) {
-    const txt = await put.text();
-    throw new Error('GitHub PUT failed: ' + put.status + ' ' + txt);
-  }
-  const result = await put.json();
-  return { commit: result.commit?.sha, path: result.content?.path };
+  return { commit: result.commit && result.commit.sha, path: result.content && result.content.path };
 }
