@@ -265,6 +265,39 @@
     .comment-admin-row { display:flex; gap:6px; margin-top:10px; }
     .no-comments { text-align:center; padding:32px; border:1px dashed var(--border2); border-radius:8px; color:var(--muted2); font-size:14px; }
     .comment-form-card { background:var(--card); border:1px solid var(--border2); border-radius:10px; padding:26px; margin-top:32px; }
+
+    /* ==== Engagement: reactions ==== */
+    .react-row { display:flex; gap:8px; align-items:center; margin-top:12px; }
+    .react-btn { display:inline-flex; align-items:center; gap:6px; padding:5px 12px; border-radius:14px; background:transparent; border:1px solid var(--border2); color:var(--muted); cursor:pointer; font-family:"DM Mono",monospace; font-size:11px; font-weight:500; letter-spacing:0.02em; transition:all 0.15s; }
+    .react-btn:hover { border-color:var(--gold2); color:var(--text); }
+    .react-btn.active.like { background:rgba(46,207,170,0.12); border-color:var(--teal); color:var(--teal); }
+    .react-btn.active.dislike { background:rgba(255,107,74,0.12); border-color:var(--coral); color:var(--coral); }
+    .react-btn .react-icon { font-size:13px; line-height:1; }
+    .react-btn .react-count { font-variant-numeric:tabular-nums; min-width:8px; text-align:right; }
+    .react-btn[disabled] { opacity:0.5; cursor:not-allowed; }
+    /* Post-level reaction bar - larger */
+    .post-react-bar { display:flex; gap:10px; align-items:center; margin:24px 0 8px; padding:14px 18px; background:var(--card); border:1px solid var(--border); border-radius:8px; }
+    .post-react-bar .react-btn { padding:8px 16px; font-size:12px; }
+    .post-react-bar .react-btn .react-icon { font-size:15px; }
+    .post-react-label { font-family:"DM Mono",monospace; font-size:9px; color:var(--muted2); text-transform:uppercase; letter-spacing:0.14em; margin-right:8px; }
+
+    /* ==== Comment width: match post width ==== */
+    /* For regular posts (780px body) keep comments matched; for full-width HTML iframes, comments go full-width too */
+    .comments-wrap { max-width:780px; }
+    .detail-wrap.full-width .comments-wrap { max-width:100%; width:100%; padding:24px 40px 60px; }
+    .detail-wrap.full-width .comment-form-card { max-width:100%; }
+    .detail-wrap.full-width .comment-item { max-width:100%; }
+
+    /* ==== Reply threading (1 level deep) ==== */
+    .comment-replies { margin-top:12px; margin-left:32px; padding-left:14px; border-left:2px solid var(--border2); }
+    .reply-btn { background:transparent; border:none; color:var(--muted); font-family:"DM Mono",monospace; font-size:10px; text-transform:uppercase; letter-spacing:0.08em; cursor:pointer; padding:4px 0; margin-left:8px; }
+    .reply-btn:hover { color:var(--blue); }
+    .reply-form { background:var(--card2); border:1px solid var(--border); border-radius:8px; padding:14px; margin-top:10px; }
+    .reply-form textarea { width:100%; min-height:70px; background:var(--bg); border:1px solid var(--border2); border-radius:5px; padding:8px 10px; color:var(--text); font-family:"DM Sans",sans-serif; font-size:13px; resize:vertical; margin-bottom:8px; }
+    .reply-form-actions { display:flex; gap:8px; }
+    .reply-form .btn-cancel { background:transparent; border:1px solid var(--border2); color:var(--muted); padding:5px 12px; border-radius:5px; cursor:pointer; font-size:11px; }
+    .reply-form .btn-submit { background:var(--gold); border:none; color:#080a0d; padding:5px 14px; border-radius:5px; cursor:pointer; font-size:11px; font-weight:600; }
+    .comment-replies .comment-item { background:var(--card2); }
     .comment-form-card h3 { font-size:16px; font-weight:600; color:var(--text); margin-bottom:16px; font-family:"DM Serif Display",serif; }
 
     /* ===== FUTURES ===== */
@@ -2914,13 +2947,38 @@ async function loadDetail(postId, category){
   }
 
   var cr = await sb.from('comments').select('*').eq('post_id',postId).eq('is_visible',true).order('created_at',{ascending:true});
-  var comments = cr.data||[];
-  var commHtml = comments.length
-    ? comments.map(function(c){
-        var adminBtns = isAdmin ? '<div class="comment-admin-row"><button class="btn-sm-del" onclick="adminDelComment(\x27'+c.id+'\x27)">Delete</button><button class="btn-sm-hide" onclick="adminHideComment(\x27'+c.id+'\x27)">Hide</button></div>' : '';
-        return '<div class="comment-item" id="ci-'+c.id+'"><div class="comment-header"><span class="comment-author">'+esc(c.author_name||'Anonymous')+'</span><span class="comment-time">'+fmtDate(c.created_at)+'</span></div><div class="comment-text">'+esc(c.content)+'</div>'+adminBtns+'</div>';
-      }).join('')
+  var allComments = cr.data||[];
+  // Split into top-level vs replies
+  var topComments = allComments.filter(function(c){ return !c.parent_id; });
+  var repliesByParent = {};
+  allComments.forEach(function(c){ if(c.parent_id){ (repliesByParent[c.parent_id] = repliesByParent[c.parent_id] || []).push(c); } });
+  // Pre-fetch reactions for post + all comments
+  var commentIds = allComments.map(function(c){ return c.id; });
+  var postReactR = await fetchReactionData('post', [postId]);
+  var commReactR = commentIds.length ? await fetchReactionData('comment', commentIds) : {counts:{},mine:{}};
+
+  function renderCommentItem(c, isReply){
+    var adminBtns = isAdmin ? '<div class="comment-admin-row"><button class="btn-sm-del" onclick="adminDelComment(\x27'+c.id+'\x27)">Delete</button><button class="btn-sm-hide" onclick="adminHideComment(\x27'+c.id+'\x27)">Hide</button></div>' : '';
+    var rCounts = commReactR.counts[c.id] || {likes:0,dislikes:0};
+    var rMine = commReactR.mine[c.id] || null;
+    var reactBar = '<div class="react-row"><span id="react-bar-c-'+c.id+'">' + reactBarHtml('comment', c.id, rCounts, rMine) + '</span>';
+    if(!isReply){ reactBar += '<button class="reply-btn" onclick="showReplyForm(\x27'+c.id+'\x27)">Reply</button>'; }
+    reactBar += '</div>';
+    var repliesHtml = '';
+    if(!isReply && repliesByParent[c.id] && repliesByParent[c.id].length){
+      repliesHtml = '<div class="comment-replies">' + repliesByParent[c.id].map(function(rep){ return renderCommentItem(rep, true); }).join('') + '</div>';
+    }
+    return '<div class="comment-item" id="ci-'+c.id+'"><div class="comment-header"><span class="comment-author">'+esc(c.author_name||'Anonymous')+'</span><span class="comment-time">'+fmtDate(c.created_at)+'</span></div><div class="comment-text">'+esc(c.content)+'</div>'+reactBar+adminBtns+repliesHtml+'</div>';
+  }
+
+  var commHtml = topComments.length
+    ? topComments.map(function(c){ return renderCommentItem(c, false); }).join('')
     : '<div class="no-comments">No comments yet -- be first to share your view.</div>';
+
+  // Post-level reaction bar (rendered above comments)
+  var postCounts = postReactR.counts[postId] || {likes:0,dislikes:0};
+  var postMine = postReactR.mine[postId] || null;
+  var postReactBar = '<div class="post-react-bar"><span class="post-react-label">Was this useful?</span><span id="react-bar-post">' + reactBarHtml('post', postId, postCounts, postMine) + '</span></div>';
   var isFullDoc = isFullHtmlDocument(post.content);
   var dw = wrap.closest('.detail-wrap');
   if(dw) dw.classList.toggle('full-width', isFullDoc);
@@ -2933,7 +2991,7 @@ async function loadDetail(postId, category){
     var standfirst = displaySummary ? '<div class="post-standfirst">'+esc(displaySummary)+'</div>' : '';
     contentHtml = '<div class="post-kicker">'+fmtDate(post.created_at)+'</div><h1>'+esc(post.title)+'</h1>'+standfirst+'<div class="post-body">'+post.content+'</div>';
   }
-  wrap.innerHTML = contentHtml+'<div class="comments-wrap"><div class="section-title">Discussion</div><div id="comments-area">'+commHtml+'</div><div class="comment-form-card"><h3>Leave a Comment</h3><div class="field"><label>Your name <span style="font-weight:400;color:var(--muted)">(optional)</span></label><input type="text" id="c-name" placeholder="e.g. John T."></div><div class="field"><label>Comment</label><textarea id="c-text" placeholder="Share your view on this analysis..."></textarea></div><button class="btn btn-navy" onclick="postComment()">Post Comment</button><div id="c-msg" class="hidden msg-box" style="margin-top:10px;"></div></div></div>';
+  wrap.innerHTML = contentHtml+postReactBar+'<div class="comments-wrap"><div class="section-title">Discussion</div><div id="comments-area">'+commHtml+'</div><div class="comment-form-card"><h3>Leave a Comment</h3><div class="field"><label>Your name <span style="font-weight:400;color:var(--muted)">(optional)</span></label><input type="text" id="c-name" placeholder="e.g. John T."></div><div class="field"><label>Comment</label><textarea id="c-text" placeholder="Share your view on this analysis..."></textarea></div><button class="btn btn-navy" onclick="postComment()">Post Comment</button><div id="c-msg" class="hidden msg-box" style="margin-top:10px;"></div></div></div>';
 }
 
 function closeDetail(){
@@ -2962,6 +3020,119 @@ function isFullHtmlDocument(c){
   if(!c) return false;
   var t = c.trim().toLowerCase();
   return t.startsWith('<!doctype')||t.startsWith('<html');
+}
+
+// ============================================================
+// REACTIONS: like/dislike for posts and comments
+// ============================================================
+async function fetchReactionData(targetType, targetIds){
+  // Returns { counts: {id: {likes, dislikes}}, mine: {id: 'like'|'dislike'|null} }
+  var counts = {};
+  var mine = {};
+  if(!targetIds || !targetIds.length) return {counts:counts, mine:mine};
+  try{
+    // Get all reactions for these targets
+    var r = await sb.from('reactions').select('target_id,reaction,user_id').eq('target_type',targetType).in('target_id',targetIds);
+    var rows = r.data || [];
+    var uid = currentUser ? currentUser.id : null;
+    rows.forEach(function(row){
+      if(!counts[row.target_id]) counts[row.target_id] = {likes:0,dislikes:0};
+      if(row.reaction === 'like') counts[row.target_id].likes++;
+      else if(row.reaction === 'dislike') counts[row.target_id].dislikes++;
+      if(uid && row.user_id === uid) mine[row.target_id] = row.reaction;
+    });
+  } catch(e){ console.error('fetchReactionData', e); }
+  return {counts:counts, mine:mine};
+}
+
+function reactBarHtml(targetType, targetId, counts, myReaction){
+  var likes = (counts && counts.likes) || 0;
+  var dislikes = (counts && counts.dislikes) || 0;
+  var likeActive = myReaction === 'like' ? ' active like' : '';
+  var dislikeActive = myReaction === 'dislike' ? ' active dislike' : '';
+  var locked = !currentUser ? ' disabled title="Sign in to react"' : '';
+  return '<button class="react-btn' + likeActive + '" onclick="toggleReaction(\''+targetType+'\',\''+targetId+'\',\'like\',this)"' + locked + '>' +
+         '<span class="react-icon">&#9650;</span><span class="react-count">' + likes + '</span></button>' +
+         '<button class="react-btn' + dislikeActive + '" onclick="toggleReaction(\''+targetType+'\',\''+targetId+'\',\'dislike\',this)"' + locked + '>' +
+         '<span class="react-icon">&#9660;</span><span class="react-count">' + dislikes + '</span></button>';
+}
+
+async function toggleReaction(targetType, targetId, reaction, btn){
+  if(!currentUser){
+    showAuthPage();
+    return;
+  }
+  if(btn) btn.disabled = true;
+  try{
+    // Check existing
+    var existingR = await sb.from('reactions').select('id,reaction').eq('user_id',currentUser.id).eq('target_type',targetType).eq('target_id',targetId).maybeSingle();
+    var existing = existingR.data;
+    if(existing && existing.reaction === reaction){
+      // Toggle off - delete
+      await sb.from('reactions').delete().eq('id',existing.id);
+    } else if(existing){
+      // Switch like<->dislike
+      await sb.from('reactions').update({reaction:reaction}).eq('id',existing.id);
+    } else {
+      // New reaction
+      await sb.from('reactions').insert({user_id:currentUser.id, target_type:targetType, target_id:targetId, reaction:reaction});
+    }
+    // Refresh the post detail to show new counts
+    await refreshReactionsInPlace(targetType, targetId);
+  } catch(e){
+    console.error('toggleReaction', e);
+    if(btn) btn.disabled = false;
+  }
+}
+
+async function refreshReactionsInPlace(targetType, targetId){
+  // Re-query counts for this single target and re-render its react bar
+  var r = await fetchReactionData(targetType, [targetId]);
+  var counts = r.counts[targetId] || {likes:0,dislikes:0};
+  var mine = r.mine[targetId] || null;
+  var containerId = targetType === 'post' ? 'react-bar-post' : 'react-bar-c-' + targetId;
+  var el = document.getElementById(containerId);
+  if(el) el.innerHTML = reactBarHtml(targetType, targetId, counts, mine);
+}
+
+// ============================================================
+// COMMENT REPLIES
+// ============================================================
+function showReplyForm(parentId){
+  // Hide any other reply forms first
+  document.querySelectorAll('.reply-form').forEach(function(f){ f.remove(); });
+  var commentEl = document.getElementById('ci-' + parentId);
+  if(!commentEl) return;
+  if(!currentUser){ showAuthPage(); return; }
+  var form = document.createElement('div');
+  form.className = 'reply-form';
+  form.id = 'reply-form-' + parentId;
+  form.innerHTML = '<textarea id="reply-text-' + parentId + '" placeholder="Reply to this comment..."></textarea>' +
+                   '<div class="reply-form-actions">' +
+                   '<button class="btn-submit" onclick="postReply(\''+parentId+'\')">Post Reply</button>' +
+                   '<button class="btn-cancel" onclick="document.getElementById(\'reply-form-' + parentId + '\').remove()">Cancel</button>' +
+                   '</div>';
+  commentEl.appendChild(form);
+  document.getElementById('reply-text-' + parentId).focus();
+}
+
+async function postReply(parentId){
+  var ta = document.getElementById('reply-text-' + parentId);
+  if(!ta) return;
+  var content = ta.value.trim();
+  if(content.length < 10){ alert('Reply must be at least 10 characters.'); return; }
+  if(!currentUser){ showAuthPage(); return; }
+  // Author name - try profile first, fall back to email prefix
+  var name = 'Anonymous';
+  try{
+    var pr = await sb.from('profiles').select('username,display_name').eq('id',currentUser.id).maybeSingle();
+    if(pr.data) name = pr.data.display_name || pr.data.username || (currentUser.email || '').split('@')[0] || 'Anonymous';
+    if(name && name.length > 0) name = name.charAt(0).toUpperCase() + name.slice(1);
+  } catch(e){}
+  var r = await sb.from('comments').insert({post_id:currentPostId, author_name:name, content:content, is_visible:true, parent_id:parentId});
+  if(r.error){ alert('Error posting reply: ' + r.error.message); return; }
+  // Refresh
+  loadDetail(currentPostId, currentPostTab);
 }
 
 async function postComment(){
