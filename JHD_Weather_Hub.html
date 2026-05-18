@@ -455,12 +455,18 @@ function wmoDesc(code) {
 }
 
 // ── OPEN-METEO ──
-async function fetchWeather(loc) {
+async function fetchWeather(loc, attempt) {
+  attempt = attempt || 0;
   const url = `https://api.open-meteo.com/v1/forecast?latitude=${loc.lat}&longitude=${loc.lon}` +
     `&daily=temperature_2m_max,temperature_2m_min,precipitation_sum,et0_fao_evapotranspiration` +
     `&current=temperature_2m,relative_humidity_2m,precipitation,wind_speed_10m,weather_code` +
     `&forecast_days=14&timezone=auto`;
   const r = await fetch(url);
+  if (r.status === 429 && attempt < 2) {
+    // Rate limited - wait with exponential backoff and retry
+    await new Promise(res => setTimeout(res, 1500 * Math.pow(2, attempt)));
+    return fetchWeather(loc, attempt + 1);
+  }
   if (!r.ok) throw new Error(`HTTP ${r.status}`);
   return r.json();
 }
@@ -569,8 +575,15 @@ function setRegion(r, el) {
 function renderCards() {
   const grid = document.getElementById('weather-grid');
   const locs = REGIONS.filter(r => currentRegion==='all' || r.region===currentRegion);
+  // Destroy any existing Chart.js instances tied to our canvases.
+  // Chart.js retains an internal registry so we must look up by canvas element,
+  // not just rely on our local charts object (which may be stale after re-renders).
   Object.values(charts).forEach(c=>{try{c.destroy();}catch(e){}});
   charts = {};
+  document.querySelectorAll('canvas[id^="ch-"]').forEach(function(canvas){
+    var existing = Chart.getChart(canvas);
+    if (existing) { try { existing.destroy(); } catch(e){} }
+  });
 
   grid.innerHTML = locs.map(loc => {
     const d = weatherData[loc.id];
@@ -709,7 +722,7 @@ async function loadModelCharts(){
 
     const [gfsR, ecmwfR] = await Promise.all([
       fetch(base + vars + '&models=gfs_seamless').then(r=>r.ok ? r.json() : null),
-      fetch(base + vars + '&models=ecmwf_ifs04').then(r=>r.ok ? r.json() : null)
+      fetch(base + vars + '&models=ecmwf_ifs025').then(r=>r.ok ? r.json() : null)
     ]);
 
     if(!gfsR && !ecmwfR){ throw new Error('Both model endpoints failed'); }
@@ -882,15 +895,19 @@ function initModelSection(){
 async function loadAll() {
   document.getElementById('status-txt').textContent='Fetching…';
   document.getElementById('live-dot').style.background='var(--gold)';
-  const batch=4;
+  // Smaller batches + small pause = lighter load on free-tier API, fewer 429s
+  const batch=2;
   for(let i=0;i<REGIONS.length;i+=batch){
     await Promise.all(REGIONS.slice(i,i+batch).map(async loc=>{
       try{ weatherData[loc.id]=await fetchWeather(loc); }
       catch(e){ weatherData[loc.id]={error:e.message}; }
     }));
-    renderCards();
-    renderRegionAlerts();
+    // Brief pause between batches to be polite to free-tier API
+    if (i + batch < REGIONS.length) await new Promise(r=>setTimeout(r, 200));
   }
+  // Single render at the end - avoids canvas-reuse race conditions
+  renderCards();
+  renderRegionAlerts();
   const loaded=Object.keys(weatherData).filter(k=>!weatherData[k].error).length;
   document.getElementById('status-txt').textContent=`Live · ${loaded}/${REGIONS.length}`;
   document.getElementById('live-dot').style.background='var(--teal)';
@@ -898,7 +915,7 @@ async function loadAll() {
 }
 
 loadAll();
-setInterval(loadAll, 30*60*1000);
+setInterval(loadAll, 60*60*1000);  // hourly refresh (was 30min) to stay under free-tier API limits
 initModelSection();
 
 // ── HUB TAB SWITCHING ───────────────────────────────────────────────────
