@@ -22,7 +22,7 @@ html,body{background:var(--bg);color:var(--text);font-family:'DM Sans',sans-seri
 .hdr{display:flex;align-items:flex-start;justify-content:space-between;gap:16px;margin-bottom:16px;flex-wrap:wrap;}
 .hdr-left .tag{font-family:'DM Mono',monospace;font-size:9px;letter-spacing:0.16em;color:var(--blue);text-transform:uppercase;margin-bottom:4px;}
 .hdr-left h2{font-family:'DM Serif Display',serif;font-size:22px;font-weight:900;color:var(--text);line-height:1.1;}
-.hdr-left h2 span{color:var(--blue);}
+.hdr-left h2 span{color:var(--gold);font-style:italic;}
 .hdr-right{display:flex;align-items:center;gap:8px;}
 .live-dot{width:8px;height:8px;border-radius:50%;background:var(--gold);animation:pulse 2s infinite;flex-shrink:0;}
 @keyframes pulse{0%,100%{opacity:1;}50%{opacity:0.3;}}
@@ -560,7 +560,8 @@ function setRegion(r, el) {
   document.querySelectorAll('.rtab').forEach(b=>b.classList.remove('active'));
   el.classList.add('active');
   const showDrought = r === 'all' || r === 'namerica';
-  document.getElementById('drought-section').style.display = showDrought ? '' : 'none';
+  const droughtEl = document.getElementById('drought-section');
+  if (droughtEl) droughtEl.style.display = showDrought ? '' : 'none';
   renderRegionAlerts();
   renderCards();
 }
