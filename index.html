@@ -80,8 +80,10 @@
     .topbar { background:#080a0d; border-bottom:1px solid var(--border2); position:sticky; top:0; z-index:200; box-shadow:0 2px 20px rgba(0,0,0,0.5); }
     .topbar-inner { width:100%; padding:0 24px; height:58px; display:flex; align-items:center; justify-content:space-between; }
     .topbar-brand { display:flex; align-items:center; gap:10px; cursor:pointer; user-select:none; }
-    .brand-mark { width:34px; height:34px; background:var(--gold); border-radius:5px; display:flex; align-items:center; justify-content:center; font-weight:900; font-size:11px; color:#080a0d; flex-shrink:0; letter-spacing:-0.5px; font-family:"DM Mono",monospace; }
-    .brand-name { font-size:15px; font-weight:600; color:var(--text); letter-spacing:0.01em; font-family:"DM Sans",sans-serif; }
+    .brand-logo { width:34px; height:34px; object-fit:contain; border-radius:5px; flex-shrink:0; }
+    .brand-name { font-size:15px; font-weight:600; letter-spacing:0.01em; font-family:"DM Sans",sans-serif; }
+    .brand-jhd { color:var(--text); }
+    .brand-ca { color:var(--gold); font-weight:500; }
     .topbar-right { display:flex; align-items:center; gap:10px; }
     .user-chip { font-size:12px; color:rgba(255,255,255,0.5); max-width:180px; overflow:hidden; text-overflow:ellipsis; white-space:nowrap; }
 
@@ -213,7 +215,9 @@
     /* ===== CONTENT ===== */
     .page-wrap { width:100%; padding:40px 32px 60px; }
     .page-heading { margin-bottom:32px; padding-bottom:20px; border-bottom:1px solid var(--border); }
-    .page-heading h2 { font-size:24px; font-weight:700; color:var(--text); margin-bottom:4px; font-family:"DM Serif Display",serif; }
+    .page-heading-tag { font-family:"DM Mono",monospace; font-size:9px; letter-spacing:0.18em; color:var(--blue); text-transform:uppercase; margin-bottom:8px; }
+    .page-heading h2 { font-size:24px; font-weight:700; color:var(--text); margin-bottom:4px; font-family:"DM Serif Display",serif; letter-spacing:-0.005em; }
+    .page-heading h2 em { color:var(--gold); font-style:italic; font-weight:700; }
     .page-heading p { color:var(--muted); font-size:14px; }
     .posts-grid { display:grid; grid-template-columns:repeat(auto-fill,minmax(320px,1fr)); gap:20px; }
     .post-card { background:var(--card); border:1px solid var(--border); border-radius:10px; padding:26px; cursor:pointer; transition:box-shadow 0.18s,transform 0.15s; }
@@ -368,8 +372,8 @@
     .site-footer { background:#080a0d; border-top:1px solid var(--border); }
     .site-footer-inner { width:100%; padding:16px 32px; display:flex; align-items:center; gap:20px; flex-wrap:wrap; }
     .footer-brand-wrap { display:flex; align-items:center; gap:8px; }
-    .footer-brand-mark { width:28px; height:28px; background:var(--gold); border-radius:4px; display:flex; align-items:center; justify-content:center; font-family:"DM Mono",monospace; font-size:9pt; font-weight:700; color:#080a0d; flex-shrink:0; cursor:pointer; }
-    .footer-brand-name { font-family:"DM Sans",sans-serif; font-size:12px; font-weight:600; color:var(--muted); }
+    .footer-logo { width:28px; height:28px; object-fit:contain; border-radius:4px; flex-shrink:0; }
+    .footer-brand-name { font-family:"DM Sans",sans-serif; font-size:12px; font-weight:600; }
     .footer-nav { display:flex; gap:0; margin-left:auto; }
     .footer-nav-btn { padding:8px 16px; border:none; background:none; cursor:pointer; font-size:12px; font-weight:500; color:var(--muted2); font-family:"DM Sans",sans-serif; transition:color 0.15s; border-left:1px solid var(--border); }
     .footer-nav-btn:first-child { border-left:none; }
@@ -1068,8 +1072,8 @@ padding:2px 8px;border-radius:3px;margin-bottom:6px;letter-spacing:0.06em;text-t
   <header class="topbar">
     <div class="topbar-inner">
       <div class="topbar-brand" onclick="showTab('commentary')" title="Home">
-        <div class="brand-mark" onclick="event.stopPropagation();showTab('services')" title="Services" style="cursor:pointer;">JHD</div>
-        <span class="brand-name">JHD Commodity Advisors</span>
+        <img src="https://i.ibb.co/PZPZGP71/IMG-2924.jpg" alt="JHD" class="brand-logo">
+        <span class="brand-name"><span class="brand-jhd">JHD</span> <span class="brand-ca">Commodity Advisors</span></span>
       </div>
       <div class="topbar-right">
         <span class="user-chip" id="app-chip" onclick="openProfilePanel()" style="cursor:pointer;" title="My Profile"></span>
@@ -1221,7 +1225,8 @@ padding:2px 8px;border-radius:3px;margin-bottom:6px;letter-spacing:0.06em;text-t
   <div id="tab-commentary" class="protected">
     <div class="page-wrap">
       <div class="page-heading">
-        <h2>Market Commentary <span class="premium-badge">&#128274; PREMIUM</span></h2>
+        <div class="page-heading-tag">Premium Research</div>
+        <h2>Market <em>Commentary</em> <span class="premium-badge">&#128274; PREMIUM</span></h2>
         <p>In-depth analysis of agricultural commodity markets &mdash; Wheat, Corn &amp; Soy Complex</p>
       </div>
       <div class="comm-subtabs">
@@ -1239,7 +1244,8 @@ padding:2px 8px;border-radius:3px;margin-bottom:6px;letter-spacing:0.06em;text-t
   <div id="tab-research" class="hidden protected">
     <div class="page-wrap">
       <div class="page-heading">
-        <h2>Research <span class="premium-badge">&#128274; PREMIUM</span></h2>
+        <div class="page-heading-tag">Premium Research</div>
+        <h2><em>Research</em> <span class="premium-badge">&#128274; PREMIUM</span></h2>
         <p>In-depth analytical research &mdash; Technicals, Options, Spreads, Supply &amp; Demand, CFTC &amp; Macro</p>
       </div>
       <div class="comm-subtabs">
@@ -1327,8 +1333,9 @@ padding:2px 8px;border-radius:3px;margin-bottom:6px;letter-spacing:0.06em;text-t
   <div id="tab-futures" class="hidden">
     <div class="page-wrap">
       <div class="page-heading">
-        <h2>Global Markets</h2>
-        <p>Major equity indices, FX, energy and metals — live prices via TradingView</p>
+        <div class="page-heading-tag">Free Access &middot; Markets</div>
+        <h2>Global <em>Markets</em></h2>
+        <p>Major equity indices, FX, energy and metals &mdash; live prices via TradingView</p>
       </div>
 
       <!-- Ticker tape -->
@@ -1552,7 +1559,8 @@ padding:2px 8px;border-radius:3px;margin-bottom:6px;letter-spacing:0.06em;text-t
   <div id="tab-exports" class="hidden">
     <div class="page-wrap">
       <div class="page-heading">
-        <h2>Export Sales</h2>
+        <div class="page-heading-tag">Free Access &middot; USDA Data</div>
+        <h2>Export <em>Sales</em></h2>
         <p>USDA Weekly Export Sales &mdash; auto-updated each Thursday via USDA ESRQS</p>
       </div>
       <div id="exports-dashboard"><div class="spin">Loading export data…</div></div>
@@ -1727,7 +1735,7 @@ padding:2px 8px;border-radius:3px;margin-bottom:6px;letter-spacing:0.06em;text-t
   <!-- Options Analytics -->
   <div id="tab-options" class="hidden protected">
     <div class="page-wrap">
-      <div class="page-heading"><h2>Options Analytics</h2><p>Volatility analysis, options strategies and derivatives market intelligence</p></div>
+      <div class="page-heading"><div class="page-heading-tag">Free Access &middot; Derivatives</div><h2>Options <em>Analytics</em></h2><p>Volatility analysis, options strategies and derivatives market intelligence</p></div>
       <div id="posts-options"><div class="spin">Loading…</div></div>
     </div>
   </div>
@@ -1735,7 +1743,7 @@ padding:2px 8px;border-radius:3px;margin-bottom:6px;letter-spacing:0.06em;text-t
   <!-- FOB Data -->
   <div id="tab-fob" class="hidden protected">
     <div class="page-wrap">
-      <div class="page-heading"><h2>FOB Data</h2><p>Free-on-board pricing, origin spreads and export basis analysis</p></div>
+      <div class="page-heading"><div class="page-heading-tag">Free Access &middot; FOB Pricing</div><h2>FOB <em>Data</em></h2><p>Free-on-board pricing, origin spreads and export basis analysis</p></div>
       <div id="posts-fob"><div class="spin">Loading…</div></div>
     </div>
   </div>
@@ -1744,7 +1752,8 @@ padding:2px 8px;border-radius:3px;margin-bottom:6px;letter-spacing:0.06em;text-t
   <div id="tab-freight" class="hidden protected">
     <div class="page-wrap">
       <div class="page-heading">
-        <h2>Freight</h2>
+        <div class="page-heading-tag">Free Access &middot; Freight Markets</div>
+        <h2><em>Freight</em> Markets</h2>
         <p>Baltic dry bulk indices &amp; grain freight commentary</p>
       </div>
       <div id="posts-freight"></div>
@@ -1755,7 +1764,8 @@ padding:2px 8px;border-radius:3px;margin-bottom:6px;letter-spacing:0.06em;text-t
   <div id="tab-technicals" class="hidden protected">
     <div class="page-wrap">
       <div class="page-heading">
-        <h2>Technical Analysis</h2>
+        <div class="page-heading-tag">Free Access &middot; Technicals</div>
+        <h2>Technical <em>Analysis</em></h2>
         <p>Chart analysis, key levels and technical factors across grain and oilseed markets</p>
       </div>
       <div id="ta-admin-form-wrap" class="hidden">
@@ -1804,7 +1814,8 @@ padding:2px 8px;border-radius:3px;margin-bottom:6px;letter-spacing:0.06em;text-t
   <div id="tab-sentiment" class="hidden protected">
     <div class="page-wrap">
       <div class="page-heading">
-        <h2>Community Sentiment</h2>
+        <div class="page-heading-tag">Free Access &middot; Community</div>
+        <h2>Community <em>Sentiment</em></h2>
         <p>Live directional views, price calls and crop condition surveys from across the JHD trading community</p>
       </div>
 
@@ -1975,9 +1986,9 @@ padding:2px 8px;border-radius:3px;margin-bottom:6px;letter-spacing:0.06em;text-t
   </div>
   <footer class="site-footer">
     <div class="site-footer-inner">
-      <div class="footer-brand-wrap">
-        <div class="footer-brand-mark" onclick="showTab('services')" title="Services" style="background:transparent;display:flex;align-items:center;gap:6px;width:auto;"><img src="https://i.ibb.co/PZPZGP71/IMG-2924.jpg" alt="JHD" style="height:28px;width:28px;object-fit:contain;border-radius:3px;"><span style="font-family:'DM Serif Display',serif;font-size:13px;color:var(--text);">JHD</span></div>
-        <span class="footer-brand-name">JHD Commodity Advisors</span>
+      <div class="footer-brand-wrap" onclick="showTab('commentary')" title="Home" style="cursor:pointer;">
+        <img src="https://i.ibb.co/PZPZGP71/IMG-2924.jpg" alt="JHD" class="footer-logo">
+        <span class="footer-brand-name"><span class="brand-jhd">JHD</span> <span class="brand-ca">Commodity Advisors</span></span>
       </div>
       <nav class="footer-nav">
         <button class="footer-nav-btn" onclick="showTab('services')">Services</button>
@@ -1985,7 +1996,7 @@ padding:2px 8px;border-radius:3px;margin-bottom:6px;letter-spacing:0.06em;text-t
         <button class="footer-nav-btn" onclick="showTab('about')">About Us</button>
         <button class="footer-nav-btn" onclick="openPrivacyPolicy()">Privacy Policy</button>
       </nav>
-      <div class="footer-copy">&copy; 2025 JHD Commodity Advisors &middot; Informational use only &middot; Not investment advice</div>
+      <div class="footer-copy">&copy; 2026 <span class="brand-jhd">JHD</span> <span class="brand-ca">Commodity Advisors</span> &middot; Informational use only &middot; Not investment advice</div>
     </div>
   </footer>
 <!-- BUSHEL PANEL -->
@@ -2026,7 +2037,6 @@ padding:2px 8px;border-radius:3px;margin-bottom:6px;letter-spacing:0.06em;text-t
       </div>
     </div>
   </div>
-</div>
 </div>
 
 <!-- PROFILE PANEL -->
@@ -2262,8 +2272,8 @@ padding:2px 8px;border-radius:3px;margin-bottom:6px;letter-spacing:0.06em;text-t
   <header class="topbar">
     <div class="topbar-inner">
       <div class="topbar-brand" onclick="showAppPage()">
-          <img src="https://i.ibb.co/PZPZGP71/IMG-2924.jpg" alt="JHD" style="height:34px;width:34px;object-fit:contain;border-radius:4px;">
-          <span class="brand-name">JHD Commodity Advisors <span style="font-family:DM Mono,monospace;font-size:9px;color:var(--coral);letter-spacing:0.06em;margin-left:8px;">ADMIN</span></span>
+          <img src="https://i.ibb.co/PZPZGP71/IMG-2924.jpg" alt="JHD" class="brand-logo">
+          <span class="brand-name"><span class="brand-jhd">JHD</span> <span class="brand-ca">Commodity Advisors</span> <span style="font-family:DM Mono,monospace;font-size:9px;color:var(--coral);letter-spacing:0.06em;margin-left:8px;">ADMIN</span></span>
         </div>
       <div class="topbar-right">
         <button class="btn btn-ghost" onclick="showAppPage()">← Back to Site</button>
