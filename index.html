@@ -1114,7 +1114,7 @@ padding:2px 8px;border-radius:3px;margin-bottom:6px;letter-spacing:0.06em;text-t
       <!-- Welcome header -->
       <div class="dash-welcome">
         <div class="dash-welcome-left">
-          <div class="dash-greeting"><span id="dash-username-greeting" style="color:var(--gold);font-style:italic;">Trader</span></div>
+          <div class="dash-greeting">Welcome, <span id="dash-username-greeting" style="color:var(--gold);font-style:italic;">Trader</span></div>
           <div class="dash-sub" id="dash-date-label">Loading...</div>
         </div>
         <div class="dash-level-card">
@@ -3833,6 +3833,8 @@ function setDashWelcome(){
     sb.from('profiles').select('username,display_name').eq('id',currentUser.id).maybeSingle().then(function(r){
       var p = r.data || {};
       var name = p.display_name || p.username || currentUser.email.split('@')[0];
+      // Capitalise first letter for presentation
+      if (name && name.length > 0) name = name.charAt(0).toUpperCase() + name.slice(1);
       var el = document.getElementById('dash-username-greeting');
       if(el) el.textContent = name;
     });
