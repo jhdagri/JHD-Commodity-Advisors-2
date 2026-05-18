@@ -1744,10 +1744,10 @@ padding:2px 8px;border-radius:3px;margin-bottom:6px;letter-spacing:0.06em;text-t
   <div id="tab-freight" class="hidden protected">
     <div class="page-wrap">
       <div class="page-heading">
-        <h2>Freight Dashboard</h2>
-        <p>Baltic dry bulk indices &amp; grain freight rates &mdash; updated daily</p>
+        <h2>Freight</h2>
+        <p>Baltic dry bulk indices &amp; grain freight commentary</p>
       </div>
-      <div id="freight-dashboard"><div class="spin">Loading freight data…</div></div>
+      <div id="posts-freight"></div>
     </div>
   </div>
 
@@ -2591,144 +2591,6 @@ function renderExportDashboard(data, el) {
 
 
 /* ===== FREIGHT DASHBOARD ===== */
-var _freightCache = null;
-
-async function loadFreightDashboard(force) {
-  var el = document.getElementById('freight-dashboard');
-  if (!el) return;
-  if (_freightCache && !force) { renderFreight(_freightCache, el); return; }
-  el.innerHTML = '<div class="spin">Fetching Baltic indices\u2026</div>';
-  try {
-    var resp = await fetch('/.netlify/functions/freight');
-    if (!resp.ok) throw new Error('Function returned ' + resp.status);
-    var data = await resp.json();
-    if (data.error) throw new Error(data.error);
-    _freightCache = data;
-    renderFreight(data, el);
-  } catch(e) {
-    el.innerHTML = '<div style="color:var(--coral);font-family:\'DM Mono\',monospace;font-size:11px;padding:20px;">Could not load freight data: ' + e.message + '</div>';
-  }
-}
-
-function fmtChg(c) {
-  if (c === null || c === undefined) return '';
-  var sign = c > 0 ? '+' : '';
-  var col  = c > 0 ? 'var(--teal)' : c < 0 ? 'var(--coral)' : 'var(--muted)';
-  return '<span style="color:' + col + '">' + sign + c + '</span>';
-}
-
-function fmtEarn(e) {
-  if (!e) return '--';
-  return '$' + e.toLocaleString() + '/day';
-}
-
-function renderFreight(data, el) {
-  var bdi = data.bdi || {}, bci = data.bci || {}, bpi = data.bpi || {};
-  var bsi = data.bsi || {}, bhsi = data.bhsi || {};
-  var routes = data.grainRoutes || [];
-
-  var out = '<div class="frt-header">';
-  out += '<div class="frt-datestamp">Baltic Exchange &mdash; ' + (data.date || 'Latest') + '</div>';
-  out += '<button class="frt-refresh-btn" onclick="loadFreightDashboard(true)">&#8635; Refresh</button>';
-  out += '</div>';
-
-  // Index cards
-  out += '<div class="frt-grid">';
-  var indices = [
-    { key: bdi, cls: 'bdi-card', label: 'Composite', name: 'Baltic Dry Index', abbr: 'BDI', earn: null },
-    { key: bci, cls: 'bci-card', label: 'Capesize', name: 'Baltic Capesize Index', abbr: 'BCI', earn: bci.earnings },
-    { key: bpi, cls: 'bpi-card', label: 'Panamax', name: 'Baltic Panamax Index', abbr: 'BPI', earn: bpi.earnings },
-    { key: bsi, cls: 'bsi-card', label: 'Supramax', name: 'Baltic Supramax Index', abbr: 'BSI', earn: bsi.earnings },
-    { key: bhsi, cls:'bhsi-card',label: 'Handysize', name: 'Baltic Handysize Index', abbr:'BHSI', earn: bhsi.earnings },
-  ];
-  indices.forEach(function(idx) {
-    out += '<div class="frt-card ' + idx.cls + '">';
-    out += '<div class="frt-card-label">' + idx.label + '</div>';
-    out += '<div class="frt-card-name">' + idx.abbr + '</div>';
-    out += '<div class="frt-card-val">' + (idx.key.level ? idx.key.level.toLocaleString() : '--') + '</div>';
-    out += '<div class="frt-card-chg">' + fmtChg(idx.key.change) + '</div>';
-    if (idx.earn) out += '<div class="frt-card-earn">' + fmtEarn(idx.earn) + '</div>';
-    out += '</div>';
-  });
-  out += '</div>';
-
-  // Grain routes
-  out += '<div class="frt-section-title">Indicative Grain Freight Routes</div>';
-  out += '<div class="frt-routes-grid">';
-  routes.forEach(function(r) {
-    out += '<div class="frt-route-card">';
-    out += '<div class="frt-route-left">';
-    out += '<div class="frt-route-name">' + r.route + '</div>';
-    out += '<div class="frt-route-desc">' + r.desc + '</div>';
-    out += '<div class="frt-route-vessel">' + r.vessel + ' &middot; ' + r.note + '</div>';
-    out += '</div>';
-    out += '<div class="frt-route-right">';
-    if (r.usd_mt) {
-      out += '<div class="frt-route-val">$' + r.usd_mt + '</div>';
-      out += '<div class="frt-route-unit">/MT est.</div>';
-    } else {
-      out += '<div class="frt-route-val" style="color:var(--muted2);font-size:14px;">--</div>';
-    }
-    out += '</div></div>';
-  });
-  out += '</div>';
-
-  // Context cards
-  out += '<div class="frt-section-title">Market Context</div>';
-  out += '<div class="frt-context-grid">';
-
-  // Vessel sizing context
-  out += '<div class="frt-context-card">';
-  out += '<div class="frt-context-title">Vessel Types &mdash; Grain Relevance</div>';
-  var vessels = [
-    ['Capesize (180k DWT)', 'Iron ore, coal only'],
-    ['Panamax (75-82k DWT)', 'Primary grain vessel'],
-    ['Supramax (55-63k DWT)', 'Grain, minor bulk'],
-    ['Handysize (28-40k DWT)', 'Bagged grain, short haul'],
-  ];
-  vessels.forEach(function(v) {
-    out += '<div class="frt-context-item"><span class="frt-context-label">' + v[0] + '</span><span class="frt-context-val">' + v[1] + '</span></div>';
-  });
-  out += '</div>';
-
-  // BPI context
-  out += '<div class="frt-context-card">';
-  out += '<div class="frt-context-title">BPI Range Context</div>';
-  var ranges = [
-    ['Current BPI', bpi.level ? bpi.level.toLocaleString() : '--'],
-    ['5yr avg (est.)', '~1,600-2,200'],
-    ['2024 range', '~900-2,100'],
-    ['2022 peak', '~4,700'],
-    ['Panamax earnings', fmtEarn(bpi.earnings)],
-  ];
-  ranges.forEach(function(r) {
-    out += '<div class="frt-context-item"><span class="frt-context-label">' + r[0] + '</span><span class="frt-context-val">' + r[1] + '</span></div>';
-  });
-  out += '</div>';
-
-  // BSI context
-  out += '<div class="frt-context-card">';
-  out += '<div class="frt-context-title">Key Grain Origins</div>';
-  var origins = [
-    ['US Gulf', 'Corn, Soybeans, Wheat'],
-    ['PNW', 'Wheat, Corn, Soybeans'],
-    ['Brazil (Santos)', 'Soybeans, Corn'],
-    ['Argentina (Rosario)', 'Soybeans, Meal, Corn'],
-    ['Black Sea', 'Wheat, Corn, Barley'],
-    ['Australia (Kwinana)', 'Wheat, Barley'],
-  ];
-  origins.forEach(function(o) {
-    out += '<div class="frt-context-item"><span class="frt-context-label">' + o[0] + '</span><span class="frt-context-val">' + o[1] + '</span></div>';
-  });
-  out += '</div>';
-
-  out += '</div>'; // /context-grid
-
-  out += '<div class="frt-note">Source: HandyBulk / Baltic Exchange &middot; Updated daily (Mon-Fri) &middot; Route $/MT figures are indicative estimates derived from timecharter rates and voyage parameters &middot; Not a substitute for actual market freight quotes &middot; Not investment advice</div>';
-
-  el.innerHTML = out;
-}
-
 /* ===== BOOT ===== */
 async function boot(){
   sb = window.supabase.createClient(SUPABASE_URL, SUPABASE_ANON);
@@ -2842,7 +2704,6 @@ function showTab(name){
   document.querySelectorAll('.snav-btn').forEach(function(b){ b.classList.toggle('active', b.dataset.tab===name); });
   var _cmTip = document.getElementById('cm-tip'); if(_cmTip) _cmTip.style.opacity='0';
   if(name === 'exports')    loadExportSales(false);
-  if(name === 'freight')    loadFreightDashboard(false);
   if(POST_TABS.indexOf(name) > -1) loadPosts(name);
   if(name === 'research') {
     var resEl = document.getElementById('posts-research-technicals');
