@@ -1144,6 +1144,15 @@ padding:2px 8px;border-radius:3px;margin-bottom:6px;letter-spacing:0.06em;text-t
         </div>
       </div>
 
+      <!-- Futures Snapshot Ribbon -->
+      <div class="dash-card" id="futures-snap-card" style="margin-bottom:16px;">
+        <div class="dash-card-header">
+          <div class="dash-card-title">Futures Snapshot <span id="futures-snap-time" style="font-family:'DM Mono',monospace;font-size:9px;color:var(--muted2);letter-spacing:0.08em;margin-left:10px;text-transform:none;font-weight:400;"></span></div>
+          <span class="dash-card-action" id="futures-snap-refresh" onclick="loadFuturesSnapshot()" style="cursor:pointer;">Refresh &rarr;</span>
+        </div>
+        <div class="dash-card-body" id="futures-snap-body"><div class="spin">Loading...</div></div>
+      </div>
+
       <!-- Main grid row 1 -->
       <div class="dash-grid-wide">
 
@@ -2269,6 +2278,7 @@ padding:2px 8px;border-radius:3px;margin-bottom:6px;letter-spacing:0.06em;text-t
       <button class="tab-btn"        id="mtab"  onclick="switchAdminTab('mod')">&#128172; Moderate Comments</button>
       <button class="tab-btn"        id="stab"  onclick="switchAdminTab('subs')">&#128101; Subscribers</button>
       <button class="tab-btn"        id="itab"  onclick="switchAdminTab('import')">&#128196; PDF Import</button>
+      <button class="tab-btn"        id="ftab"  onclick="switchAdminTab('futures')">&#128200; Futures Snapshot</button>
     </div>
 
     <!-- New Post -->
@@ -2404,6 +2414,31 @@ padding:2px 8px;border-radius:3px;margin-bottom:6px;letter-spacing:0.06em;text-t
         <div style="font-family:'DM Mono',monospace;font-size:9px;text-transform:uppercase;letter-spacing:0.12em;color:var(--muted2);margin-bottom:16px;padding-bottom:6px;border-bottom:1px solid var(--border);">Converted Posts &mdash; Review &amp; Publish</div>
         <div id="pdf-results-list" style="display:flex;flex-direction:column;gap:24px;"></div>
       </div>
+    </div>
+
+    <!-- Futures Snapshot Upload -->
+    <div id="admin-futures" class="hidden">
+      <div class="section-h2">Futures Snapshot Upload</div>
+      <p style="font-size:14px;color:var(--muted);line-height:1.7;margin-bottom:18px;max-width:680px;">Upload or paste a Barchart futures snapshot. Accepts tab-separated (TSV) or comma-separated (CSV) with columns: <code style="color:var(--gold);">Symbol, Latest, Change, %Change, Open, High, Low, Time</code>. Saves to the dashboard ribbon for all visitors.</p>
+
+      <div class="admin-field">
+        <label class="cat-label">Option 1 &middot; Paste data</label>
+        <textarea id="fut-paste" rows="10" placeholder="Symbol&#9;Latest&#9;Change&#9;%Change&#9;Open&#9;High&#9;Low&#9;Time&#10;ZWK26&#9;659&#9;-6&#9;-0.90%&#9;666.25&#9;666.25&#9;659&#9;03:10 CT&#10;..." style="width:100%;background:var(--card);border:1px solid var(--border2);border-radius:6px;padding:12px;color:var(--text);font-family:'DM Mono',monospace;font-size:11px;resize:vertical;"></textarea>
+      </div>
+
+      <div class="admin-field" style="margin-top:14px;">
+        <label class="cat-label">Option 2 &middot; Upload CSV/TSV file</label>
+        <input type="file" id="fut-file-input" accept=".csv,.tsv,.txt" style="font-family:'DM Mono',monospace;font-size:11px;color:var(--muted);" onchange="handleFutFile(this.files)">
+      </div>
+
+      <div style="display:flex;gap:10px;margin-top:18px;align-items:center;flex-wrap:wrap;">
+        <button class="btn btn-navy" onclick="parseFuturesSnapshot()" style="padding:10px 22px;">&#128270; Preview</button>
+        <button class="btn btn-gold" id="fut-save-btn" onclick="saveFuturesSnapshot()" style="padding:10px 22px;display:none;">&#9989; Save Snapshot to Dashboard</button>
+        <button class="btn btn-ghost" onclick="clearFuturesPreview()" style="padding:10px 18px;">Clear</button>
+        <div id="fut-msg" class="hidden msg-box" style="flex:1;margin:0;font-size:11px;"></div>
+      </div>
+
+      <div id="fut-preview" style="margin-top:24px;"></div>
     </div>
 
   </div>
@@ -3108,10 +3143,12 @@ function initQuill(){
   quill=new Quill('#quill-editor',{theme:'snow',modules:{toolbar:[[{header:[1,2,3,false]}],['bold','italic','underline'],[{list:'ordered'},{list:'bullet'}],['link','blockquote'],[{color:[]}],['clean']]},placeholder:'Write your post here...'});
 }
 function switchAdminTab(t){
-  ['write','posts','mod','subs','import'].forEach(function(x){
-    document.getElementById('admin-'+x).classList.toggle('hidden',x!==t);
-    var btnId = x==='write'?'wtab':x==='posts'?'ptab':x==='mod'?'mtab':x==='subs'?'stab':'itab';
-    document.getElementById(btnId).classList.toggle('active',x===t);
+  ['write','posts','mod','subs','import','futures'].forEach(function(x){
+    var panel = document.getElementById('admin-'+x);
+    if (panel) panel.classList.toggle('hidden',x!==t);
+    var btnId = x==='write'?'wtab':x==='posts'?'ptab':x==='mod'?'mtab':x==='subs'?'stab':x==='import'?'itab':'ftab';
+    var btn = document.getElementById(btnId);
+    if (btn) btn.classList.toggle('active',x===t);
   });
   if(t==='mod')    loadAllComments();
   if(t==='subs')   loadSubscribers();
@@ -3905,7 +3942,8 @@ async function loadDashboard(){
     loadDashSentiment(),
     loadDashPriceCalls(),
     loadDashCftc(),
-    loadDashMetrics()
+    loadDashMetrics(),
+    loadFuturesSnapshot()
   ]);
 }
 
@@ -5053,6 +5091,274 @@ function initWasde(){
 // End WASDE Comprehensive
 
 
+
+
+/* ============================================================
+   FUTURES SNAPSHOT - upload, save, render
+   ============================================================ */
+var _futParsedRows = null;
+
+// Commodity grouping
+var FUT_COMMODITIES = [
+  { prefix:'ZW', label:'SRW Wheat',    color:'#c8853a', unit:'¢/bu' },
+  { prefix:'KE', label:'HRW Wheat',    color:'#ffb347', unit:'¢/bu' },
+  { prefix:'ZC', label:'Corn',         color:'#d4aa55', unit:'¢/bu' },
+  { prefix:'ZS', label:'Soybeans',     color:'#2ecfaa', unit:'¢/bu' },
+  { prefix:'ZL', label:'Soy Oil',      color:'#a78bfa', unit:'¢/lb' },
+  { prefix:'ZM', label:'Soy Meal',     color:'#4a9eff', unit:'$/ton' }
+];
+
+var FUT_MONTH_CODES = { F:'Jan', G:'Feb', H:'Mar', J:'Apr', K:'May', M:'Jun', N:'Jul', Q:'Aug', U:'Sep', V:'Oct', X:'Nov', Z:'Dec' };
+
+function futMsg(text, ok){
+  var el = document.getElementById('fut-msg');
+  if (!el) return;
+  el.textContent = text;
+  el.className = 'msg-box ' + (ok ? 'msg-ok' : 'msg-err');
+  el.classList.remove('hidden');
+}
+
+function clearFuturesPreview(){
+  document.getElementById('fut-paste').value = '';
+  document.getElementById('fut-file-input').value = '';
+  document.getElementById('fut-preview').innerHTML = '';
+  document.getElementById('fut-save-btn').style.display = 'none';
+  document.getElementById('fut-msg').classList.add('hidden');
+  _futParsedRows = null;
+}
+
+function handleFutFile(files){
+  if (!files || !files.length) return;
+  var f = files[0];
+  var reader = new FileReader();
+  reader.onload = function(e){
+    document.getElementById('fut-paste').value = e.target.result;
+    parseFuturesSnapshot();
+  };
+  reader.readAsText(f);
+}
+
+function parseFuturesSnapshot(){
+  var raw = document.getElementById('fut-paste').value.trim();
+  if (!raw){ futMsg('Paste data or upload a file first.', false); return; }
+
+  // Detect delimiter
+  var firstLine = raw.split('\n')[0];
+  var delim = firstLine.indexOf('\t') > -1 ? '\t' : ',';
+
+  var lines = raw.split('\n').filter(function(l){ return l.trim(); });
+  if (lines.length < 2){ futMsg('Need at least a header row plus one data row.', false); return; }
+
+  // Parse header
+  var headers = lines[0].split(delim).map(function(h){ return h.trim().replace(/^"|"$/g,'').toLowerCase(); });
+
+  function idx(possibleNames){
+    for (var i = 0; i < possibleNames.length; i++){
+      var n = possibleNames[i].toLowerCase();
+      var j = headers.indexOf(n);
+      if (j > -1) return j;
+    }
+    return -1;
+  }
+
+  var iSym = idx(['symbol','contract']);
+  var iLast = idx(['latest','last','price']);
+  var iChg = idx(['change','chg']);
+  var iPct = idx(['%change','%chg','pct','change%']);
+  var iOpen = idx(['open']);
+  var iHigh = idx(['high']);
+  var iLow = idx(['low']);
+  var iTime = idx(['time','last trade','timestamp']);
+
+  if (iSym < 0 || iLast < 0){
+    futMsg('Could not find required columns (Symbol, Latest).', false);
+    return;
+  }
+
+  // Parser handles two notations:
+  //  - Decimal: "73.88", "73.88s", "+0.22", "-0.10"  (soy oil/meal)
+  //  - Ticks:   "635-6", "635-6s", "-22-2", "1177-0s" (grains: x + y/8)
+  function parseTickOrDecimal(raw){
+    if (raw === null || raw === undefined) return null;
+    var s = String(raw).trim().replace(/s$/, '');  // strip settlement flag
+    if (!s) return null;
+    // Detect tick notation: optional sign, digits, dash, digits (no decimal point)
+    var tickMatch = s.match(/^([+-]?)(\d+)-(\d+)$/);
+    if (tickMatch){
+      var sign = tickMatch[1] === '-' ? -1 : 1;
+      var whole = parseInt(tickMatch[2], 10);
+      var tick = parseInt(tickMatch[3], 10);
+      return sign * (whole + tick / 8);
+    }
+    // Plain decimal
+    var v = parseFloat(s);
+    return isNaN(v) ? null : v;
+  }
+
+  var rows = [];
+  for (var k = 1; k < lines.length; k++){
+    var parts = lines[k].split(delim).map(function(s){ return s.trim().replace(/^"|"$/g,''); });
+    if (parts.length < 2) continue;
+    var sym = parts[iSym].toUpperCase();
+    if (!sym) continue;
+    rows.push({
+      symbol: sym,
+      latest: parseTickOrDecimal(parts[iLast]),
+      change: iChg >= 0 ? (parseTickOrDecimal(parts[iChg]) || 0) : 0,
+      pctChange: iPct >= 0 ? parts[iPct].replace('%','').replace('+','') : '',
+      open: iOpen >= 0 ? parseTickOrDecimal(parts[iOpen]) : null,
+      high: iHigh >= 0 ? parseTickOrDecimal(parts[iHigh]) : null,
+      low: iLow >= 0 ? parseTickOrDecimal(parts[iLow]) : null,
+      time: iTime >= 0 ? parts[iTime] : ''
+    });
+  }
+
+  if (rows.length === 0){
+    futMsg('No data rows parsed.', false);
+    return;
+  }
+
+  _futParsedRows = rows;
+  futMsg('Parsed ' + rows.length + ' rows. Review preview and click Save.', true);
+  document.getElementById('fut-save-btn').style.display = 'inline-block';
+  renderFuturesPreview(rows);
+}
+
+function renderFuturesPreview(rows){
+  var prev = document.getElementById('fut-preview');
+  // Group by commodity
+  var groups = {};
+  rows.forEach(function(r){
+    var c = FUT_COMMODITIES.find(function(x){ return r.symbol.startsWith(x.prefix); });
+    var key = c ? c.prefix : 'OTHER';
+    if (!groups[key]) groups[key] = [];
+    groups[key].push(r);
+  });
+
+  var html = '<div style="background:var(--card);border:1px solid var(--border);border-radius:8px;padding:18px;"><div style="font-family:DM Mono,monospace;font-size:9px;color:var(--muted2);letter-spacing:0.14em;text-transform:uppercase;margin-bottom:14px;">Preview &mdash; ' + rows.length + ' contracts</div>';
+  html += renderFuturesGrid(groups);
+  html += '</div>';
+  prev.innerHTML = html;
+}
+
+function renderFuturesGrid(groups){
+  var html = '<div style="display:grid;grid-template-columns:repeat(auto-fit,minmax(280px,1fr));gap:14px;">';
+  FUT_COMMODITIES.forEach(function(c){
+    var rs = groups[c.prefix] || [];
+    if (rs.length === 0) return;
+    // Sort by month/year code from symbol
+    rs.sort(function(a, b){
+      var aTail = a.symbol.replace(c.prefix,'');
+      var bTail = b.symbol.replace(c.prefix,'');
+      var aM = aTail.charAt(0), aY = aTail.slice(1);
+      var bM = bTail.charAt(0), bY = bTail.slice(1);
+      if (aY !== bY) return parseInt(aY) - parseInt(bY);
+      var monthOrder = 'FGHJKMNQUVXZ';
+      return monthOrder.indexOf(aM) - monthOrder.indexOf(bM);
+    });
+
+    html += '<div style="background:var(--card2);border:1px solid var(--border);border-radius:6px;padding:12px 14px;">';
+    html += '<div style="font-family:DM Mono,monospace;font-size:9px;letter-spacing:0.12em;color:' + c.color + ';text-transform:uppercase;margin-bottom:8px;font-weight:600;display:flex;justify-content:space-between;align-items:baseline;">';
+    html += '<span>' + c.label + '</span><span style="color:var(--muted2);font-weight:400;letter-spacing:0.06em;">' + c.unit + '</span>';
+    html += '</div>';
+    html += '<div style="display:flex;flex-direction:column;gap:1px;">';
+    rs.forEach(function(r){
+      var tail = r.symbol.replace(c.prefix,'');
+      var monCode = tail.charAt(0);
+      var yrCode = tail.slice(1);
+      var monLabel = (FUT_MONTH_CODES[monCode] || monCode) + ' ' + yrCode;
+      var chg = r.change || 0;
+      var chgClass = chg > 0 ? 'teal' : (chg < 0 ? 'coral' : 'muted2');
+      var chgSign = chg > 0 ? '+' : '';
+      var pct = r.pctChange ? (parseFloat(r.pctChange).toFixed(2) + '%') : '';
+      var pctSign = parseFloat(r.pctChange) > 0 ? '+' : '';
+      html += '<div style="display:grid;grid-template-columns:60px 1fr auto auto;gap:8px;padding:5px 0;border-bottom:1px solid rgba(255,255,255,0.04);align-items:baseline;font-family:DM Mono,monospace;font-size:11px;">';
+      html += '<span style="color:var(--muted2);font-size:10px;">' + monLabel + '</span>';
+      html += '<span style="color:var(--text);font-weight:500;text-align:right;">' + (r.latest !== null ? r.latest.toFixed(2) : '\u2014') + '</span>';
+      html += '<span style="color:var(--' + chgClass + ');font-size:10px;min-width:48px;text-align:right;">' + chgSign + chg.toFixed(2) + '</span>';
+      html += '<span style="color:var(--' + chgClass + ');font-size:10px;min-width:54px;text-align:right;">' + pctSign + pct + '</span>';
+      html += '</div>';
+    });
+    html += '</div></div>';
+  });
+  html += '</div>';
+  return html;
+}
+
+async function saveFuturesSnapshot(){
+  if (!_futParsedRows || !_futParsedRows.length){
+    futMsg('Parse data first.', false);
+    return;
+  }
+  var btn = document.getElementById('fut-save-btn');
+  btn.disabled = true; btn.textContent = 'Saving...';
+
+  var payload = {
+    rows: _futParsedRows,
+    uploadedAt: new Date().toISOString()
+  };
+
+  // Upsert: delete old, insert new (keeps single latest record)
+  try {
+    await sb.from('posts').delete().eq('category', '_futures_snapshot');
+    var r = await sb.from('posts').insert({
+      title: '__FUTURES_SNAPSHOT__',
+      summary: 'Latest futures snapshot',
+      content: JSON.stringify(payload),
+      category: '_futures_snapshot'
+    });
+    btn.disabled = false; btn.textContent = '\u2705 Save Snapshot to Dashboard';
+    if (r.error){ futMsg('Error: ' + r.error.message, false); return; }
+    futMsg('Saved! Will appear on the dashboard next time you visit.', true);
+  } catch(e){
+    btn.disabled = false; btn.textContent = '\u2705 Save Snapshot to Dashboard';
+    futMsg('Error: ' + e.message, false);
+  }
+}
+
+// === Dashboard widget renderer ===
+async function loadFuturesSnapshot(){
+  var body = document.getElementById('futures-snap-body');
+  var tEl = document.getElementById('futures-snap-time');
+  if (!body) return;
+  body.innerHTML = '<div class="spin">Loading...</div>';
+
+  try {
+    var r = await sb.from('posts').select('content,created_at').eq('category', '_futures_snapshot').order('created_at',{ascending:false}).limit(1);
+    if (r.error) throw new Error(r.error.message);
+    if (!r.data || r.data.length === 0){
+      body.innerHTML = '<div style="padding:18px;text-align:center;font-family:DM Mono,monospace;font-size:10px;color:var(--muted2);">No snapshot uploaded yet.</div>';
+      if (tEl) tEl.textContent = '';
+      return;
+    }
+    var payload;
+    try { payload = JSON.parse(r.data[0].content); }
+    catch(e){
+      body.innerHTML = '<div style="padding:18px;text-align:center;color:var(--coral);font-family:DM Mono,monospace;font-size:10px;">Snapshot data corrupt.</div>';
+      return;
+    }
+
+    if (tEl){
+      var d = new Date(payload.uploadedAt || r.data[0].created_at);
+      tEl.textContent = 'Uploaded ' + d.toLocaleString('en-GB',{day:'2-digit',month:'short',hour:'2-digit',minute:'2-digit',timeZone:'Europe/London'}) + ' &middot; ' + (payload.rows.length) + ' contracts';
+      tEl.innerHTML = tEl.textContent;
+    }
+
+    // Group and render
+    var groups = {};
+    payload.rows.forEach(function(row){
+      var c = FUT_COMMODITIES.find(function(x){ return row.symbol.startsWith(x.prefix); });
+      var key = c ? c.prefix : 'OTHER';
+      if (!groups[key]) groups[key] = [];
+      groups[key].push(row);
+    });
+
+    body.innerHTML = renderFuturesGrid(groups);
+  } catch(e){
+    body.innerHTML = '<div style="padding:18px;text-align:center;color:var(--coral);font-family:DM Mono,monospace;font-size:10px;">Failed to load: ' + e.message + '</div>';
+  }
+}
+/* End Futures Snapshot */
 
 </script>
 
