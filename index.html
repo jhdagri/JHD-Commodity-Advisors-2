@@ -2885,13 +2885,18 @@ async function loadPosts(category){
     var n = counts[p.id]||0;
     var isPrem = p.summary && /^\[PREMIUM(:\d+)?\]/.test(p.summary);
     var displaySum = isPrem ? p.summary.replace(/^\[PREMIUM(:\d+)?\]\s*/,'') : (p.summary||'');
+    var cardBushelCost = 100;
+    if(isPrem){
+      var cardCostMatch = p.summary.match(/^\[PREMIUM:(\d+)\]/);
+      if(cardCostMatch) cardBushelCost = parseInt(cardCostMatch[1],10);
+    }
     var card = document.createElement('div');
     var postCardAgeMs = Date.now() - new Date(p.created_at).getTime();
     var postCardAgeDays = postCardAgeMs / (1000 * 60 * 60 * 24);
     var cardFreeByAge = postCardAgeDays >= 5;
     card.className = 'post-card' + (p.is_pinned?' pinned':'') + (isPrem && !cardFreeByAge?' premium':'');
     card.innerHTML = (p.is_pinned?'<div class="pin-badge">&#128204; Pinned</div>':'')
-      +'<div class="card-date">'+fmtDate(p.created_at)+(isPrem && !cardFreeByAge?'<span class="premium-badge">&#128274; Premium</span>':(isPrem && cardFreeByAge?'<span class="premium-badge" style="background:rgba(46,207,170,0.15);color:var(--teal);border-color:var(--teal);">Free</span>':''))+'</div>'
+      +'<div class="card-date">'+fmtDate(p.created_at)+(isPrem && !cardFreeByAge?'<span class="premium-badge">&#128274; Premium &middot; '+cardBushelCost+' bu</span>':(isPrem && cardFreeByAge?'<span class="premium-badge" style="background:rgba(46,207,170,0.15);color:var(--teal);border-color:var(--teal);">Free</span>':''))+'</div>'
       +'<h3>'+esc(p.title)+'</h3>'
       +'<p class="card-summary">'+esc(displaySum)+'</p>'
       +'<div class="card-foot"><span class="ccount">&#128172; '+n+' comment'+(n!==1?'s':'')+'</span><span class="readmore">Read -></span></div>';
@@ -2930,7 +2935,10 @@ async function loadDetail(postId, category){
     if(costMatch) bushelCost = parseInt(costMatch[1],10);
   }
     // Commentary posts older than 5 days become free to read
-  // Research posts remain premium regardless of age
+  // 5-day free reversion applies ONLY to:
+  //   - Market Commentary (wheat, corn, soy) -- time-sensitive market views
+  //   - CFTC Weekly Analysis -- ties to the weekly COT release cycle
+  // All other research posts (Technicals, Options, FOB, Macro, etc.) stay premium permanently
   var timeSensitiveCategories = ['commentary-wheat','commentary-corn','commentary-soy','research-cftc'];
   var isTimeSensitive = timeSensitiveCategories.indexOf(post.category) > -1;
   var postAgeMs = Date.now() - new Date(post.created_at).getTime();
@@ -2938,12 +2946,31 @@ async function loadDetail(postId, category){
   var isFreeByAge = isTimeSensitive && postAgeDays >= 5;
 
   if(isPremium && !isAdmin && !isFreeByAge){
-    var bal = window._bushelBalance || 0;
-    if(bal < bushelCost){
-      var daysLeft = Math.ceil(5 - postAgeDays);
-      wrap.innerHTML = '<div class="premium-gate"><div class="pg-icon">&#128274;</div><h3>Premium Content</h3><p>This post requires <strong style="color:var(--gold);">' + bushelCost + ' Bushels</strong> to read. It will become <strong style="color:var(--teal);">free in ' + daysLeft + ' day' + (daysLeft===1?'':'s') + '</strong>, or unlock it now.</p><div class="pg-cost">' + bushelCost + ' bu required &mdash; you have ' + bal + ' bu</div><div style="display:flex;gap:10px;justify-content:center;flex-wrap:wrap;"><button class="btn btn-gold" onclick="openGrainStore()" style="padding:10px 22px;">&#127807; Buy Bushels</button><button class="btn btn-ghost" onclick="openBushelPanel()" style="padding:10px 22px;">How to Earn Free &#8250;</button></div></div>';
+    // Non-signed-in users: prompt to sign in first (can't unlock without an account)
+    if(!currentUser){
+      wrap.innerHTML = '<div class="premium-gate"><div class="pg-icon">&#128274;</div><h3>Premium Content</h3><p>This post requires <strong style="color:var(--gold);">' + bushelCost + ' Bushels</strong> to read. Sign in to your free account to unlock.</p><div style="display:flex;gap:10px;justify-content:center;flex-wrap:wrap;margin-top:18px;"><button class="btn btn-navy" onclick="showAuthPage()" style="padding:10px 22px;">Sign In / Join Free</button></div></div>';
       return;
     }
+    // Check if user has already unlocked this post (don't double-charge)
+    var unlockedR = await sb.from('post_unlocks').select('id').eq('user_id',currentUser.id).eq('post_id',postId).maybeSingle();
+    var alreadyUnlocked = !!(unlockedR && unlockedR.data);
+
+    if(!alreadyUnlocked){
+      var bal = window._bushelBalance || 0;
+      if(bal < bushelCost){
+        // Not enough bushels - show paywall
+        var daysLeft = isTimeSensitive ? Math.ceil(5 - postAgeDays) : null;
+        var freeMsg = daysLeft ? '<p>It will become <strong style="color:var(--teal);">free in ' + daysLeft + ' day' + (daysLeft===1?'':'s') + '</strong>, or unlock it now.</p>' : '';
+        wrap.innerHTML = '<div class="premium-gate"><div class="pg-icon">&#128274;</div><h3>Premium Content</h3><p>This post requires <strong style="color:var(--gold);">' + bushelCost + ' Bushels</strong> to read.</p>' + freeMsg + '<div class="pg-cost">' + bushelCost + ' bu required &mdash; you have ' + bal + ' bu</div><div style="display:flex;gap:10px;justify-content:center;flex-wrap:wrap;"><button class="btn btn-gold" onclick="openGrainStore()" style="padding:10px 22px;">&#127807; Buy Bushels</button><button class="btn btn-ghost" onclick="openBushelPanel()" style="padding:10px 22px;">How to Earn Free &#8250;</button></div></div>';
+        return;
+      }
+
+      // User has enough - show unlock confirmation prompt
+      var confirmHtml = '<div class="premium-gate"><div class="pg-icon">&#128274;</div><h3>Unlock Premium Post</h3><p>This post costs <strong style="color:var(--gold);">' + bushelCost + ' Bushels</strong> to unlock. You have <strong style="color:var(--teal);">' + bal + ' bu</strong> available.</p><p class="muted" style="font-size:13px;">Once unlocked you have permanent access &mdash; you won\'t be charged again.</p><div style="display:flex;gap:10px;justify-content:center;flex-wrap:wrap;margin-top:18px;"><button class="btn btn-gold" id="confirm-unlock-btn" onclick="confirmUnlockPost(\''+postId+'\','+bushelCost+')" style="padding:10px 22px;">&#127807; Unlock for ' + bushelCost + ' bu</button><button class="btn btn-ghost" onclick="closeDetail()" style="padding:10px 22px;">Cancel</button></div></div>';
+      wrap.innerHTML = confirmHtml;
+      return;
+    }
+    // alreadyUnlocked === true: fall through and show content
   }
 
   var cr = await sb.from('comments').select('*').eq('post_id',postId).eq('is_visible',true).order('created_at',{ascending:true});
@@ -2992,6 +3019,45 @@ async function loadDetail(postId, category){
     contentHtml = '<div class="post-kicker">'+fmtDate(post.created_at)+'</div><h1>'+esc(post.title)+'</h1>'+standfirst+'<div class="post-body">'+post.content+'</div>';
   }
   wrap.innerHTML = contentHtml+postReactBar+'<div class="comments-wrap"><div class="section-title">Discussion</div><div id="comments-area">'+commHtml+'</div><div class="comment-form-card"><h3>Leave a Comment</h3><div class="field"><label>Your name <span style="font-weight:400;color:var(--muted)">(optional)</span></label><input type="text" id="c-name" placeholder="e.g. John T."></div><div class="field"><label>Comment</label><textarea id="c-text" placeholder="Share your view on this analysis..."></textarea></div><button class="btn btn-navy" onclick="postComment()">Post Comment</button><div id="c-msg" class="hidden msg-box" style="margin-top:10px;"></div></div></div>';
+}
+
+async function confirmUnlockPost(postId, cost){
+  var btn = document.getElementById('confirm-unlock-btn');
+  if(btn){ btn.disabled = true; btn.textContent = 'Unlocking...'; }
+  if(!currentUser){ showAuthPage(); return; }
+
+  try {
+    // 1. Re-check balance atomically by reading current
+    var balR = await sb.from('user_bushels').select('balance').eq('user_id',currentUser.id).maybeSingle();
+    var currentBal = (balR.data && balR.data.balance) || 0;
+    if(currentBal < cost){
+      alert('Insufficient bushels. Balance: ' + currentBal + ' bu, needed: ' + cost + ' bu.');
+      if(btn){ btn.disabled = false; btn.innerHTML = '&#127807; Unlock for ' + cost + ' bu'; }
+      return;
+    }
+
+    // 2. Deduct bushels
+    var newBal = currentBal - cost;
+    var updR = await sb.from('user_bushels').update({balance:newBal}).eq('user_id',currentUser.id);
+    if(updR.error){ throw new Error('Could not deduct bushels: ' + updR.error.message); }
+
+    // 3. Record the unlock
+    var insR = await sb.from('post_unlocks').insert({user_id:currentUser.id, post_id:postId, bushels_spent:cost});
+    if(insR.error){
+      // Rollback bushels if unlock record fails
+      await sb.from('user_bushels').update({balance:currentBal}).eq('user_id',currentUser.id);
+      throw new Error('Could not record unlock: ' + insR.error.message);
+    }
+
+    // 4. Refresh local balance + load post
+    window._bushelBalance = newBal;
+    loadBushelBalance();
+    loadDetail(postId, currentPostTab);
+  } catch(e) {
+    console.error('confirmUnlockPost', e);
+    alert('Error unlocking post: ' + e.message);
+    if(btn){ btn.disabled = false; btn.innerHTML = '&#127807; Unlock for ' + cost + ' bu'; }
+  }
 }
 
 function closeDetail(){
