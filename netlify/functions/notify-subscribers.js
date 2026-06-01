@@ -103,7 +103,6 @@ exports.handler = async function(event) {
     + '<div style="background:#0a0c10;padding:18px 32px;display:flex;align-items:center;justify-content:space-between;border-bottom:1px solid #1e2230;">'
     + '<div><span style="font-family:Georgia,serif;font-size:16px;font-weight:700;color:#ffffff;">JHD </span><span style="font-family:Georgia,serif;font-size:16px;font-weight:700;color:#ffb347;">Commodity Advisors</span></div>'
     + '<div style="display:inline-flex;align-items:center;gap:7px;background:#141720;border:1px solid #2a2f40;border-radius:6px;padding:6px 14px;">'
-    + '<span style="font-size:11px;">&#128273;</span>'
     + '<span style="font-family:monospace;font-size:10px;font-weight:600;color:#ffb347;letter-spacing:0.16em;text-transform:uppercase;">The Bushel</span>'
     + '</div>'
     + '</div>'
