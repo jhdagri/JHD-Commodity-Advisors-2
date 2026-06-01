@@ -2389,6 +2389,12 @@ padding:2px 8px;border-radius:3px;margin-bottom:6px;letter-spacing:0.06em;text-t
           </div>
         </div>
       </div>
+      <div style="display:flex;align-items:center;gap:14px;margin-bottom:10px;">
+        <label style="display:flex;align-items:center;gap:7px;font-size:12px;color:var(--muted);cursor:pointer;">
+          <input type="checkbox" id="p-notify-subs" checked style="width:14px;height:14px;accent-color:var(--teal);cursor:pointer;">
+          Notify subscribers by email
+        </label>
+      </div>
       <div class="publish-row">
         <button class="btn btn-navy" id="pub-btn" onclick="publishPost()" style="padding:12px 28px;font-size:15px;">Publish Post</button>
         <div id="pub-msg" class="hidden msg-box" style="margin:0;flex:1;"></div>
@@ -3302,6 +3308,21 @@ async function publishPost(){
   if(premCb) premCb.checked=false;
   var costCb=document.getElementById('p-bushel-cost'); if(costCb) costCb.value=100;
   pubMsg('Published to '+category+'!',true);
+  var notifyCb = document.getElementById('p-notify-subs');
+  if(notifyCb && notifyCb.checked){
+    try{
+      var nResp = await fetch('/.netlify/functions/notify-subscribers',{
+        method:'POST',
+        headers:{'Content-Type':'application/json'},
+        body:JSON.stringify({title:title,summary:summary,category:category})
+      });
+      var nData = await nResp.json();
+      if(nResp.ok){ pubMsg('Published + '+( nData.sent||0)+' subscribers notified!',true); }
+      else{ pubMsg('Published but notification failed: '+(nData.error||'unknown'),false); }
+    } catch(e){
+      pubMsg('Published but notification error: '+e.message,false);
+    }
+  }
 }
 function pubMsg(text,ok){
   var el=document.getElementById('pub-msg');
