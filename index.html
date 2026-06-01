@@ -2155,13 +2155,17 @@ padding:2px 8px;border-radius:3px;margin-bottom:6px;letter-spacing:0.06em;text-t
     <div class="pp-level" id="pp-level-display"></div>
     <div class="pp-section">
       <div class="pp-section-title">Edit Profile</div>
+      <div style="font-size:12px;color:var(--muted);line-height:1.6;margin-bottom:16px;padding:12px;background:var(--card2);border-radius:6px;border-left:3px solid var(--gold);">
+        <strong style="color:var(--gold);display:block;margin-bottom:4px;">Display Name</strong> Your real name, shown only on your personal dashboard as a welcome greeting.<br><br>
+        <strong style="color:var(--teal);display:block;margin-bottom:4px;">Username</strong> Your public handle used on comments and site interactions. Keeps your identity private if desired. Can be changed once from the auto-generated version, then locked permanently.
+      </div>
       <div class="pp-field"><label>Display Name</label><input type="text" id="pp-display-name" placeholder="e.g. James Day"></div>
-      <div class="pp-field"><label>Username</label><input type="text" id="pp-username-input" placeholder="e.g. GrainTrader47" maxlength="20"></div>
+      <div class="pp-field" id="pp-username-field"><label>Username <span id="pp-username-lock-icon"></span></label><input type="text" id="pp-username-input" placeholder="e.g. GrainTrader47" maxlength="20"></div>
       <div class="pp-field"><label>Job Title</label><input type="text" id="pp-job-title" placeholder="e.g. Grain Merchandiser"></div>
       <div class="pp-field"><label>Company</label><input type="text" id="pp-company" placeholder="e.g. Cargill, TP ICAP"></div>
       <div class="pp-save-row">
         <button class="btn btn-navy" onclick="saveProfileChanges()" style="flex:1;">Save Changes</button>
-        <button class="btn btn-ghost" onclick="viewOwnPublicProfile()" style="flex:1;">View Public Profile</button>
+        <button class="btn btn-gold" onclick="viewOwnPublicProfile()" style="flex:1;font-size:13px;">&#128100; View Profile</button>
       </div>
       <div id="pp-msg" class="hidden msg-box" style="margin-top:10px;"></div>
     </div>
@@ -3092,7 +3096,7 @@ async function loadDetail(postId, category){
     var standfirst = displaySummary ? '<div class="post-standfirst">'+esc(displaySummary)+'</div>' : '';
     contentHtml = '<div class="post-kicker">'+fmtDate(post.created_at)+'</div><h1>'+esc(post.title)+'</h1>'+standfirst+'<div class="post-body">'+post.content+'</div>';
   }
-  wrap.innerHTML = contentHtml+postReactBar+'<div class="comments-wrap"><div class="section-title">Discussion</div><div id="comments-area">'+commHtml+'</div><div class="comment-form-card"><h3>Leave a Comment</h3><div id="c-posting-as" style="font-family:monospace;font-size:10px;color:var(--muted2);letter-spacing:0.08em;margin-bottom:14px;"></div><div class="field"><label>Comment</label><textarea id="c-text" placeholder="Share your view on this analysis..."></textarea></div><button class="btn btn-navy" onclick="postComment()">Post Comment</button><div id="c-msg" class="hidden msg-box" style="margin-top:10px;"></div></div></div>';
+  wrap.innerHTML = contentHtml+postReactBar+'<div class="comments-wrap"><div class="section-title">Discussion</div><div id="comments-area">'+commHtml+'</div><div class="comment-form-card"><h3>Leave a Comment</h3><div id="c-posting-as" style="font-family:monospace;font-size:13px;color:var(--teal);letter-spacing:0.04em;margin-bottom:16px;padding:8px 12px;background:rgba(46,207,170,0.08);border:1px solid rgba(46,207,170,0.2);border-radius:6px;"></div><div class="field"><label>Comment</label><textarea id="c-text" placeholder="Share your view on this analysis..."></textarea></div><button class="btn btn-navy" onclick="postComment()">Post Comment</button><div id="c-msg" class="hidden msg-box" style="margin-top:10px;"></div></div></div>';
   // Populate 'posting as' label with username
   if(currentUser){ sb.from('profiles').select('username,display_name').eq('id',currentUser.id).maybeSingle().then(function(r){ var p=r.data||{}; var uname=p.username||p.display_name||(currentUser.email||'').split('@')[0]; var lbl=document.getElementById('c-posting-as'); if(lbl) lbl.textContent='Posting as @'+uname; }); }
 }
@@ -3728,7 +3732,20 @@ async function renderProfilePanel(){
   var level = window._bushelLevel ? window._bushelLevel.icon + ' ' + window._bushelLevel.name : 'Merchandiser';
   document.getElementById('pp-level-display').textContent = level;
   document.getElementById('pp-display-name').value = p.display_name || '';
-  document.getElementById('pp-username-input').value = p.username || '';
+  var unInput = document.getElementById('pp-username-input');
+  var unLockIcon = document.getElementById('pp-username-lock-icon');
+  unInput.value = p.username || '';
+  if(p.username_locked){
+    unInput.disabled = true;
+    unInput.style.opacity = '0.5';
+    unInput.style.cursor = 'not-allowed';
+    if(unLockIcon) unLockIcon.innerHTML = '<span style="color:var(--gold);font-size:11px;margin-left:6px;">&#128274; Locked</span>';
+  } else {
+    unInput.disabled = false;
+    unInput.style.opacity = '';
+    unInput.style.cursor = '';
+    if(unLockIcon) unLockIcon.innerHTML = '<span style="color:var(--teal);font-size:11px;margin-left:6px;">(1 change remaining)</span>';
+  }
   document.getElementById('pp-job-title').value = p.job_title || '';
   document.getElementById('pp-company').value = p.company || '';
   document.getElementById('pp-email-display').textContent = currentUser.email;
@@ -3746,11 +3763,23 @@ async function saveProfileChanges(){
   if(username && !/^[a-zA-Z0-9_]+$/.test(username)){
     msgEl.textContent='Username: letters, numbers and _ only.'; msgEl.className='msg-box msg-error'; msgEl.classList.remove('hidden'); return;
   }
-  var r = await sb.from('profiles').upsert({id:currentUser.id, display_name:displayName||username, username:username, job_title:jobTitle||null, company:company||null});
+  // Check current lock state before saving
+  var curR = await sb.from('profiles').select('username,username_locked').eq('id',currentUser.id).maybeSingle();
+  var curP = curR.data || {};
+  var alreadyLocked = !!curP.username_locked;
+  var usernameChanged = username && curP.username && username !== curP.username;
+  if(alreadyLocked && usernameChanged){
+    msgEl.textContent='Username is locked and cannot be changed.'; msgEl.className='msg-box msg-error'; msgEl.classList.remove('hidden'); return;
+  }
+  var lockNow = !alreadyLocked && usernameChanged;
+  var updateData = {id:currentUser.id, display_name:displayName||username, username:username, job_title:jobTitle||null, company:company||null};
+  if(lockNow) updateData.username_locked = true;
+  var r = await sb.from('profiles').upsert(updateData);
   if(r.error){ msgEl.textContent='Error: '+r.error.message; msgEl.className='msg-box msg-error'; msgEl.classList.remove('hidden'); return; }
-  msgEl.textContent='Profile updated!'; msgEl.className='msg-box msg-ok'; msgEl.classList.remove('hidden');
+  msgEl.textContent = lockNow ? 'Username saved and locked permanently.' : 'Profile updated!';
+  msgEl.className='msg-box msg-ok'; msgEl.classList.remove('hidden');
   document.getElementById('pp-username-display').textContent = '@' + (username || 'member');
-  setTimeout(function(){ msgEl.classList.add('hidden'); }, 3000);
+  setTimeout(function(){ msgEl.classList.add('hidden'); renderProfilePanel(); }, 3000);
 }
 function viewOwnPublicProfile(){
   if(!currentUser) return;
