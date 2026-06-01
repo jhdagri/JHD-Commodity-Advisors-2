@@ -92,22 +92,51 @@ exports.handler = async function(event) {
   var emails = subscribers.map(function(s) { return s.email; }).filter(Boolean);
 
   // 2 — Build the email HTML
-  var emailHtml = '<div style="font-family:\'DM Sans\',Arial,sans-serif;max-width:600px;margin:0 auto;background:#0A2445;color:#ffffff;border-radius:8px;overflow:hidden;">'
-    + '<div style="padding:32px 40px;border-bottom:1px solid rgba(255,255,255,0.1);">'
-    + '<div style="font-size:11px;letter-spacing:0.15em;text-transform:uppercase;color:#0D7377;font-weight:700;margin-bottom:8px;">The Bushel</div>'
-    + '<div style="font-size:11px;letter-spacing:0.12em;text-transform:uppercase;color:#8899aa;">JHD Commodity Advisors</div>'
+  var isPremiumPost = /^\[PREMIUM/.test(postSummary || '');
+  var premiumCostMatch = (postSummary || '').match(/^\[PREMIUM:(\d+)\]/);
+  var premiumCost = premiumCostMatch ? premiumCostMatch[1] : null;
+  var accessLabel = isPremiumPost ? ('&#128274; Premium' + (premiumCost ? ' &middot; ' + premiumCost + ' bu' : '')) : 'Free';
+  var accessColor = isPremiumPost ? '#ffb347' : '#2ecfaa';
+  var pubDate = new Date().toLocaleDateString('en-GB', {day:'2-digit', month:'short', year:'numeric'});
+
+  var emailHtml = '<div style="font-family:Arial,sans-serif;max-width:560px;margin:0 auto;border-radius:8px;overflow:hidden;border:1px solid #1e2230;">'
+    + '<div style="background:#0a0c10;padding:18px 32px;display:flex;align-items:center;justify-content:space-between;border-bottom:1px solid #1e2230;">'
+    + '<div><span style="font-family:Georgia,serif;font-size:16px;font-weight:700;color:#ffffff;">JHD </span><span style="font-family:Georgia,serif;font-size:16px;font-weight:700;color:#ffb347;">Commodity Advisors</span></div>'
+    + '<div style="display:inline-flex;align-items:center;gap:7px;background:#141720;border:1px solid #2a2f40;border-radius:6px;padding:6px 14px;">'
+    + '<span style="font-size:11px;">&#128273;</span>'
+    + '<span style="font-family:monospace;font-size:10px;font-weight:600;color:#ffb347;letter-spacing:0.16em;text-transform:uppercase;">The Bushel</span>'
     + '</div>'
-    + '<div style="padding:40px;">'
-    + '<div style="font-size:10px;letter-spacing:0.12em;text-transform:uppercase;color:#0D7377;margin-bottom:16px;">' + categoryLabel + '</div>'
-    + '<h1 style="font-size:24px;font-weight:700;color:#ffffff;margin:0 0 16px 0;line-height:1.3;">' + postTitle + '</h1>'
-    + (postSummary ? '<p style="font-size:15px;color:#8899aa;line-height:1.6;margin:0 0 32px 0;">' + postSummary + '</p>' : '')
-    + '<a href="' + postUrl + '" style="display:inline-block;background:#0D7377;color:#ffffff;text-decoration:none;padding:12px 28px;border-radius:6px;font-size:13px;font-weight:600;letter-spacing:0.05em;">Read on The Bushel</a>'
     + '</div>'
-    + '<div style="padding:24px 40px;border-top:1px solid rgba(255,255,255,0.1);font-size:11px;color:#556677;">'
-    + 'You are receiving this because you subscribed to The Bushel. '
-    + '<a href="' + postUrl + '" style="color:#0D7377;">Unsubscribe</a>'
+    + '<div style="background:#0d0f12;padding:32px 32px 28px;">'
+    + '<div style="font-family:monospace;font-size:9px;color:#0D7377;letter-spacing:0.18em;text-transform:uppercase;margin-bottom:12px;">' + categoryLabel + '</div>'
+    + '<h1 style="font-family:Georgia,serif;font-size:22px;font-weight:700;color:#e8eaf0;margin:0 0 14px;line-height:1.25;">' + postTitle + '</h1>'
+    + '<div style="height:1px;background:linear-gradient(90deg,#ffb347 0%,transparent 65%);margin-bottom:18px;"></div>'
+    + (postSummary ? '<p style="font-size:14px;color:#8890a4;line-height:1.65;margin:0 0 28px;">' + postSummary + '</p>' : '<div style="margin-bottom:28px;"></div>')
+    + '<a href="' + postUrl + '" style="display:inline-block;background:#ffb347;color:#0d0f12;text-decoration:none;padding:11px 24px;border-radius:6px;font-size:11px;font-weight:700;letter-spacing:0.1em;text-transform:uppercase;font-family:monospace;">Read on The Bushel &rarr;</a>'
+    + '</div>'
+    + '<div style="background:#141720;padding:15px 32px;display:flex;border-top:1px solid rgba(255,255,255,0.05);">'
+    + '<div style="flex:1;border-right:1px solid rgba(255,255,255,0.05);padding-right:16px;">'
+    + '<div style="font-family:monospace;font-size:9px;color:#555f78;text-transform:uppercase;letter-spacing:0.1em;margin-bottom:3px;">Category</div>'
+    + '<div style="font-family:monospace;font-size:11px;color:#8890a4;">' + categoryLabel + '</div>'
+    + '</div>'
+    + '<div style="flex:1;border-right:1px solid rgba(255,255,255,0.05);padding:0 16px;">'
+    + '<div style="font-family:monospace;font-size:9px;color:#555f78;text-transform:uppercase;letter-spacing:0.1em;margin-bottom:3px;">Published</div>'
+    + '<div style="font-family:monospace;font-size:11px;color:#8890a4;">' + pubDate + '</div>'
+    + '</div>'
+    + '<div style="flex:1;padding-left:16px;">'
+    + '<div style="font-family:monospace;font-size:9px;color:#555f78;text-transform:uppercase;letter-spacing:0.1em;margin-bottom:3px;">Access</div>'
+    + '<div style="font-family:monospace;font-size:11px;color:' + accessColor + ';">' + accessLabel + '</div>'
+    + '</div>'
+    + '</div>'
+    + '<div style="background:#090b0e;padding:13px 32px;border-top:1px solid #1a1d26;">'
+    + '<p style="font-size:10px;color:#2e3344;margin:0;font-family:monospace;">'
+    + 'You subscribed to The Bushel &middot; '
+    + '<a href="' + postUrl + '" style="color:#555f78;text-decoration:underline;">Unsubscribe</a>'
+    + ' &middot; <a href="' + postUrl + '" style="color:#555f78;text-decoration:underline;">thebushel.jhdcommodityadvisors.com</a>'
+    + '</p>'
     + '</div>'
     + '</div>';
+
 
   // 3 — Send via Resend (batch to all subscribers)
   var resendResp;
