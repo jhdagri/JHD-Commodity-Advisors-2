@@ -1321,6 +1321,16 @@ padding:2px 8px;border-radius:3px;margin-bottom:6px;letter-spacing:0.06em;text-t
     </div>
   </div>
 
+  <div id="tab-profile" class="hidden">
+    <header style="background:var(--bg);border-bottom:1px solid var(--border);">
+      <div style="width:100%;padding:12px 32px;display:flex;align-items:center;gap:12px;">
+        <button class="btn btn-navy" onclick="closeProfile()" style="padding:7px 16px;font-size:13px;">Back</button>
+        <span style="font-size:13px;color:var(--muted);">Member Profile</span>
+      </div>
+    </header>
+    <div id="pub-profile-content"><div class="spin">Loading...</div></div>
+  </div>
+
   <div id="tab-commentary" class="protected">
     <div class="page-wrap">
       <div class="page-heading">
@@ -2064,15 +2074,6 @@ padding:2px 8px;border-radius:3px;margin-bottom:6px;letter-spacing:0.06em;text-t
   </div>
 
   <!-- Public Profile -->
-  <div id="tab-profile" class="hidden">
-    <header style="background:var(--bg);border-bottom:1px solid var(--border);">
-      <div style="width:100%;padding:12px 32px;display:flex;align-items:center;gap:12px;">
-        <button class="btn btn-navy" onclick="closeProfile()" style="padding:7px 16px;font-size:13px;">Back</button>
-        <span style="font-size:13px;color:var(--muted);">Member Profile</span>
-      </div>
-    </header>
-    <div id="pub-profile-content"><div class="spin">Loading...</div></div>
-  </div>
 
     <!-- RECENT PUBLICATIONS STRIP + FOOTER — always visible outside all tabs -->
   <div class="recent-strip-wrap" id="recent-strip-wrap">
@@ -3091,7 +3092,7 @@ async function loadDetail(postId, category){
     var standfirst = displaySummary ? '<div class="post-standfirst">'+esc(displaySummary)+'</div>' : '';
     contentHtml = '<div class="post-kicker">'+fmtDate(post.created_at)+'</div><h1>'+esc(post.title)+'</h1>'+standfirst+'<div class="post-body">'+post.content+'</div>';
   }
-  wrap.innerHTML = contentHtml+postReactBar+'<div class="comments-wrap"><div class="section-title">Discussion</div><div id="comments-area">'+commHtml+'</div><div class="comment-form-card"><h3>Leave a Comment</h3><div class="field"><label>Your name <span style="font-weight:400;color:var(--muted)">(optional)</span></label><input type="text" id="c-name" placeholder="e.g. John T."></div><div class="field"><label>Comment</label><textarea id="c-text" placeholder="Share your view on this analysis..."></textarea></div><button class="btn btn-navy" onclick="postComment()">Post Comment</button><div id="c-msg" class="hidden msg-box" style="margin-top:10px;"></div></div></div>';
+  wrap.innerHTML = contentHtml+postReactBar+'<div class="comments-wrap"><div class="section-title">Discussion</div><div id="comments-area">'+commHtml+'</div><div class="comment-form-card"><h3>Leave a Comment</h3><div class="field"><label>Comment</label><textarea id="c-text" placeholder="Share your view on this analysis..."></textarea></div><button class="btn btn-navy" onclick="postComment()">Post Comment</button><div id="c-msg" class="hidden msg-box" style="margin-top:10px;"></div></div></div>';
 }
 
 async function confirmUnlockPost(postId, cost){
@@ -3265,7 +3266,7 @@ async function postReply(parentId){
   var name = 'Anonymous';
   try{
     var pr = await sb.from('profiles').select('username,display_name').eq('id',currentUser.id).maybeSingle();
-    if(pr.data) name = pr.data.display_name || pr.data.username || (currentUser.email || '').split('@')[0] || 'Anonymous';
+    if(pr.data) name = pr.data.username || pr.data.display_name || (currentUser.email || '').split('@')[0] || 'Anonymous';
     if(name && name.length > 0) name = name.charAt(0).toUpperCase() + name.slice(1);
   } catch(e){}
   var r = await sb.from('comments').insert({post_id:currentPostId, author_name:name, content:content, is_visible:true, parent_id:parentId});
@@ -3275,8 +3276,14 @@ async function postReply(parentId){
 }
 
 async function postComment(){
-  var name = (document.getElementById('c-name').value.trim())||'Anonymous';
   var content = document.getElementById('c-text').value.trim();
+  var name = 'Anonymous';
+  if(currentUser){
+    try{
+      var _pr = await sb.from('profiles').select('display_name,username').eq('id',currentUser.id).maybeSingle();
+      if(_pr.data) name = _pr.data.username || _pr.data.display_name || currentUser.email.split('@')[0] || 'Anonymous';
+    } catch(e){}
+  }
   var msgEl = document.getElementById('c-msg');
   if(!content){ msgEl.textContent='Please write a comment.'; msgEl.className='msg-box msg-error'; msgEl.classList.remove('hidden'); return; }
   var wordCount = content.trim().split(/\s+/).filter(function(w){ return w.length>0; }).length;
@@ -3765,9 +3772,9 @@ function closeOnboardingModal(){
 /* ===== PUBLIC PROFILE ===== */
 async function loadPublicProfile(userId){
   window._prevProfileTab = window._activeTab || 'commentary';
-  ['commentary','research','futures','services','contact','about','exports','wasde','cftc','commoditymap','weather','options','fob','freight','technicals','detail'].forEach(function(t){
+  ['dashboard','commentary','research','futures','services','contact','about','detail','exports','wasde','cftc','commoditymap','weather','options','fob','freight','technicals','sentiment'].forEach(function(t){
     var el = document.getElementById('tab-'+t);
-    if(el) el.classList.add('hidden');
+    if(el){ el.classList.add('hidden'); if(t==='commoditymap'||t==='cftc') el.style.display='none'; }
   });
   document.getElementById('tab-profile').classList.remove('hidden');
   var wrap = document.getElementById('pub-profile-content');
