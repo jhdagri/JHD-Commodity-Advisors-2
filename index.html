@@ -91,7 +91,7 @@
     .brand-jhd { color:var(--text); }
     .brand-ca { color:var(--gold); font-weight:500; }
     .topbar-right { display:flex; align-items:center; gap:10px; }
-    .user-chip { font-size:12px; color:rgba(255,255,255,0.5); max-width:180px; overflow:hidden; text-overflow:ellipsis; white-space:nowrap; }
+    .user-chip { font-size:11px; font-weight:600; color:var(--text); background:var(--card); border:1px solid var(--border2); border-radius:6px; padding:6px 14px; cursor:pointer; letter-spacing:0.04em; white-space:nowrap; transition:border-color 0.15s,background 0.15s; font-family:"DM Sans",sans-serif; }
 
     /* ===== SECTION NAV ===== */
     .section-nav { background:#0a0c10; border-bottom:1px solid var(--border); position:sticky; top:58px; z-index:190; }
@@ -1146,7 +1146,7 @@ padding:2px 8px;border-radius:3px;margin-bottom:6px;letter-spacing:0.06em;text-t
         <span></span><span></span><span></span>
       </button>
       <div class="topbar-right">
-        <span class="user-chip" id="app-chip" onclick="openProfilePanel()" style="cursor:pointer;" title="My Profile"></span>
+        <span class="user-chip" id="app-chip" onclick="openProfilePanel()" onmouseover="this.style.borderColor='var(--blue)'" onmouseout="this.style.borderColor=''" title="My Profile">&#128100; Profile</span>
         <div class="bushel-chip hidden" id="bushel-chip" onclick="openBushelPanel()">
           <span class="bu-icon">🌾</span>
           <span class="bu-balance" id="topbar-bu-balance">0 bu</span>
@@ -2771,7 +2771,7 @@ function showAppPage(){
   var adminBtn = document.getElementById('admin-btn');
   if(adminBtn) adminBtn.classList.toggle('hidden', !isAdmin);
   var chip = document.getElementById('app-chip');
-  if(chip) chip.textContent = currentUser ? 'Profile' : '';
+  if(chip){ chip.innerHTML = currentUser ? '&#128100; Profile' : ''; }
   var bushelChip = document.getElementById('bushel-chip');
   if(bushelChip) bushelChip.classList.toggle('hidden', !currentUser);
   var signinNav = document.getElementById('nav-signin-btn');
