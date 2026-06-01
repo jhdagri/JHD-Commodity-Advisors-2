@@ -2903,7 +2903,7 @@ async function loadPosts(category){
     var cardFreeByAge = cardTimeSensitive && postCardAgeDays >= 5;
     card.className = 'post-card' + (p.is_pinned?' pinned':'') + (isPrem && !cardFreeByAge?' premium':'');
     card.innerHTML = (p.is_pinned?'<div class="pin-badge">&#128204; Pinned</div>':'')
-      +'<div class="card-date">'+fmtDate(p.created_at)+(isPrem && !cardFreeByAge?'<span class="premium-badge">&#128274; Premium &middot; '+cardBushelCost+' bu</span>':(isPrem && cardFreeByAge?'<span class="premium-badge" style="background:rgba(46,207,170,0.15);color:var(--teal);border-color:var(--teal);">Free</span>':''))+'</div>'
+      +'<div class="card-date">'+fmtDate(p.created_at)+(isPrem && !cardFreeByAge?'<span class="premium-badge">&#128274; Premium &middot; '+cardBushelCost+' bu</span>':'<span class="premium-badge" style="background:rgba(46,207,170,0.15);color:var(--teal);border-color:var(--teal);">Free</span>')+'</div>'
       +'<h3>'+esc(p.title)+'</h3>'
       +'<p class="card-summary">'+esc(displaySum)+'</p>'
       +'<div class="card-foot"><span class="ccount">&#128172; '+n+' comment'+(n!==1?'s':'')+'</span><span class="readmore">Read -></span></div>';
