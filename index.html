@@ -3726,7 +3726,8 @@ async function renderProfilePanel(){
   var r = await sb.from('profiles').select('*').eq('id',currentUser.id).maybeSingle();
   var p = r.data || {};
   var displayName = p.display_name || p.username || currentUser.email.split('@')[0];
-  var initials = displayName.slice(0,2).toUpperCase();
+  var initialsSource = p.username || p.display_name || currentUser.email.split('@')[0];
+  var initials = initialsSource.slice(0,2).toUpperCase();
   document.getElementById('pp-avatar').textContent = initials;
   document.getElementById('pp-username-display').textContent = '@' + (p.username || 'member');
   var level = window._bushelLevel ? window._bushelLevel.icon + ' ' + window._bushelLevel.name : 'Merchandiser';
@@ -3815,7 +3816,8 @@ async function loadPublicProfile(userId){
   var bal = (balR.data && balR.data.balance) || 0;
   var level = getLevelForBalance(bal);
   var displayName = p.display_name || p.username || 'JHD Member';
-  var initials = displayName.slice(0,2).toUpperCase();
+  var initialsSource2 = p.username || displayName;
+  var initials = initialsSource2.slice(0,2).toUpperCase();
   var isSelf = currentUser && currentUser.id === userId;
   var html = '<div class="pub-profile-wrap">'
     + '<div class="pub-profile-header">'
@@ -5641,5 +5643,6 @@ if('serviceWorker' in navigator){
   });
 }
 </script>
+
 </body>
 </html>
