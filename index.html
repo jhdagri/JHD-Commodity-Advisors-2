@@ -3681,6 +3681,7 @@ async function loadBushelBalance(){
   var balEl=document.getElementById('topbar-bu-balance'); if(balEl) balEl.textContent=bal+' bu';
   var lvlEl=document.getElementById('topbar-bu-level'); if(lvlEl) lvlEl.textContent=level.icon+' '+level.name;
   window._bushelBalance=bal; window._bushelLevel=level;
+  updateDashLevel();
 }
 function openBushelPanel(){ document.getElementById('bushel-overlay').classList.add('open'); document.getElementById('bushel-panel').classList.add('open'); renderBushelPanel(); }
 function closeBushelPanel(){ document.getElementById('bushel-overlay').classList.remove('open'); document.getElementById('bushel-panel').classList.remove('open'); }
@@ -4170,6 +4171,36 @@ function getSentWeekKey(){
   return now.getFullYear() + '-W' + String(week).padStart(2,'0');
 }
 
+function updateDashLevel(){
+  var bal = window._bushelBalance || 0;
+  var level = getLevelForBalance(bal);
+  var nextLevel = LEVELS.find(function(l){ return l.min > bal; });
+  var iconEl = document.getElementById('dash-level-icon');
+  var nameEl = document.getElementById('dash-level-name');
+  var balEl  = document.getElementById('dash-bal-display');
+  var nextEl = document.getElementById('dash-next-label');
+  var fillEl = document.getElementById('dash-progress-fill');
+  var minEl  = document.getElementById('dash-prog-min');
+  var maxEl  = document.getElementById('dash-prog-max');
+  var dmBal  = document.getElementById('dm-bushels');
+  if(iconEl) iconEl.textContent = level.icon;
+  if(nameEl) nameEl.textContent = level.name;
+  if(balEl)  balEl.textContent  = bal.toLocaleString();
+  if(dmBal)  dmBal.textContent  = bal.toLocaleString();
+  if(nextLevel){
+    var pct = Math.round(((bal - level.min) / (nextLevel.min - level.min)) * 100);
+    if(nextEl) nextEl.textContent = (nextLevel.min - bal) + ' bu to ' + nextLevel.name;
+    if(fillEl) fillEl.style.width = Math.min(pct, 100) + '%';
+    if(minEl)  minEl.textContent  = level.min;
+    if(maxEl)  maxEl.textContent  = nextLevel.min;
+  } else {
+    if(nextEl) nextEl.textContent = 'Maximum level reached';
+    if(fillEl) fillEl.style.width = '100%';
+    if(minEl)  minEl.textContent  = level.min;
+    if(maxEl)  maxEl.textContent  = '';
+  }
+}
+
 async function loadDashboard(){
   setDashWelcome();
   await Promise.all([
@@ -4203,32 +4234,8 @@ function setDashWelcome(){
       if(el) el.textContent = name;
     });
   }
-  // Level progress
-  var bal = window._bushelBalance || 0;
-  var level = getLevelForBalance(bal);
-  var nextLevel = LEVELS.find(function(l){ return l.min > bal; });
-  var iconEl = document.getElementById('dash-level-icon');
-  var nameEl = document.getElementById('dash-level-name');
-  var balEl  = document.getElementById('dash-bal-display');
-  var nextEl = document.getElementById('dash-next-label');
-  var fillEl = document.getElementById('dash-progress-fill');
-  var minEl  = document.getElementById('dash-prog-min');
-  var maxEl  = document.getElementById('dash-prog-max');
-  var dmBal  = document.getElementById('dm-bushels');
-  if(iconEl) iconEl.textContent = level.icon;
-  if(nameEl) nameEl.textContent = level.name;
-  if(balEl)  balEl.textContent  = bal.toLocaleString();
-  if(dmBal)  dmBal.textContent  = bal.toLocaleString();
-  if(nextLevel){
-    var pct = Math.round(((bal - level.min) / (nextLevel.min - level.min)) * 100);
-    if(nextEl) nextEl.textContent = (nextLevel.min - bal) + ' bu to ' + nextLevel.name;
-    if(fillEl) fillEl.style.width = Math.min(pct, 100) + '%';
-    if(minEl)  minEl.textContent  = level.min;
-    if(maxEl)  maxEl.textContent  = nextLevel.min;
-  } else {
-    if(nextEl) nextEl.textContent = 'Maximum level reached';
-    if(fillEl) fillEl.style.width = '100%';
-  }
+  // Level progress — deferred, called again by updateDashLevel after balance loads
+  updateDashLevel();
 }
 
 async function loadDashRecentPosts(){
