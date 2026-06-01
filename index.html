@@ -5,6 +5,12 @@
   <meta name="google-site-verification" content="epxImizmkRsV71_tCIIGvOVxtE44ef73dBjh0pzbX5Y">
   <link href="https://fonts.googleapis.com/css2?family=DM+Serif+Display:ital@0;1&family=DM+Mono:wght@400;500&family=DM+Sans:wght@300;400;500;600&display=swap" rel="stylesheet">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <link rel="manifest" href="/manifest.json">
+  <meta name="theme-color" content="#0d0f12">
+  <meta name="apple-mobile-web-app-capable" content="yes">
+  <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+  <meta name="apple-mobile-web-app-title" content="The Bushel">
+  <link rel="apple-touch-icon" href="https://i.ibb.co/PZPZGP71/IMG-2924.jpg">
   <title>JHD Commodity Advisors</title>
   <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2/dist/umd/supabase.js"></script>
   <link rel="shortcut icon" type="image/jpeg" href="https://i.ibb.co/PZPZGP71/IMG-2924.jpg">
@@ -1108,6 +1114,9 @@ padding:2px 8px;border-radius:3px;margin-bottom:6px;letter-spacing:0.06em;text-t
         <img src="https://i.ibb.co/PZPZGP71/IMG-2924.jpg" alt="JHD" class="brand-logo">
         <span class="brand-name"><span class="brand-jhd">JHD</span> <span class="brand-ca">Commodity Advisors</span></span>
       </div>
+      <button class="mob-menu-btn" id="mob-menu-btn" onclick="openMobDrawer()" aria-label="Open menu">
+        <span></span><span></span><span></span>
+      </button>
       <div class="topbar-right">
         <span class="user-chip" id="app-chip" onclick="openProfilePanel()" style="cursor:pointer;" title="My Profile"></span>
         <div class="bushel-chip hidden" id="bushel-chip" onclick="openBushelPanel()">
@@ -1138,6 +1147,35 @@ padding:2px 8px;border-radius:3px;margin-bottom:6px;letter-spacing:0.06em;text-t
       <button class="snav-btn snav-free" data-tab="weather"                onclick="showTab('weather')">Weather</button>
     </div>
   </nav>
+
+  <!-- Mobile drawer overlay -->
+  <div class="mob-drawer-overlay" id="mob-drawer-overlay" onclick="closeMobDrawer()"></div>
+
+  <!-- Mobile side drawer -->
+  <div class="mob-drawer" id="mob-drawer">
+    <div class="mob-drawer-head">
+      <span class="mob-drawer-brand"><span style="color:var(--text);">JHD</span> <span style="color:var(--gold);">Commodity Advisors</span></span>
+      <button class="mob-drawer-close" onclick="closeMobDrawer()">&#215;</button>
+    </div>
+    <div class="mob-drawer-body">
+      <div class="mob-drawer-section">&#128274; Premium</div>
+      <button class="mob-nav-item premium" data-tab="dashboard"   onclick="mobNavTo('dashboard')"><span class="mob-nav-icon">&#9632;</span>Dashboard</button>
+      <button class="mob-nav-item premium" data-tab="commentary"  onclick="mobNavTo('commentary')"><span class="mob-nav-icon">&#128240;</span>Commentary</button>
+      <button class="mob-nav-item premium" data-tab="research"    onclick="mobNavTo('research')"><span class="mob-nav-icon">&#128202;</span>Research</button>
+      <button class="mob-nav-item premium" data-tab="fob"         onclick="mobNavTo('fob')"><span class="mob-nav-icon">&#127758;</span>FOB Data</button>
+      <button class="mob-nav-item premium" data-tab="freight"     onclick="mobNavTo('freight')"><span class="mob-nav-icon">&#128674;</span>Freight</button>
+      <button class="mob-nav-item premium" data-tab="sentiment"   onclick="mobNavTo('sentiment')"><span class="mob-nav-icon">&#127770;</span>Sentiment</button>
+      <button class="mob-nav-item premium" onclick="closeMobDrawer();openGrainStore();"><span class="mob-nav-icon">&#127807;</span>Grain Store</button>
+      <div class="mob-drawer-section">Free Access</div>
+      <button class="mob-nav-item free" data-tab="cftc"           onclick="mobNavTo('cftc')"><span class="mob-nav-icon">&#128200;</span>CFTC</button>
+      <button class="mob-nav-item free" data-tab="exports"        onclick="mobNavTo('exports')"><span class="mob-nav-icon">&#128674;</span>Exports</button>
+      <button class="mob-nav-item free" data-tab="wasde"          onclick="mobNavTo('wasde')"><span class="mob-nav-icon">&#127807;</span>WASDE</button>
+      <button class="mob-nav-item free" data-tab="futures"        onclick="mobNavTo('futures')"><span class="mob-nav-icon">&#128201;</span>Global Markets</button>
+      <button class="mob-nav-item free" data-tab="commoditymap"   onclick="mobNavTo('commoditymap')"><span class="mob-nav-icon">&#127758;</span>Commodity Map</button>
+      <button class="mob-nav-item free" data-tab="weather"        onclick="mobNavTo('weather')"><span class="mob-nav-icon">&#9925;</span>Weather</button>
+    </div>
+    <div class="mob-drawer-foot">The Bushel &mdash; JHD Commodity Advisors</div>
+  </div>
 
   <!-- Commentary -->
   <!-- DASHBOARD -->
@@ -5495,5 +5533,73 @@ async function loadFuturesSnapshot(){
 
 
 <div id="cm-tip" style="position:fixed;background:var(--card2);border:1px solid var(--border2);border-radius:6px;padding:12px 14px;pointer-events:none;opacity:0;transition:opacity 0.12s;z-index:9999;min-width:200px;max-width:250px;box-shadow:0 8px 32px rgba(0,0,0,0.6);"></div>
+
+<script>
+// ── Mobile drawer ──────────────────────────────────────────────
+function openMobDrawer(){
+  document.getElementById('mob-drawer').classList.add('open');
+  document.getElementById('mob-drawer-overlay').style.display='block';
+  setTimeout(function(){ document.getElementById('mob-drawer-overlay').classList.add('open'); },10);
+  document.body.style.overflow='hidden';
+}
+function closeMobDrawer(){
+  document.getElementById('mob-drawer').classList.remove('open');
+  document.getElementById('mob-drawer-overlay').classList.remove('open');
+  document.body.style.overflow='';
+  setTimeout(function(){ document.getElementById('mob-drawer-overlay').style.display='none'; },280);
+}
+function mobNavTo(tab){
+  closeMobDrawer();
+  setTimeout(function(){ showTab(tab); },120);
+}
+// Keep drawer active item in sync with desktop tab
+var _origShowTab = showTab;
+showTab = function(tab){
+  _origShowTab(tab);
+  document.querySelectorAll('.mob-nav-item[data-tab]').forEach(function(b){
+    b.classList.toggle('active', b.getAttribute('data-tab') === tab);
+  });
+};
+// ── PWA Service Worker ─────────────────────────────────────────
+if('serviceWorker' in navigator){
+  window.addEventListener('load', function(){
+    navigator.serviceWorker.register('/sw.js').then(function(reg){
+      console.log('SW registered:', reg.scope);
+    }).catch(function(err){
+      console.log('SW registration failed:', err);
+    });
+  });
+}
+</script>
 </body>
 </html>
+    /* ===== MOBILE DRAWER NAV ===== */
+    .mob-menu-btn { display:none; background:none; border:none; cursor:pointer; padding:8px; color:var(--text); flex-direction:column; gap:5px; align-items:center; justify-content:center; }
+    .mob-menu-btn span { display:block; width:22px; height:2px; background:var(--text); border-radius:2px; transition:all 0.2s; }
+    .mob-drawer-overlay { display:none; position:fixed; inset:0; background:rgba(0,0,0,0.7); z-index:900; opacity:0; transition:opacity 0.25s; }
+    .mob-drawer-overlay.open { opacity:1; }
+    .mob-drawer { position:fixed; top:0; left:0; bottom:0; width:280px; background:#0a0c10; z-index:901; transform:translateX(-100%); transition:transform 0.28s cubic-bezier(0.4,0,0.2,1); display:flex; flex-direction:column; border-right:1px solid var(--border2); }
+    .mob-drawer.open { transform:translateX(0); }
+    .mob-drawer-head { padding:20px 20px 14px; border-bottom:1px solid var(--border2); display:flex; align-items:center; justify-content:space-between; flex-shrink:0; }
+    .mob-drawer-brand { font-size:14px; font-weight:600; font-family:"DM Sans",sans-serif; }
+    .mob-drawer-close { background:none; border:none; cursor:pointer; color:var(--muted); font-size:20px; padding:4px 8px; line-height:1; }
+    .mob-drawer-close:hover { color:var(--text); }
+    .mob-drawer-body { overflow-y:auto; flex:1; padding:10px 0; }
+    .mob-drawer-section { font-family:"DM Mono",monospace; font-size:9px; color:var(--muted2); letter-spacing:0.14em; text-transform:uppercase; padding:14px 20px 6px; }
+    .mob-nav-item { display:flex; align-items:center; gap:12px; width:100%; padding:13px 20px; border:none; background:none; cursor:pointer; color:var(--muted); font-size:13px; font-weight:500; font-family:"DM Sans",sans-serif; text-align:left; transition:background 0.15s,color 0.15s; border-left:3px solid transparent; }
+    .mob-nav-item:hover { background:rgba(255,255,255,0.04); color:var(--text); }
+    .mob-nav-item.active { color:var(--blue); border-left-color:var(--blue); background:rgba(74,158,255,0.06); }
+    .mob-nav-item.premium { color:var(--gold); }
+    .mob-nav-item.premium.active { border-left-color:var(--gold); background:rgba(255,179,71,0.06); }
+    .mob-nav-item.free { color:var(--teal); }
+    .mob-nav-item.free.active { border-left-color:var(--teal); background:rgba(46,207,170,0.06); }
+    .mob-nav-icon { font-size:14px; width:18px; text-align:center; flex-shrink:0; }
+    .mob-drawer-foot { padding:16px 20px; border-top:1px solid var(--border2); flex-shrink:0; font-family:"DM Mono",monospace; font-size:10px; color:var(--muted2); letter-spacing:0.08em; }
+    @media (max-width: 768px) {
+      .mob-menu-btn { display:flex; }
+      .section-nav { display:none; }
+    }
+    @media (min-width: 769px) {
+      .mob-drawer-overlay, .mob-drawer { display:none !important; }
+    }
+

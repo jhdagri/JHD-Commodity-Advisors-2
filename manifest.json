@@ -1,0 +1,26 @@
+{
+  "name": "The Bushel — JHD Commodity Advisors",
+  "short_name": "The Bushel",
+  "description": "Grain and oilseed market intelligence — commentary, research, USDA data and futures",
+  "start_url": "/",
+  "display": "standalone",
+  "orientation": "portrait-primary",
+  "background_color": "#0d0f12",
+  "theme_color": "#0d0f12",
+  "icons": [
+    {
+      "src": "https://i.ibb.co/PZPZGP71/IMG-2924.jpg",
+      "sizes": "192x192",
+      "type": "image/jpeg",
+      "purpose": "any maskable"
+    },
+    {
+      "src": "https://i.ibb.co/PZPZGP71/IMG-2924.jpg",
+      "sizes": "512x512",
+      "type": "image/jpeg",
+      "purpose": "any maskable"
+    }
+  ],
+  "categories": ["finance", "business", "news"],
+  "lang": "en-GB"
+}
