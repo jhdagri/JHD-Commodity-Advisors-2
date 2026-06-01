@@ -3092,7 +3092,9 @@ async function loadDetail(postId, category){
     var standfirst = displaySummary ? '<div class="post-standfirst">'+esc(displaySummary)+'</div>' : '';
     contentHtml = '<div class="post-kicker">'+fmtDate(post.created_at)+'</div><h1>'+esc(post.title)+'</h1>'+standfirst+'<div class="post-body">'+post.content+'</div>';
   }
-  wrap.innerHTML = contentHtml+postReactBar+'<div class="comments-wrap"><div class="section-title">Discussion</div><div id="comments-area">'+commHtml+'</div><div class="comment-form-card"><h3>Leave a Comment</h3><div class="field"><label>Comment</label><textarea id="c-text" placeholder="Share your view on this analysis..."></textarea></div><button class="btn btn-navy" onclick="postComment()">Post Comment</button><div id="c-msg" class="hidden msg-box" style="margin-top:10px;"></div></div></div>';
+  wrap.innerHTML = contentHtml+postReactBar+'<div class="comments-wrap"><div class="section-title">Discussion</div><div id="comments-area">'+commHtml+'</div><div class="comment-form-card"><h3>Leave a Comment</h3><div id="c-posting-as" style="font-family:monospace;font-size:10px;color:var(--muted2);letter-spacing:0.08em;margin-bottom:14px;"></div><div class="field"><label>Comment</label><textarea id="c-text" placeholder="Share your view on this analysis..."></textarea></div><button class="btn btn-navy" onclick="postComment()">Post Comment</button><div id="c-msg" class="hidden msg-box" style="margin-top:10px;"></div></div></div>';
+  // Populate 'posting as' label with username
+  if(currentUser){ sb.from('profiles').select('username,display_name').eq('id',currentUser.id).maybeSingle().then(function(r){ var p=r.data||{}; var uname=p.username||p.display_name||(currentUser.email||'').split('@')[0]; var lbl=document.getElementById('c-posting-as'); if(lbl) lbl.textContent='Posting as @'+uname; }); }
 }
 
 async function confirmUnlockPost(postId, cost){
@@ -3290,7 +3292,6 @@ async function postComment(){
   if(content.length < 80 || wordCount < 15){ msgEl.textContent='Comments must be at least 80 characters and 15 words. Help us keep discussion substantive.'; msgEl.className='msg-box msg-error'; msgEl.classList.remove('hidden'); return; }
   var r = await sb.from('comments').insert({post_id:currentPostId, author_name:name, content:content, is_visible:true});
   if(r.error){ msgEl.textContent='Error posting comment.'; msgEl.className='msg-box msg-error'; msgEl.classList.remove('hidden'); return; }
-  document.getElementById('c-name').value='';
   document.getElementById('c-text').value='';
   msgEl.textContent='Comment posted!'; msgEl.className='msg-box msg-ok'; msgEl.classList.remove('hidden');
   setTimeout(function(){ loadDetail(currentPostId,currentPostTab); }, 600);
@@ -5588,13 +5589,18 @@ function mobNavTo(tab){
   setTimeout(function(){ showTab(tab); },120);
 }
 // Keep drawer active item in sync with desktop tab
-var _origShowTab = showTab;
-showTab = function(tab){
-  _origShowTab(tab);
-  document.querySelectorAll('.mob-nav-item[data-tab]').forEach(function(b){
-    b.classList.toggle('active', b.getAttribute('data-tab') === tab);
-  });
-};
+// Sync mobile drawer active state — deferred to avoid hoisting issues
+document.addEventListener('DOMContentLoaded', function(){
+  var _orig = window.showTab;
+  if(typeof _orig === 'function'){
+    window.showTab = function(tab){
+      _orig(tab);
+      document.querySelectorAll('.mob-nav-item[data-tab]').forEach(function(b){
+        b.classList.toggle('active', b.getAttribute('data-tab') === tab);
+      });
+    };
+  }
+});
 // ── PWA Service Worker ─────────────────────────────────────────
 if('serviceWorker' in navigator){
   window.addEventListener('load', function(){
