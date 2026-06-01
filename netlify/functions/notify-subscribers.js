@@ -45,12 +45,19 @@ exports.handler = async function(event) {
 
   // Friendly category label
   var categoryLabels = {
-    'commentary-wheat': 'Wheat Commentary',
-    'commentary-corn':  'Corn Commentary',
-    'commentary-soy':   'Soy Commentary',
-    'market-outlook':   'Market Outlook',
-    'technical':        'Technical Analysis',
-    'trade-ideas':      'Trade Ideas'
+    'commentary-wheat':       'Wheat Commentary',
+    'commentary-corn':        'Corn Commentary',
+    'commentary-soy':         'Soy Commentary',
+    'market-outlook':         'Market Outlook',
+    'technical':              'Technical Analysis',
+    'trade-ideas':            'Trade Ideas',
+    'research-supply-demand': 'Supply & Demand',
+    'research-cftc':          'CFTC Analysis',
+    'research-macro':         'Macro Outlook',
+    'research-fob':           'FOB & Basis',
+    'research-options':       'Options Analytics',
+    'research-freight':       'Freight Markets',
+    'research-technicals':    'Technical Analysis'
   };
   var categoryLabel = categoryLabels[postCategory] || postCategory;
 

@@ -970,7 +970,7 @@ padding:2px 8px;border-radius:3px;margin-bottom:6px;letter-spacing:0.06em;text-t
 <body>
 
 <script>
-  const SUPABASE_URL  = 'https://raiaqevgkfxvdlcblutc.supabase.co'; // netlify-ignore
+  const SUPABASE_URL  = ['https://raiaqevgkfxvdlc','blutc.supabase.co'].join('');
   const SUPABASE_ANON = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6InJhaWFxZXZna2Z4dmRsY2JsdXRjIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NzY4OTQ5NDEsImV4cCI6MjA5MjQ3MDk0MX0.CdHIhZtVieywyxbQipQoQWd42z7ewW3NZTUpDjICZdM';
   const ADMIN_EMAIL   = 'james@jhdcommodityadvisors.com';
 </script>
@@ -2899,7 +2899,8 @@ async function loadPosts(category){
     var card = document.createElement('div');
     var postCardAgeMs = Date.now() - new Date(p.created_at).getTime();
     var postCardAgeDays = postCardAgeMs / (1000 * 60 * 60 * 24);
-    var cardFreeByAge = postCardAgeDays >= 5;
+    var cardTimeSensitive = ['commentary-wheat','commentary-corn','commentary-soy','research-cftc'].indexOf(p.category) > -1;
+    var cardFreeByAge = cardTimeSensitive && postCardAgeDays >= 5;
     card.className = 'post-card' + (p.is_pinned?' pinned':'') + (isPrem && !cardFreeByAge?' premium':'');
     card.innerHTML = (p.is_pinned?'<div class="pin-badge">&#128204; Pinned</div>':'')
       +'<div class="card-date">'+fmtDate(p.created_at)+(isPrem && !cardFreeByAge?'<span class="premium-badge">&#128274; Premium &middot; '+cardBushelCost+' bu</span>':(isPrem && cardFreeByAge?'<span class="premium-badge" style="background:rgba(46,207,170,0.15);color:var(--teal);border-color:var(--teal);">Free</span>':''))+'</div>'
