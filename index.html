@@ -2129,7 +2129,7 @@ padding:2px 8px;border-radius:3px;margin-bottom:6px;letter-spacing:0.06em;text-t
     </div>
     <div class="bp-section">
       <div class="bp-section-title">Premium Access</div>
-      <div class="bp-earn-item"><span class="bp-earn-label">&#128274; Premium research posts</span><span class="bp-earn-val" style="color:var(--gold2);">100 bu to read</span></div>
+      <div class="bp-earn-item"><span class="bp-earn-label">&#128274; Premium research posts</span><span class="bp-earn-val" style="color:var(--gold2);">20-250 bu to read</span></div>
       <div class="bp-earn-item"><span class="bp-earn-label">&#128202; Exclusive data tools</span><span class="bp-earn-val" style="color:var(--muted);">Coming soon</span></div>
       <div style="margin-top:16px;">
         <button class="btn btn-gold" onclick="closeBushelPanel();openGrainStore();" style="width:100%;padding:12px;font-size:14px;letter-spacing:0.02em;">&#127807; Buy Bushels &rarr;</button>
@@ -2766,7 +2766,7 @@ function showAppPage(){
   var adminBtn = document.getElementById('admin-btn');
   if(adminBtn) adminBtn.classList.toggle('hidden', !isAdmin);
   var chip = document.getElementById('app-chip');
-  if(chip) chip.textContent = currentUser ? currentUser.email : '';
+  if(chip) chip.textContent = currentUser ? 'Profile' : '';
   var bushelChip = document.getElementById('bushel-chip');
   if(bushelChip) bushelChip.classList.toggle('hidden', !currentUser);
   var signinNav = document.getElementById('nav-signin-btn');
