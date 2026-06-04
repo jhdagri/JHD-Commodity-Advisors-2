@@ -10,7 +10,8 @@ var CSV_URL_2025 = 'https://fgisonline.ams.usda.gov/ExportGrainReport/CY2025.csv
 // Commodity name patterns to match in the CSV
 var COMMODITY_MAP = {
   'Corn':      ['CORN YELLOW','CORN WHITE','CORN'],
-  'All Wheat': ['WHEAT'],
+  'All Wheat': ['WHEAT HRW','WHEAT SRW','WHEAT HRS','WHEAT WHITE','WHEAT DURUM',
+                'WHEAT MIXED','WHEAT PRODUCTS','WHEAT'],
   'Soybeans':  ['SOYBEANS','SOYBEAN'],
 };
 
@@ -48,19 +49,35 @@ function splitCsvLine(line) {
 
 // ── Detect quantity column (might vary by year) ─────────────────
 function findQtyCol(headers) {
-  var candidates = ['Inspection Quantity (Metric Tons)','Inspections (Metric Tons)',
-    'Metric Tons','MT','Quantity','QUANTITY','metric_tons'];
+  var candidates = ['Metric Ton','Metric Tons','1000 Bushels','Pounds',
+    'Inspection Quantity (Metric Tons)','Inspections (Metric Tons)',
+    'MT','Quantity','QUANTITY','metric_tons','Inspection Quantity',
+    'Net Weight Kilograms','Weight','Bushels'];
   for (var i = 0; i < candidates.length; i++) {
     if (headers.indexOf(candidates[i]) > -1) return candidates[i];
   }
-  // Fallback — last numeric-looking column
+  // Case-insensitive partial
+  var numWords = ['ton','weight','quant','metric','bushel','pound','kg'];
+  for (var i = 0; i < numWords.length; i++) {
+    for (var j = 0; j < headers.length; j++) {
+      if (headers[j].toLowerCase().indexOf(numWords[i]) > -1) return headers[j];
+    }
+  }
   return headers[headers.length - 1];
 }
 
 // ── Detect date and commodity columns ──────────────────────────
 function findCol(headers, candidates) {
+  // Exact match first
   for (var i = 0; i < candidates.length; i++) {
     if (headers.indexOf(candidates[i]) > -1) return candidates[i];
+  }
+  // Case-insensitive partial match
+  for (var i = 0; i < candidates.length; i++) {
+    var cl = candidates[i].toLowerCase();
+    for (var j = 0; j < headers.length; j++) {
+      if (headers[j].toLowerCase().indexOf(cl) > -1) return headers[j];
+    }
   }
   return null;
 }
@@ -80,13 +97,17 @@ function matchCommodity(name) {
 
 // ── Aggregate CSV rows into weekly totals by commodity ──────────
 function aggregateWeekly(rows, headers) {
-  var dateCol  = findCol(headers, ['Week Ending Date','Week Ending','Week_Ending','WEEK_ENDING','Date','DATE']);
-  var commCol  = findCol(headers, ['Commodity','COMMODITY','commodity','Grain','GRAIN']);
+  // Strip surrounding quotes from all header names (FGIS CSV uses quoted headers)
+  headers = headers.map(function(h){ return h.replace(/^"+|"+$/g,'').trim(); });
+
+  var dateCol  = findCol(headers, ['Thursday','Week Ending Date','Week Ending','Cert Date','DATE','Date']);
+  var commCol  = findCol(headers, ['Grain','Commodity','COMMODITY','commodity','GRAIN']);
   var qtyCol   = findQtyCol(headers);
 
   console.log('Columns — date:' + dateCol + ' comm:' + commCol + ' qty:' + qtyCol);
+  console.log('All headers: ' + headers.join(' | '));
+  console.log('First row sample: ' + JSON.stringify(rows[0]));
   if (!dateCol || !commCol) {
-    console.log('All headers: ' + headers.join(', '));
     return {};
   }
 
