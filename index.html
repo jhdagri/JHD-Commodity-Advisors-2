@@ -999,6 +999,24 @@ padding:2px 8px;border-radius:3px;margin-bottom:6px;letter-spacing:0.06em;text-t
       .section-nav { display:none !important; }
       .mob-drawer { display:flex; }
     }
+
+    /* ===== EXPORT SUB-TABS ===== */
+    .exp-subtab-bar{display:flex;gap:8px;margin-bottom:20px;border-bottom:1px solid var(--border);padding-bottom:12px;}
+    .exp-subtab{font-family:"DM Mono",monospace;font-size:10px;letter-spacing:0.08em;padding:6px 16px;border-radius:20px;border:1px solid var(--border2);cursor:pointer;color:var(--muted);background:transparent;transition:all 0.15s;}
+    .exp-subtab:hover{border-color:var(--gold);color:var(--gold);}
+    .exp-subtab.active{background:var(--gold);border-color:var(--gold);color:#0d0f12;font-weight:700;}
+    /* Inspections table */
+    .insp-table{width:100%;border-collapse:collapse;font-family:"DM Mono",monospace;font-size:11px;margin-top:10px;}
+    .insp-table th{background:var(--card2);font-size:9px;color:var(--muted2);letter-spacing:0.1em;text-transform:uppercase;padding:8px 12px;text-align:right;border-bottom:1px solid var(--border2);font-weight:500;}
+    .insp-table th:first-child{text-align:left;}
+    .insp-table td{padding:9px 12px;border-bottom:1px solid var(--border);color:var(--text);text-align:right;}
+    .insp-table td:first-child{text-align:left;color:var(--muted);}
+    .insp-table tr:first-child td{color:var(--text);font-weight:600;}
+    .insp-comm-card{background:var(--card);border:1px solid var(--border);border-radius:8px;padding:16px 18px;margin-bottom:12px;}
+    .insp-comm-label{font-family:"DM Mono",monospace;font-size:9px;color:var(--muted2);text-transform:uppercase;letter-spacing:0.14em;margin-bottom:6px;}
+    .insp-comm-val{font-family:"DM Serif Display",serif;font-size:26px;color:var(--text);font-weight:700;}
+    .insp-three-col{display:grid;grid-template-columns:1fr 1fr 1fr;gap:12px;margin-bottom:20px;}
+    @media(max-width:600px){.insp-three-col{grid-template-columns:1fr;}}
 </style>
 </head>
 <body>
@@ -1669,10 +1687,22 @@ padding:2px 8px;border-radius:3px;margin-bottom:6px;letter-spacing:0.06em;text-t
     <div class="page-wrap">
       <div class="page-heading">
         <div class="page-heading-tag">Free Access &middot; USDA Data</div>
-        <h2>Export <em>Sales</em></h2>
-        <p>USDA Weekly Export Sales &mdash; auto-updated each Thursday via USDA ESRQS</p>
+        <h2>Export <em>Data</em></h2>
+        <p>USDA weekly export sales and grain inspection data &mdash; auto-updated</p>
       </div>
-      <div id="exports-dashboard"><div class="spin">Loading export data…</div></div>
+      <!-- Sub-tab switcher -->
+      <div class="exp-subtab-bar">
+        <button class="exp-subtab active" id="expst-sales" onclick="switchExpSubTab('sales')">&#128200; Export Sales</button>
+        <button class="exp-subtab" id="expst-inspections" onclick="switchExpSubTab('inspections')">&#128270; Export Inspections</button>
+      </div>
+      <!-- Sales panel -->
+      <div id="exp-panel-sales">
+        <div id="exports-dashboard"><div class="spin">Loading export data…</div></div>
+      </div>
+      <!-- Inspections panel -->
+      <div id="exp-panel-inspections" class="hidden">
+        <div id="inspections-dashboard"><div class="spin">Loading inspection data…</div></div>
+      </div>
     </div>
   </div>
 
@@ -5689,5 +5719,96 @@ if('serviceWorker' in navigator){
 }
 </script>
 
+
+<script>
+function switchExpSubTab(name){
+  document.querySelectorAll('.exp-subtab').forEach(function(b){ b.classList.remove('active'); });
+  document.getElementById('expst-' + name).classList.add('active');
+  document.getElementById('exp-panel-sales').classList.toggle('hidden', name !== 'sales');
+  document.getElementById('exp-panel-inspections').classList.toggle('hidden', name !== 'inspections');
+  if(name === 'inspections') loadInspections(false);
+}
+
+var _inspLoaded = false;
+async function loadInspections(forceRefresh){
+  if(_inspLoaded && !forceRefresh) return;
+  var el = document.getElementById('inspections-dashboard');
+  if(!el) return;
+  el.innerHTML = '<div class="spin">Loading inspection data…</div>';
+  try {
+    var resp = await fetch('/.netlify/functions/exportinspections');
+    var d = await resp.json();
+    if(d.error) throw new Error(d.error);
+    _inspLoaded = true;
+    renderInspections(d);
+  } catch(e) {
+    el.innerHTML = '<div class="empty-state">Could not load inspection data: ' + e.message + '</div>';
+  }
+}
+
+function fmtInspMT(v){
+  if(!v && v !== 0) return '--';
+  if(v >= 1000000) return (v/1000000).toFixed(2) + 'M MT';
+  if(v >= 1000) return (v/1000).toFixed(0) + 'K MT';
+  return v.toLocaleString() + ' MT';
+}
+
+function renderInspections(d){
+  var el = document.getElementById('inspections-dashboard');
+  if(!el) return;
+  var h = d.history || [];
+  var latest = h[0] || {};
+  var out = '';
+
+  // Header
+  out += '<div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:16px;">';
+  out += '<div style="font-family:monospace;font-size:11px;padding:4px 12px;background:rgba(46,207,170,0.1);border:1px solid var(--teal);border-radius:4px;color:var(--teal);">Week ending ' + (d.reportDate || '--') + '</div>';
+  out += '<button class="exp-refresh-btn" onclick="loadInspections(true)">&#8635; Refresh</button>';
+  out += '</div>';
+
+  // Note about coverage
+  out += '<div style="font-family:monospace;font-size:9px;color:var(--muted2);margin-bottom:16px;padding:8px 12px;background:var(--card2);border-radius:4px;">&#9432; FGIS covers bulk grain only. Soy Meal and Soy Oil are not included (processed products).</div>';
+
+  // Summary cards — 3 commodities
+  out += '<div class="insp-three-col">';
+  var cards = [
+    { key:'corn',     label:'CORN',     color:'var(--gold)' },
+    { key:'wheat',    label:'ALL WHEAT', color:'var(--blue)' },
+    { key:'soybeans', label:'SOYBEANS', color:'var(--teal)' },
+  ];
+  cards.forEach(function(c){
+    var val = latest[c.key] || 0;
+    out += '<div class="insp-comm-card">';
+    out += '<div class="insp-comm-label" style="color:' + c.color + '">' + c.label + '</div>';
+    out += '<div class="insp-comm-val">' + fmtInspMT(val) + '</div>';
+    out += '<div style="font-family:monospace;font-size:9px;color:var(--muted2);margin-top:4px;">This week</div>';
+    out += '</div>';
+  });
+  out += '</div>';
+
+  // 4-week history table
+  if(h.length > 0){
+    out += '<div style="font-family:monospace;font-size:9px;color:var(--muted2);letter-spacing:0.14em;text-transform:uppercase;margin-bottom:8px;">4-Week Inspection History</div>';
+    out += '<div class="card" style="padding:0;overflow:hidden;">';
+    out += '<table class="insp-table"><thead><tr>';
+    out += '<th>Week Ending</th><th>Corn</th><th>All Wheat</th><th>Soybeans</th><th>Total Grains</th>';
+    out += '</tr></thead><tbody>';
+    h.forEach(function(row, i){
+      var total = (row.corn||0) + (row.wheat||0) + (row.soybeans||0);
+      out += '<tr>';
+      out += '<td style="font-weight:' + (i===0?'700':'400') + ';color:' + (i===0?'var(--text)':'var(--muted)') + '">' + row.date + '</td>';
+      out += '<td style="color:var(--gold)">' + fmtInspMT(row.corn) + '</td>';
+      out += '<td style="color:var(--blue)">' + fmtInspMT(row.wheat) + '</td>';
+      out += '<td style="color:var(--teal)">' + fmtInspMT(row.soybeans) + '</td>';
+      out += '<td>' + fmtInspMT(total) + '</td>';
+      out += '</tr>';
+    });
+    out += '</tbody></table></div>';
+  }
+
+  out += '<div style="font-family:monospace;font-size:9px;color:var(--muted2);margin-top:12px;">Source: USDA FGIS &middot; Updated weekly &middot; Figures in Metric Tonnes</div>';
+  el.innerHTML = out;
+}
+</script>
 </body>
 </html>
