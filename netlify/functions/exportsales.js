@@ -49,7 +49,9 @@ function parseXml(xml) {
       accumulated:    numAttr(el, 'AccumulatedExports'),
       outstanding:    numAttr(el, 'OutstandingSales'),
       weeklyExports:  numAttr(el, 'WeeklyExports'),
-      projection:     numAttr(el, 'WASDEReportProjectionsQuantity'),
+      projection:     numAttr(el, 'WASDEReportProjectionsQuantity'), // in MILLIONS MT (not thousands)
+      prevAccumulated:numAttr(el, 'PreviousMKTYearAccumulatedExports'),
+      prevOutstanding:numAttr(el, 'PreviousMKTYearOutstandingSales'),
     });
   }
   return rows;
@@ -94,7 +96,15 @@ function buildOutput(rows) {
       var ac  = r.accumulated  * 1000;
       var os  = r.outstanding  * 1000;
       var pr  = r.projection   * 1000;
-      var pct = (pr > 0 && ac > 0) ? Math.round(ac / pr * 1000) / 10 : null;
+      // WASDEReportProjectionsQuantity is in MILLIONS MT; convert to thousands for comparison
+    // % USDA uses TotalCommitment (accumulated + outstanding), not just accumulated
+    var prMt = r.projection > 0 ? r.projection * 1000 : 0;  // millions → thousands MT
+    var totalCommit = r.accumulated + r.outstanding;           // thousands MT
+    var pct = (prMt > 0 && totalCommit > 0) ? Math.round(totalCommit / prMt * 1000) / 10 : null;
+
+    // vs yr ago: compare current TotalCommitment to previous year's
+    var prevTotal = r.prevAccumulated + r.prevOutstanding;
+    var vsYrAgo  = (prevTotal > 0) ? Math.round((totalCommit - prevTotal) / prevTotal * 1000) / 10 : null;
 
       // Format date
       var dt = '--';
@@ -116,6 +126,7 @@ function buildOutput(rows) {
         projection:  pr,
         pct_usda:    pct !== null ? pct.toFixed(1) : '--',
         pct_5yr:     '--',
+        vsYrAgo:     vsYrAgo,
       };
     }
 
@@ -129,6 +140,7 @@ function buildOutput(rows) {
       outstanding: latestRow.outstanding,
       pctUsda:     latestRow.pct_usda !== '--' ? parseFloat(latestRow.pct_usda) : null,
       pct_usda:    latestRow.pct_usda,
+      vsYrAgo:     latestRow.vsYrAgo,
     };
 
     history[name] = recent.map(buildRow);
