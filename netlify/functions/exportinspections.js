@@ -131,18 +131,35 @@ function aggregateWeekly(rows, headers) {
 }
 
 // ── Sort dates descending and return 4-week slice ───────────────
+function parseDate(str) {
+  // Handle YYYYMMDD format (e.g. 20260101)
+  if (/^\d{8}$/.test(str)) {
+    return new Date(str.slice(0,4) + '-' + str.slice(4,6) + '-' + str.slice(6,8));
+  }
+  // Handle MM/DD/YYYY format
+  if (/^\d{2}\/\d{2}\/\d{4}$/.test(str)) {
+    var p = str.split('/');
+    return new Date(p[2] + '-' + p[0] + '-' + p[1]);
+  }
+  return new Date(str);
+}
+
+function fmtDate(str) {
+  var dt = parseDate(str);
+  if (isNaN(dt)) return str;
+  return dt.toLocaleDateString('en-GB', {day:'2-digit', month:'short', year:'numeric'});
+}
+
 function buildHistory(byWeek) {
   var dates = Object.keys(byWeek).sort(function(a, b) {
-    return new Date(b) - new Date(a);
+    return parseDate(b) - parseDate(a);
   });
 
   var recent = dates.slice(0, 4);
   return recent.map(function(d) {
     var totals = byWeek[d];
-    var dt = new Date(d);
-    var fmt = isNaN(dt) ? d : dt.toLocaleDateString('en-GB', {day:'2-digit', month:'short'});
     return {
-      date:     fmt,
+      date:     fmtDate(d),
       rawDate:  d,
       corn:     totals['Corn']      || 0,
       wheat:    totals['All Wheat'] || 0,

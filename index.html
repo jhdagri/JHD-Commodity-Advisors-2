@@ -2698,7 +2698,7 @@ function renderExportDashboard(data, el) {
   histComms.forEach(function(key) {
     var rows = h[key];
     if (!rows || !rows.length) return;
-    out += '<div class="exp-section-title">' + key + ' &mdash; 4-Week History</div>';
+    out += '<div class="exp-section-title">' + key + ' &mdash; Week-on-Week Comparison</div>';
     out += '<table class="exp-table">';
     out += '<thead><tr><th>Week Ending</th><th>Net Sales</th><th>Next MY</th><th>Total</th><th>Accumulated</th><th>% USDA</th><th>Vs Yr Ago</th><th>Outstanding</th></tr></thead><tbody>';
     rows.forEach(function(r, i) {
