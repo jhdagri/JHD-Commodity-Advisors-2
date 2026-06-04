@@ -9,11 +9,11 @@
 // ================================================================
 
 var COMMODITIES = [
-  { name: 'Corn',      code: '401' },
-  { name: 'All Wheat', code: '107' },
-  { name: 'Soybeans',  code: '801' },
-  { name: 'Soy Meal',  code: '901' },
-  { name: 'Soy Oil',   code: '902' },
+  { name: 'Corn',      code: '401', altCodes: ['302','301','0440000'] },
+  { name: 'All Wheat', code: '107', altCodes: ['108'] },
+  { name: 'Soybeans',  code: '801', altCodes: ['802','0220100'] },
+  { name: 'Soy Meal',  code: '901', altCodes: ['902'] },
+  { name: 'Soy Oil',   code: '902', altCodes: ['901'] },
 ];
 
 var FAS_BASE = 'https://apps.fas.usda.gov/OpenData/api/esr/exports';
@@ -55,27 +55,33 @@ function getDateField(row) {
 }
 
 // ── Fetch one commodity from FAS API ──────────────────────────────
-async function fetchCommodity(name, code, marketYear) {
-  var urls = [
-    FAS_BASE + '/commodityCode/' + code + '/allCountries/marketYear/' + marketYear,
-    ESRQS_BASE + '/commodityCode/' + code + '/allCountries/marketYear/' + marketYear,
-  ];
-
-  var lastErr = null;
-  for (var i = 0; i < urls.length; i++) {
-    try {
-      var resp = await fetch(urls[i], {
-        headers: { 'Accept': 'application/json', 'User-Agent': 'JHD-Bushel/1.0' },
-        signal: AbortSignal.timeout ? AbortSignal.timeout(10000) : undefined
-      });
-      if (!resp.ok) { lastErr = 'HTTP ' + resp.status; continue; }
-      var data = await resp.json();
-      if (Array.isArray(data) && data.length > 0) return data;
-    } catch (e) {
-      lastErr = e.message;
+async function fetchCommodity(name, code, altCodes, marketYear) {
+  var allCodes = [code].concat(altCodes || []);
+  for (var ci = 0; ci < allCodes.length; ci++) {
+    var tryCode = allCodes[ci];
+    var urls = [
+      FAS_BASE + '/commodityCode/' + tryCode + '/allCountries/marketYear/' + marketYear,
+      ESRQS_BASE + '/commodityCode/' + tryCode + '/allCountries/marketYear/' + marketYear,
+    ];
+    for (var i = 0; i < urls.length; i++) {
+      try {
+        var resp = await fetch(urls[i], {
+          headers: { 'Accept': 'application/json', 'User-Agent': 'JHD-Bushel/1.0' },
+          signal: AbortSignal.timeout ? AbortSignal.timeout(10000) : undefined
+        });
+        if (!resp.ok) { console.log(name + ' code ' + tryCode + ' URL ' + i + ': HTTP ' + resp.status); continue; }
+        var data = await resp.json();
+        if (Array.isArray(data) && data.length > 0) {
+          console.log(name + ' found with code ' + tryCode);
+          return data;
+        }
+      } catch (e) {
+        console.log(name + ' code ' + tryCode + ' error: ' + e.message);
+      }
     }
   }
-  throw new Error('Failed to fetch ' + name + ' (code ' + code + '): ' + lastErr);
+  console.log(name + ' not found with any code — returning empty');
+  return [];
 }
 
 // ── Process rows into summary + 4-week history ───────────────────
@@ -155,11 +161,16 @@ exports.handler = async function(event) {
     var history = {};
     var reportDate = null;
 
-    // Fetch all commodities in parallel
+    // Fetch all commodities in parallel — failures return empty, don't crash
     var fetches = COMMODITIES.map(async function(c) {
-      var yr = getMarketingYear(c.name);
-      var rows = await fetchCommodity(c.name, c.code, yr);
-      return { name: c.name, rows: rows };
+      try {
+        var yr = getMarketingYear(c.name);
+        var rows = await fetchCommodity(c.name, c.code, c.altCodes || [], yr);
+        return { name: c.name, rows: rows };
+      } catch(e) {
+        console.log('Commodity fetch failed for ' + c.name + ': ' + e.message);
+        return { name: c.name, rows: [] };
+      }
     });
 
     var results = await Promise.all(fetches);
