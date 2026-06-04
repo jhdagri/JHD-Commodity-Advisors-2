@@ -142,7 +142,7 @@ exports.handler = async function(event) {
   var headers = {
     'Access-Control-Allow-Origin': '*',
     'Content-Type': 'application/json',
-    'Cache-Control': 'public, max-age=1800'  // cache 30 mins
+    'Cache-Control': 'no-cache, no-store'
   };
 
   if (event.httpMethod === 'OPTIONS') {
@@ -150,6 +150,7 @@ exports.handler = async function(event) {
   }
 
   try {
+    console.log('exportsales function invoked');
     var summary = {};
     var history = {};
     var reportDate = null;
@@ -163,7 +164,14 @@ exports.handler = async function(event) {
 
     var results = await Promise.all(fetches);
 
+    var debugSamples = {};
     results.forEach(function(r) {
+      console.log(r.name + ': ' + (r.rows ? r.rows.length : 0) + ' rows');
+      // Store first row keys for debugging
+      if (r.rows && r.rows.length > 0) {
+        debugSamples[r.name] = r.rows[0];
+        console.log(r.name + ' sample keys: ' + Object.keys(r.rows[0]).join(', '));
+      }
       var processed = processRows(r.name, r.rows);
       if (!processed) return;
       summary[r.name] = processed.summary;
@@ -180,10 +188,10 @@ exports.handler = async function(event) {
         reportDate:  reportDate || 'Latest',
         summary:     summary,
         history:     history,
-        topBuyers:   {},   // Phase 2 — country-level API calls
+        topBuyers:   {},
         fetchedAt:   new Date().toISOString(),
         source:      'USDA FAS OpenData API',
-        note:        'pct_5yr column requires historical calc — Phase 2'
+        _debug:      debugSamples
       })
     };
 
