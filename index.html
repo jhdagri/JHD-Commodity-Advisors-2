@@ -1054,7 +1054,7 @@ padding:2px 8px;border-radius:3px;margin-bottom:6px;letter-spacing:0.06em;text-t
         </div>
         <div class="avp-text-wrap">
           <div class="avp-title">Rise Through the Ranks</div>
-          <div class="avp-body">Progress from <strong>Merchandiser</strong> through <strong>Originator</strong>, <strong>Risk Manager</strong> and <strong>Head of Desk</strong> to <strong>Market Maker</strong> as your Bushel balance grows. Higher levels unlock discounts on premium content, early access to new research and recognition across the platform community.</div>
+          <div class="avp-body">Progress from <strong>Merchandiser</strong> through <strong>Originator</strong>, <strong>Risk Manager</strong> and <strong>Head of Desk</strong> to <strong>Market Maker</strong> as your lifetime Bushels grow. Reach <strong style="color:var(--gold);">Market Maker</strong> and earn a <strong style="color:var(--teal);">30% lifetime discount</strong> on all premium content &mdash; permanently locked in.</div>
         </div>
       </div>
 
@@ -3108,15 +3108,20 @@ async function confirmUnlockPost(postId, cost){
 
   try {
     // 1. Re-check balance atomically by reading current
-    var balR = await sb.from('user_bushels').select('balance').eq('user_id',currentUser.id).maybeSingle();
+    var balR = await sb.from('user_bushels').select('balance,lifetime_earned').eq('user_id',currentUser.id).maybeSingle();
     var currentBal = (balR.data && balR.data.balance) || 0;
-    if(currentBal < cost){
-      alert('Insufficient bushels. Balance: ' + currentBal + ' bu, needed: ' + cost + ' bu.');
-      if(btn){ btn.disabled = false; btn.innerHTML = '&#127807; Unlock for ' + cost + ' bu'; }
+    var currentEarned = (balR.data && balR.data.lifetime_earned) || currentBal;
+    // Apply 30% Market Maker discount
+    var userRank = getLevelForBalance(currentEarned);
+    var effectiveCost = userRank.name === 'Market Maker' ? Math.ceil(cost * 0.7) : cost;
+    if(currentBal < effectiveCost){
+      alert('Insufficient bushels. Balance: ' + currentBal + ' bu, needed: ' + effectiveCost + ' bu' + (userRank.name==='Market Maker'?' (after 30% MM discount)':'') + '.');
+      if(btn){ btn.disabled = false; btn.innerHTML = '&#127807; Unlock for ' + effectiveCost + ' bu'; }
       return;
     }
 
-    // 2. Deduct bushels
+    // 2. Deduct bushels (using effective cost)
+    cost = effectiveCost;
     var newBal = currentBal - cost;
     var updR = await sb.from('user_bushels').update({balance:newBal}).eq('user_id',currentUser.id);
     if(updR.error){ throw new Error('Could not deduct bushels: ' + updR.error.message); }
@@ -3656,14 +3661,14 @@ function generateUsername(){
 }
 async function getBushels(){
   if(!sb||!currentUser) return null;
-  var r=await sb.from('user_bushels').select('balance,last_login_date').eq('user_id',currentUser.id).single();
+  var r=await sb.from('user_bushels').select('balance,last_login_date,lifetime_earned').eq('user_id',currentUser.id).single();
   return r.data;
 }
 async function awardBushels(amount){
   if(!sb||!currentUser) return;
   var existing=await getBushels();
   if(!existing) await sb.from('user_bushels').insert({user_id:currentUser.id,balance:amount,last_login_date:null});
-  else await sb.from('user_bushels').update({balance:existing.balance+amount}).eq('user_id',currentUser.id);
+  else await sb.from('user_bushels').update({balance:existing.balance+amount, lifetime_earned:(existing.lifetime_earned||existing.balance||0)+amount}).eq('user_id',currentUser.id);
   loadBushelBalance();
 }
 async function checkDailyLogin(){
@@ -3671,36 +3676,44 @@ async function checkDailyLogin(){
   var data=await getBushels();
   var today=new Date().toISOString().slice(0,10);
   if(!data){ await sb.from('user_bushels').insert({user_id:currentUser.id,balance:50,last_login_date:today}); loadBushelBalance(); return; }
-  if(data.last_login_date!==today){ await sb.from('user_bushels').update({balance:(data.balance||0)+2,last_login_date:today}).eq('user_id',currentUser.id); loadBushelBalance(); }
+  if(data.last_login_date!==today){ await sb.from('user_bushels').update({balance:(data.balance||0)+2, lifetime_earned:(data.lifetime_earned||data.balance||0)+2, last_login_date:today}).eq('user_id',currentUser.id); loadBushelBalance(); }
 }
 async function loadBushelBalance(){
   var data=await getBushels();
   var bal=data?(data.balance||0):0;
-  var level=getLevelForBalance(bal);
+  var earned=data?(data.lifetime_earned||bal):bal;
+  var level=getLevelForBalance(earned);
   var chip=document.getElementById('bushel-chip'); if(chip) chip.classList.remove('hidden');
   var balEl=document.getElementById('topbar-bu-balance'); if(balEl) balEl.textContent=bal+' bu';
   var lvlEl=document.getElementById('topbar-bu-level'); if(lvlEl) lvlEl.textContent=level.icon+' '+level.name;
-  window._bushelBalance=bal; window._bushelLevel=level;
+  window._bushelBalance=bal; window._bushelEarned=earned; window._bushelLevel=level;
   updateDashLevel();
 }
 function openBushelPanel(){ document.getElementById('bushel-overlay').classList.add('open'); document.getElementById('bushel-panel').classList.add('open'); renderBushelPanel(); }
 function closeBushelPanel(){ document.getElementById('bushel-overlay').classList.remove('open'); document.getElementById('bushel-panel').classList.remove('open'); }
 function renderBushelPanel(){
   var bal=window._bushelBalance||0;
+  var earned=window._bushelEarned||bal;
   var level=window._bushelLevel||LEVELS[0];
   var nextLevel=LEVELS[LEVELS.indexOf(level)+1]||null;
+  var isMarketMaker=level.name==='Market Maker';
   document.getElementById('bp-balance-val').textContent=bal;
-  document.getElementById('bp-level-badge').textContent=level.icon+' '+level.name;
+  document.getElementById('bp-level-badge').textContent=level.icon+' '+level.name+(isMarketMaker?' ⭐':'');
   var prog=document.getElementById('bp-progress');
   if(nextLevel){
-    var pct=Math.min(100,Math.round((bal-level.min)/(nextLevel.min-level.min)*100));
-    prog.innerHTML='<div class="bp-progress-bar-bg"><div class="bp-progress-bar-fill" style="width:'+pct+'%"></div></div><div class="bp-progress-label"><span>'+bal+' bu</span><span>'+nextLevel.min+' bu for '+nextLevel.name+'</span></div>';
-  } else { prog.innerHTML='<div style="font-size:9px;color:var(--gold2);margin-top:8px;">MAX LEVEL ACHIEVED</div>'; }
+    var pct=Math.min(100,Math.round((earned-level.min)/(nextLevel.min-level.min)*100));
+    prog.innerHTML='<div class="bp-progress-bar-bg"><div class="bp-progress-bar-fill" style="width:'+pct+'%"></div></div><div class="bp-progress-label"><span>'+earned+' bu earned</span><span>'+nextLevel.min+' bu for '+nextLevel.name+'</span></div>';
+  } else {
+    prog.innerHTML='<div style="font-size:11px;color:var(--gold);margin-top:8px;padding:10px;background:rgba(255,179,71,0.08);border:1px solid rgba(255,179,71,0.2);border-radius:6px;">&#127942; Max Level Achieved &mdash; <strong style="color:var(--teal);">30% lifetime discount</strong> active on all premium posts</div>';
+  }
   var html='';
   LEVELS.forEach(function(lv){
     var isCurrent=lv.name===level.name;
-    var isDone=bal>=lv.min;
-    html+='<div class="bp-level-row'+(isCurrent?' current-level':'')+'"><div class="bp-level-dot" style="background:'+(isDone?'var(--gold2)':'var(--border2)')+'"></div><div class="bp-level-name">'+lv.icon+' '+lv.name+'</div><div class="bp-level-req">'+(lv.min===0?'Starting':lv.min+' bu')+'</div><div class="bp-level-check">'+(isDone?'✅':'')+'</div></div>';
+    var isDone=earned>=lv.min;
+    var isMMLevel=lv.name==='Market Maker';
+    var reqText=lv.min===0?'Starting level':lv.min+' bu earned';
+    var extra=isMMLevel?'<span style="font-size:9px;color:var(--teal);margin-left:8px;font-family:monospace;">30% OFF</span>':'';
+    html+='<div class="bp-level-row'+(isCurrent?' current-level':'')+'"><div class="bp-level-dot" style="background:'+(isDone?'var(--gold2)':'var(--border2)')+'"></div><div class="bp-level-name">'+lv.icon+' '+lv.name+extra+'</div><div class="bp-level-req">'+reqText+'</div><div class="bp-level-check">'+(isDone?'&#10003;':'')+'</div></div>';
   });
   document.getElementById('bp-levels-list').innerHTML=html;
 }
@@ -4173,8 +4186,9 @@ function getSentWeekKey(){
 
 function updateDashLevel(){
   var bal = window._bushelBalance || 0;
-  var level = getLevelForBalance(bal);
-  var nextLevel = LEVELS.find(function(l){ return l.min > bal; });
+  var earned = window._bushelEarned || bal;
+  var level = getLevelForBalance(earned);
+  var nextLevel = LEVELS.find(function(l){ return l.min > earned; });
   var iconEl = document.getElementById('dash-level-icon');
   var nameEl = document.getElementById('dash-level-name');
   var balEl  = document.getElementById('dash-bal-display');
@@ -4188,8 +4202,8 @@ function updateDashLevel(){
   if(balEl)  balEl.textContent  = bal.toLocaleString();
   if(dmBal)  dmBal.textContent  = bal.toLocaleString();
   if(nextLevel){
-    var pct = Math.round(((bal - level.min) / (nextLevel.min - level.min)) * 100);
-    if(nextEl) nextEl.textContent = (nextLevel.min - bal) + ' bu to ' + nextLevel.name;
+    var pct = Math.round(((earned - level.min) / (nextLevel.min - level.min)) * 100);
+    if(nextEl) nextEl.textContent = (nextLevel.min - earned) + ' bu to ' + nextLevel.name;
     if(fillEl) fillEl.style.width = Math.min(pct, 100) + '%';
     if(minEl)  minEl.textContent  = level.min;
     if(maxEl)  maxEl.textContent  = nextLevel.min;
@@ -5603,6 +5617,31 @@ async function loadFuturesSnapshot(){
 }
 /* End Futures Snapshot */
 
+</script>
+<script>
+// JHD watermark plugin — draws on canvas, survives screenshots
+(function(){
+  function registerWatermark(){
+    if(typeof Chart === 'undefined'){ setTimeout(registerWatermark, 100); return; }
+    if(Chart.registry && Chart.registry.plugins.get('jhd-watermark')) return;
+    Chart.register({
+      id: 'jhd-watermark',
+      afterDraw: function(chart) {
+        var ctx = chart.ctx;
+        ctx.save();
+        ctx.globalAlpha = 0.22;
+        ctx.fillStyle = '#ffb347';
+        ctx.font = '500 9px monospace';
+        ctx.textAlign = 'left';
+        ctx.textBaseline = 'top';
+        var area = chart.chartArea;
+        if(area) ctx.fillText('JHD COMMODITY ADVISORS', area.left + 8, area.top + 8);
+        ctx.restore();
+      }
+    });
+  }
+  registerWatermark();
+})();
 </script>
 
 
