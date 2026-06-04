@@ -240,7 +240,7 @@ html,body{background:var(--bg);color:var(--text);font-family:'DM Sans',sans-seri
   <div class="w-card loading-card"><span class="spin"></span>Fetching weather data…</div>
 </div>
 
-<div class="disc" style="margin-top:16px;">Weather: Open-Meteo (open-meteo.com) · 14-day forecasts · Informational only · JHD Commodity Advisors</div>
+<div class="disc" style="margin-top:16px;display:flex;align-items:center;gap:12px;flex-wrap:wrap;">Weather: Open-Meteo (open-meteo.com) · 14-day forecasts · Informational only · JHD Commodity Advisors · <button onclick="loadAll(true)" style="font-family:monospace;font-size:9px;background:transparent;border:1px solid rgba(255,255,255,0.15);color:var(--muted);padding:2px 10px;border-radius:3px;cursor:pointer;letter-spacing:0.06em;">&#8635; Force Refresh</button></div>
 </div><!-- /hub-panel-outlook -->
 
 <!-- ── PANEL 2: US DROUGHT MONITOR ── -->
@@ -455,20 +455,52 @@ function wmoDesc(code) {
 }
 
 // ── OPEN-METEO ──
+const CACHE_TTL = 60 * 60 * 1000; // 1 hour in ms
+
+function getCached(id) {
+  try {
+    const raw = sessionStorage.getItem('wx_' + id);
+    if (!raw) return null;
+    const { ts, data } = JSON.parse(raw);
+    if (Date.now() - ts < CACHE_TTL) return data;
+    sessionStorage.removeItem('wx_' + id);
+  } catch(e) {}
+  return null;
+}
+
+function setCache(id, data) {
+  try {
+    sessionStorage.setItem('wx_' + id, JSON.stringify({ ts: Date.now(), data }));
+  } catch(e) {}
+}
+
+function clearWeatherCache() {
+  try {
+    Object.keys(sessionStorage).filter(k => k.startsWith('wx_')).forEach(k => sessionStorage.removeItem(k));
+  } catch(e) {}
+}
+
 async function fetchWeather(loc, attempt) {
   attempt = attempt || 0;
+
+  // Serve from sessionStorage cache if fresh
+  const cached = getCached(loc.id);
+  if (cached) return cached;
+
   const url = `https://api.open-meteo.com/v1/forecast?latitude=${loc.lat}&longitude=${loc.lon}` +
     `&daily=temperature_2m_max,temperature_2m_min,precipitation_sum,et0_fao_evapotranspiration` +
     `&current=temperature_2m,relative_humidity_2m,precipitation,wind_speed_10m,weather_code` +
     `&forecast_days=14&timezone=auto`;
   const r = await fetch(url);
   if (r.status === 429 && attempt < 2) {
-    // Rate limited - wait with exponential backoff and retry
+    // Rate limited — wait with exponential backoff and retry
     await new Promise(res => setTimeout(res, 1500 * Math.pow(2, attempt)));
     return fetchWeather(loc, attempt + 1);
   }
   if (!r.ok) throw new Error(`HTTP ${r.status}`);
-  return r.json();
+  const data = await r.json();
+  setCache(loc.id, data);
+  return data;
 }
 
 
@@ -720,10 +752,18 @@ async function loadModelCharts(){
     const base = `https://api.open-meteo.com/v1/forecast?latitude=${_modelRegion.lat}&longitude=${_modelRegion.lon}`;
     const vars = `&daily=temperature_2m_max,temperature_2m_min,precipitation_sum&forecast_days=10&timezone=auto`;
 
-    const [gfsR, ecmwfR] = await Promise.all([
-      fetch(base + vars + '&models=gfs_seamless').then(r=>r.ok ? r.json() : null),
-      fetch(base + vars + '&models=ecmwf_ifs025').then(r=>r.ok ? r.json() : null)
-    ]);
+    const modelKey = 'model_' + _modelRegion.id;
+    const mCached  = getCached(modelKey);
+    let gfsR, ecmwfR;
+    if (mCached) {
+      gfsR = mCached.gfs; ecmwfR = mCached.ecmwf;
+    } else {
+      [gfsR, ecmwfR] = await Promise.all([
+        fetch(base + vars + '&models=gfs_seamless').then(r=>r.ok ? r.json() : null),
+        fetch(base + vars + '&models=ecmwf_ifs025').then(r=>r.ok ? r.json() : null)
+      ]);
+      if (gfsR || ecmwfR) setCache(modelKey, { gfs: gfsR, ecmwf: ecmwfR });
+    }
 
     if(!gfsR && !ecmwfR){ throw new Error('Both model endpoints failed'); }
 
@@ -892,7 +932,8 @@ function initModelSection(){
   buildModelRegionBar();
 }
 
-async function loadAll() {
+async function loadAll(forceRefresh) {
+  if (forceRefresh) clearWeatherCache();
   document.getElementById('status-txt').textContent='Fetching…';
   document.getElementById('live-dot').style.background='var(--gold)';
   // Smaller batches + small pause = lighter load on free-tier API, fewer 429s
@@ -909,9 +950,11 @@ async function loadAll() {
   renderCards();
   renderRegionAlerts();
   const loaded=Object.keys(weatherData).filter(k=>!weatherData[k].error).length;
+  const fromCache = Object.keys(weatherData).filter(k => !weatherData[k].error).length < loaded + 1;
   document.getElementById('status-txt').textContent=`Live · ${loaded}/${REGIONS.length}`;
   document.getElementById('live-dot').style.background='var(--teal)';
-  document.getElementById('last-updated').textContent=`Updated ${new Date().toLocaleTimeString('en-GB')} · Open-Meteo · 14-day forecasts`;
+  const cacheNote = forceRefresh ? '' : ' · cached';
+  document.getElementById('last-updated').textContent=`Updated ${new Date().toLocaleTimeString('en-GB')} · Open-Meteo · 14-day forecasts${cacheNote}`;
 }
 
 loadAll();
