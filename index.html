@@ -5190,9 +5190,9 @@ function wdBuildUSTable(elId, usData){
   h+='<th style="' + thS + 'text-align:left;">Item</th>';
   h+='<th style="' + thS + '">24/25 A</th>';
   h+='<th style="' + thS + 'color:var(--muted);">25/26 Apr</th>';
-  h+='<th style="' + thS + 'color:var(--text);font-weight:700;">25/26 May</th>';
+  h+='<th style="' + thS + 'color:var(--text);font-weight:700;">25/26 Jun</th>';
   h+='<th style="' + thS + 'color:var(--blue);">26/27 Proj</th>';
-  h+='<th style="' + thS + 'color:var(--muted2);font-size:7px;">May vs Apr</th>';
+  h+='<th style="' + thS + 'color:var(--muted2);font-size:7px;">Jun vs May</th>';
   h+='<th style="' + thS + 'color:var(--blue);font-size:7px;">26/27 vs 25/26</th>';
   h+='</tr></thead><tbody>';
   attrs.forEach(function(attr){
@@ -5229,9 +5229,9 @@ function wdBuildWorldTable(elId, worldData, region){
   h+='<thead><tr><th style="' + thS + 'text-align:left;">' + region + ' (' + (worldData.unit||'MMT') + ')</th>';
   h+='<th style="' + thS + '">24/25 A</th>';
   h+='<th style="' + thS + 'color:var(--muted);">25/26 Apr</th>';
-  h+='<th style="' + thS + 'color:var(--text);font-weight:700;">25/26 May</th>';
+  h+='<th style="' + thS + 'color:var(--text);font-weight:700;">25/26 Jun</th>';
   h+='<th style="' + thS + 'color:var(--blue);">26/27 Proj</th>';
-  h+='<th style="' + thS + 'color:var(--muted2);font-size:7px;">May vs Apr</th>';
+  h+='<th style="' + thS + 'color:var(--muted2);font-size:7px;">Jun vs May</th>';
   h+='<th style="' + thS + 'color:var(--blue);font-size:7px;">26/27 vs 25/26</th>';
   h+='</tr></thead><tbody>';
   attrs.forEach(function(attr){
@@ -5367,7 +5367,7 @@ function initWasde(){
     .then(function(d){
       _wdData=d;
       var tag=document.getElementById('wasde-report-tag');
-      if(tag) tag.textContent='USDA WASDE-671 \u00b7 May 2026 \u00b7 Apr vs May comparison \u00b7 2026/27 First Projection';
+      if(tag) tag.textContent='USDA WASDE-672 \u00b7 Jun 2026 \u00b7 May vs Jun comparison \u00b7 2026/27 Updated Projection';
       wdRenderComm('wheat');
     })
     .catch(function(e){

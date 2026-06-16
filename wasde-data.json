@@ -1,393 +1,80 @@
 {
-  "reportDate": "May 2026",
-  "wasdeNumber": "WASDE-671",
-  "generatedFrom": "wasde0526.xlsx",
-  "summaries": {
-    "wheat": [
-      "The 2026/27 U.S. wheat outlook is for reduced supplies and exports, lower domestic use, and smaller ending stocks compared with 2025/26. U.S. 2026/27 production is projected at 1.561 billion bushels, down 424 million from the prior year, reflecting sharply lower harvested area.",
-      "Total U.S. 2026/27 domestic use is lower on reduced feed and residual use reflecting smaller supplies, while food use is unchanged at 960 million bushels. U.S. 2026/27 exports are projected at 775 million bushels.",
-      "Global 2026/27 outlook is for lower supplies, marginally lower consumption, reduced trade, and decreased ending stocks. World production projected at 819.1 MMT, down from the 2025/26 record of 843.8 MMT. World ending stocks fall to 275.0 MMT from 279.2 MMT."
-    ],
-    "corn": [
-      "The 2026/27 U.S. corn outlook is for reductions to supply, total use, and ending stocks with a higher expected farm price. U.S. corn production for 2026/27 projected at 15.995 billion bushels, down 1.026 billion from the prior year's record on lower harvested area and yield.",
-      "Total U.S. corn use for 2026/27 is forecast to fall 2 percent relative to a year ago. U.S. corn exports forecast to decline 5 percent to 3.2 billion bushels. With supply falling more than use, 2026/27 ending stocks are down 185 million bushels. Stocks-to-use is 12.1 percent.",
-      "World corn production for 2026/27 forecast to decline from the prior year's record to 1.295 billion MMT. Global corn ending stocks for 2026/27 down 19.4 MMT to 277.5 MMT \u2014 which, if realized, would be the lowest since 2012/13."
-    ],
-    "soybeans": [
-      "The 2026/27 outlook for U.S. soybeans shows higher supplies, crush, and exports with lower ending stocks from the 2025/26 forecast. Crush projected at 2.750 billion bushels, up 120 million from 2025/26 on favourable crush margins.",
-      "U.S. soybean exports projected to rise to 1.630 billion bushels, an increase over 2025/26 when tariff measures curtailed Chinese purchases. U.S. ending stocks for 2026/27 projected at 310 million bushels, down 30 million from revised 2025/26.",
-      "Global 2026/27 oilseed outlook shows higher production, crush, and ending stocks. World soybean production projected at 441.5 MMT. Combined global oilseed crush projected to increase by 4 percent."
-    ],
-    "soymeal": [
-      "World soybean meal production for 2026/27 is projected at 300.4 MMT, up from 290.3 MMT in 2025/26, driven by higher crush volumes in all major origins \u2014 United States, Brazil, and Argentina.",
-      "Global soybean meal exports for 2026/27 are projected at 88.2 MMT, reflecting strong demand growth in Asia and continued expansion of livestock sectors in key importing regions.",
-      "U.S. soybean meal production for 2026/27 projected at 58.99 thousand short tons, with exports at 21.7 thousand short tons, the highest on record, reflecting competitive FOB values."
-    ],
-    "soyoil": [
-      "Total U.S. soybean oil demand for 2026/27 is forecast to increase 7 percent, with higher domestic use partly offset by lower exports. Biofuel use projected at 17.8 billion pounds, up substantially from 14.2 billion in 2025/26.",
-      "World soybean oil production for 2026/27 is projected at 74.7 MMT, up from 71.8 MMT in 2025/26. Global ending stocks projected at 6.32 MMT, recovering from the 5.93 MMT trough in 2025/26.",
-      "Argentine soybean oil exports remain the dominant trade flow at 6.55 MMT. U.S. soybean oil exports projected to fall sharply to 0.18 MMT in 2026/27 on higher domestic biofuel demand absorbing available supply."
-    ]
-  },
-  "corn": {
-    "us": {
-      "unit": "Million Bushels",
-      "attrs": [
-        "Beginning Stocks",
-        "Production",
-        "Imports",
-        "Supply, Total",
-        "Feed and Residual",
-        "Food/Seed/Industrial",
-        "Ethanol",
-        "Domestic, Total",
-        "Exports",
-        "Use, Total",
-        "Ending Stocks",
-        "Avg. Farm Price ($/bu)"
-      ],
-      "2024/25A": {
-        "Beginning Stocks": "1763",
-        "Production": "14892",
-        "Imports": "22",
-        "Supply, Total": "16677",
-        "Feed and Residual": "5454",
-        "Food/Seed/Industrial": "6814",
-        "Ethanol": "5436",
-        "Domestic, Total": "12267",
-        "Exports": "2858",
-        "Use, Total": "15126",
-        "Ending Stocks": "1551",
-        "Avg. Farm Price ($/bu)": "4.24"
-      },
-      "2025/26 Apr": {
-        "Beginning Stocks": "1551",
-        "Production": "17021",
-        "Imports": "25",
-        "Supply, Total": "18597",
-        "Feed and Residual": "6200",
-        "Food/Seed/Industrial": "6955",
-        "Ethanol": "5600",
-        "Domestic, Total": "13155",
-        "Exports": "3300",
-        "Use, Total": "16455",
-        "Ending Stocks": "2142",
-        "Avg. Farm Price ($/bu)": "4.15"
-      },
-      "2025/26 May": {
-        "Beginning Stocks": "1551",
-        "Production": "17021",
-        "Imports": "25",
-        "Supply, Total": "18597",
-        "Feed and Residual": "6200",
-        "Food/Seed/Industrial": "6955",
-        "Ethanol": "5600",
-        "Domestic, Total": "13155",
-        "Exports": "3300",
-        "Use, Total": "16455",
-        "Ending Stocks": "2142",
-        "Avg. Farm Price ($/bu)": "4.15"
-      },
-      "2026/27 Proj": {
-        "Beginning Stocks": "2142",
-        "Production": "15995",
-        "Imports": "25",
-        "Supply, Total": "18162",
-        "Feed and Residual": "6100",
-        "Food/Seed/Industrial": "6955",
-        "Ethanol": "5600",
-        "Domestic, Total": "13055",
-        "Exports": "3150",
-        "Use, Total": "16205",
-        "Ending Stocks": "1957",
-        "Avg. Farm Price ($/bu)": "4.40"
-      }
-    },
-    "world": {
-      "unit": "MMT",
-      "attrs": [
-        "Beginning Stocks",
-        "Production",
-        "Imports",
-        "Domestic Total",
-        "Exports",
-        "Ending Stocks"
-      ],
-      "regions": {
-        "World": {
-          "2024/25A": {
-            "Beginning Stocks": "313.98",
-            "Production": "1232.07",
-            "Imports": "186.11",
-            "Domestic Total": "1251.26",
-            "Exports": "187.32",
-            "Ending Stocks": "294.80"
-          },
-          "2025/26 Apr": {
-            "Beginning Stocks": "296.28",
-            "Production": "1301.07",
-            "Imports": "193.1",
-            "Domestic Total": "1302.55",
-            "Exports": "207.29",
-            "Ending Stocks": "294.81"
-          },
-          "2025/26 May": {
-            "Beginning Stocks": "294.80",
-            "Production": "1312.68",
-            "Imports": "195.86",
-            "Domestic Total": "1310.53",
-            "Exports": "213.61",
-            "Ending Stocks": "296.95"
-          },
-          "2026/27 Proj": {
-            "Beginning Stocks": "296.95",
-            "Production": "1295.38",
-            "Imports": "198.59",
-            "Domestic Total": "1314.79",
-            "Exports": "206.91",
-            "Ending Stocks": "277.54"
-          }
-        },
-        "United States": {
-          "2024/25A": {
-            "Beginning Stocks": "44.79",
-            "Production": "378.27",
-            "Imports": "0.55",
-            "Domestic Total": "311.60",
-            "Exports": "72.60",
-            "Ending Stocks": "39.40"
-          },
-          "2025/26 Apr": {
-            "Beginning Stocks": "39.40",
-            "Production": "432.34",
-            "Imports": "0.64",
-            "Domestic Total": "334.15",
-            "Exports": "83.82",
-            "Ending Stocks": "54.41"
-          },
-          "2025/26 May": {
-            "Beginning Stocks": "39.40",
-            "Production": "432.34",
-            "Imports": "0.64",
-            "Domestic Total": "334.15",
-            "Exports": "83.82",
-            "Ending Stocks": "54.41"
-          },
-          "2026/27 Proj": {
-            "Beginning Stocks": "54.41",
-            "Production": "406.29",
-            "Imports": "0.64",
-            "Domestic Total": "331.61",
-            "Exports": "80.01",
-            "Ending Stocks": "49.71"
-          }
-        },
-        "Brazil": {
-          "2024/25A": {
-            "Beginning Stocks": "7.35",
-            "Production": "136.00",
-            "Imports": "1.76",
-            "Domestic Total": "91.50",
-            "Exports": "42.24",
-            "Ending Stocks": "11.38"
-          },
-          "2025/26 Apr": {
-            "Beginning Stocks": "11.52",
-            "Production": "132.0",
-            "Imports": "1.7",
-            "Domestic Total": "96.0",
-            "Exports": "43.0",
-            "Ending Stocks": "6.22"
-          },
-          "2025/26 May": {
-            "Beginning Stocks": "11.38",
-            "Production": "135.00",
-            "Imports": "1.70",
-            "Domestic Total": "93.50",
-            "Exports": "43.00",
-            "Ending Stocks": "11.58"
-          },
-          "2026/27 Proj": {
-            "Beginning Stocks": "11.58",
-            "Production": "139.00",
-            "Imports": "1.80",
-            "Domestic Total": "97.00",
-            "Exports": "44.00",
-            "Ending Stocks": "11.38"
-          }
-        },
-        "Argentina": {
-          "2024/25A": {
-            "Beginning Stocks": "2.46",
-            "Production": "49.00",
-            "Imports": "0.01",
-            "Domestic Total": "17.10",
-            "Exports": "29.07",
-            "Ending Stocks": "5.30"
-          },
-          "2025/26 Apr": {
-            "Beginning Stocks": "6.72",
-            "Production": "52.0",
-            "Imports": "0.01",
-            "Domestic Total": "16.7",
-            "Exports": "37.0",
-            "Ending Stocks": "5.02"
-          },
-          "2025/26 May": {
-            "Beginning Stocks": "5.30",
-            "Production": "59.00",
-            "Imports": "0.01",
-            "Domestic Total": "17.50",
-            "Exports": "43.00",
-            "Ending Stocks": "3.81"
-          },
-          "2026/27 Proj": {
-            "Beginning Stocks": "3.81",
-            "Production": "55.00",
-            "Imports": "0.01",
-            "Domestic Total": "17.30",
-            "Exports": "38.00",
-            "Ending Stocks": "3.51"
-          }
-        },
-        "Ukraine": {
-          "2024/25A": {
-            "Beginning Stocks": "0.54",
-            "Production": "26.80",
-            "Imports": "0.02",
-            "Domestic Total": "6.50",
-            "Exports": "20.02",
-            "Ending Stocks": "0.84"
-          },
-          "2025/26 Apr": {
-            "Beginning Stocks": "0.84",
-            "Production": "30.90",
-            "Imports": "0.01",
-            "Domestic Total": "7.00",
-            "Exports": "22.00",
-            "Ending Stocks": "2.75"
-          },
-          "2025/26 May": {
-            "Beginning Stocks": "0.84",
-            "Production": "30.90",
-            "Imports": "0.01",
-            "Domestic Total": "7.00",
-            "Exports": "22.00",
-            "Ending Stocks": "2.75"
-          },
-          "2026/27 Proj": {
-            "Beginning Stocks": "2.75",
-            "Production": "30.00",
-            "Imports": "0.01",
-            "Domestic Total": "7.20",
-            "Exports": "23.00",
-            "Ending Stocks": "2.56"
-          }
-        },
-        "China": {
-          "2024/25A": {
-            "Beginning Stocks": "211.19",
-            "Production": "294.92",
-            "Imports": "1.82",
-            "Domestic Total": "316.00",
-            "Exports": "0.00",
-            "Ending Stocks": "191.93"
-          },
-          "2025/26 Apr": {
-            "Beginning Stocks": "191.93",
-            "Production": "301.24",
-            "Imports": "6.00",
-            "Domestic Total": "321.00",
-            "Exports": "0.02",
-            "Ending Stocks": "178.15"
-          },
-          "2025/26 May": {
-            "Beginning Stocks": "191.93",
-            "Production": "301.24",
-            "Imports": "6.00",
-            "Domestic Total": "321.00",
-            "Exports": "0.02",
-            "Ending Stocks": "178.15"
-          },
-          "2026/27 Proj": {
-            "Beginning Stocks": "178.15",
-            "Production": "307.00",
-            "Imports": "6.00",
-            "Domestic Total": "325.00",
-            "Exports": "0.02",
-            "Ending Stocks": "166.13"
-          }
-        }
-      }
-    }
+  "meta": {
+    "wasdeNumber": 672,
+    "reportDate": "2026-06-11",
+    "title": "WASDE-672 \u00b7 June 2026",
+    "description": "May vs June comparison \u00b7 2026/27 Updated Projection"
   },
   "wheat": {
     "us": {
-      "unit": "Million Bushels",
+      "unit": "Mil. Bu.",
       "attrs": [
         "Beginning Stocks",
         "Production",
         "Imports",
         "Supply, Total",
+        "Domestic, Total",
         "Food",
         "Feed and Residual",
-        "Domestic, Total",
+        "Seed",
         "Exports",
         "Use, Total",
         "Ending Stocks",
-        "Avg. Farm Price ($/bu)"
+        "Avg. Farm Price",
+        "Area Planted",
+        "Area Harvested",
+        "Yield per Harvested Acre"
       ],
       "2024/25A": {
-        "Beginning Stocks": "696",
-        "Production": "1979",
-        "Imports": "149",
-        "Supply, Total": "2824",
-        "Food": "969",
-        "Feed and Residual": "113",
-        "Domestic, Total": "1143",
-        "Exports": "826",
-        "Use, Total": "1969",
-        "Ending Stocks": "855",
-        "Avg. Farm Price ($/bu)": "5.52"
-      },
-      "2025/26 Apr": {
-        "Beginning Stocks": "855",
-        "Production": "1985",
-        "Imports": "125",
-        "Supply, Total": "2964",
-        "Food": "960",
-        "Feed and Residual": "100",
-        "Domestic, Total": "1120",
-        "Exports": "910",
-        "Use, Total": "2030",
-        "Ending Stocks": "935",
-        "Avg. Farm Price ($/bu)": "5.00"
+        "Beginning Stocks": 696.0,
+        "Production": 1979.0,
+        "Imports": 149.0,
+        "Supply, Total": 2824.0,
+        "Domestic, Total": 1143.0,
+        "Food": 969.0,
+        "Feed and Residual": 113.0,
+        "Seed": 61.0,
+        "Exports": 826.0,
+        "Use, Total": 1969.0,
+        "Ending Stocks": 855.0,
+        "Avg. Farm Price": 5.52,
+        "Area Planted": 46.3,
+        "Area Harvested": 38.6,
+        "Yield per Harvested Acre": 51.2
       },
       "2025/26 May": {
-        "Beginning Stocks": "855",
-        "Production": "1985",
-        "Imports": "125",
-        "Supply, Total": "2964",
-        "Food": "960",
-        "Feed and Residual": "100",
-        "Domestic, Total": "1120",
-        "Exports": "910",
-        "Use, Total": "2030",
-        "Ending Stocks": "935",
-        "Avg. Farm Price ($/bu)": "5.00"
+        "Beginning Stocks": 855.0,
+        "Production": 1985.0,
+        "Imports": 125.0,
+        "Supply, Total": 2964.0,
+        "Domestic, Total": 1120.0,
+        "Food": 960.0,
+        "Feed and Residual": 100.0,
+        "Seed": 60.0,
+        "Exports": 910.0,
+        "Use, Total": 2030.0,
+        "Ending Stocks": 935.0,
+        "Avg. Farm Price": 5.05,
+        "Area Planted": 45.3,
+        "Area Harvested": 37.2,
+        "Yield per Harvested Acre": 53.3
       },
       "2026/27 Proj": {
-        "Beginning Stocks": "935",
-        "Production": "1561",
-        "Imports": "140",
-        "Supply, Total": "2636",
-        "Food": "960",
-        "Feed and Residual": "80",
-        "Domestic, Total": "1099",
-        "Exports": "775",
-        "Use, Total": "1874",
-        "Ending Stocks": "762",
-        "Avg. Farm Price ($/bu)": "6.50"
+        "Beginning Stocks": 935.0,
+        "Production": 1543.0,
+        "Imports": 140.0,
+        "Supply, Total": 2618.0,
+        "Domestic, Total": 1099.0,
+        "Food": 960.0,
+        "Feed and Residual": 80.0,
+        "Seed": 59.0,
+        "Exports": 775.0,
+        "Use, Total": 1874.0,
+        "Ending Stocks": 744.0,
+        "Avg. Farm Price": 6.0,
+        "Area Planted": 43.8,
+        "Area Harvested": 32.9,
+        "Yield per Harvested Acre": 47.0
       }
     },
     "world": {
@@ -396,289 +83,147 @@
         "Beginning Stocks",
         "Production",
         "Imports",
-        "Domestic Total",
         "Exports",
+        "Domestic Use",
         "Ending Stocks"
       ],
-      "regions": {
-        "World": {
-          "2024/25A": {
-            "Beginning Stocks": "269.86",
-            "Production": "799.31",
-            "Imports": "201.21",
-            "Domestic Total": "810.27",
-            "Exports": "210.47",
-            "Ending Stocks": "258.89"
-          },
-          "2025/26 Apr": {
-            "Beginning Stocks": "259.09",
-            "Production": "844.15",
-            "Imports": "217.62",
-            "Domestic Total": "820.12",
-            "Exports": "221.88",
-            "Ending Stocks": "283.12"
-          },
-          "2025/26 May": {
-            "Beginning Stocks": "258.89",
-            "Production": "843.84",
-            "Imports": "218.34",
-            "Domestic Total": "823.52",
-            "Exports": "223.68",
-            "Ending Stocks": "279.21"
-          },
-          "2026/27 Proj": {
-            "Beginning Stocks": "279.21",
-            "Production": "819.06",
-            "Imports": "207.31",
-            "Domestic Total": "823.23",
-            "Exports": "211.70",
-            "Ending Stocks": "275.04"
-          }
-        },
-        "Russia": {
-          "2024/25A": {
-            "Beginning Stocks": "11.69",
-            "Production": "81.60",
-            "Imports": "0.30",
-            "Domestic Total": "40.00",
-            "Exports": "43.00",
-            "Ending Stocks": "10.59"
-          },
-          "2025/26 Apr": {
-            "Beginning Stocks": "10.59",
-            "Production": "90.3",
-            "Imports": "0.30",
-            "Domestic Total": "41.7",
-            "Exports": "44.5",
-            "Ending Stocks": "14.99"
-          },
-          "2025/26 May": {
-            "Beginning Stocks": "10.59",
-            "Production": "90.30",
-            "Imports": "0.30",
-            "Domestic Total": "41.70",
-            "Exports": "46.00",
-            "Ending Stocks": "13.49"
-          },
-          "2026/27 Proj": {
-            "Beginning Stocks": "13.49",
-            "Production": "86.00",
-            "Imports": "0.30",
-            "Domestic Total": "40.20",
-            "Exports": "47.00",
-            "Ending Stocks": "12.59"
-          }
-        },
-        "European Union": {
-          "2024/25A": {
-            "Beginning Stocks": "15.92",
-            "Production": "121.06",
-            "Imports": "10.72",
-            "Domestic Total": "108.50",
-            "Exports": "27.92",
-            "Ending Stocks": "11.27"
-          },
-          "2025/26 Apr": {
-            "Beginning Stocks": "11.27",
-            "Production": "145.11",
-            "Imports": "6.50",
-            "Domestic Total": "115.50",
-            "Exports": "30.50",
-            "Ending Stocks": "16.88"
-          },
-          "2025/26 May": {
-            "Beginning Stocks": "11.27",
-            "Production": "145.11",
-            "Imports": "6.50",
-            "Domestic Total": "115.50",
-            "Exports": "30.50",
-            "Ending Stocks": "16.88"
-          },
-          "2026/27 Proj": {
-            "Beginning Stocks": "16.88",
-            "Production": "136.00",
-            "Imports": "6.50",
-            "Domestic Total": "113.75",
-            "Exports": "31.00",
-            "Ending Stocks": "14.63"
-          }
-        },
-        "Australia": {
-          "2024/25A": {
-            "Beginning Stocks": "2.41",
-            "Production": "34.11",
-            "Imports": "0.22",
-            "Domestic Total": "9.10",
-            "Exports": "23.65",
-            "Ending Stocks": "3.99"
-          },
-          "2025/26 Apr": {
-            "Beginning Stocks": "3.99",
-            "Production": "36.00",
-            "Imports": "0.23",
-            "Domestic Total": "9.10",
-            "Exports": "26.00",
-            "Ending Stocks": "5.12"
-          },
-          "2025/26 May": {
-            "Beginning Stocks": "3.99",
-            "Production": "36.00",
-            "Imports": "0.23",
-            "Domestic Total": "9.10",
-            "Exports": "26.00",
-            "Ending Stocks": "5.12"
-          },
-          "2026/27 Proj": {
-            "Beginning Stocks": "5.12",
-            "Production": "30.00",
-            "Imports": "0.24",
-            "Domestic Total": "8.65",
-            "Exports": "23.00",
-            "Ending Stocks": "3.71"
-          }
-        },
-        "Canada": {
-          "2024/25A": {
-            "Beginning Stocks": "5.29",
-            "Production": "35.94",
-            "Imports": "0.61",
-            "Domestic Total": "8.31",
-            "Exports": "29.35",
-            "Ending Stocks": "4.18"
-          },
-          "2025/26 Apr": {
-            "Beginning Stocks": "4.18",
-            "Production": "39.96",
-            "Imports": "0.60",
-            "Domestic Total": "8.85",
-            "Exports": "30.00",
-            "Ending Stocks": "5.88"
-          },
-          "2025/26 May": {
-            "Beginning Stocks": "4.18",
-            "Production": "39.96",
-            "Imports": "0.60",
-            "Domestic Total": "8.85",
-            "Exports": "30.00",
-            "Ending Stocks": "5.88"
-          },
-          "2026/27 Proj": {
-            "Beginning Stocks": "5.88",
-            "Production": "35.00",
-            "Imports": "0.60",
-            "Domestic Total": "8.85",
-            "Exports": "28.00",
-            "Ending Stocks": "4.63"
-          }
-        },
-        "Ukraine": {
-          "2024/25A": {
-            "Beginning Stocks": "1.51",
-            "Production": "23.40",
-            "Imports": "0.07",
-            "Domestic Total": "8.50",
-            "Exports": "15.75",
-            "Ending Stocks": "0.73"
-          },
-          "2025/26 Apr": {
-            "Beginning Stocks": "0.73",
-            "Production": "24.10",
-            "Imports": "0.10",
-            "Domestic Total": "8.80",
-            "Exports": "12.50",
-            "Ending Stocks": "3.63"
-          },
-          "2025/26 May": {
-            "Beginning Stocks": "0.73",
-            "Production": "24.10",
-            "Imports": "0.10",
-            "Domestic Total": "8.80",
-            "Exports": "12.50",
-            "Ending Stocks": "3.63"
-          },
-          "2026/27 Proj": {
-            "Beginning Stocks": "3.63",
-            "Production": "25.00",
-            "Imports": "0.10",
-            "Domestic Total": "8.75",
-            "Exports": "13.50",
-            "Ending Stocks": "6.48"
-          }
-        },
-        "China": {
-          "2024/25A": {
-            "Beginning Stocks": "134.52",
-            "Production": "140.10",
-            "Imports": "4.17",
-            "Domestic Total": "150.00",
-            "Exports": "1.02",
-            "Ending Stocks": "127.78"
-          },
-          "2025/26 Apr": {
-            "Beginning Stocks": "127.78",
-            "Production": "140.07",
-            "Imports": "6.00",
-            "Domestic Total": "150.00",
-            "Exports": "1.00",
-            "Ending Stocks": "122.85"
-          },
-          "2025/26 May": {
-            "Beginning Stocks": "127.78",
-            "Production": "140.07",
-            "Imports": "6.00",
-            "Domestic Total": "150.00",
-            "Exports": "1.00",
-            "Ending Stocks": "122.85"
-          },
-          "2026/27 Proj": {
-            "Beginning Stocks": "122.85",
-            "Production": "141.00",
-            "Imports": "6.00",
-            "Domestic Total": "148.00",
-            "Exports": "1.00",
-            "Ending Stocks": "120.85"
-          }
-        },
-        "India": {
-          "2024/25A": {
-            "Beginning Stocks": "7.50",
-            "Production": "113.29",
-            "Imports": "0.16",
-            "Domestic Total": "108.96",
-            "Exports": "0.19",
-            "Ending Stocks": "11.80"
-          },
-          "2025/26 Apr": {
-            "Beginning Stocks": "11.80",
-            "Production": "115.00",
-            "Imports": "0.20",
-            "Domestic Total": "109.00",
-            "Exports": "0.30",
-            "Ending Stocks": "17.70"
-          },
-          "2025/26 May": {
-            "Beginning Stocks": "11.80",
-            "Production": "115.00",
-            "Imports": "0.20",
-            "Domestic Total": "109.00",
-            "Exports": "0.30",
-            "Ending Stocks": "17.70"
-          },
-          "2026/27 Proj": {
-            "Beginning Stocks": "17.70",
-            "Production": "114.00",
-            "Imports": "0.20",
-            "Domestic Total": "109.50",
-            "Exports": "0.30",
-            "Ending Stocks": "22.10"
-          }
-        }
+      "2024/25A": {
+        "Beginning Stocks": 270.14,
+        "Production": 799.31,
+        "Imports": 201.18,
+        "Exports": 210.46,
+        "Domestic Use": 809.91,
+        "Ending Stocks": 259.53
+      },
+      "2025/26 May": {
+        "Beginning Stocks": 259.53,
+        "Production": 844.36,
+        "Imports": 220.93,
+        "Exports": 226.7,
+        "Domestic Use": 823.94,
+        "Ending Stocks": 279.95
+      },
+      "2026/27 Proj": {
+        "Beginning Stocks": 279.95,
+        "Production": 820.06,
+        "Imports": 207.29,
+        "Exports": 211.95,
+        "Domestic Use": 824.59,
+        "Ending Stocks": 275.42
+      }
+    }
+  },
+  "corn": {
+    "us": {
+      "unit": "Mil. Bu.",
+      "attrs": [
+        "Beginning Stocks",
+        "Production",
+        "Imports",
+        "Supply, Total",
+        "Feed and Residual",
+        "Food, Seed & Industrial",
+        "Ethanol & by-products",
+        "Domestic, Total",
+        "Exports",
+        "Use, Total",
+        "Ending Stocks",
+        "Avg. Farm Price",
+        "Area Planted",
+        "Area Harvested",
+        "Yield per Harvested Acre"
+      ],
+      "2024/25A": {
+        "Beginning Stocks": 1763.0,
+        "Production": 14892.0,
+        "Imports": 22.0,
+        "Supply, Total": 16677.0,
+        "Feed and Residual": 5454.0,
+        "Food, Seed & Industrial": 6814.0,
+        "Ethanol & by-products": 5436.0,
+        "Domestic, Total": 12267.0,
+        "Exports": 2858.0,
+        "Use, Total": 15126.0,
+        "Ending Stocks": 1551.0,
+        "Avg. Farm Price": 4.24,
+        "Area Planted": 90.9,
+        "Area Harvested": 83.0,
+        "Yield per Harvested Acre": 179.3
+      },
+      "2025/26 May": {
+        "Beginning Stocks": 1551.0,
+        "Production": 17021.0,
+        "Imports": 28.0,
+        "Supply, Total": 18600.0,
+        "Feed and Residual": 6200.0,
+        "Food, Seed & Industrial": 6930.0,
+        "Ethanol & by-products": 5575.0,
+        "Domestic, Total": 13130.0,
+        "Exports": 3325.0,
+        "Use, Total": 16455.0,
+        "Ending Stocks": 2145.0,
+        "Avg. Farm Price": 4.15,
+        "Area Planted": 98.8,
+        "Area Harvested": 91.3,
+        "Yield per Harvested Acre": 186.5
+      },
+      "2026/27 Proj": {
+        "Beginning Stocks": 2145.0,
+        "Production": 15995.0,
+        "Imports": 25.0,
+        "Supply, Total": 18165.0,
+        "Feed and Residual": 6100.0,
+        "Food, Seed & Industrial": 6955.0,
+        "Ethanol & by-products": 5600.0,
+        "Domestic, Total": 13055.0,
+        "Exports": 3150.0,
+        "Use, Total": 16205.0,
+        "Ending Stocks": 1960.0,
+        "Avg. Farm Price": 4.4,
+        "Area Planted": 95.3,
+        "Area Harvested": 87.4,
+        "Yield per Harvested Acre": 183.0
+      }
+    },
+    "world": {
+      "unit": "MMT",
+      "attrs": [
+        "Beginning Stocks",
+        "Production",
+        "Imports",
+        "Exports",
+        "Domestic Use",
+        "Ending Stocks"
+      ],
+      "2024/25A": {
+        "Beginning Stocks": 313.88,
+        "Production": 1233.2,
+        "Imports": 186.14,
+        "Exports": 187.13,
+        "Domestic Use": 783.99,
+        "Ending Stocks": 295.98
+      },
+      "2025/26 May": {
+        "Beginning Stocks": 295.98,
+        "Production": 1326.67,
+        "Imports": 197.59,
+        "Exports": 217.0,
+        "Domestic Use": 823.33,
+        "Ending Stocks": 303.36
+      },
+      "2026/27 Proj": {
+        "Beginning Stocks": 303.36,
+        "Production": 1300.38,
+        "Imports": 199.63,
+        "Exports": 207.61,
+        "Domestic Use": 832.56,
+        "Ending Stocks": 281.22
       }
     }
   },
   "soybeans": {
     "us": {
-      "unit": "Million Bushels",
+      "unit": "Mil. Bu.",
       "attrs": [
         "Beginning Stocks",
         "Production",
@@ -686,63 +231,62 @@
         "Supply, Total",
         "Crushings",
         "Exports",
-        "Seed",
         "Residual",
+        "Seed",
         "Use, Total",
         "Ending Stocks",
-        "Avg. Farm Price ($/bu)"
+        "Avg. Farm Price",
+        "Area Planted",
+        "Area Harvested",
+        "Yield per Harvested Acre"
       ],
       "2024/25A": {
-        "Beginning Stocks": "342",
-        "Production": "4374",
-        "Imports": "29",
-        "Supply, Total": "4746",
-        "Crushings": "2445",
-        "Exports": "1882",
-        "Seed": "70",
-        "Residual": "23",
-        "Use, Total": "4421",
-        "Ending Stocks": "325",
-        "Avg. Farm Price ($/bu)": "10.00"
-      },
-      "2025/26 Apr": {
-        "Beginning Stocks": "325",
-        "Production": "4262",
-        "Imports": "25",
-        "Supply, Total": "4612",
-        "Crushings": "2630",
-        "Exports": "1530",
-        "Seed": "73",
-        "Residual": "39",
-        "Use, Total": "4272",
-        "Ending Stocks": "340",
-        "Avg. Farm Price ($/bu)": "10.40"
+        "Beginning Stocks": 342.0,
+        "Production": 4374.0,
+        "Imports": 29.0,
+        "Supply, Total": 4746.0,
+        "Crushings": 2445.0,
+        "Exports": 1882.0,
+        "Residual": 23.0,
+        "Seed": 70.0,
+        "Use, Total": 4421.0,
+        "Ending Stocks": 325.0,
+        "Avg. Farm Price": 10.0,
+        "Area Planted": 87.3,
+        "Area Harvested": 86.2,
+        "Yield per Harvested Acre": 50.7
       },
       "2025/26 May": {
-        "Beginning Stocks": "325",
-        "Production": "4262",
-        "Imports": "25",
-        "Supply, Total": "4612",
-        "Crushings": "2630",
-        "Exports": "1530",
-        "Seed": "73",
-        "Residual": "39",
-        "Use, Total": "4272",
-        "Ending Stocks": "340",
-        "Avg. Farm Price ($/bu)": "10.40"
+        "Beginning Stocks": 325.0,
+        "Production": 4262.0,
+        "Imports": 25.0,
+        "Supply, Total": 4612.0,
+        "Crushings": 2650.0,
+        "Exports": 1510.0,
+        "Residual": 39.0,
+        "Seed": 73.0,
+        "Use, Total": 4272.0,
+        "Ending Stocks": 340.0,
+        "Avg. Farm Price": 10.4,
+        "Area Planted": 81.2,
+        "Area Harvested": 80.4,
+        "Yield per Harvested Acre": 53.0
       },
       "2026/27 Proj": {
-        "Beginning Stocks": "340",
-        "Production": "4435",
-        "Imports": "25",
-        "Supply, Total": "4800",
-        "Crushings": "2750",
-        "Exports": "1630",
-        "Seed": "72",
-        "Residual": "38",
-        "Use, Total": "4490",
-        "Ending Stocks": "310",
-        "Avg. Farm Price ($/bu)": "11.40"
+        "Beginning Stocks": 340.0,
+        "Production": 4435.0,
+        "Imports": 25.0,
+        "Supply, Total": 4800.0,
+        "Crushings": 2750.0,
+        "Exports": 1630.0,
+        "Residual": 38.0,
+        "Seed": 72.0,
+        "Use, Total": 4490.0,
+        "Ending Stocks": 310.0,
+        "Avg. Farm Price": 11.4,
+        "Area Planted": 84.7,
+        "Area Harvested": 83.7,
+        "Yield per Harvested Acre": 53.0
       }
     },
     "world": {
@@ -751,643 +295,107 @@
         "Beginning Stocks",
         "Production",
         "Imports",
-        "Domestic Total",
         "Exports",
+        "Crush",
         "Ending Stocks"
       ],
-      "regions": {
-        "World": {
-          "2024/25A": {
-            "Beginning Stocks": "115.13",
-            "Production": "427.89",
-            "Imports": "179.19",
-            "Domestic Total": "412.13",
-            "Exports": "184.17",
-            "Ending Stocks": "125.91"
-          },
-          "2025/26 Apr": {
-            "Beginning Stocks": "124.81",
-            "Production": "427.41",
-            "Imports": "185.63",
-            "Domestic Total": "425.88",
-            "Exports": "187.17",
-            "Ending Stocks": "124.79"
-          },
-          "2025/26 May": {
-            "Beginning Stocks": "125.91",
-            "Production": "427.60",
-            "Imports": "184.77",
-            "Domestic Total": "426.58",
-            "Exports": "186.57",
-            "Ending Stocks": "125.13"
-          },
-          "2026/27 Proj": {
-            "Beginning Stocks": "125.13",
-            "Production": "441.54",
-            "Imports": "188.02",
-            "Domestic Total": "440.69",
-            "Exports": "189.22",
-            "Ending Stocks": "124.78"
-          }
-        },
-        "Brazil": {
-          "2024/25A": {
-            "Beginning Stocks": "29.76",
-            "Production": "172.50",
-            "Imports": "0.73",
-            "Domestic Total": "62.16",
-            "Exports": "103.14",
-            "Ending Stocks": "37.69"
-          },
-          "2025/26 Apr": {
-            "Beginning Stocks": "37.69",
-            "Production": "180.00",
-            "Imports": "0.90",
-            "Domestic Total": "65.90",
-            "Exports": "115.00",
-            "Ending Stocks": "37.69"
-          },
-          "2025/26 May": {
-            "Beginning Stocks": "37.69",
-            "Production": "180.00",
-            "Imports": "0.90",
-            "Domestic Total": "65.90",
-            "Exports": "115.00",
-            "Ending Stocks": "37.69"
-          },
-          "2026/27 Proj": {
-            "Beginning Stocks": "37.69",
-            "Production": "185.00",
-            "Imports": "0.90",
-            "Domestic Total": "68.00",
-            "Exports": "118.00",
-            "Ending Stocks": "37.59"
-          }
-        },
-        "Argentina": {
-          "2024/25A": {
-            "Beginning Stocks": "24.05",
-            "Production": "51.11",
-            "Imports": "6.32",
-            "Domestic Total": "48.94",
-            "Exports": "7.87",
-            "Ending Stocks": "24.67"
-          },
-          "2025/26 Apr": {
-            "Beginning Stocks": "23.57",
-            "Production": "48.0",
-            "Imports": "7.30",
-            "Domestic Total": "47.9",
-            "Exports": "8.25",
-            "Ending Stocks": "22.72"
-          },
-          "2025/26 May": {
-            "Beginning Stocks": "24.67",
-            "Production": "48.00",
-            "Imports": "7.30",
-            "Domestic Total": "48.40",
-            "Exports": "8.25",
-            "Ending Stocks": "23.32"
-          },
-          "2026/27 Proj": {
-            "Beginning Stocks": "23.32",
-            "Production": "55.00",
-            "Imports": "7.50",
-            "Domestic Total": "52.00",
-            "Exports": "9.00",
-            "Ending Stocks": "24.82"
-          }
-        },
-        "China": {
-          "2024/25A": {
-            "Beginning Stocks": "43.31",
-            "Production": "20.65",
-            "Imports": "108.00",
-            "Domestic Total": "127.40",
-            "Exports": "0.07",
-            "Ending Stocks": "44.49"
-          },
-          "2025/26 Apr": {
-            "Beginning Stocks": "44.49",
-            "Production": "20.90",
-            "Imports": "112.00",
-            "Domestic Total": "132.90",
-            "Exports": "0.12",
-            "Ending Stocks": "44.37"
-          },
-          "2025/26 May": {
-            "Beginning Stocks": "44.49",
-            "Production": "20.90",
-            "Imports": "112.00",
-            "Domestic Total": "132.90",
-            "Exports": "0.12",
-            "Ending Stocks": "44.37"
-          },
-          "2026/27 Proj": {
-            "Beginning Stocks": "44.37",
-            "Production": "21.00",
-            "Imports": "112.00",
-            "Domestic Total": "133.00",
-            "Exports": "0.10",
-            "Ending Stocks": "44.27"
-          }
-        },
-        "United States": {
-          "2024/25A": {
-            "Beginning Stocks": "9.32",
-            "Production": "119.05",
-            "Imports": "0.79",
-            "Domestic Total": "69.09",
-            "Exports": "51.23",
-            "Ending Stocks": "8.84"
-          },
-          "2025/26 Apr": {
-            "Beginning Stocks": "8.84",
-            "Production": "115.99",
-            "Imports": "0.68",
-            "Domestic Total": "74.62",
-            "Exports": "41.64",
-            "Ending Stocks": "9.25"
-          },
-          "2025/26 May": {
-            "Beginning Stocks": "8.84",
-            "Production": "115.99",
-            "Imports": "0.68",
-            "Domestic Total": "74.62",
-            "Exports": "41.64",
-            "Ending Stocks": "9.25"
-          },
-          "2026/27 Proj": {
-            "Beginning Stocks": "9.25",
-            "Production": "120.70",
-            "Imports": "0.68",
-            "Domestic Total": "77.83",
-            "Exports": "44.36",
-            "Ending Stocks": "8.44"
-          }
-        }
+      "2024/25A": {
+        "Beginning Stocks": 115.14,
+        "Production": 427.93,
+        "Imports": 179.18,
+        "Exports": 184.06,
+        "Crush": 359.14,
+        "Ending Stocks": 126.0
+      },
+      "2025/26 May": {
+        "Beginning Stocks": 126.0,
+        "Production": 429.2,
+        "Imports": 185.01,
+        "Exports": 186.75,
+        "Crush": 371.11,
+        "Ending Stocks": 125.52
+      },
+      "2026/27 Proj": {
+        "Beginning Stocks": 125.52,
+        "Production": 441.34,
+        "Imports": 188.02,
+        "Exports": 189.22,
+        "Crush": 383.09,
+        "Ending Stocks": 124.88
       }
     }
   },
   "soymeal": {
     "us": {
-      "unit": "Thousand Short Tons",
+      "unit": "1000 ST",
       "attrs": [
         "Beginning Stocks",
         "Production",
         "Imports",
-        "Supply, Total",
-        "Domestic Disappearance",
         "Exports",
-        "Use, Total",
+        "Domestic",
         "Ending Stocks",
-        "Avg. Price ($/ST)"
+        "Avg. Price"
       ],
       "2024/25A": {
-        "Beginning Stocks": "453",
-        "Production": "58443",
-        "Imports": "807",
-        "Supply, Total": "59704",
-        "Domestic Disappearance": "41041",
-        "Exports": "18265",
-        "Use, Total": "59305",
-        "Ending Stocks": "398",
-        "Avg. Price ($/ST)": "299.77"
-      },
-      "2025/26 Apr": {
-        "Beginning Stocks": "398",
-        "Production": "62627",
-        "Imports": "800",
-        "Supply, Total": "63825",
-        "Domestic Disappearance": "43575",
-        "Exports": "19800",
-        "Use, Total": "63375",
-        "Ending Stocks": "450",
-        "Avg. Price ($/ST)": "315.00"
+        "Beginning Stocks": 453.0,
+        "Production": 58443.0,
+        "Imports": 807.0,
+        "Exports": 18265.0,
+        "Ending Stocks": 398.0,
+        "Avg. Price": 299.77
       },
       "2025/26 May": {
-        "Beginning Stocks": "398",
-        "Production": "62627",
-        "Imports": "800",
-        "Supply, Total": "63825",
-        "Domestic Disappearance": "43575",
-        "Exports": "19800",
-        "Use, Total": "63375",
-        "Ending Stocks": "450",
-        "Avg. Price ($/ST)": "315.00"
+        "Beginning Stocks": 398.0,
+        "Production": 63052.0,
+        "Imports": 825.0,
+        "Exports": 20000.0,
+        "Ending Stocks": 450.0,
+        "Avg. Price": 315.0
       },
       "2026/27 Proj": {
-        "Beginning Stocks": "450",
-        "Production": "65025",
-        "Imports": "800",
-        "Supply, Total": "66275",
-        "Domestic Disappearance": "44125",
-        "Exports": "21700",
-        "Use, Total": "65825",
-        "Ending Stocks": "450",
-        "Avg. Price ($/ST)": "310.00"
-      }
-    },
-    "world": {
-      "unit": "MMT",
-      "attrs": [
-        "Beginning Stocks",
-        "Production",
-        "Imports",
-        "Domestic Total",
-        "Exports",
-        "Ending Stocks"
-      ],
-      "regions": {
-        "World": {
-          "2024/25A": {
-            "Beginning Stocks": "14.31",
-            "Production": "281.74",
-            "Imports": "77.71",
-            "Domestic Total": "272.78",
-            "Exports": "83.04",
-            "Ending Stocks": "17.94"
-          },
-          "2025/26 Apr": {
-            "Beginning Stocks": "18.44",
-            "Production": "290.14",
-            "Imports": "80.46",
-            "Domestic Total": "285.65",
-            "Exports": "84.06",
-            "Ending Stocks": "19.32"
-          },
-          "2025/26 May": {
-            "Beginning Stocks": "17.94",
-            "Production": "290.33",
-            "Imports": "80.14",
-            "Domestic Total": "285.57",
-            "Exports": "83.95",
-            "Ending Stocks": "18.89"
-          },
-          "2026/27 Proj": {
-            "Beginning Stocks": "18.89",
-            "Production": "300.41",
-            "Imports": "84.00",
-            "Domestic Total": "295.14",
-            "Exports": "88.23",
-            "Ending Stocks": "19.93"
-          }
-        },
-        "Argentina": {
-          "2024/25A": {
-            "Beginning Stocks": "2.26",
-            "Production": "33.51",
-            "Imports": "0.28",
-            "Domestic Total": "3.53",
-            "Exports": "29.78",
-            "Ending Stocks": "2.74"
-          },
-          "2025/26 Apr": {
-            "Beginning Stocks": "2.74",
-            "Production": "32.16",
-            "Imports": "0.17",
-            "Domestic Total": "3.60",
-            "Exports": "29.00",
-            "Ending Stocks": "2.47"
-          },
-          "2025/26 May": {
-            "Beginning Stocks": "2.74",
-            "Production": "32.16",
-            "Imports": "0.17",
-            "Domestic Total": "3.60",
-            "Exports": "29.00",
-            "Ending Stocks": "2.47"
-          },
-          "2026/27 Proj": {
-            "Beginning Stocks": "2.47",
-            "Production": "35.50",
-            "Imports": "0.20",
-            "Domestic Total": "3.80",
-            "Exports": "31.50",
-            "Ending Stocks": "2.87"
-          }
-        },
-        "Brazil": {
-          "2024/25A": {
-            "Beginning Stocks": "2.97",
-            "Production": "44.38",
-            "Imports": "0.01",
-            "Domestic Total": "20.50",
-            "Exports": "23.39",
-            "Ending Stocks": "3.47"
-          },
-          "2025/26 Apr": {
-            "Beginning Stocks": "3.47",
-            "Production": "47.48",
-            "Imports": "0.01",
-            "Domestic Total": "21.80",
-            "Exports": "25.00",
-            "Ending Stocks": "4.16"
-          },
-          "2025/26 May": {
-            "Beginning Stocks": "3.47",
-            "Production": "47.48",
-            "Imports": "0.01",
-            "Domestic Total": "21.80",
-            "Exports": "25.00",
-            "Ending Stocks": "4.16"
-          },
-          "2026/27 Proj": {
-            "Beginning Stocks": "4.16",
-            "Production": "49.00",
-            "Imports": "0.01",
-            "Domestic Total": "22.50",
-            "Exports": "26.50",
-            "Ending Stocks": "4.17"
-          }
-        },
-        "China": {
-          "2024/25A": {
-            "Beginning Stocks": "0.79",
-            "Production": "81.97",
-            "Imports": "0.05",
-            "Domestic Total": "80.85",
-            "Exports": "1.02",
-            "Ending Stocks": "0.94"
-          },
-          "2025/26 Apr": {
-            "Beginning Stocks": "0.94",
-            "Production": "85.54",
-            "Imports": "0.15",
-            "Domestic Total": "84.15",
-            "Exports": "1.20",
-            "Ending Stocks": "1.28"
-          },
-          "2025/26 May": {
-            "Beginning Stocks": "0.94",
-            "Production": "85.54",
-            "Imports": "0.15",
-            "Domestic Total": "84.15",
-            "Exports": "1.20",
-            "Ending Stocks": "1.28"
-          },
-          "2026/27 Proj": {
-            "Beginning Stocks": "1.28",
-            "Production": "87.00",
-            "Imports": "0.15",
-            "Domestic Total": "85.50",
-            "Exports": "1.50",
-            "Ending Stocks": "1.43"
-          }
-        }
+        "Beginning Stocks": 450.0,
+        "Production": 65025.0,
+        "Imports": 800.0,
+        "Exports": 21700.0,
+        "Ending Stocks": 450.0,
+        "Avg. Price": 310.0
       }
     }
   },
   "soyoil": {
     "us": {
-      "unit": "Million Pounds",
+      "unit": "Mil. Lbs.",
       "attrs": [
         "Beginning Stocks",
         "Production",
         "Imports",
-        "Supply, Total",
-        "Domestic Disappearance",
-        "Biofuel",
-        "Food/Feed/Other",
         "Exports",
-        "Use, Total",
+        "Biofuel",
+        "Domestic",
         "Ending Stocks",
-        "Avg. Price (\u00a2/lb)"
+        "Avg. Price"
       ],
       "2024/25A": {
-        "Beginning Stocks": "1551",
-        "Production": "29218",
-        "Imports": "362",
-        "Supply, Total": "31131",
-        "Domestic Disappearance": "26891",
-        "Biofuel": "11758",
-        "Food/Feed/Other": "15133",
-        "Exports": "2492",
-        "Use, Total": "29384",
-        "Ending Stocks": "1747",
-        "Avg. Price (\u00a2/lb)": "47.59"
-      },
-      "2025/26 Apr": {
-        "Beginning Stocks": "1747",
-        "Production": "30675",
-        "Imports": "315",
-        "Supply, Total": "32737",
-        "Domestic Disappearance": "29680",
-        "Biofuel": "14200",
-        "Food/Feed/Other": "15480",
-        "Exports": "1200",
-        "Use, Total": "30880",
-        "Ending Stocks": "1857",
-        "Avg. Price (\u00a2/lb)": "63.00"
+        "Beginning Stocks": 1551.0,
+        "Production": 29218.0,
+        "Imports": 362.0,
+        "Exports": 2492.0,
+        "Avg. Price": 47.59
       },
       "2025/26 May": {
-        "Beginning Stocks": "1747",
-        "Production": "30675",
-        "Imports": "315",
-        "Supply, Total": "32737",
-        "Domestic Disappearance": "29680",
-        "Biofuel": "14200",
-        "Food/Feed/Other": "15480",
-        "Exports": "1200",
-        "Use, Total": "30880",
-        "Ending Stocks": "1857",
-        "Avg. Price (\u00a2/lb)": "63.00"
+        "Beginning Stocks": 1747.0,
+        "Production": 30855.0,
+        "Imports": 315.0,
+        "Exports": 1050.0,
+        "Avg. Price": 64.0
       },
       "2026/27 Proj": {
-        "Beginning Stocks": "1857",
-        "Production": "32590",
-        "Imports": "600",
-        "Supply, Total": "35047",
-        "Domestic Disappearance": "32750",
-        "Biofuel": "17800",
-        "Food/Feed/Other": "14950",
-        "Exports": "400",
-        "Use, Total": "33150",
-        "Ending Stocks": "1897",
-        "Avg. Price (\u00a2/lb)": "70.00"
-      }
-    },
-    "world": {
-      "unit": "MMT",
-      "attrs": [
-        "Beginning Stocks",
-        "Production",
-        "Imports",
-        "Domestic Total",
-        "Exports",
-        "Ending Stocks"
-      ],
-      "regions": {
-        "World": {
-          "2024/25A": {
-            "Beginning Stocks": "5.68",
-            "Production": "70.06",
-            "Imports": "14.30",
-            "Domestic Total": "68.32",
-            "Exports": "15.26",
-            "Ending Stocks": "6.47"
-          },
-          "2025/26 Apr": {
-            "Beginning Stocks": "6.45",
-            "Production": "71.71",
-            "Imports": "12.77",
-            "Domestic Total": "70.77",
-            "Exports": "13.9",
-            "Ending Stocks": "6.26"
-          },
-          "2025/26 May": {
-            "Beginning Stocks": "6.47",
-            "Production": "71.81",
-            "Imports": "12.78",
-            "Domestic Total": "71.01",
-            "Exports": "14.13",
-            "Ending Stocks": "5.93"
-          },
-          "2026/27 Proj": {
-            "Beginning Stocks": "5.93",
-            "Production": "74.70",
-            "Imports": "13.08",
-            "Domestic Total": "72.99",
-            "Exports": "14.39",
-            "Ending Stocks": "6.32"
-          }
-        },
-        "Argentina": {
-          "2024/25A": {
-            "Beginning Stocks": "0.67",
-            "Production": "8.63",
-            "Imports": "0.11",
-            "Domestic Total": "1.98",
-            "Exports": "7.10",
-            "Ending Stocks": "0.32"
-          },
-          "2025/26 Apr": {
-            "Beginning Stocks": "0.32",
-            "Production": "8.28",
-            "Imports": "0.07",
-            "Domestic Total": "1.98",
-            "Exports": "6.30",
-            "Ending Stocks": "0.39"
-          },
-          "2025/26 May": {
-            "Beginning Stocks": "0.32",
-            "Production": "8.28",
-            "Imports": "0.07",
-            "Domestic Total": "1.98",
-            "Exports": "6.30",
-            "Ending Stocks": "0.39"
-          },
-          "2026/27 Proj": {
-            "Beginning Stocks": "0.39",
-            "Production": "8.58",
-            "Imports": "0.01",
-            "Domestic Total": "1.99",
-            "Exports": "6.55",
-            "Ending Stocks": "0.44"
-          }
-        },
-        "Brazil": {
-          "2024/25A": {
-            "Beginning Stocks": "0.18",
-            "Production": "11.84",
-            "Imports": "0.09",
-            "Domestic Total": "10.41",
-            "Exports": "1.49",
-            "Ending Stocks": "0.21"
-          },
-          "2025/26 Apr": {
-            "Beginning Stocks": "0.21",
-            "Production": "12.54",
-            "Imports": "0.10",
-            "Domestic Total": "11.05",
-            "Exports": "1.50",
-            "Ending Stocks": "0.30"
-          },
-          "2025/26 May": {
-            "Beginning Stocks": "0.21",
-            "Production": "12.54",
-            "Imports": "0.10",
-            "Domestic Total": "11.05",
-            "Exports": "1.50",
-            "Ending Stocks": "0.30"
-          },
-          "2026/27 Proj": {
-            "Beginning Stocks": "0.30",
-            "Production": "13.20",
-            "Imports": "0.10",
-            "Domestic Total": "11.50",
-            "Exports": "1.80",
-            "Ending Stocks": "0.30"
-          }
-        },
-        "China": {
-          "2024/25A": {
-            "Beginning Stocks": "1.17",
-            "Production": "20.10",
-            "Imports": "0.30",
-            "Domestic Total": "20.50",
-            "Exports": "0.32",
-            "Ending Stocks": "0.75"
-          },
-          "2025/26 Apr": {
-            "Beginning Stocks": "0.75",
-            "Production": "20.97",
-            "Imports": "0.30",
-            "Domestic Total": "20.50",
-            "Exports": "0.70",
-            "Ending Stocks": "0.82"
-          },
-          "2025/26 May": {
-            "Beginning Stocks": "0.75",
-            "Production": "20.97",
-            "Imports": "0.30",
-            "Domestic Total": "20.50",
-            "Exports": "0.70",
-            "Ending Stocks": "0.82"
-          },
-          "2026/27 Proj": {
-            "Beginning Stocks": "0.82",
-            "Production": "21.50",
-            "Imports": "0.30",
-            "Domestic Total": "21.00",
-            "Exports": "0.70",
-            "Ending Stocks": "0.92"
-          }
-        },
-        "United States": {
-          "2024/25A": {
-            "Beginning Stocks": "0.70",
-            "Production": "13.25",
-            "Imports": "0.16",
-            "Domestic Total": "12.20",
-            "Exports": "1.13",
-            "Ending Stocks": "0.79"
-          },
-          "2025/26 Apr": {
-            "Beginning Stocks": "0.79",
-            "Production": "13.91",
-            "Imports": "0.14",
-            "Domestic Total": "13.46",
-            "Exports": "0.54",
-            "Ending Stocks": "0.84"
-          },
-          "2025/26 May": {
-            "Beginning Stocks": "0.79",
-            "Production": "13.91",
-            "Imports": "0.14",
-            "Domestic Total": "13.46",
-            "Exports": "0.54",
-            "Ending Stocks": "0.84"
-          },
-          "2026/27 Proj": {
-            "Beginning Stocks": "0.84",
-            "Production": "14.78",
-            "Imports": "0.27",
-            "Domestic Total": "14.86",
-            "Exports": "0.18",
-            "Ending Stocks": "0.86"
-          }
-        }
+        "Beginning Stocks": 1837.0,
+        "Production": 32590.0,
+        "Imports": 600.0,
+        "Exports": 400.0,
+        "Avg. Price": 70.0
       }
     }
   }
