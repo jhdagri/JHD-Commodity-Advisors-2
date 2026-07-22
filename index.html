@@ -1719,8 +1719,8 @@ padding:2px 8px;border-radius:3px;margin-bottom:6px;letter-spacing:0.06em;text-t
         </div>
         <div style="text-align:right;">
           <div style="font-family:'DM Mono',monospace;font-size:9px;color:var(--muted2);letter-spacing:0.1em;">WASDE-673</div>
-          <div style="font-family:'DM Serif Display',serif;font-size:18px;color:var(--gold);font-weight:700;margin-top:2px;">Jun 2026</div>
-          <div style="font-family:'DM Mono',monospace;font-size:8.5px;color:var(--muted2);margin-top:2px;">Released 11 Jun 2026 &middot; 12:00pm ET</div>
+          <div style="font-family:'DM Serif Display',serif;font-size:18px;color:var(--gold);font-weight:700;margin-top:2px;">Jul 2026</div>
+          <div style="font-family:'DM Mono',monospace;font-size:8.5px;color:var(--muted2);margin-top:2px;">Released 10 Jul 2026 &middot; 12:00pm ET</div>
         </div>
       </div>
 
@@ -2830,6 +2830,7 @@ function showAppPage(){
 function showAdminPage(){
   document.getElementById('page-app').classList.add('hidden');
   document.getElementById('page-admin').classList.remove('hidden');
+  window.scrollTo(0,0);
   if(!quill) initQuill();
   switchAdminTab('write');
 }
