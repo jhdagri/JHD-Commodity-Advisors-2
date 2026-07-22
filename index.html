@@ -1718,7 +1718,7 @@ padding:2px 8px;border-radius:3px;margin-bottom:6px;letter-spacing:0.06em;text-t
           <div style="font-family:'DM Mono',monospace;font-size:10px;color:var(--muted2);margin-top:4px;" id="wasde-report-tag">Loading WASDE data&hellip;</div>
         </div>
         <div style="text-align:right;">
-          <div style="font-family:'DM Mono',monospace;font-size:9px;color:var(--muted2);letter-spacing:0.1em;">WASDE-672</div>
+          <div style="font-family:'DM Mono',monospace;font-size:9px;color:var(--muted2);letter-spacing:0.1em;">WASDE-673</div>
           <div style="font-family:'DM Serif Display',serif;font-size:18px;color:var(--gold);font-weight:700;margin-top:2px;">Jun 2026</div>
           <div style="font-family:'DM Mono',monospace;font-size:8.5px;color:var(--muted2);margin-top:2px;">Released 11 Jun 2026 &middot; 12:00pm ET</div>
         </div>
@@ -1805,7 +1805,7 @@ padding:2px 8px;border-radius:3px;margin-bottom:6px;letter-spacing:0.06em;text-t
       </div>
 
       <div style="font-family:'DM Mono',monospace;font-size:9px;color:var(--muted2);padding-top:14px;border-top:1px solid var(--border);margin-top:4px;">
-        Source: USDA World Agricultural Supply and Demand Estimates (WASDE-672) &mdash; Jun 2026 &mdash; 
+        Source: USDA World Agricultural Supply and Demand Estimates (WASDE-673) &mdash; Jul 2026 &mdash; 
         May = May 2026 WASDE estimate &mdash; Jun = June 2026 WASDE estimate &mdash; 26/27 Proj = Updated 2026/27 projection &mdash;
         <a href="https://www.usda.gov/oce/commodity/wasde" target="_blank" style="color:var(--blue);text-decoration:none;">Official Report</a>
       </div>
@@ -5189,10 +5189,10 @@ function wdBuildUSTable(elId, usData){
   h+='<thead><tr>';
   h+='<th style="' + thS + 'text-align:left;">Item</th>';
   h+='<th style="' + thS + '">24/25 A</th>';
-  h+='<th style="' + thS + 'color:var(--muted);">25/26 Apr</th>';
-  h+='<th style="' + thS + 'color:var(--text);font-weight:700;">25/26 Jun</th>';
+  h+='<th style="' + thS + 'color:var(--muted);">25/26 Jun</th>';
+  h+='<th style="' + thS + 'color:var(--text);font-weight:700;">25/26 Jul</th>';
   h+='<th style="' + thS + 'color:var(--blue);">26/27 Proj</th>';
-  h+='<th style="' + thS + 'color:var(--muted2);font-size:7px;">Jun vs May</th>';
+  h+='<th style="' + thS + 'color:var(--muted2);font-size:7px;">Jul vs Jun</th>';
   h+='<th style="' + thS + 'color:var(--blue);font-size:7px;">26/27 vs 25/26</th>';
   h+='</tr></thead><tbody>';
   attrs.forEach(function(attr){
@@ -5228,10 +5228,10 @@ function wdBuildWorldTable(elId, worldData, region){
   var h='<table style="width:100%;border-collapse:collapse;">';
   h+='<thead><tr><th style="' + thS + 'text-align:left;">' + region + ' (' + (worldData.unit||'MMT') + ')</th>';
   h+='<th style="' + thS + '">24/25 A</th>';
-  h+='<th style="' + thS + 'color:var(--muted);">25/26 Apr</th>';
-  h+='<th style="' + thS + 'color:var(--text);font-weight:700;">25/26 Jun</th>';
+  h+='<th style="' + thS + 'color:var(--muted);">25/26 Jun</th>';
+  h+='<th style="' + thS + 'color:var(--text);font-weight:700;">25/26 Jul</th>';
   h+='<th style="' + thS + 'color:var(--blue);">26/27 Proj</th>';
-  h+='<th style="' + thS + 'color:var(--muted2);font-size:7px;">Jun vs May</th>';
+  h+='<th style="' + thS + 'color:var(--muted2);font-size:7px;">Jul vs Jun</th>';
   h+='<th style="' + thS + 'color:var(--blue);font-size:7px;">26/27 vs 25/26</th>';
   h+='</tr></thead><tbody>';
   attrs.forEach(function(attr){
@@ -5367,7 +5367,7 @@ function initWasde(){
     .then(function(d){
       _wdData=d;
       var tag=document.getElementById('wasde-report-tag');
-      if(tag) tag.textContent='USDA WASDE-672 \u00b7 Jun 2026 \u00b7 May vs Jun comparison \u00b7 2026/27 Updated Projection';
+      if(tag) tag.textContent='USDA WASDE-673 \u00b7 Jul 2026 \u00b7 Jun vs Jul comparison \u00b7 2026/27 Updated Projection';
       wdRenderComm('wheat');
     })
     .catch(function(e){
@@ -5811,4 +5811,4 @@ function renderInspections(d){
 }
 </script>
 </body>
-</html>
+</html>
