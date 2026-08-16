@@ -2,8 +2,21 @@
 // Fetches USDA ESRQS weekly CWR Commodity Summary XML
 // Static file updated every Thursday at 8:30am ET — no API key, no IP restrictions
 // URL: https://apps.fas.usda.gov/esrqs/StaticReports/CWRCommoditySummary.xml
-
+//
+// Fix (Aug 2026): this started intermittently failing with "Error: fetch
+// failed" after ~10.7s — right at Netlify's synchronous function execution
+// ceiling. That's not USDA cleanly rejecting the request (no HTTP status
+// like 403/429 was ever logged); the connection just wasn't completing
+// from Netlify's network until the platform killed the function. Fetching
+// the same URL directly from a normal client worked fine, which points at
+// USDA's server/WAF filtering the request based on how it looks in transit
+// — the request previously had no User-Agent at all, a common bot-
+// detection trigger. Two changes: (1) send browser-like headers so the
+// request looks like an ordinary page load, and (2) an explicit
+// AbortController timeout so a bad connection fails fast with a clear
+// message instead of running the function out the clock.
 var XML_URL = 'https://apps.fas.usda.gov/esrqs/StaticReports/CWRCommoditySummary.xml';
+var FETCH_TIMEOUT_MS = 8500; // headroom inside Netlify's ~10s ceiling
 
 // Commodity codes we want
 var TARGET_CODES = {
@@ -162,9 +175,21 @@ exports.handler = async function(event) {
   try {
     console.log('Fetching ESRQS static XML...');
 
-    var resp = await fetch(XML_URL, {
-      headers: { 'Accept': 'application/xml, text/xml, */*' }
-    });
+    var controller = new AbortController();
+    var timer = setTimeout(function () { controller.abort(); }, FETCH_TIMEOUT_MS);
+    var resp;
+    try {
+      resp = await fetch(XML_URL, {
+        headers: {
+          'Accept': 'application/xml, text/xml, */*',
+          'Accept-Language': 'en-US,en;q=0.9',
+          'User-Agent': 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/124.0.0.0 Safari/537.36',
+        },
+        signal: controller.signal,
+      });
+    } finally {
+      clearTimeout(timer);
+    }
 
     console.log('XML response: HTTP ' + resp.status);
     if (!resp.ok) throw new Error('XML fetch failed: HTTP ' + resp.status);
@@ -193,11 +218,14 @@ exports.handler = async function(event) {
     };
 
   } catch(e) {
-    console.error('Error: ' + e.message);
+    var msg = (e && e.name === 'AbortError')
+      ? 'Timed out after ' + FETCH_TIMEOUT_MS + 'ms waiting for USDA ESRQS'
+      : (e && e.message) || String(e);
+    console.error('Error: ' + msg);
     return {
       statusCode: 500,
       headers: headers,
-      body: JSON.stringify({ error: e.message })
+      body: JSON.stringify({ error: msg })
     };
   }
 };
